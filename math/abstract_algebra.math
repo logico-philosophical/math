@@ -1,0 +1,157 @@
+import propositional;
+import predicate;
+import set;
+import relation;
+import function;
+
+############################
+##### ABSTRACT ALGEBRA #####
+############################
+
+"이항연산. 즉 [$A\times A]에서 [$A]로의 함수이다."
+$\left(<<\operatorname{bin.\ op.}>>#1\text{ on }#2\right)$
+st is_bin_op($\ast$ cls f, $A$ cls a) {
+	is_fun(f, cartesian(a, a), a)
+}
+
+"이항연산을 위한 함수 호출의 syntactic sugar."
+$\left(#2\mathbin{#1}#3\right){}^{<<\scriptscriptstyle\dag>>}$
+cls bin_op_call($\ast$ cls f, cls x, cls y) {
+	funcall(f, pair(x, y))
+}
+
+$\left(#1\ <<\text{is associative on}>>\ #2\right)$
+st bin_op_associative($\ast$ cls f, $A$ cls a) {
+	Uin(a, (cls x) => {
+		Uin(a, (cls y) => {
+			Uin(a, (cls z) => {
+				eq(
+					bin_op_call(f,
+						bin_op_call(f, x, y),
+						z
+					),
+					bin_op_call(f,
+						x,
+						bin_op_call(f, y, z)
+					)
+				)
+			})
+		})
+	})
+}
+
+"대수학에서의 마그마(magma)."
+$\left(<<\operatorname{magma}>>\left(#1,#2\right)\right)$
+st is_magma($M$ cls m, $\ast$ cls f) {
+	is_bin_op(f, m)
+}
+
+"반군(semigroup)."
+$\left(<<\operatorname{semigroup}>>\left(#1,#2\right)\right)$
+st is_semigroup($S$ cls s, $\ast$ cls f) {
+	A(
+		is_magma(s, f),
+		bin_op_associative(f, s)
+	)
+}
+
+"[$e]가 [$.(S, \ast)]의 항등원이다."
+$\left(<<\operatorname{id.\ el.}>>#1\text{ of }\mathord{\left(#2,#3\right)}\right)$
+st is_identity_element(cls e, $S$ cls s, $\ast$ cls f) {
+	A(
+		in(e, s),
+		Uin(s, (cls a) => {
+			A(
+				eq(bin_op_call(f, e, a), a),
+				eq(bin_op_call(f, a, e), a)
+			)
+		})
+	)
+}
+
+"항등원은 여러 개 있지 않다."
+schema identity_element_Q($S$ cls s, $\ast$ cls f) {
+	Ui2[($e_1$ cls e1, $e_2$ cls e2) => {
+		cp2[is_identity_element(e1, s, f), is_identity_element(e2, s, f) |-
+		$e1_in_s = Ae1[@h1];
+		$e2_in_s = Ae1[@h2];
+		
+		eq_transitive[
+			eq_symmetric[Ae2[mp[$e1_in_s; Ue(?, e1)[Ae2[@h2]]]]];
+			Ae1[mp[$e2_in_s; Ue(?, e2)[Ae2[@h1]]]]
+		]]
+	}][as Q((cls e) => { is_identity_element(e, s, f) })]
+}
+
+"[$.(S, \ast)]의 항등원(존재한다면)."
+$\left(<<\operatorname{id.\ el.\ of}>>\mathord{\left(#1,#2\right)}\right)$
+cls identity_element($S$ cls s, $\ast$ cls f) {
+	instantiate((cls e) => {
+		is_identity_element(e, s, f)
+	})
+}
+
+schema identity_element_def($S$ cls s, $\ast$ cls f) {
+	X((cls e) => {is_identity_element(e, s, f)}) |-
+		instantiate_def[XQ_to_Xq[@h1; identity_element_Q(s, f)]]
+		[as is_identity_element(identity_element(s, f), s, f)]
+}
+
+schema identity_element_in($S$ cls s, $\ast$ cls f) {
+	X((cls e) => {is_identity_element(e, s, f)}) |-
+		Ae1[identity_element_def(s, f)[@h1]]
+}
+
+schema identity_element_eq_1(cls a, $S$ cls s, $\ast$ cls f) {
+	in(a, s), X((cls e) => {is_identity_element(e, s, f)}) |-
+		Ae1[mp[@h1; Ue(?, a)[Ae2[identity_element_def(s, f)[@h2]]]]]
+}
+
+schema identity_element_eq_2(cls a, $S$ cls s, $\ast$ cls f) {
+	in(a, s), X((cls e) => {is_identity_element(e, s, f)}) |-
+		Ae2[mp[@h1; Ue(?, a)[Ae2[identity_element_def(s, f)[@h2]]]]]
+}
+
+"대수학에서의 모노이드(monoid)."
+$\left(<<\operatorname{monoid}>>\left(#1,#2\right)\right)$
+st is_monoid($M$ cls m, $\ast$ cls f) {
+	A(
+		is_semigroup(m, f),
+		X((cls e) => {
+			is_identity_element(e, m, f)
+		})
+	)
+}
+
+"[$b]가 [$.(S, \ast)]에서 [$a]의 역원이다."
+$\left(#1\ <<\mathrm{is\ inv.\ of}>>\ #2\text{ in }\mathord{\left(#3,#4\right)}\right)$
+st is_inverse_element(cls b, cls a, $S$ cls s, $\ast$ cls f) {
+	A(
+		in(b, s),
+		A(
+			eq(bin_op_call(f, a, b), identity_element(s, f)),
+			eq(bin_op_call(f, b, a), identity_element(s, f))
+		)
+	)
+}
+
+"[$.(S, \ast)]에서 [$a]의 역원(존재한다면)."
+$\left(<<\mathrm{inv.\ of}>>\ #1\text{ in }\mathord{\left(#2,#3\right)}\right)$
+cls inverse_element(cls a, $S$ cls s, $\ast$ cls f) {
+	instantiate((cls b) => {
+		is_inverse_element(b, a, s, f)
+	})
+}
+
+"대수학에서의 군(group)."
+$\left(<<\operatorname{group}>>\left(#1,#2\right)\right)$
+st is_group($G$ cls g, $\ast$ cls f) {
+	A(
+		is_monoid(g, f),
+		Uin(g, (cls a) => {
+			X((cls b) => {
+				is_inverse_element(b, a, g, f)
+			})
+		})
+	)
+}

@@ -1,0 +1,14 @@
+{
+	"compilerOptions": {
+		"target": "es6",
+		"module": "commonjs",
+		"outDir": "./dist",
+		"allowJs": true,
+		"sourceMap": true,
+		"lib": [
+			"es2019"
+		],
+		"esModuleInterop": true
+	},
+	"include": ["./src/**/*.ts"]
+}

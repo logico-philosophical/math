@@ -1,0 +1,11 @@
+extension:
+  - '.ts'
+  - '.js'
+include:
+  - 'src/**/*.ts'
+exclude:
+  - '**/*.d.ts'
+  - 'src/entry.js'
+reporter:
+  - 'html'
+all: true

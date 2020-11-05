@@ -1,0 +1,48 @@
+{
+	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+	"name": "math-o-matic",
+	"patterns": [
+		{
+			"include": "#keywords"
+		},
+		{
+			"include": "#strings"
+		},
+		{
+			"include": "#comments"
+		}
+	],
+	"repository": {
+		"keywords": {
+			"patterns": [{
+				"name": "keyword.control.math-o-matic",
+				"match": "\\b(as|axiomatic|base|import|schema|sealed|type)\\b"
+			}]
+		},
+		"strings": {
+			"name": "string.quoted.double.math-o-matic",
+			"begin": "\"",
+			"end": "\""
+		},
+		"comments": {
+			"patterns": [
+				{
+					"name": "comment.line.double-slash.math-o-matic",
+					"begin": "#",
+					"end": "$"
+				},
+				{
+					"name": "comment.line.math-o-matic",
+					"begin": "//",
+					"end": "$"
+				},
+				{
+					"name": "comment.block.math-o-matic",
+					"begin": "/\\*",
+					"end": "\\*/"
+				}
+			]
+		}
+	},
+	"scopeName": "source.math-o-matic"
+}

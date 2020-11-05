@@ -1,0 +1,231 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>M42/math/tt</title>
+		<script src="tt.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.js"></script>
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Mono">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.css">
+		<style>
+			* {
+				box-sizing: border-box;
+			}
+
+			body {
+				padding: 0; 
+				margin: 0;
+				font: 16px 'Roboto Mono', monospace, monospace;
+				font-weight: 400;
+				-webkit-font-smoothing: antialiased;
+				color: #5f6368;
+				line-height: 1.5;
+				word-break: normal;
+				overflow-wrap: break-word;
+			}
+
+			h1, h2, h3, h4, h5, h6 {
+				font-weight: 400;
+				line-height: 1.2;
+			}
+
+			h1, h2, h3, h4, h5, h6, a, b, strong, input, textarea, th {
+				color: #202124;
+			}
+
+			img {
+				max-width: 100%;
+			}
+
+			pre, code {
+				font-family: 'Roboto Mono', monospace, monospace;
+				background-color: rgba(0,0,0,.05);
+				white-space: pre-wrap;
+				word-break: break-all;
+				tab-size: 4;
+			}
+
+			pre {
+				padding: 6px;
+			}
+
+			code {
+				font-size: .85em;
+			}
+
+			pre code {
+				background-color: unset;
+			}
+
+			ul, ol {
+				margin: .5em 0;
+			}
+
+			table {
+				margin: 1em 0;
+				border-collapse: collapse;
+			}
+
+			table tr td, table tr th {
+				border: 1px #ccc solid;
+				padding: .5em .5em;
+			}
+
+			blockquote {
+				margin: 1em 0;
+				padding: .5em 20px;
+				border-left: 5px #202124 solid;
+				background-color: #f7f7f7;
+			}
+
+			input, textarea {
+				font: .85em 'Roboto Mono', sans-serif;
+				tab-size: 4;
+			}
+
+			button {
+				font: .85em 'Roboto Mono', sans-serif;
+			}
+
+			input:disabled, textarea:disabled {
+				background-color: #f3f3f3;
+			}
+
+			input[type=text], input[type=password], textarea {
+				padding: 1ex .5em;
+				border: 1px #5f6368 solid;
+			}
+
+			textarea {
+				padding: 1em;
+				border: 1px #5f6368 solid;
+				resize: vertical;
+			}
+
+			input[type=button], input[type=submit], button {
+				background: none;
+				border: none;
+				border-radius: 3px;
+				padding: 1ex 1em;
+				cursor: pointer;
+			}
+
+			ul.horizontal {
+				padding: 0;
+			}
+
+			ul.horizontal li {
+				display: inline-block;
+				list-style: none;
+			}
+
+			.container {
+				margin: 30px auto;
+				padding: 1em;
+				max-width: 720px;
+			}
+
+			col.vars {
+				background-color: #E0F2F1;
+			}
+
+			col.result {
+				border: 3px #455A64 solid;
+			}
+
+			#display table {
+				border: 3px #455A64 solid;
+			}
+
+			#display table tr td.true::before {
+				content: 'T';
+			}
+
+			.tex {
+				margin: 1em 0;
+			}
+
+			.true {
+				background-color: #81C784;
+				color: white;
+			}
+
+			.false {
+				background-color: #E57373;
+				color: white;
+			}
+
+			.result-true {
+				color: #388E3C;
+			}
+
+			.result-false {
+				color: #D32F2F;
+			}
+
+			#display table tr td.false::before {
+				content: 'F';
+			}
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<h1>math-o-matic/tt</h1>
+			<p>폴란드 표기법으로 된 명제논리 식을 입력해 보세요.</p>
+			<ul>
+				<li>말단
+					<ul>
+						<li>p, q, r, s, t, u, v, w, x, y, z: 순서대로 1~11번째의 st 타입 입력항.
+						<li>T: verum. true의 T.
+						<li>F: falsum. false의 F.
+					</ul>
+				<li>일항 연산자
+					<ul>
+						<li>N: not.
+					</ul>
+				<li>이항 연산자
+					<ul>
+						<li>A: and.
+						<li>O: or.
+						<li>I: implies.
+						<li>E: iff. equivalent의 E인 것으로 하자.
+					</ul>
+			</ul>
+			<p>예시: EIpIqrIApqr</p>
+			<input id="input" type="text" style="width:100%" placeholder="Type something">
+			<div id="display"></div>
+			<script>
+				$ = q => document.querySelector(q);
+
+				$('#input').addEventListener('input', _ => {
+					var v = $('#input').value;
+
+					try {
+						var {table, tex} = tt(v, 'verbose');
+						var result = tt(v);
+						
+						$('#display').innerHTML = `
+	<p class="tex result-${result}">${katex.renderToString(tex, {displayMode: true})}</p>
+	<table>
+	<colgroup>
+		${table.left.length ? `<col class="vars" span="${table.left.length}">` : ''}
+		<col class="result" span="1">
+	</colgroup>
+	<tr>${table.left.map(({name}) => `<th>${name}</th>`).join('')}
+		${table.right.map(({name}) => `<th>${name}</th>`).join('')}</tr>
+	${Array(2 ** table.left.length).fill().map((_, i) => {
+		return `<tr>${table.left.map(({column}) => column[i]).map(e => `<td class="${e}"></td>`).join('')}
+		${table.right.map(({column}) => column[i]).map(e => `<td class="${e}"></td>`).join('')}</tr>`;
+	}).join('')}
+	</table>
+	<p>결과: <span class="result-${result}">${result}</span></p>`;
+					} catch (err) {
+						$('#display').innerHTML = '<p></p>';
+						$('#display p').innerText = err;
+					}
+				});
+			</script>
+		</div>
+	</body>
+</html>

@@ -1,0 +1,39 @@
+language: node_js
+
+arch: amd64
+os: linux
+dist: focal
+
+node_js:
+  - 14
+
+install:
+  - npm ci
+  - cd docs && npm ci && cd ..
+
+script:
+  - sed -i 's/^dist\/$//g' .gitignore
+  - sed -i 's/^docs\/build\/$//g' .gitignore
+  - npm test
+  - npm run build
+  - cd docs && npx m42kup-builder && cd ..
+
+after_success: npm run coverage
+
+deploy:
+  provider: pages
+  edge: true
+  strategy: git
+  cleanup: false
+  keep_history: false
+  token: $GITHUB_TOKEN
+  target_branch: gh-pages
+  on:
+    branch: master
+
+notifications:
+  email:
+    recipients:
+      - ossia@korea.ac.kr
+    on_success: change
+    on_failure: always

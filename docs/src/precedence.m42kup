@@ -1,0 +1,29 @@
+[=우선순위]
+
+[>[**참고]: 우선순위 숫자가 작은 것이 먼저 연산된다.]
+
+[==사용자 코드에서]
+
+[~(href=../../web/index.html)메인 페이지]의 자동 생성된 표를 참고하라. 단항 연산자는 이항 연산자에 우선하도록 하는 것이 좋을 듯하다.
+
+[==내장된 코드에서]
+
+[table
+	우선순위(밖) [*] 우선순위(안) [*] 연산자 [**]
+	PREC_FUNEXPR [*] PREC_COMMA, 0 [*] [$.(\texttt{...\#1})\mapsto \texttt{\#2}] [**]
+	0 [*] PREC_COLONEQQ, PREC_COLONEQQ [*] [$\texttt{\#1}\coloneqq\texttt{\#2}] [**]
+	0 [*] 0, PREC_COMMA [*] [$\texttt{\#1}(\texttt{...\#2})] [**]
+	0 [*] 0, PREC_COMMA [*] [$`\texttt{\#1}[\texttt{...\#2}]`] [**]
+	0 [*] PREC_COMMA, [$\infty] [*] [$\textsf{schema}(\texttt{...\#1}):\\\quad\texttt{\#2}] [**]
+	PREC_COMMA [*] PREC_COMMA, PREC_COMMA [*] [$\texttt{...\#1}\vdash\texttt{\#2}] [**]
+	0 [*] [$\infty] [*] (root)
+]
+
+[===상수들이 갖는 값]
+
+[table
+	상수 [*] 값 [**]
+	PREC_FUNEXPR [*] 1000 [**]
+	PREC_COMMA [*] 1000 [**]
+	PREC_COLONEQQ [*] 100000
+]

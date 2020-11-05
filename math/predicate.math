@@ -1,0 +1,540 @@
+import propositional;
+
+#################################
+######## PREDICATE LOGIC ########
+#################################
+
+"클래스 타입. 술어 논리에서 쓰인다."
+type cls;
+
+"class 하나를 받는 술어 타입."
+type [cls -> st] pr;
+
+"class 두 개를 받는 술어 타입."
+type [(cls, cls) -> st] pr2;
+
+"class 세 개를 받는 술어 타입."
+type [(cls, cls, cls) -> st] pr3;
+
+"class 하나를 받는 메타함수 타입."
+type [cls -> cls] fun;
+
+"pr 타입을 위한 A."
+$\left(#1<<\land>>#2\right)$
+pr Af(pr f, pr g) {
+	(cls z) => A(f(z), g(z))
+}
+
+"pr 타입을 위한 O."
+$\left(#1<<\lor>>#2\right)$
+pr Of(pr f, pr g) {
+	(cls z) => O(f(z), g(z))
+}
+
+"pr 타입을 위한 I."
+$\left(#1<<\to>>#2\right)$
+pr If(pr f, pr g) {
+	(cls z) => I(f(z), g(z))
+}
+
+"pr 타입을 위한 E."
+$\left(#1<<\leftrightarrow>>#2\right)$
+pr Ef(pr f, pr g) {
+	(cls z) => E(f(z), g(z))
+}
+
+"pr 타입을 위한 N."
+$\left(<<\neg>>#1\right)$
+pr Nf(pr f) {
+	(cls z) => N(f(z))
+}
+
+"pr2 타입을 위한 A."
+$\left(#1<<\land>>#2\right)$
+pr2 Af2(pr2 f, pr2 g) {
+	(cls x, cls y) => A(f(x, y), g(x, y))
+}
+
+"pr2 타입을 위한 O."
+$\left(#1<<\lor>>#2\right)$
+pr2 Of2(pr2 f, pr2 g) {
+	(cls x, cls y) => O(f(x, y), g(x, y))
+}
+
+"pr2 타입을 위한 I."
+$\left(#1<<\to>>#2\right)$
+pr2 If2(pr2 f, pr2 g) {
+	(cls x, cls y) => I(f(x, y), g(x, y))
+}
+
+"pr2 타입을 위한 E."
+$\left(#1<<\leftrightarrow>>#2\right)$
+pr2 Ef2(pr2 f, pr2 g) {
+	(cls x, cls y) => E(f(x, y), g(x, y))
+}
+
+"pr2 타입을 위한 N."
+$\left(<<\neg>>#1\right)$
+pr2 Nf2(pr2 f) {
+	(cls x, cls y) => N(f(x, y))
+}
+
+"보편 양화(universal quantification). 일반적인 표기법과는 다르게 pr을 입력으로 받는다. 또한 [*domain of discourse는 공집합일 수도 있다]."
+$!<prec=249><<\forall>>#1$
+st U(pr f);
+
+"pr2를 위한 보편 양화."
+$!<prec=249><<\forall^2>>#1$
+st U2(pr2 f) {
+	U((cls x) => {
+		U((cls y) => {
+			f(x, y)
+		})
+	})
+}
+
+"pr3을 위한 보편 양화."
+$!<prec=249><<\forall^3>>#1$
+st U3(pr3 f) {
+	U((cls x) => {
+		U((cls y) => {
+			U((cls z) => {
+				f(x, y, z)
+			})
+		})
+	})
+}
+
+"존재 양화(existential quantification). 일반적인 표기법과는 다르게 pr을 입력으로 받으며 U에 의존한다. 또한 [*domain of discourse는 공집합일 수도 있다]."
+$!<prec=249><<\exists>>#1$
+st X(pr f) {
+	N(U(Nf(f)))
+}
+
+"pr2를 위한 존재 양화. X에 의존한다."
+$!<prec=249><<\exists^2>>#1$
+st X2(pr2 f) {
+	X((cls x) => {
+		X((cls y) => { f(x, y) })
+	})
+}
+
+schema NX_to_UN(pr f: @111) {
+	N(X(f)) |- NNe[@h1][as U(Nf(f))]
+}
+
+schema UN_to_NX(pr f: @111) {
+	U(Nf(f)) |- NNi[@h1][as N(X(f))]
+}
+
+"보편 양화 도입(universal introduction)."
+axiomatic schema Ui(pr f: @1) {
+	f |- U(f)
+}
+
+schema Ui2(pr2 f: @1) {
+	f |-
+		Ui[(cls x) => Ui[(cls y) => @h1(x, y)]]
+		[as U2(f)]
+}
+
+"보편 양화 소거(universal elimination)."
+axiomatic schema Ue(pr f: @11, cls x) {
+	U(f) |- f(x)
+}
+
+schema Ue2(pr2 f: @11, cls x, cls y) {
+	U2(f) |- Ue(?, y)[Ue(?, x)[@h1]]
+}
+
+schema Ui_p(st p: @1) {
+	p |- Ui((cls x) => { p })[(cls x) => { p }]
+}
+
+schema Ui_c(st p) {
+	cp[Ui_p(p)]
+}
+
+"U를 위한 contrapose."
+schema contrapose_U(pr f: @111, pr g: @112) {
+	U(If(f, g)) |- Ui[(cls x) => {
+		contrapose(f(x), g(x))[Ue(?, x)[@h1]]
+	}]
+}
+
+"U를 위한 mp."
+schema mpU(pr f: @11, pr g: @212) {
+	U(f), U(If(f, g)) |-
+		Ui[(cls x) => {
+			mp[Ue(?, x)[@h1]; Ue(?, x)[id(U((cls x) => I(f(x), g(x))))[@h2]]]
+		}][as U(g)]
+}
+
+"U를 위한 mt."
+schema mtU(pr f: @111, pr g: @112) {
+	U(If(f, g)), N(U(g)) |-
+		Niu[
+			U(f) |-
+				Ne(?, F)[
+					mpU[@h3; @h1];
+					@h2
+				]
+		]
+}
+
+"UA의 m1형."
+schema UAm1(pr f: @111, pr g: @112) {
+	U(Af(f, g)) |-
+		Ai[
+			Ui[(cls x) => {
+				Ae1[Ue(?, x)[@h1][as A(f(x), g(x))]]
+			}];
+			Ui[(cls x) => {
+				Ae2[Ue(?, x)[@h1][as A(f(x), g(x))]]
+			}]
+		][as A(U(f), U(g))]
+}
+
+"UA의 m2형."
+schema UAm2(pr f: @111, pr g: @121) {
+	A(U(f), U(g)) |-
+		Ui[(cls x) => {
+			Ai[
+				Ue(?, x)[Ae1[@h1]];
+				Ue(?, x)[Ae2[@h1]]
+			]
+		}][as U(Af(f, g))]
+}
+
+"[$\forall]과 [$\land] 간의 분배법칙 같은 것."
+schema UA(pr f, pr g) {
+	Ei[cp[UAm1(f, g)]; cp[UAm2(f, g)]]
+}
+
+"UI의 m형."
+schema UIm(pr f: @111, pr g: @112) {
+	U(If(f, g)) |-
+		cp[U(f) |- mpU[@h2; @h1]]
+}
+
+"[$\forall]과 [$\to] 간의 분배법칙 같은 것."
+schema UI(pr f, pr g) {
+	cp[UIm(f, g)]
+}
+
+"U를 위한 Oi1."
+schema Oi1U(pr f, pr g) {
+	U(f) |-
+		Ui[(cls x) => {
+			Oi1(?, g(x))[Ue(?, x)[@h1]]
+		}][as U(Of(f, g))]
+}
+
+"U를 위한 Oi2."
+schema Oi2U(pr f, pr g) {
+	U(g) |-
+		Ui[(cls x) => {
+			Oi2(f(x), ?)[Ue(?, x)[@h1]]
+		}][as U(Of(f, g))]
+}
+
+schema UOm(pr f, pr g) {
+	O(U(f), U(g)) |-
+		Oe[
+			@h1;
+			cp[Oi1U(f, g)];
+			cp[Oi2U(f, g)]
+		]
+}
+
+schema UO(pr f, pr g) {
+	cp[UOm(f, g)]
+}
+
+"UU의 m형. 재미있게도 Ui 및 Ue로부터 유도할 수 있다."
+schema UUm(pr2 f: @11) {
+	U2((cls x, cls y) => { f(x, y) }) |-
+		Ui[(cls y) => {
+			Ui[(cls x) => {
+				Ue2(?, x, y)[@h1]
+			}]
+		}][as U2((cls y, cls x) => { f(x, y) })]
+}
+
+"[$\forall x\forall y]랑 [$\forall y\forall x]가 같다는 것."
+schema UU(pr2 f) {
+	cp[UUm(f)]
+}
+
+schema UE_flip(pr f: @111, pr g: @112) {
+	U(Ef(f, g)) |-
+		Ui[(cls x) => {
+			E_flip[Ue(?, x)[@h1][as E(f(x), g(x))]]
+		}][as U(Ef(g, f))]
+}
+
+schema EiU(pr f: @111, pr g: @112) {
+	U(If(f, g)), U(If(g, f)) |-
+		Ui[(cls z) => { Ei[
+			Ue(?, z)[@h1][as I(f(z), g(z))];
+			Ue(?, z)[@h2][as I(g(z), f(z))]
+		] }][as U(Ef(f, g))]
+}
+
+"Ee1의 U형."
+schema Ee1U(pr f: @111, pr g: @112) {
+	U(Ef(f, g)) |-
+		Ui[(cls x) => {
+			Ee1[Ue(?, x)[@h1][as E(f(x), g(x))]]
+		}][as U(If(f, g))]
+}
+
+"Ee2의 U형."
+schema Ee2U(pr f: @111, pr g: @112) {
+	U(Ef(f, g)) |-
+		Ui[(cls x) => {
+			Ee2[Ue(?, x)[@h1][as E(f(x), g(x))]]
+		}][as U(If(g, f))]
+}
+
+schema UEe(pr f: @111, pr g: @112) {
+	U(Ef(f, g)) |-
+		Ei[
+			UIm[Ee1U[@h1]];
+			UIm[Ee2U[@h1]]
+		]
+}
+
+schema syllU(pr f: @111, pr g: @112, pr h: @212) {
+	U(If(f, g)), U(If(g, h)) |-
+		Ui[(cls x) => { syll[
+			Ue(?, x)[@h1][as I(f(x), g(x))];
+			Ue(?, x)[@h2][as I(g(x), h(x))]
+		] }][as U(If(f, h))]
+}
+
+schema syllUE(pr f: @111, pr g: @112, pr h: @212) {
+	U(Ef(f, g)), U(Ef(g, h)) |-
+		Ui[(cls x) => { syllE[
+			Ue(?, x)[@h1][as E(f(x), g(x))];
+			Ue(?, x)[@h2][as E(g(x), h(x))]
+		] }][as U(Ef(f, h))]
+}
+
+"존재 양화 도입(existential introduction). Ue와 합치면 [$\forall f \vdash \exists f]가 될 것도 같으나 어떤 class x가 있어야 한다."
+schema Xi(pr f, cls x: @12) {
+	f(x) |-
+		contrapose_u[Ue(Nf(f), x)][NNi[@h1]]
+		[as X(f)]
+}
+
+schema Xi2(pr2 f, cls x, cls y) {
+	f(x, y) |- Xi((cls x) => {
+		X((cls y) => { f(x, y) })
+	}, x)[
+		Xi((cls y) => { f(x, y) }, y)[@h1]
+	][as X2(f)]
+}
+
+"X를 위한 mp."
+schema mpX(pr f: @11, pr g: @212) {
+	X(f), U(If(f, g)) |-
+		NNe[Niu[
+			N(X(g)) |- Fi[
+				Ui(Nf(f))[(cls x) => {
+					mt(f(x), g(x))[
+						Ue(?, x)[@h2];
+						Ue(?, x)[NNe[@h3]]
+					]
+				}];
+				@h1
+			]
+		]]
+}
+
+"X2를 위한 mp."
+schema mpX2(pr2 f: @11, pr2 g: @212) {
+	X2(f), U2(If2(f, g)) |-
+		NNe[Niu[N(X2(g)) |- Fi[
+			Ui[(cls x) => {
+				NNi[Ui[(cls y) => {
+					mt[
+						Ue2(?, x, y)[id(U2((cls x, cls y) => {
+							I(f(x, y), g(x, y))
+						}))[@h2]];
+						Ue(?, y)[NNe(U((cls y) => {N(g(x, y))}))[Ue(?, x)[NNe[@h3]]]]
+					]
+				}]][as N(X((cls y) => {f(x, y)}))]
+			}];
+			@h1
+		]]]
+}
+
+"mpX의 더 강력한 버전."
+schema mpX_strong(pr f: @11, pr g: @212) {
+	X(f), U(If(f, g)) |-
+		mpX(?, Af(f, g))[
+			@h1;
+			Ui[(cls x) => {
+				cp[
+					f(x) |-
+						Ai[
+							@h3;
+							mp(f(x), g(x))[@h3; Ue(?, x)[@h2]]
+						]
+				]
+			}]
+		]
+}
+
+schema mpXE1(pr f, pr g) {
+	X(f), U(Ef(f, g)) |-
+		mpX[@h1; Ee1U[@h2]]
+}
+
+schema mpXE2(pr f, pr g) {
+	X(g), U(Ef(f, g)) |-
+		mpX[@h1; Ee2U[@h2]]
+}
+
+"st 타입을 위한 존재 양화 소거(existential elimination)."
+schema Xe_p(st p) {
+	X((cls z) => { p }) |-
+		NNe[Niu[N(p) |-
+			Fi[
+				@h1;
+				NNi[Ui_p[@h2]][as N(X((cls z) => { p }))]
+			]]]
+}
+
+schema X2e_p(st p) {
+	X2((cls x, cls y) => { p }) |-
+		Xe_p(p)[Xe_p(X((cls y) => { p }))[@h1]]
+}
+
+schema mpX_Xe_p(pr f: @11, st p) {
+	X(f), U(If(f, (cls z) => { p })) |-
+		Xe_p(p)[mpX[@h1; @h2]]
+}
+
+schema mpX2_X2e_p(pr2 f: @11, st p) {
+	X2(f), U2(If2(f, (cls x, cls y) => { p })) |-
+		X2e_p(p)[mpX2[@h1; @h2]]
+}
+
+schema XOm1(pr f: @111, pr g: @112) {
+	X(Of(f, g)) |-
+		NNe[Niu[N(O(X(f), X(g))) |-
+			$noan = NO_to_AN[@h2];
+			
+			$foo = UAm2[Ai[
+				NX_to_UN[Ae1[$noan]];
+				NX_to_UN[Ae2[$noan]]
+			]];
+			
+			Fi[@h1; NNi[Ui[(cls x) => {
+				AN_to_NO[Ue(?, x)[$foo][as A(N(f(x)), N(g(x)))]]
+			}]][as N(X(Of(f, g)))]]]]
+}
+
+schema XOm2(pr f: @111, pr g: @121) {
+	O(X(f), X(g)) |-
+		NNe[Niu[N(X(Of(f, g))) |-
+			$foo = NNe[@h2];
+			
+			$1 = UAm1(Nf(f), Nf(g))[Ui[(cls x) => {
+				NO_to_AN[Ue(?, x)[$foo][as N(O(f(x), g(x)))]]
+			}]];
+			
+			Fi[@h1; AN_to_NO[Ai[
+				UN_to_NX[Ae1[$1]];
+				UN_to_NX[Ae2[$1]]
+			]]]
+		]]
+}
+"[$\exists]과 [$\lor] 간의 분배법칙 같은 것. UA로부터 증명할 수 있다."
+schema XO(pr f, pr g) {
+	Eiu[XOm1(f, g); XOm2(f, g)]
+}
+
+schema ON_to_NA_U(pr f, pr g) {
+	U(Of(Nf(f), Nf(g))) |-
+		Ui[(cls x) => {
+			ON_to_NA(f(x), g(x))[Ue(?, x)[@h1]]
+		}]
+}
+
+schema XAe(pr f: @111, pr g: @112) {
+	X(Af(f, g)) |-
+		NO_to_AN[mp[
+			contrapose_u[ON_to_NA_U(f, g)][@h1];
+			contrapose[UO(Nf(f), Nf(g))]
+		]][as A(X(f), X(g))]
+}
+
+schema XAe1(pr f: @111, pr g: @112) {
+	X(Af(f, g)) |-
+		Ae1[XAe[@h1]]
+}
+
+schema XAe2(pr f: @111, pr g: @112) {
+	X(Af(f, g)) |-
+		Ae2[XAe[@h1]]
+}
+
+schema X2Ae(pr2 f, pr2 g) {
+	X2(Af2(f, g)) |-
+		Ai[
+			mpX2[
+				@h1;
+				Ui2[(cls x, cls y) => {
+					cp[A(f(x, y), g(x, y)) |-
+						Ae1[@h2]]
+				}][as U2(If2(Af2(f, g), f))]
+			];
+			mpX2[
+				@h1;
+				Ui2[(cls x, cls y) => {
+					cp[A(f(x, y), g(x, y)) |-
+						Ae2[@h2]]
+				}][as U2(If2(Af2(f, g), g))]
+			]
+		]
+}
+
+schema X2Ae1(pr2 f: @111, pr2 g: @112) {
+	X2(Af2(f, g)) |-
+		Ae1[X2Ae(f, g)[@h1]]
+}
+
+schema X2Ae2(pr2 f: @111, pr2 g: @112) {
+	X2(Af2(f, g)) |-
+		Ae2[X2Ae(f, g)[@h1]]
+}
+
+schema mpUE(pr f, pr g) {
+	U(f), U(Ef(f, g)) |-
+		mpU[@h1; Ee1U[@h2]]
+}
+
+schema swapU(pr f, pr g, pr h) {
+	U(If(f, If(g, h))) |-
+		Ui[(cls x) => {
+			swap[Ue(?, x)[@h1][as I(f(x), I(g(x), h(x)))]]
+		}][as U(If(g, If(f, h)))]
+}
+
+schema swapU_c(pr f, pr g, pr h) {
+	cp[swapU(f, g, h)]
+}
+
+schema swapU2(pr2 f, pr2 g, pr2 h) {
+	U2(If2(f, If2(g, h))) |-
+		Ui2[(cls x, cls y) => {
+			swap(f(x, y), g(x, y), h(x, y))[Ue2(?, x, y)[@h1]]
+		}][as U2(If2(g, If2(f, h)))]
+}
+
+schema swapU2_c(pr2 f, pr2 g, pr2 h) {
+	cp[swapU2(f ,g, h)]
+}

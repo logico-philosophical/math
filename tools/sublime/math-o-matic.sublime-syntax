@@ -1,0 +1,88 @@
+%YAML 1.2
+---
+name: math-o-matic
+file_extensions: [math]
+scope: source.math-o-matic
+contexts:
+  main:
+    - match: '"'
+      scope: punctuation.definition.string.begin.math-o-matic
+      push:
+        - meta_scope: string.quoted.double.math-o-matic
+        - match: '"'
+          scope: punctuation.definition.string.end.math-o-matic
+          pop: true
+
+    - match: '//|\#'
+      scope: punctuation.definition.comment.math-o-matic
+      push:
+        - meta_scope: comment.line.math-o-matic
+        - match: $
+          pop: true
+
+    - match: '/\*'
+      scope: punctuation.definition.comment.begin.math-o-matic
+      push:
+        - meta_scope: comment.block.math-o-matic
+        - match: '\*/'
+          scope: punctuation.definition.comment.end.math-o-matic
+          pop: true
+
+    - match: '\b(as|axiomatic|base|import|schema|sealed|type)\b'
+      scope: keyword.control.math-o-matic
+
+    # - match: '\$'
+    #   scope: punctuation.definition.string.begin.math-o-matic
+    #   push:
+    #     - meta_scope: string.quoted.double.math-o-matic
+    #     - match: '\$'
+    #       scope: punctuation.definition.string.end.math-o-matic
+    #       pop: true
+
+    - match: '=>'
+      scope: storage.type.function.arrow.math-o-matic
+
+    - match: '\|-'
+      scope: keyword.operator.math-o-matic
+
+    - match: '~'
+      scope: keyword.operator.math-o-matic
+
+    - match: ';'
+      scope: punctuation.terminator.statement.math-o-matic
+
+    - match: \)
+      scope: invalid.illegal.stray-bracket-end.math-o-matic
+
+    - match: \(
+      scope: punctuation.section.group.begin.math-o-matic
+      push:
+        - meta_scope: meta.group.math-o-matic
+        - match: \)
+          scope: punctuation.section.group.end.math-o-matic
+          pop: true
+        - include: main
+
+    - match: \]
+      scope: invalid.illegal.stray-bracket-end.math-o-matic
+
+    - match: \[
+      scope: punctuation.section.brackets.begin.math-o-matic
+      push:
+        - meta_scope: meta.sequence.math-o-matic
+        - match: \]
+          scope: punctuation.section.brackets.end.math-o-matic
+          pop: true
+        - include: main
+
+    - match: \}
+      scope: invalid.illegal.stray-bracket-end.math-o-matic
+
+    - match: \{
+      scope: punctuation.section.block.begin.math-o-matic
+      push:
+        - meta_scope: meta.block.math-o-matic
+        - match: \}
+          scope: punctuation.section.block.end.math-o-matic
+          pop: true
+        - include: main
