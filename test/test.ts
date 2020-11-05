@@ -55,7 +55,7 @@ cls y;
 	});
 });
 
-describe('Sealed macro', function () {
+describe('Sealed macro & using', function () {
 	it('N(p) != (sealed p => N(p))', async function () {
 		var program = new Program(parser);
 		
@@ -77,18 +77,15 @@ sealed st N2(st p) {
 		
 		expect(foo.equals(baz, new ExecutionContext())).to.be.false;
 	});
-});
 
-describe('using', function () {
-	it('is a valid syntax', async function () {
-		var program = new Program(parser);
-		
-		await program.loadModule('duh', (_filename: string) => ({
-			code: `
+	for (let i = 0; i < 2; i++) {
+		it(`Issue #53.${i + 1}`, async function () {
+			var program = new Program(parser);
+			
+			await expect(program.loadModule('duh', (_filename: string) => ({
+				code: `
 type st;
-
 st p;
-
 st N(st p);
 
 sealed st N2(st p) {
@@ -96,14 +93,14 @@ sealed st N2(st p) {
 }
 
 schema foo(st p) using N2 {
-	N2(p)
+	N2(p) |- p
+}
+
+schema bar(st p) ${i == 0 ? '' : 'using N2'} {
+	N(p) |- foo(p)[@h1]
 }
 `
-		}));
-
-		var foo = program.evaluate(evalParser.parse(`foo`)) as Schema,
-			bar = program.evaluate(evalParser.parse(`N2`)) as ObjectFun;
-		
-		expect(foo.context.uses(bar)).to.be.true;
-	});
+			}))).to.be[i == 0 ? 'rejected' : 'fulfilled'];
+		});
+	}
 });
