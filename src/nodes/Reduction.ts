@@ -1,3 +1,4 @@
+import ExecutionContext from '../ExecutionContext';
 import StackTrace from '../StackTrace';
 import Expr0 from './Expr0';
 import Fun from './Fun';
@@ -23,7 +24,7 @@ export default class Reduction extends Metaexpr {
 	public readonly leftargs: Metaexpr[];
 	public readonly reduced: Metaexpr;
 
-	constructor ({subject, guesses, leftargs, expected}: ReductionArgumentType, trace: StackTrace) {
+	constructor ({subject, guesses, leftargs, expected}: ReductionArgumentType, context: ExecutionContext, trace: StackTrace) {
 		if (guesses) {
 			let resolvedType = subject.type.resolve() as ObjectType | MetaType,
 				paramTypes = resolvedType.from,
@@ -57,13 +58,13 @@ export default class Reduction extends Metaexpr {
 					leftargs,
 					tee.right,
 					expected,
+					context,
 					trace
 				);
 			});
 	
 			subject = new Funcall({
 				fun: subject,
-				unseal: false,
 				args: derefs,
 			}, trace);
 		} else if (guesses) {
@@ -104,7 +105,7 @@ export default class Reduction extends Metaexpr {
 		});
 
 		for (let i = 0; i < tee.left.length; i++) {
-			if (!tee.left[i].equals(leftargsExpanded[i])) {
+			if (!tee.left[i].equals(leftargsExpanded[i], context)) {
 				throw Node.error(`LHS #${i + 1} failed to match:
 
 --- EXPECTED ---
@@ -118,7 +119,7 @@ ${leftargs[i].expandMeta(true)}
 		}
 
 		if (expected) {
-			if (!tee.right.equals(expected)) {
+			if (!tee.right.equals(expected, context)) {
 				throw Node.error(`RHS failed to match:
 
 --- EXPECTED ---
@@ -156,11 +157,11 @@ ${expected.expandMeta(true)}
 		return EqualsPriority.FOUR;
 	}
 
-	protected equalsInternal(obj: Metaexpr): boolean {
-		return this.reduced.equals(obj);
+	protected equalsInternal(obj: Metaexpr, context: ExecutionContext): boolean {
+		return this.reduced.equals(obj, context);
 	}
 
-	public static query(guess: string, left, leftargs, right, expected, trace: StackTrace) {
+	public static query(guess: string, left, leftargs, right, expected, context: ExecutionContext, trace: StackTrace) {
 		if (guess.length == 0) throw Node.error('wut', trace);
 
 		var lef, ret;
@@ -206,15 +207,15 @@ ${expected.expandMeta(true)}
 						throw Node.error(`Cannot dereference @${guess}`, trace);
 					}
 
-					if (lef.fun.equals(node.fun)) {
+					if (lef.fun.equals(node.fun, context)) {
 						break;
 					}
 
-					if (!node.isExpandable()) {
+					if (!node.isExpandable(context)) {
 						throw Node.error(`Cannot dereference @${guess}`, trace);
 					}
 
-					node = node.expandOnce();
+					node = node.expandOnce(context);
 				}
 
 				if (!node.args || !(1 <= n && n <= node.args.length))

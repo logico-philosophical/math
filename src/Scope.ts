@@ -29,7 +29,11 @@ export default class Scope {
 	public readonly trace: StackTrace;
 	public baseType: ObjectType;
 
-	constructor (parent: Scope, trace?: StackTrace) {
+	public readonly fileUri: string;
+
+	constructor (fileUri: string, parent: Scope, trace?: StackTrace) {
+		this.fileUri = fileUri;
+
 		this.parent = parent;
 		this.root = parent ? parent.root : this;
 
@@ -37,13 +41,13 @@ export default class Scope {
 			throw Error('Assertion failed');
 		}
 
-		this.trace = trace || new StackTrace();
+		this.trace = trace || new StackTrace(fileUri);
 
 		this.baseType = parent ? parent.baseType : null;
 	}
 
 	public extend(type: string, name: string, location: LocationObject): Scope {
-		var child = new Scope(this, this.trace.extend({type, name, location}));
+		var child = new Scope(this.fileUri, this, this.trace.extend({type, name, location}));
 		this.hypotheses.forEach(h => child.hypotheses.push(h));
 		return child;
 	}

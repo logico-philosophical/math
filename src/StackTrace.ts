@@ -7,18 +7,21 @@ interface StackTraceElement {
 }
 
 export default class StackTrace {
+
+	public readonly fileUri: string;
 	public readonly stack: StackTraceElement[];
 
-	constructor (stack?: StackTraceElement[]) {
+	constructor (fileUri: string, stack?: StackTraceElement[]) {
+		this.fileUri = fileUri;
 		this.stack = stack || [];
 	}
 
 	public extend(element: StackTraceElement): StackTrace {
-		return new StackTrace([element].concat(this.stack));
+		return new StackTrace(this.fileUri, [element].concat(this.stack));
 	}
 
 	public error(message: string) {
-		var filename = typeof process != 'undefined' && process.argv[2];
+		var fileUri = this.fileUri || '<unknown>';
 
 		return new Error(
 			message
@@ -26,9 +29,9 @@ export default class StackTrace {
 			+ (
 				this.stack.length
 					? this.stack.map(({type, name, location}) => {
-						return `${type} ${name || '<anonymous>'} (${filename || '<unknown>'}:${location.start.line}:${location.start.column})`;
+						return `${type} ${name || '<anonymous>'} (${fileUri}:${location.start.line}:${location.start.column})`;
 					}).join('\n\tat ')
-					: `<root> (${filename || '<unknown>'}:1:1)`
+					: `<root> (${fileUri}:1:1)`
 			)
 		);
 	}

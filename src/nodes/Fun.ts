@@ -61,7 +61,7 @@ export default abstract class Fun extends Expr0 implements Nameable {
 		return EqualsPriority.ONE;
 	}
 	
-	protected equalsInternal(obj: Metaexpr): boolean {
+	protected equalsInternal(obj: Metaexpr, context: ExecutionContext): boolean {
 		if (!(this.expr && !this.sealed)
 				&& !(obj instanceof Fun && obj.expr && !obj.sealed)) {
 			return false;
@@ -82,7 +82,6 @@ export default abstract class Fun extends Expr0 implements Nameable {
 			? this.call(placeholders)
 			: new Funcall({
 				fun: this,
-				unseal: false,
 				args: placeholders
 			}, this.trace);
 
@@ -90,12 +89,13 @@ export default abstract class Fun extends Expr0 implements Nameable {
 			? obj.call(placeholders)
 			: new Funcall({
 				fun: obj,
-				unseal: false,
 				args: placeholders
 			}, this.trace);
 		
-		return thisCall.equals(objCall);
+		return thisCall.equals(objCall, context);
 	}
+
+	public abstract isCallable(context: ExecutionContext): boolean;
 
 	public call(args: Expr0[]): Metaexpr {
 		if (!this.expr) {
@@ -124,6 +124,7 @@ import ObjectType from './ObjectType';
 import Type from './Type';
 import Variable from './Variable';
 import StackTrace from '../StackTrace';
+import ExecutionContext from '../ExecutionContext';
 
 interface FunArgumentType {
 	doc?: string;

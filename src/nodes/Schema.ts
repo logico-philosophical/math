@@ -5,14 +5,19 @@ export default class Schema extends Fun {
 	public readonly axiomatic: boolean;
 	public readonly using: ObjectFun[];
 	public readonly def$s: $Variable[];
+	public readonly context: ExecutionContext;
 	private _isProvedCache: boolean;
 
-	constructor ({doc, tex, annotations, axiomatic, name, params, using, def$s, expr}: SchemaArgumentType, trace: StackTrace) {
+	constructor ({doc, tex, annotations, axiomatic, name, params, context, def$s, expr}: SchemaArgumentType, trace: StackTrace) {
+		if (!expr) {
+			throw Node.error('wut', trace);
+		}
+
 		super({doc, tex, annotations, sealed: false, type: null, name, params, expr}, trace);
 		
 		this.axiomatic = axiomatic;
-		this.using = using;
 		this.def$s = def$s || [];
+		this.context = context;
 	}
 	
 	public isProved(hyps?) {
@@ -45,7 +50,7 @@ export default class Schema extends Fun {
 			axiomatic: this.axiomatic,
 			name: null,
 			params: this.params,
-			using: this.using,
+			context: this.context,
 			def$s: this.def$s,
 			expr: this.expr.substitute(map)
 		}, this.trace);
@@ -60,10 +65,14 @@ export default class Schema extends Fun {
 			axiomatic: this.axiomatic,
 			name: null,
 			params: this.params,
-			using: this.using,
+			context: this.context,
 			def$s: this.def$s,
 			expr: this.expr.expandMeta(andFuncalls)
 		}, this.trace);
+	}
+
+	public isCallable(_context: ExecutionContext): boolean {
+		return true;
 	}
 
 	public toIndentedString(indent: number, root?: boolean): string {
@@ -110,6 +119,7 @@ import ObjectType from "./ObjectType";
 import Variable from "./Variable";
 import ObjectFun from "./ObjectFun";
 import StackTrace from "../StackTrace";
+import ExecutionContext from "../ExecutionContext";
 
 interface SchemaArgumentType {
 	doc?: string;
@@ -118,7 +128,7 @@ interface SchemaArgumentType {
 	axiomatic: boolean;
 	name?: string;
 	params: Variable[];
-	using: ObjectFun[];
+	context: ExecutionContext;
 	def$s: $Variable[];
 	expr: Metaexpr;
 }

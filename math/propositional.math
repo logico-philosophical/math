@@ -117,22 +117,22 @@ schema mt(st p: @11, st q: @21) {
 }
 
 "선언 도입(disjunction introduction) 1."
-schema Oi1(st p: @1, st q) {
+schema Oi1(st p: @1, st q) using O {
 	p |-
 		cp[N(p) |- Ne(?, q)[@h1; @h2]]
-		[as O+(p, q)]
+		[as O(p, q)]
 }
 
 "선언 도입(disjunction introduction) 2."
-schema Oi2(st p, st q: @1) {
+schema Oi2(st p, st q: @1) using O {
 	q |-
 		cp[N(p) |- @h1]
-		[as O+(p, q)]
+		[as O(p, q)]
 }
 
 "선언 소거(disjunction elimination). proof by cases라고도 한다."
-schema Oe(st p: @11, st q: @12, st r: @22) {
-	O+(p, q), I(p, r), I(q, r) |-
+schema Oe(st p: @11, st q: @12, st r: @22) using O {
+	O(p, q), I(p, r), I(q, r) |-
 		NNe[Niu[N(r) |-
 			Fi[mp[mp[Niu[p |- Fi[mp[@h5; @h2]; @h4]]; @h1]; @h3]; @h4]
 		]]

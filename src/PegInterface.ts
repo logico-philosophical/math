@@ -3,6 +3,7 @@
  * PEG.js의 출력은 여기에서만 처리해야 한다.
  */
 
+import ExecutionContext from './ExecutionContext';
 import $Variable from './nodes/$Variable';
 import Expr0 from './nodes/Expr0';
 import Fun from './nodes/Fun';
@@ -212,10 +213,10 @@ export default class PI {
 			return PI.expr0(arg, scope);
 		});
 
-		return new Funcall({fun, unseal: obj.unseal, args}, scope.trace);
+		return new Funcall({fun, args}, scope.trace);
 	}
 
-	public static metaexpr(obj: MetaexprObject, parentScope: Scope): Metaexpr {
+	public static metaexpr(obj: MetaexprObject, parentScope: Scope, context: ExecutionContext): Metaexpr {
 		if (!['tee', 'reduction', 'schemacall', 'schemaexpr', 'var'].includes(obj._type))
 			throw Error('Assertion failed');
 
@@ -224,13 +225,13 @@ export default class PI {
 
 		switch (obj._type) {
 			case 'tee':
-				return PI.tee(obj, scope);
+				return PI.tee(obj, scope, context);
 			case 'reduction':
-				return PI.reduction(obj, scope);
+				return PI.reduction(obj, scope, context);
 			case 'schemacall':
-				return PI.schemacall(obj, scope);
+				return PI.schemacall(obj, scope, context);
 			case 'schemaexpr':
-				return PI.schema(obj, scope);
+				return PI.schema(obj, scope, context);
 			case 'var':
 				return PI.metavar(obj, scope);
 			default:
@@ -294,19 +295,19 @@ export default class PI {
 		}
 	}
 
-	public static tee(obj: TeeObject, parentScope: Scope): Tee {
+	public static tee(obj: TeeObject, parentScope: Scope, context: ExecutionContext): Tee {
 		if (obj._type != 'tee')
 			throw Error('Assertion failed');
 
 		var scope = parentScope.extend('tee', null, obj.location);
 
-		var left = obj.left.map(o => PI.metaexpr(o, scope));
+		var left = obj.left.map(o => PI.metaexpr(o, scope, context));
 
 		var scopeRight = scope.extend('tee.right', null, obj.right.location);
 		left.forEach(l => scopeRight.hypotheses.push(l));
 
 		var def$s = obj.def$s.map($ => {
-			var $v = PI.def$($, scopeRight);
+			var $v = PI.def$($, scopeRight, context);
 
 			if (scopeRight.hasOwn$($v.name)) {
 				throw scopeRight.error(`${$.name} has already been declared`);
@@ -315,23 +316,23 @@ export default class PI {
 			return scopeRight.add$($v);
 		});
 
-		var right = PI.metaexpr(obj.right, scopeRight);
+		var right = PI.metaexpr(obj.right, scopeRight, context);
 
 		return new Tee({left, def$s, right}, scope.trace);
 	}
 
-	public static def$(obj: Def$Object, parentScope: Scope): $Variable {
+	public static def$(obj: Def$Object, parentScope: Scope, context: ExecutionContext): $Variable {
 		if (obj._type != 'def$')
 			throw Error('Assertion failed');
 		
 		var scope = parentScope.extend('def$', obj.name, obj.location);
 		
-		var expr = PI.metaexpr(obj.expr, scope);
+		var expr = PI.metaexpr(obj.expr, scope, context);
 
 		return new $Variable({name: obj.name, expr}, scope.trace);
 	}
 
-	public static schema(obj: DefschemaObject | SchemaexprObject, parentScope: Scope): Schema {
+	public static schema(obj: DefschemaObject | SchemaexprObject, parentScope: Scope, oldContext: ExecutionContext): Schema {
 		if (obj._type != 'defschema' && obj._type != 'schemaexpr')
 			throw Error('Assertion failed');
 		
@@ -342,13 +343,19 @@ export default class PI {
 		var axiomatic: boolean = false,
 			doc: string = null,
 			annotations: string[] = [],
-			using: ObjectFun[];
+			context = oldContext;
 
 		if (obj._type == 'defschema') {
 			axiomatic = obj.axiomatic;
 			doc = obj.doc;
 			annotations = obj.annotations;
-			using = obj.using.map(name => {
+
+			if (oldContext) {
+				console.log(oldContext);
+				throw Error('duh');
+			}
+
+			var using: ObjectFun[] = obj.using.map(name => {
 				if (!scope.hasVariable(name)) {
 					throw scope.error(`Variable ${name} is not defined`);
 				}
@@ -361,6 +368,8 @@ export default class PI {
 
 				return fun;
 			});
+
+			context = new ExecutionContext(using);
 		}
 
 		var params = obj.params.map(tvo => {
@@ -376,7 +385,7 @@ export default class PI {
 		});
 
 		var def$s = obj.def$s.map($ => {
-			var $v = PI.def$($, scope);
+			var $v = PI.def$($, scope, context);
 
 			if (scope.hasOwn$($v.name)) {
 				throw scope.error(`${$.name} has already been declared`);
@@ -385,18 +394,18 @@ export default class PI {
 			return scope.add$($v);
 		});
 
-		var expr = PI.metaexpr(obj.expr, scope);
+		var expr = PI.metaexpr(obj.expr, scope, context);
 
-		return new Schema({doc, annotations, axiomatic, name, params, using, def$s, expr}, scope.trace);
+		return new Schema({doc, annotations, axiomatic, name, params, context, def$s, expr}, scope.trace);
 	}
 
-	public static schemacall(obj: SchemacallObject, parentScope: Scope): Funcall {
+	public static schemacall(obj: SchemacallObject, parentScope: Scope, context: ExecutionContext): Funcall {
 		if (obj._type != 'schemacall')
 			throw Error('Assertion failed');
 
 		var scope = parentScope.extend('schemacall', 'name' in obj.schema ? obj.schema.name : null, obj.location);
 
-		var fun = PI.metaexpr(obj.schema, scope);
+		var fun = PI.metaexpr(obj.schema, scope, context);
 
 		var args = obj.args.map(obj => {
 			return PI.expr0(obj, scope);
@@ -404,18 +413,21 @@ export default class PI {
 
 		return new Funcall({
 			fun,
-			unseal: obj.unseal,
 			args
 		}, scope.trace);
 	}
 
-	public static reduction(obj: ReductionObject, parentScope: Scope): Reduction {
+	public static reduction(obj: ReductionObject, parentScope: Scope, context: ExecutionContext): Reduction {
 		if (obj._type != 'reduction')
 			throw Error('Assertion failed');
+		
+		if (!context) {
+			throw Error('duh');
+		}
 
 		var scope = parentScope.extend('reduction', 'name' in obj.subject ? obj.subject.name : null, obj.location);
 
-		var subject = PI.metaexpr(obj.subject, scope);
+		var subject = PI.metaexpr(obj.subject, scope, context);
 
 		var guesses = !obj.guesses
 			? null
@@ -424,16 +436,16 @@ export default class PI {
 			});
 
 		var leftargs = obj.leftargs.map(obj => {
-			return PI.metaexpr(obj, scope);
+			return PI.metaexpr(obj, scope, context);
 		});
 
-		var expected = obj.expected && PI.metaexpr(obj.expected, scope);
+		var expected = obj.expected && PI.metaexpr(obj.expected, scope, context);
 
 		return new Reduction({
 			subject,
 			guesses,
 			leftargs,
 			expected
-		}, scope.trace);
+		}, context, scope.trace);
 	}
 }

@@ -1,3 +1,4 @@
+import ExecutionContext from "../ExecutionContext";
 import StackTrace from "../StackTrace";
 import Expr0 from "./Expr0";
 import Node from "./Node";
@@ -39,17 +40,17 @@ export default abstract class Metaexpr extends Node {
 	 */
 	public abstract expandMeta(andFuncalls: boolean): Metaexpr;
 
-	public equals(obj: Metaexpr): boolean {
+	public equals(obj: Metaexpr, context: ExecutionContext): boolean {
 		if (this === obj) return true;
 		if (!this.type.equals(obj.type)) return false;
 
 		if (obj.getEqualsPriority() > this.getEqualsPriority())
-			return obj.equalsInternal(this);
+			return obj.equalsInternal(this, context);
 		
-		return this.equalsInternal(obj);
+		return this.equalsInternal(obj, context);
 	}
 
 	protected abstract getEqualsPriority(): EqualsPriority;
 
-	protected abstract equalsInternal(obj: Metaexpr): boolean;
+	protected abstract equalsInternal(obj: Metaexpr, context: ExecutionContext): boolean;
 }

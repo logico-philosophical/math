@@ -1,3 +1,4 @@
+import ExecutionContext from "../ExecutionContext";
 import StackTrace from "../StackTrace";
 import Expr0 from "./Expr0";
 import Metaexpr, { EqualsPriority } from "./Metaexpr";
@@ -45,8 +46,8 @@ export default class $Variable extends Metaexpr implements Nameable {
 		return EqualsPriority.FOUR;
 	}
 
-	protected equalsInternal(obj: Metaexpr): boolean {
-		return this.expr.equals(obj);
+	protected equalsInternal(obj: Metaexpr, context: ExecutionContext): boolean {
+		return this.expr.equals(obj, context);
 	}
 
 	public toIndentedString(indent: number, root?: boolean): string {

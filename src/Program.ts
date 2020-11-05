@@ -2,9 +2,17 @@ import PegInterface from './PegInterface';
 import { EvaluableObject, LineObject } from './PegInterfaceDefinitions';
 import ProofExplorer from './ProofExplorer';
 import Scope from './Scope';
+import StackTrace from './StackTrace';
+
+interface LoaderReturnType {
+	fileUri?: string;
+	code: string;
+}
+
+type LoaderType = (packageName: string) => (LoaderReturnType | Promise<LoaderReturnType>);
 
 export default class Program {
-	public scope = new Scope(null);
+	public scope: Scope;
 	public readonly parser;
 	public readonly scopeMap: Map<string, Scope> = new Map();
 	
@@ -13,19 +21,20 @@ export default class Program {
 		this.parser = parser;
 	}
 
-	public async loadModule(filename, loader): Promise<Scope> {
+	public async loadModule(filename: string, loader: LoaderType): Promise<Scope> {
 		return this.scope = await this.loadModuleInternal(filename, loader);
 	}
 
-	private async loadModuleInternal(filename, loader): Promise<Scope> {
+	private async loadModuleInternal(filename: string, loader: LoaderType): Promise<Scope> {
 		if (this.scopeMap.has(filename)) {
 			return this.scopeMap.get(filename);
 		}
 
-		var scope = new Scope(null);
+		var {fileUri, code} = await loader(filename);
 
-		var code = await loader(filename);
+		var scope = new Scope(fileUri, null);
 		var parsed = this.parser.parse(code);
+
 		await this.feed(parsed, scope, loader);
 
 		this.scopeMap.set(filename, scope);
@@ -69,7 +78,7 @@ export default class Program {
 					scope.addFun(fun);
 					break;
 				case 'defschema':
-					var schema = PegInterface.schema(line, scope);
+					var schema = PegInterface.schema(line, scope, null);
 
 					if (scope.hasSchema(schema.name)) {
 						throw scope.error(`Schema ${schema.name} has already been declared`);
@@ -84,24 +93,26 @@ export default class Program {
 	}
 
 	public evaluate(line: EvaluableObject) {
+		var scope = new Scope('<repl>', this.scope);
+
 		switch (line._type) {
 			case 'typedef':
-				return PegInterface.type(line, this.scope);
+				return PegInterface.type(line, scope);
 			case 'defv':
-				return PegInterface.variable(line, this.scope);
+				return PegInterface.variable(line, scope);
 			case 'defun':
-				return PegInterface.fun(line, this.scope);
+				return PegInterface.fun(line, scope);
 			case 'defschema':
 			case 'schemaexpr':
-				return PegInterface.schema(line, this.scope);
+				return PegInterface.schema(line, scope, null);
 			case 'tee':
-				return PegInterface.tee(line, this.scope);
+				return PegInterface.tee(line, scope, null);
 			case 'reduction':
-				return PegInterface.reduction(line, this.scope);
+				return PegInterface.reduction(line, scope, null);
 			case 'schemacall':
-				return PegInterface.schemacall(line, this.scope);
+				return PegInterface.schemacall(line, scope, null);
 			case 'var':
-				return PegInterface.metavar(line, this.scope);
+				return PegInterface.metavar(line, scope);
 			default:
 				throw Error(`Unknown line type ${(line as any)._type}`);
 		}

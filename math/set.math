@@ -666,7 +666,7 @@ sealed cls instantiate(pr f) {
 	})
 }
 
-schema instantiate_eq_i(pr f: @11, cls x) {
+schema instantiate_eq_i(pr f: @11, cls x) using instantiate {
 	Q(f), f(x) |-
 		$foo = Ui[(cls z) => {
 			$c1 = cp[in(z, x) |-
@@ -675,9 +675,9 @@ schema instantiate_eq_i(pr f: @11, cls x) {
 					weaken(?, Xq(f))[Xi((cls x) => {
 						A(f(x), in(z, x))
 					}, x)[Ai[@h2; @h3]]]
-				][as in(z, instantiate+(f))]];
+				][as in(z, instantiate(f))]];
 
-			$c2 = cp[in(z, instantiate+(f)) |-
+			$c2 = cp[in(z, instantiate(f)) |-
 				mpX_Xe_p(?, in(z, x))[
 					mp[Ai[Xi(f, x)[@h2]; @h1]; setbuilder_e[@h3]];
 					Ui[(cls y) => { cp2[f(y), in(z, y) |-
@@ -1063,20 +1063,20 @@ sealed cls singleton(cls x) {
 	})
 }
 
-schema self_in_singleton(cls x: @11) {
+schema self_in_singleton(cls x: @11) using singleton {
 	set(x) |-
 		setbuilder_i[
 			@h1;
 			Oi2(N(set(x)), ?)[eq_reflexive(x)]
-		][as in(x, singleton+(x))]
+		][as in(x, singleton(x))]
 }
 
-schema singleton_e(cls x: @11, cls z: @21) {
-	set(x), in(z, singleton+(x)) |-
+schema singleton_e(cls x: @11, cls z: @21) using singleton {
+	set(x), in(z, singleton(x)) |-
 		Oe1[setbuilder_e[@h2]; NNi[@h1]]
 }
 
-schema singleton_set_e(cls x: @111) {
+schema singleton_set_e(cls x: @111) using singleton {
 	set(singleton(x)) |-
 		NNe[Niu[N(set(x)) |-
 			Fi[
@@ -1087,7 +1087,7 @@ schema singleton_set_e(cls x: @111) {
 						setbuilder_i[
 							set_i[@h3];
 							Oi1(?, eq(z, x))[@h2]
-						][as in(z, singleton+(x))]
+						][as in(z, singleton(x))]
 					]][as subseteq(universe(), singleton(x))]
 				]
 			]

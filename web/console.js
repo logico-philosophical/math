@@ -98,7 +98,7 @@ $('#console-input').addEventListener('keydown', evt => {
 			try {
 				var parsed = evalParser.parse(v);
 			} catch (e) {
-				htmlify(`Parse error: ${e.message}\n    at (<unknown>:${e.location.start.line}:${e.location.start.column})`, {error: true});
+				htmlify(`Parse error: ${e.message}\n    at (<repl>:${e.location.start.line}:${e.location.start.column})`, {error: true});
 				if (!evt.ctrlKey) codemirror.setValue('');
 				return;
 			}

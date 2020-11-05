@@ -1,4 +1,5 @@
 import chai, { expect } from "chai";
+import ExecutionContext from "../src/ExecutionContext";
 chai.use(require('chai-as-promised'));
 import Metaexpr from "../src/nodes/Metaexpr";
 import ObjectFun from "../src/nodes/ObjectFun";
@@ -21,9 +22,9 @@ describe('Program', function () {
 		'abstract_algebra'
 	].forEach(name => {
 		it(`can load ${name}.math`, async function () {
-			await program.loadModule(name, (filename: string) => {
-				return fs.readFileSync(path.join(__dirname, '../math/' + filename + '.math'), 'utf-8');
-			});
+			await program.loadModule(name, (filename: string) => ({
+				code: fs.readFileSync(path.join(__dirname, '../math/' + filename + '.math'), 'utf-8')
+			}));
 		});
 	});
 });
@@ -38,17 +39,19 @@ describe('Issue #52', function () {
 	it('(f(x))(y) == (f(x))(y)', async function () {
 		var program = new Program(parser);
 
-		await program.loadModule('duh', (_filename: string) => `
+		await program.loadModule('duh', (_filename: string) => ({
+			code: `
 type cls;
 
 [cls -> [cls -> cls]] f;
 cls x;
 cls y;
-`);
+`
+		}));
 		var foo = program.evaluate(evalParser.parse(`(f(x))(y)`)) as Metaexpr,
 			baz = program.evaluate(evalParser.parse(`(f(x))(y)`)) as Metaexpr;
 		
-		expect(foo.equals(baz)).to.be.true;
+		expect(foo.equals(baz, null)).to.be.true;
 	});
 });
 
@@ -56,7 +59,8 @@ describe('Sealed macro', function () {
 	it('N(p) != (sealed p => N(p))', async function () {
 		var program = new Program(parser);
 		
-		await program.loadModule('duh', (_filename: string) => `
+		await program.loadModule('duh', (_filename: string) => ({
+			code: `
 type st;
 
 st p;
@@ -66,11 +70,12 @@ st N(st p);
 sealed st N2(st p) {
 	N(p)
 }
-`);
+`
+		}));
 		var foo = program.evaluate(evalParser.parse(`N(p)`)) as Metaexpr,
 			baz = program.evaluate(evalParser.parse(`N2(p)`)) as Metaexpr;
 		
-		expect(foo.equals(baz)).to.be.false;
+		expect(foo.equals(baz, new ExecutionContext())).to.be.false;
 	});
 });
 
@@ -78,7 +83,8 @@ describe('using', function () {
 	it('is a valid syntax', async function () {
 		var program = new Program(parser);
 		
-		await program.loadModule('duh', (_filename: string) => `
+		await program.loadModule('duh', (_filename: string) => ({
+			code: `
 type st;
 
 st p;
@@ -92,11 +98,12 @@ sealed st N2(st p) {
 schema foo(st p) using N2 {
 	N2(p)
 }
-`);
+`
+		}));
 
 		var foo = program.evaluate(evalParser.parse(`foo`)) as Schema,
-			bar = program.evaluate(evalParser.parse(`N2`)) as Metaexpr;
+			bar = program.evaluate(evalParser.parse(`N2`)) as ObjectFun;
 		
-		expect(foo.using[0]).to.equal(bar);
+		expect(foo.context.uses(bar)).to.be.true;
 	});
 });

@@ -1,3 +1,4 @@
+import ExecutionContext from "../ExecutionContext";
 import StackTrace from "../StackTrace";
 import Expr0 from "./Expr0";
 import Fun from "./Fun";
@@ -54,6 +55,10 @@ export default class ObjectFun extends Fun {
 			params: this.params,
 			expr: this.expr.expandMeta(andFuncalls)
 		}, this.trace);
+	}
+
+	public isCallable(context: ExecutionContext): boolean {
+		return this.expr && (!this.sealed || context.uses(this));
 	}
 
 	public toIndentedString(indent: number, root?: boolean): string {

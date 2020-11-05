@@ -1,3 +1,4 @@
+import ExecutionContext from '../ExecutionContext';
 import StackTrace from '../StackTrace';
 import $Variable from './$Variable';
 import Expr0 from './Expr0';
@@ -15,9 +16,9 @@ interface TeeArgumentType {
 
 export default class Tee extends Metaexpr {
 
-	public readonly left;
+	public readonly left: Metaexpr[];
 	public readonly def$s: $Variable[];
-	public readonly right;
+	public readonly right: Metaexpr;
 
 	constructor ({left, def$s, right}: TeeArgumentType, trace: StackTrace) {
 		if (!(left instanceof Array
@@ -79,7 +80,7 @@ export default class Tee extends Metaexpr {
 		return EqualsPriority.TWO;
 	}
 
-	protected equalsInternal(obj: Metaexpr): boolean {
+	protected equalsInternal(obj: Metaexpr, context: ExecutionContext): boolean {
 		if (!(obj instanceof Tee)) {
 			throw Error('Assertion failed');
 		}
@@ -89,10 +90,10 @@ export default class Tee extends Metaexpr {
 		}
 
 		for (var i = 0; i < this.left.length; i++) {
-			if (!this.left[i].equals(obj.left[i])) return false;
+			if (!this.left[i].equals(obj.left[i], context)) return false;
 		}
 
-		return this.right.equals(obj.right);
+		return this.right.equals(obj.right, context);
 	}
 
 	public toIndentedString(indent: number, root?: boolean): string {

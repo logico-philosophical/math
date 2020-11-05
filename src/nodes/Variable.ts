@@ -1,3 +1,4 @@
+import ExecutionContext from '../ExecutionContext';
 import StackTrace from '../StackTrace';
 import Expr0 from './Expr0';
 import Metaexpr, { EqualsPriority } from './Metaexpr';
@@ -51,7 +52,7 @@ export default class Variable extends Expr0 implements Nameable {
 		return EqualsPriority.ZERO;
 	}
 
-	protected equalsInternal(obj: Metaexpr): boolean {
+	protected equalsInternal(obj: Metaexpr, context: ExecutionContext): boolean {
 		return false;
 	}
 

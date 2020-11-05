@@ -436,8 +436,9 @@
 
 					$('#reload').value = 'reloading...';
 					program = new math.Program(parser);
-					await program.loadModule(filename, async filename => {
-						return await new Promise((resolve, reject) => {
+					await program.loadModule(filename, async filename => ({
+						fileUri: `../math/${filename}.math`,
+						code: await new Promise((resolve, reject) => {
 							var xhr = new XMLHttpRequest();
 							xhr.addEventListener('load', () => {
 								resolve(xhr.responseText);
@@ -447,8 +448,8 @@
 							});
 							xhr.open('GET', `../math/${filename}.math`);
 							xhr.send();
-						});
-					});
+						})
+					}));
 
 					var visitedFiles = [filename];
 

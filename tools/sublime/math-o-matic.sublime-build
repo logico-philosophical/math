@@ -1,6 +1,5 @@
 {
 	"selector": "source.math-o-matic",
 	"file_patterns": ["*.math"],
-	"cmd": "node --enable-source-maps ../tools/sublime/build.js $file_base_name",
-	"file_regex": "^Error at[^(]*\\(((?:.:)?.+?):(.+?):(.+?)\\)(?:: )?(.*)$"
+	"cmd": "node --enable-source-maps ../tools/sublime/build.js $file_base_name"
 }

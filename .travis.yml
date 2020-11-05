@@ -25,7 +25,7 @@ deploy:
   edge: true
   strategy: git
   cleanup: false
-  keep_history: false
+  keep_history: true
   token: $GITHUB_TOKEN
   target_branch: gh-pages
   on:

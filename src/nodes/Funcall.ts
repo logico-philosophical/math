@@ -1,3 +1,4 @@
+import ExecutionContext from '../ExecutionContext';
 import StackTrace from '../StackTrace';
 import $Variable from './$Variable';
 import Expr0 from './Expr0';
@@ -13,17 +14,15 @@ import Variable from './Variable';
 
 interface FuncallArgumentType {
 	fun: Metaexpr;
-	unseal: boolean;
 	args: Expr0[];
 }
 
 export default class Funcall extends Expr0 {
 	
 	public readonly fun: Metaexpr;
-	public readonly unseal: boolean;
 	public readonly args: Expr0[];
 
-	constructor ({fun, unseal, args}: FuncallArgumentType, trace: StackTrace) {
+	constructor ({fun, args}: FuncallArgumentType, trace: StackTrace) {
 		if (fun.type.isSimple) {
 			var name = isNameable(fun) ? fun.name : '<anonymous>';
 			throw Node.error(`${name} is not callable`, trace);
@@ -48,7 +47,6 @@ export default class Funcall extends Expr0 {
 		super(trace, null, null, resolvedType.to);
 		
 		this.fun = fun;
-		this.unseal = unseal;
 		this.args = args;
 	}
 
@@ -61,23 +59,21 @@ export default class Funcall extends Expr0 {
 	public substitute(map: Map<Variable, Expr0>): Metaexpr {
 		return new Funcall({
 			fun: this.fun.substitute(map),
-			unseal: this.unseal,
 			args: this.args.map(arg => arg.substitute(map))
 		}, this.trace);
 	}
 
 	public expandMeta(andFuncalls: boolean): Metaexpr {
 		var fun = this.fun.expandMeta(andFuncalls),
-			unseal = this.unseal,
 			args = this.args.map(arg => arg.expandMeta(andFuncalls));
 		
 		if (!(fun instanceof Fun) || !fun.expr || fun.name && !(fun instanceof Schema))
-			return new Funcall({fun, unseal, args}, this.trace);
+			return new Funcall({fun, args}, this.trace);
 
 		return fun.call(args).expandMeta(andFuncalls);
 	}
 
-	public isExpandable(): boolean {
+	public isExpandable(context: ExecutionContext): boolean {
 		var callee: Metaexpr = this.fun;
 
 		while (callee instanceof $Variable) {
@@ -85,16 +81,16 @@ export default class Funcall extends Expr0 {
 		}
 
 		if (callee instanceof Funcall) {
-			return callee.isExpandable();
+			return callee.isExpandable(context);
 		}
 
 		if (!(callee instanceof Fun)) return false;
 
-		return callee.expr && !(callee.sealed && !this.unseal);
+		return callee.isCallable(context);
 	}
 	
-	public expandOnce(): Metaexpr {
-		if (!this.isExpandable()) {
+	public expandOnce(context: ExecutionContext): Metaexpr {
+		if (!this.isExpandable(context)) {
 			throw Error('Cannot expand');
 		}
 
@@ -106,8 +102,7 @@ export default class Funcall extends Expr0 {
 
 		if (callee instanceof Funcall) {
 			return new Funcall({
-				fun: callee.expandOnce(),
-				unseal: this.unseal,
+				fun: callee.expandOnce(context),
 				args: this.args
 			}, this.trace);
 		}
@@ -123,55 +118,55 @@ export default class Funcall extends Expr0 {
 		return EqualsPriority.THREE;
 	}
 
-	protected equalsInternal(obj: Metaexpr): boolean {
+	protected equalsInternal(obj: Metaexpr, context: ExecutionContext): boolean {
 		if (!(obj instanceof Funcall)) {
-			if (!this.isExpandable()) return false;
+			if (!this.isExpandable(context)) return false;
 
-			return this.expandOnce().equals(obj);
+			return this.expandOnce(context).equals(obj, context);
 		}
 
-		if (this.fun.equals(obj.fun)) {
+		if (this.fun.equals(obj.fun, context)) {
 			for (var i = 0; i < this.args.length; i++) {
-				if (!this.args[i].equals(obj.args[i])) return false;
+				if (!this.args[i].equals(obj.args[i], context)) return false;
 			}
 
 			return true;
 		}
 
-		if (this.fun instanceof Funcall && this.fun.isExpandable()) {
-			return this.expandOnce().equals(obj);
+		if (this.fun instanceof Funcall && this.fun.isExpandable(context)) {
+			return this.expandOnce(context).equals(obj, context);
 		}
 
-		if (obj.fun instanceof Funcall && obj.fun.isExpandable()) {
-			return this.equals(obj.expandOnce());
+		if (obj.fun instanceof Funcall && obj.fun.isExpandable(context)) {
+			return this.equals(obj.expandOnce(context), context);
 		}
 
-		var thisIsExpandable = this.isExpandable(),
-			objIsExpandable = obj.isExpandable();
+		var thisIsExpandable = this.isExpandable(context),
+			objIsExpandable = obj.isExpandable(context);
 		
 		if (this.fun == obj.fun || !thisIsExpandable && !objIsExpandable) {
 			if (this.fun != obj.fun) return false;
 
 			if (!thisIsExpandable && !objIsExpandable) {
 				for (var i = 0; i < this.args.length; i++) {
-					if (!this.args[i].equals(obj.args[i])) return false;
+					if (!this.args[i].equals(obj.args[i], context)) return false;
 				}
 
 				return true;
 			}
 
 			if (this.args.every((_, i) => {
-				return this.args[i].equals(obj.args[i]);
+				return this.args[i].equals(obj.args[i], context);
 			})) {
 				return true;
 			}
 		}
 
 		if (thisIsExpandable) {
-			return this.expandOnce().equals(obj);
+			return this.expandOnce(context).equals(obj, context);
 		}
 
-		return this.equals(obj.expandOnce());
+		return this.equals(obj.expandOnce(context), context);
 	}
 
 	public toIndentedString(indent: number, root?: boolean): string {
