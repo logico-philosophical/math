@@ -439,13 +439,13 @@ export default class PI {
 			return PI.metaexpr(obj, scope, context);
 		});
 
-		var expected = obj.expected && PI.metaexpr(obj.expected, scope, context);
+		var as = obj.as && PI.metaexpr(obj.as, scope, context);
 
 		return new Reduction({
 			subject,
 			guesses,
 			leftargs,
-			expected
+			as
 		}, context, scope.trace);
 	}
 }

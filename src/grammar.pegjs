@@ -219,7 +219,7 @@ reduction =
 			subject,
 			guesses,
 			leftargs: leftargs[0].a,
-			expected: leftargs[0].b,
+			as: leftargs[0].b,
 			location: location()
 		};
 
@@ -229,7 +229,7 @@ reduction =
 				subject: ret,
 				guesses: null,
 				leftargs: leftargs[i].a,
-				expected: leftargs[i].b,
+				as: leftargs[i].b,
 				location: location()
 			};
 		}

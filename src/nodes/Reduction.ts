@@ -14,7 +14,7 @@ interface ReductionArgumentType {
 	subject: Metaexpr;
 	guesses: Expr0[];
 	leftargs: Metaexpr[];
-	expected: Metaexpr;
+	as: Metaexpr;
 }
 
 export default class Reduction extends Metaexpr {
@@ -24,7 +24,7 @@ export default class Reduction extends Metaexpr {
 	public readonly leftargs: Metaexpr[];
 	public readonly reduced: Metaexpr;
 
-	constructor ({subject, guesses, leftargs, expected}: ReductionArgumentType, context: ExecutionContext, trace: StackTrace) {
+	constructor ({subject, guesses, leftargs, as}: ReductionArgumentType, context: ExecutionContext, trace: StackTrace) {
 		if (guesses) {
 			let resolvedType = subject.type.resolve() as ObjectType | MetaType,
 				paramTypes = resolvedType.from,
@@ -54,12 +54,9 @@ export default class Reduction extends Metaexpr {
 	
 				return Reduction.query(
 					p.guess,
-					tee.left,
-					leftargs,
-					tee.right,
-					expected,
-					context,
-					trace
+					tee.left, leftargs,
+					tee.right, as,
+					context, trace
 				);
 			});
 	
@@ -118,20 +115,20 @@ ${leftargs[i].expandMeta(true)}
 			}
 		}
 
-		if (expected) {
-			if (!tee.right.equals(expected, context)) {
+		if (as) {
+			if (!tee.right.equals(as, context)) {
 				throw Node.error(`RHS failed to match:
 
 --- EXPECTED ---
 ${tee.right.expandMeta(true)}
 ----------------
 
---- RECEIVED ---
-${expected.expandMeta(true)}
+--- RECEIVED (from [as ...]) ---
+${as.expandMeta(true)}
 ----------------`, trace);
 			}
 
-			this.reduced = expected;
+			this.reduced = as;
 		} else {
 			this.reduced = tee.right;
 		}
@@ -161,77 +158,84 @@ ${expected.expandMeta(true)}
 		return this.reduced.equals(obj, context);
 	}
 
-	public static query(guess: string, left, leftargs, right, expected, context: ExecutionContext, trace: StackTrace) {
+	public static query(
+			guess: string,
+			left: Metaexpr[], leftargs: Metaexpr[],
+			right: Metaexpr, as: Metaexpr,
+			context: ExecutionContext, trace: StackTrace) {
 		if (guess.length == 0) throw Node.error('wut', trace);
 
-		var lef, ret;
+		var parameter: Metaexpr, argument: Metaexpr;
 
 		if (guess[0] == 'r') {
-			if (!expected) {
-				throw Node.error(`Cannot dereference @${guess}`, trace);
+			if (!as) {
+				throw Node.error(`Cannot dereference @${guess}: expected output is not given`, trace);
 			}
 
-			lef = right;
-			ret = expected;
+			parameter = right;
+			argument = as;
 		} else {
 			var n = Number(guess[0]);
+
 			if (!(1 <= n && n <= leftargs.length))
 				throw Node.error(`Cannot dereference @${guess}: antecedent index out of range`, trace);
 
-			lef = left[n - 1];
-			ret = leftargs[n - 1];
+			parameter = left[n - 1];
+			argument = leftargs[n - 1];
 		}
 
-		return (function recurse(guess: string, lef: Metaexpr, node: Metaexpr, ptr: number) {
-			node = node.expandMeta(true);
+		return (function recurse(
+				guess: string, ptr: number,
+				parameter: Metaexpr, argument: Metaexpr) {
+			argument = argument.expandMeta(true);
 			
-			if (guess.length <= ptr) return node;
+			if (guess.length <= ptr) return argument;
 
 			if (/[0-9]/.test(guess[ptr])) {
 				var n = Number(guess[ptr]);
 
-				if (lef instanceof Tee && node instanceof Tee) {
-					if (lef.left.length != node.left.length) {
+				if (parameter instanceof Tee && argument instanceof Tee) {
+					if (parameter.left.length != argument.left.length) {
 						throw Node.error(`Cannot dereference @${guess}: antecedent length mismatch`, trace);
 					}
 
-					if (!(1 <= n && n <= node.left.length)) {
+					if (!(1 <= n && n <= argument.left.length)) {
 						throw Node.error(`Cannot dereference @${guess}: antecedent index out of range`, trace);
 					}
 
-					return recurse(guess, lef.left[n - 1], node.left[n - 1], ptr + 1);
+					return recurse(guess, ptr + 1, parameter.left[n - 1], argument.left[n - 1]);
 				}
 
 				while (true) {
-					if (!(lef instanceof Funcall) || !(node instanceof Funcall)) {
+					if (!(parameter instanceof Funcall) || !(argument instanceof Funcall)) {
 						throw Node.error(`Cannot dereference @${guess}`, trace);
 					}
 
-					if (lef.fun.equals(node.fun, context)) {
+					if (parameter.fun.equals(argument.fun, context)) {
 						break;
 					}
 
-					if (!node.isExpandable(context)) {
+					if (!argument.isExpandable(context)) {
 						throw Node.error(`Cannot dereference @${guess}`, trace);
 					}
 
-					node = node.expandOnce(context);
+					argument = argument.expandOnce(context);
 				}
 
-				if (!node.args || !(1 <= n && n <= node.args.length))
+				if (!argument.args || !(1 <= n && n <= argument.args.length))
 					throw Node.error(`Cannot dereference @${guess}`, trace);
 
-				return recurse(guess, lef.args[n - 1], node.args[n - 1], ptr + 1);
+				return recurse(guess, ptr + 1, parameter.args[n - 1], argument.args[n - 1]);
 			} else if (guess[ptr] == 'r') {
-				if (lef instanceof Tee && node instanceof Tee) {
-					return recurse(guess, lef.right, node.right, ptr + 1);
+				if (parameter instanceof Tee && argument instanceof Tee) {
+					return recurse(guess, ptr + 1, parameter.right, argument.right);
 				}
 
 				throw Node.error(`Cannot dereference @${guess}`, trace);
 			}
 
 			throw Node.error(`Cannot dereference @${guess}`, trace);
-		})(guess, lef, ret, 1);
+		})(guess, 1, parameter, argument);
 	}
 
 	public toIndentedString(indent: number, root?: boolean): string {

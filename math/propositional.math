@@ -465,7 +465,7 @@ schema DIpqEpApq(st p: @11, st q: @12) {
 }
 
 schema Ipp(st p) {
-	cp[id(p)]
+	cp[p |- @h1]
 }
 
 schema Epp(st p) {

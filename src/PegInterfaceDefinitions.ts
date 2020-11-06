@@ -69,7 +69,7 @@ export interface ReductionObject {
 	subject: MetaexprObject;
 	guesses: Array<Expr0Object | null>;
 	leftargs: MetaexprObject[];
-	expected: MetaexprObject;
+	as: MetaexprObject;
 	location: LocationObject;
 }
 
