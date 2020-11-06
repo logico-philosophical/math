@@ -967,7 +967,7 @@ schema setminus_e2(cls x: @121, cls y: @122, cls z: @11) {
 "공집합."
 $<<\varnothing>>$
 cls emptyset() {
-	setbuilder((cls z) => { F })
+	setbuilder((cls z) => { F() })
 }
 
 "axiom of empty set."

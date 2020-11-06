@@ -5,14 +5,6 @@
 "문장 타입."
 base type st;
 
-"verum (T). 즉 임의의 항진명제를 표시한다."
-$\top$
-st T;
-
-"falsum (F). 즉 임의의 모순명제를 표시한다."
-$\bot$
-st F;
-
 "implies (TFTT)."
 $!<prec=598>#1<<\to>>#2$
 st I(st p, st q);
@@ -33,7 +25,19 @@ sealed st O(st p, st q) {
 
 "iff (TFFT)."
 $!<prec=599>#1<<\leftrightarrow>>#2$
-st E(st p, st q);
+sealed st E(st p, st q) {
+	A(I(p, q), I(q, p))
+}
+
+"verum (T). 즉 임의의 항진명제를 표시한다."
+$\top$
+st T;
+
+"falsum (F). 즉 임의의 모순명제를 표시한다."
+$<<\bot>>$
+sealed st F() {
+	N(T)
+}
 
 "함의 도입(implication introduction). conditional proof를 가능케 한다. 특정 힐베르트 체계(Hilbert system)에서는 메타정리(metatheorem)이며 이를 연역 정리(deduction theorem)라 부른다."
 axiomatic schema cp(st p: @11, st q: @1r) {
@@ -43,6 +47,12 @@ axiomatic schema cp(st p: @11, st q: @1r) {
 "modus ponens. 함의 소거(implication elimination) 또는 전건 긍정이라고도 한다."
 axiomatic schema mp(st p: @1, st q: @22) {
 	p, I(p, q) |- q
+}
+
+schema weaken(st p: @1, st q) {
+	p |- cp[
+		q |- p
+	]
 }
 
 "연언 도입(conjunction introduction)."
@@ -65,39 +75,53 @@ axiomatic schema Ae2(st p: @11, st q: @12) {
 	A(p, q) |- q
 }
 
-"부정 도입(negation introduction). 귀류법(reductio ad absurdum)이라고도 한다."
-axiomatic schema Ni(st p: @11) {
-	I(p, F) |- N(p)
+"[$\top] 도입."
+axiomatic schema Ti() {
+	T
 }
 
-schema Niu(st p: @11) {
-	(p |- F) |-
-		Ni[cp[@h1]]
+"[$\neg]에 관한 공리."
+axiomatic schema luk3(st p: @111, st q: @121) {
+	I(N(p), N(q)) |- I(q, p)
 }
 
-"부정 소거(negation elimination). 폭발률(ex falso quodlibet)이라고도 한다."
-axiomatic schema Ne(st p: @1, st q) {
-	p, N(p) |- q
-}
-
-schema Nec1(st p: @11, st q) {
-	N(p) |-
-		cp[p |- Ne(p, q)[@h2; @h1]]
+"이중부정 소거(double negation elimination)."
+schema NNe(st p: @111) {
+	N(N(p)) |-
+		mp[
+			Ti();
+			luk3[luk3[weaken(?, N(N(T)))[@h1]]]
+		]
 }
 
 "이중부정 도입(double negation introduction)."
 schema NNi(st p: @1) {
-	p |- Niu[N(p) |- Ne(p, F)[@h1; @h2]]
+	p |- mp[@h1; luk3[cp[N(N(N(p))) |- NNe[@h2]]]]
 }
 
-"이중부정 소거(double negation elimination)."
-axiomatic schema NNe(st p: @111) {
-	N(N(p)) |- p
+"부정 도입(negation introduction). 귀류법(reductio ad absurdum)이라고도 한다."
+schema Ni(st p: @11) using F {
+	I(p, F()) |-
+		mp[Ti(); luk3[cp[N(N(p)) |- mp[NNe[@h2]; @h1]]]]
+}
+
+schema Niu(st p: @11) {
+	(p |- F()) |-
+		Ni[cp[@h1]]
+}
+
+schema Nec1(st p: @11, st q) {
+	N(p) |- luk3[weaken(?, N(q))[@h1]]
+}
+
+"부정 소거(negation elimination). 폭발률(ex falso quodlibet)이라고도 한다."
+schema Ne(st p: @1, st q) {
+	p, N(p) |- mp[@h1; Nec1(?, q)[@h2]]
 }
 
 "[$\bot]을 도입한다. falsum introduction이라 불러도 좋을 것이다."
 schema Fi(st p: @1) {
-	Ne(p, F)
+	Ne(p, F())
 }
 
 schema Fi_c(st p: @11) {
@@ -106,7 +130,7 @@ schema Fi_c(st p: @11) {
 
 "[$\bot]을 소거한다. falsum elimination이라 불러도 좋을 것이다. Ne와 마찬가지로 폭발률을 나타낸다 할 수 있다."
 schema Fe(st p) {
-	F |- NNe[Niu[N(p) |- @h1]]
+	F() |- NNe[Niu[N(p) |- @h1]]
 }
 
 "후건 부정(modus tollens)."
@@ -147,8 +171,8 @@ schema Oeu(st p: @11, st q: @12, st r: @2r) {
 }
 
 "쌍조건문 도입(biconditional introduction)."
-axiomatic schema Ei(st p: @11, st q: @12) {
-	I(p, q), I(q, p) |- E(p, q)
+schema Ei(st p: @11, st q: @12) using E {
+	I(p, q), I(q, p) |- Ai[@h1; @h2][as E(p, q)]
 }
 
 "Ei의 다른 버전."
@@ -158,13 +182,13 @@ schema Eiu(st p: @11, st q: @21) {
 }
 
 "쌍조건문 소거(biconditional elimination) 1."
-axiomatic schema Ee1(st p: @11, st q: @12) {
-	E(p, q) |- I(p, q)
+schema Ee1(st p: @11, st q: @12) using E {
+	E(p, q) |- Ae1[@h1]
 }
 
 "쌍조건문 소거(biconditional elimination) 2."
-axiomatic schema Ee2(st p: @11, st q: @12) {
-	E(p, q) |- I(q, p)
+schema Ee2(st p: @11, st q: @12) using E {
+	E(p, q) |- Ae2[@h1]
 }
 
 schema cp2(st p: @11, st q: @12, st r: @1r) {
@@ -179,12 +203,6 @@ schema A_flip(st p: @11, st q: @12) {
 
 schema E_flip(st p: @11, st q: @12) {
 	E(p, q) |- Ei[Ee2[@h1]; Ee1[@h1]]
-}
-
-schema weaken(st p: @1, st q) {
-	p |- cp[
-		q |- p
-	]
 }
 
 schema mpE1(st p: @1, st q: @22) {
@@ -232,11 +250,6 @@ schema syllE4(st p: @11, st q: @21, st r: @31, st s: @32) {
 "sequent calculus의 I 규칙 같은 것. 표현형식을 바꾸는 데 쓰이고 있다."
 schema id(st p) {
 	p |- p
-}
-
-"[$\top] 도입."
-axiomatic schema Ti() {
-	T
 }
 
 "대우명제(contrapositive)를 유도한다."

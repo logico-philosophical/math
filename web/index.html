@@ -257,7 +257,11 @@
 								v.annotations.map(a => `<b class="red">${a}</b> `).join('')
 							}<b>${
 								v.axiomatic ? 'axiomatic ' : ''
-							}schema</b> ${k}</a>${`(${v.params.map(p => p.toSimpleString()).join(', ')})`}</p>`
+							}schema</b> ${k}</a>(${v.params.map(p => p.toSimpleString()).join(', ')})${
+								v.context.usingList.length
+									? ` <b>using</b> ${v.context.usingList.join(', ')}`
+									: ''
+							}</p>`
 							+ `<div class="math">${ktx(v.toTeXString(true, true))}</div>`
 
 							+ (
