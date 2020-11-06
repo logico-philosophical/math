@@ -45,7 +45,7 @@ export default abstract class Metaexpr extends Node {
 		return this.expandMetaCache = this.expandMetaInternal(andFuncalls);
 	}
 
-	public abstract expandMetaInternal(andFuncalls: boolean): Metaexpr;
+	protected abstract expandMetaInternal(andFuncalls: boolean): Metaexpr;
 
 	public equals(obj: Metaexpr, context: ExecutionContext): boolean {
 		if (this === obj) return true;

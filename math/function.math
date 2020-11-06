@@ -306,22 +306,6 @@ cls make_fun_pair([(cls, cls) -> cls] f, $A$ cls a, $B$ cls b) {
 	)
 }
 
-"단사함수(injective function). 일대일함수(one-to-one function)라고도 한다."
-$<<\mathop\mathrm{injection}>>\left(#1: #2 \to #3\right)$
-st is_injection(cls f, $A$ cls a, $B$ cls b) {
-	A(
-		is_fun(f, a, b),
-		Uin(a, (cls x) => {
-			Uin(a, (cls y) => {
-				I(
-					eq(funcall(f, x), funcall(f, y)),
-					eq(x, y)
-				)
-			})
-		})
-	)
-}
-
 "전사함수(surjective function). onto라고도 한다."
 $<<\mathop\mathrm{surjection}>>\left(#1: #2 \to #3\right)$
 st is_surjection(cls f, $A$ cls a, $B$ cls b) {
@@ -329,17 +313,39 @@ st is_surjection(cls f, $A$ cls a, $B$ cls b) {
 		is_fun(f, a, b),
 		Uin(b, (cls y) => {
 			Xin(a, (cls x) => {
-				eq(y, funcall(f, x))
+				in(pair(x, y), f)
 			})
 		})
 	)
 }
 
-"전단사함수(bijective function). 즉 전사함수이고 단사함수이면 된다."
+"단사함수(injective function). 일대일함수(one-to-one function)라고도 한다."
+$<<\mathop\mathrm{injection}>>\left(#1: #2 \to #3\right)$
+st is_injection(cls f, $A$ cls a, $B$ cls b) {
+	A(
+		is_fun(f, a, b),
+		Uin(b, (cls y) => {
+			Q((cls x) => {
+				in(pair(x, y), f)
+			})
+		})
+	)
+}
+
+"전단사함수(bijective function). [~(href=#def-is_fun)is_fun]의 정의와의 유사성에 주목하라."
 $<<\mathop\mathrm{bijection}>>\left(#1: #2 \to #3\right)$
 st is_bijection(cls f, $A$ cls a, $B$ cls b) {
 	A(
-		is_injection(f, a, b),
-		is_surjection(f, a, b)
+		is_fun(f, a, b),
+		Uin(b, (cls y) => {
+			A(
+				Xin(a, (cls x) => {
+					in(pair(x, y), f)
+				}),
+				Q((cls x) => {
+					in(pair(x, y), f)
+				})
+			)
+		})
 	)
 }

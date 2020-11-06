@@ -38,7 +38,7 @@ export default class $Variable extends Metaexpr implements Nameable {
 		return this.expr.substitute(map);
 	}
 
-	public expandMetaInternal(andFuncalls: boolean): Metaexpr {
+	protected expandMetaInternal(andFuncalls: boolean): Metaexpr {
 		return this.expr.expandMeta(andFuncalls);
 	}
 

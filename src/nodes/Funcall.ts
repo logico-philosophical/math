@@ -63,7 +63,7 @@ export default class Funcall extends Expr0 {
 		}, this.trace);
 	}
 
-	public expandMetaInternal(andFuncalls: boolean): Metaexpr {
+	protected expandMetaInternal(andFuncalls: boolean): Metaexpr {
 		var fun = this.fun.expandMeta(andFuncalls),
 			args = this.args.map(arg => arg.expandMeta(andFuncalls));
 		

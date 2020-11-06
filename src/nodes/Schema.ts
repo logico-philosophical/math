@@ -56,7 +56,7 @@ export default class Schema extends Fun {
 		}, this.trace);
 	}
 
-	public expandMetaInternal(andFuncalls: boolean): Metaexpr {
+	protected expandMetaInternal(andFuncalls: boolean): Metaexpr {
 		if (!this.expr) return this;
 		if (this.type instanceof ObjectType && this.name) return this;
 

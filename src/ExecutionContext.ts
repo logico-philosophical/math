@@ -8,7 +8,7 @@ export default class ExecutionContext {
 		this.usingList = usingList || [];
 	}
 
-	public uses(fun: ObjectFun) {
+	public canUse(fun: ObjectFun) {
 		return this.usingList.includes(fun);
 	}
 }

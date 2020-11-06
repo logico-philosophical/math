@@ -44,7 +44,7 @@ export default class ObjectFun extends Fun {
 		}, this.trace);
 	}
 
-	public expandMetaInternal(andFuncalls: boolean): Metaexpr {
+	protected expandMetaInternal(andFuncalls: boolean): Metaexpr {
 		if (!this.expr) return this;
 		if (this.type instanceof ObjectType && this.name) return this;
 
@@ -58,7 +58,7 @@ export default class ObjectFun extends Fun {
 	}
 
 	public isCallable(context: ExecutionContext): boolean {
-		return this.expr && (!this.sealed || context.uses(this));
+		return this.expr && (!this.sealed || context.canUse(this));
 	}
 
 	public toIndentedString(indent: number, root?: boolean): string {
