@@ -349,3 +349,11 @@ st is_bijection(cls f, $A$ cls a, $B$ cls b) {
 		})
 	)
 }
+
+$<<\mathop\mathrm{invertible\ fun.}>>\left(#1: #2 \to #3\right)$
+st is_invertible_fun(cls f, $A$ cls a, $B$ cls b) {
+	A(
+		is_fun(f, a, b),
+		is_fun(rel_inverse(f), b, a)
+	)
+}

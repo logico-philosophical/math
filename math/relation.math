@@ -31,6 +31,11 @@ schema pair_set_e2(cls x: @111, cls y: @112) {
 		doubleton_set_e2[doubleton_set_e2[@h1]]
 }
 
+schema pair_set_flip(cls x: @111, cls y: @112) {
+	set(pair(x, y)) |-
+		pair_set_i[pair_set_e2[@h1]; pair_set_e1[@h1]]
+}
+
 schema pair_eq_i(cls x: @11, cls y: @21, cls u: @12, cls v: @22) {
 	eq(x, u), eq(y, v) |-
 		doubleton_eq_i[
@@ -173,6 +178,40 @@ cls setbuilder_pair(pr2 f) {
 			)
 		})
 	})
+}
+
+schema setbuilder_pair_i(pr2 f: @r21, cls a: @111, cls b: @112) {
+	set(pair(a, b)), f(a, b) |-
+		setbuilder_i[
+			@h1;
+			Xi2((cls c, cls d) => {
+				A(
+					eq(pair(a, b), pair(c, d)),
+					f(c, d)
+				)
+			}, a, b)[Ai[eq_reflexive(pair(a, b)); @h2]]
+		][as in(pair(a, b), setbuilder_pair(f))]
+}
+
+schema setbuilder_pair_e(pr2 f: @121, cls a: @111, cls b: @112) {
+	in(pair(a, b), setbuilder_pair(f)) |-
+		$set_a_b = set_i[@h1];
+		mpX2_X2e_p(?, f(a, b))[
+			setbuilder_e[@h1]
+			[as X2((cls c, cls d) => {
+				A(
+					eq(pair(a, b), pair(c, d)),
+					f(c, d)
+				)
+			})];
+			Ui2[(cls c, cls d) => { cp2[eq(pair(a, b), pair(c, d)), f(c, d) |-
+				ax_indiscernible2_m2(f, ?, ?, ?, ?)[
+					pair_eq_e1_v1[$set_a_b; @h2];
+					pair_eq_e2_v1[$set_a_b; @h2];
+					@h3
+				]
+			] }]
+		]
 }
 
 "순서쌍을 위한 setbuilder2. 즉 [$\{f(a, b): g(a, b)\}]이다."
@@ -327,10 +366,45 @@ schema rel_im_set_eq_i($R$ cls r, $A$ cls a: @11, $B$ cls b: @12) {
 
 "이항관계의 역(inverse)."
 $!<prec=190>{#1}^{<<-1>>}$
-cls rel_inverse(cls x) {
+sealed cls rel_inverse(cls x) {
 	setbuilder_pair((cls a, cls b) => {
 		in(pair(b, a), x)
 	})
+}
+
+schema rel_inverse_in_i(cls x: @12, cls a: @111, cls b: @112) using rel_inverse {
+	in(pair(a, b), x) |-
+		setbuilder_pair_i[
+			pair_set_flip[set_i[@h1]];
+			@h1
+		][as in(pair(b, a), rel_inverse(x))]
+}
+
+schema rel_inverse_in_e(cls x: @121, cls a: @111, cls b: @112) using rel_inverse {
+	in(pair(a, b), rel_inverse(x)) |-
+		setbuilder_pair_e[@h1]
+}
+
+schema rel_inverse_in(cls x, cls a, cls b) {
+	Ei[
+		cp[rel_inverse_in_i(x, a, b)];
+		cp[rel_inverse_in_e(x, b, a)]
+	]
+}
+
+schema cartesian_inverse_($A$ cls a, $B$ cls b, cls x, cls y) {
+	$foo = ($A$ cls a, $B$ cls b, cls x, cls y) => {
+		cp[in(pair(x, y), cartesian(a, b)) |-
+			cartesian_in_i[
+				Ae2[cartesian_in_e[@h1]];
+				Ae1[cartesian_in_e[@h1]]
+			]]
+	};
+	
+	syllE[
+		Ei[$foo(a, b, x, y); $foo(b, a, y, x)];
+		rel_inverse_in(cartesian(b, a), y, x)
+	]
 }
 
 "이항관계의 합성(composition)."

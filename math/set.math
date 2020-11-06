@@ -65,6 +65,28 @@ schema ax_indiscernible_m2(pr f, cls x: @11, cls y: @12) {
 		mpE2[@h2; ax_indiscernible_m(f, ?, ?)[@h1]]
 }
 
+schema ax_indiscernible2_m(pr2 f, cls x: @11, cls y: @21, cls u: @12, cls v: @22) {
+	eq(x, u), eq(y, v) |-
+		syllE[
+			ax_indiscernible_m((cls a) => {
+				f(a, y)
+			}, ?, ?)[@h1];
+			ax_indiscernible_m((cls b) => {
+				f(u, b)
+			}, ?, ?)[@h2]
+		]
+}
+
+schema ax_indiscernible2_m1(pr2 f, cls x: @11, cls y: @21, cls u: @12, cls v: @22) {
+	eq(x, u), eq(y, v), f(x, y) |-
+		mpE1[@h3; ax_indiscernible2_m(f, ?, ?, ?, ?)[@h1; @h2]]
+}
+
+schema ax_indiscernible2_m2(pr2 f, cls x: @11, cls y: @21, cls u: @12, cls v: @22) {
+	eq(x, u), eq(y, v), f(u, v) |-
+		mpE2[@h3; ax_indiscernible2_m(f, ?, ?, ?, ?)[@h1; @h2]]
+}
+
 "eq의 이전 정의."
 schema eq_def(cls x: @11, cls y: @12) {
 	eq(x, y) |-

@@ -322,7 +322,7 @@ schema syllUE(pr f: @111, pr g: @112, pr h: @212) {
 }
 
 "존재 양화 도입(existential introduction). Ue와 합치면 [$\forall f \vdash \exists f]가 될 것도 같으나 어떤 class x가 있어야 한다."
-schema Xi(pr f, cls x: @12) {
+schema Xi(pr f: @r1, cls x: @12) {
 	f(x) |-
 		contrapose_u[Ue(Nf(f), x)][NNi[@h1]]
 		[as X(f)]
