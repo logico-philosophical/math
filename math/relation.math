@@ -392,19 +392,17 @@ schema rel_inverse_in(cls x, cls a, cls b) {
 	]
 }
 
-schema cartesian_inverse_($A$ cls a, $B$ cls b, cls x, cls y) {
-	$foo = ($A$ cls a, $B$ cls b, cls x, cls y) => {
-		cp[in(pair(x, y), cartesian(a, b)) |-
-			cartesian_in_i[
-				Ae2[cartesian_in_e[@h1]];
-				Ae1[cartesian_in_e[@h1]]
-			]]
-	};
-	
-	syllE[
-		Ei[$foo(a, b, x, y); $foo(b, a, y, x)];
-		rel_inverse_in(cartesian(b, a), y, x)
-	]
+schema rel_inverse_is_rel($R$ cls r: @11, $A$ cls a: @12, $B$ cls b: @13) using rel_inverse {
+	is_rel_over_sets(r, a, b) |-
+		Ui[(cls z) => { cp[in(z, rel_inverse(r)) |-
+			mpX2_X2e_p(?, in(z, cartesian(b, a)))[
+				setbuilder_e[@h2];
+				Ui2[(cls x, cls y) => { cp2[eq(z, pair(x, y)), in(pair(y, x), r) |-
+					$foo = cartesian_in_e[in_subseteq[@h4; @h1]];
+					in_eq_left_2[cartesian_in_i[Ae2[$foo]; Ae1[$foo]]; @h3]
+				] }]
+			]
+		] }][as is_rel_over_sets(rel_inverse(r), b, a)]
 }
 
 "이항관계의 합성(composition)."
@@ -548,8 +546,8 @@ st is_strict_order($R$ cls r, $A$ cls a) {
 "이항관계를 위한 U.
 
 [$R]이 이항관계일 때 임의의 [$.(a, b)\in R]에 대해 [$f(a, b)]이면, 임의의 [$x\in R]에 대해 [$fx]이다."
-schema rel_U(pr f, $R$ cls r: @11, $A$ cls a: @12, $B$ cls b: @13) {
-	is_rel_over_sets(r, a, b), U2((cls x, cls y) => {
+schema rel_U(pr f, $R$ cls r: @11) {
+	is_rel(r), U2((cls x, cls y) => {
 		I(
 			in(pair(x, y), r),
 			f(pair(x, y))
@@ -559,14 +557,38 @@ schema rel_U(pr f, $R$ cls r: @11, $A$ cls a: @12, $B$ cls b: @13) {
 			mpX2_X2e_p(?, f(z))[
 				X2Ae1(
 					(cls x, cls y) => { eq(z, pair(x, y)) },
-					(cls x, cls y) => { A(in(x, a), in(y, b)) }
+					(cls x, cls y) => { A(in(x, universe()), in(y, universe())) }
 				)[setbuilder_e[in_subseteq[@h3; @h1]]];
 				Ui2[(cls x, cls y) => {
 					cp[eq(z, pair(x, y)) |-
-						ax_indiscernible_m1(f, ?, ?)[eq_symmetric[@h4]; mp[in_eq_left_1[@h3; @h4]; Ue2(?, x, y)[@h2]]]]
+						ax_indiscernible_m2(f, ?, ?)[@h4; mp[in_eq_left_1[@h3; @h4]; Ue2(?, x, y)[@h2]]]]
 				}]
 			]
 		]}][as Uin(r, f)]
+}
+
+schema rel_eq_i($R_1$ cls r1: @11, $R_2$ cls r2: @21) {
+	is_rel(r1), is_rel(r2), U2((cls x, cls y) => {
+		E(in(pair(x, y), r1), in(pair(x, y), r2))
+	}) |-
+		$Ee1 = Ee1U2(
+			(cls x, cls y) => in(pair(x, y), r1),
+			(cls x, cls y) => in(pair(x, y), r2)
+		)[@h3][as U2((cls x, cls y) => {
+			I(in(pair(x, y), r1), in(pair(x, y), r2))
+		})];
+		
+		$Ee2 = Ee2U2(
+			(cls x, cls y) => in(pair(x, y), r1),
+			(cls x, cls y) => in(pair(x, y), r2)
+		)[@h3][as U2((cls x, cls y) => {
+			I(in(pair(x, y), r2), in(pair(x, y), r1))
+		})];
+		
+		subseteq_to_eq[
+			rel_U(is_in(r2), ?)[@h1; $Ee1][as subseteq(r1, r2)];
+			rel_U(is_in(r1), ?)[@h2; $Ee2][as subseteq(r2, r1)]
+		]
 }
 
 "곱집합은 이항관계이다."
@@ -591,6 +613,25 @@ schema cartesian_is_rel(cls x, cls y) {
 		][as in(z, cartesian(universe(), universe()))]
 	] }]
 	[as is_rel(cartesian(x, y))]
+}
+
+schema cartesian_inverse($A$ cls a, $B$ cls b) {
+	$foo = ($A$ cls a, $B$ cls b, cls x, cls y) => {
+		cp[in(pair(x, y), cartesian(a, b)) |-
+			cartesian_in_i[
+				Ae2[cartesian_in_e[@h1]];
+				Ae1[cartesian_in_e[@h1]]
+			]]
+	};
+	
+	eq_symmetric[rel_eq_i[
+		cartesian_is_rel(b, a);
+		rel_inverse_is_rel[cartesian_is_rel(a, b)][as is_rel(rel_inverse(cartesian(a, b)))];
+		Ui2[(cls x, cls y) => syllE[
+			Ei[$foo(b, a, x, y); $foo(a, b, y, x)];
+			rel_inverse_in(cartesian(a, b), y, x)
+		]]
+	]]
 }
 
 schema rel_subset_is_rel(cls x: @11, cls y: @12) {
@@ -643,7 +684,7 @@ schema cartesian_is_set_21($A$ cls a: @121, $B$ cls b: @122, cls x: @111, cls y:
 }
 
 schema cartesian_is_set_2($A$ cls a, $B$ cls b) {
-	rel_U(is_in(power(power(cup(a, b)))), cartesian(a, b), ?, ?)[
+	rel_U(is_in(power(power(cup(a, b)))), cartesian(a, b))[
 		cartesian_is_rel(a, b);
 		Ui2[(cls x, cls y) => {
 			cp[cartesian_is_set_21(a, b, x, y)]

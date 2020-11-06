@@ -191,7 +191,7 @@ schema fun_eq_i(cls f: @11, cls g: @21, $A$ cls a: @12, $B$ cls b: @13) {
 					funcall_e[@h2; $x_in_a; eq_transitive[funcall_i[@h1; @h4]; mp[$x_in_a; Ue(?, x)[@h3]]]]]
 			}];
 
-			rel_U(is_in(g), ?, ?, ?)[fun_is_rel[@h1]; $foo]
+			rel_U(is_in(g), ?)[fun_is_rel[@h1]; $foo]
 			[as subseteq(f, g)]
 	};
 	

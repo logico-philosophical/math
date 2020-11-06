@@ -297,6 +297,28 @@ schema Ee2U(pr f: @111, pr g: @112) {
 		}][as U(If(g, f))]
 }
 
+"Ee1의 U2형."
+schema Ee1U2(pr2 f: @111, pr2 g: @112) {
+	U2(Ef2(f, g)) |- Ui[(cls x) => {
+		Ee1U(
+			(cls y) => f(x, y),
+			(cls y) => g(x, y)
+		)[Ue(?, x)[@h1]]
+	}]
+	[as U2(If2(f, g))]
+}
+
+"Ee2의 U2형."
+schema Ee2U2(pr2 f: @111, pr2 g: @112) {
+	U2(Ef2(f, g)) |- Ui[(cls x) => {
+		Ee2U(
+			(cls y) => f(x, y),
+			(cls y) => g(x, y)
+		)[Ue(?, x)[@h1]]
+	}]
+	[as U2(If2(g, f))]
+}
+
 schema UEe(pr f: @111, pr g: @112) {
 	U(Ef(f, g)) |-
 		Ei[

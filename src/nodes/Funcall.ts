@@ -125,7 +125,7 @@ export default class Funcall extends Expr0 {
 			return this.expandOnce(context).equals(obj, context);
 		}
 
-		if (this.fun.equals(obj.fun, context)) {
+		if (this.fun == obj.fun || this.fun.equals(obj.fun, context)) {
 			for (var i = 0; i < this.args.length; i++) {
 				if (!this.args[i].equals(obj.args[i], context)) return false;
 			}

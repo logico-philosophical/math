@@ -111,7 +111,7 @@ axiomatic schema ax_extensional() {
 	})
 }
 
-schema ax_extensional_m(cls x, cls y) {
+schema eq_i(cls x, cls y) {
 	U((cls z) => {E(in(z, x), in(z, y))}) |-
 		mp[@h1; Ue2(?, x, y)[ax_extensional()]]
 }
@@ -189,7 +189,7 @@ schema in_eq_right_2(cls x: @21, cls y: @22, cls z: @11) {
 }
 
 schema eq_reflexive(cls x) {
-	ax_extensional_m(x, x)[
+	eq_i(x, x)[
 		Ui[(cls z) => {
 			Epp(in(z, x))
 		}]
@@ -198,7 +198,7 @@ schema eq_reflexive(cls x) {
 
 schema eq_symmetric(cls x: @11, cls y: @12) {
 	eq(x, y) |-
-		ax_extensional_m(y, x)[
+		eq_i(y, x)[
 			UE_flip(is_in(x), is_in(y))[Ae1[eq_def[@h1]]]
 		]
 }
@@ -211,7 +211,7 @@ schema Neq_symmetric(cls x: @11, cls y: @12) {
 
 schema eq_transitive(cls x: @11, cls y: @12, cls z: @22) {
 	eq(x, y), eq(y, z) |-
-		ax_extensional_m(x, z)[
+		eq_i(x, z)[
 			syllUE(
 				is_in(x), is_in(y), is_in(z)
 			)[Ae1[eq_def[@h1]]; Ae1[eq_def[@h2]]]
@@ -237,7 +237,7 @@ schema eq_transitive_Er(cls x: @11, cls y: @12, cls z) {
 schema eq_simple(cls x, cls y) {
 	Eiu[
 		eq_Ae1(x, y);
-		ax_extensional_m(x, y)
+		eq_i(x, y)
 	]
 }
 
@@ -254,7 +254,7 @@ schema eq_to_subseteq_2(cls x: @11, cls y: @12) {
 
 schema subseteq_to_eq(cls x: @11, cls y: @12) {
 	subseteq(x, y), subseteq(y, x) |-
-		ax_extensional_m(x, y)[EiU(is_in(x), is_in(y))[@h1; @h2]]
+		eq_i(x, y)[EiU(is_in(x), is_in(y))[@h1; @h2]]
 }
 
 schema subseteq_subseteq(cls x: @11, cls y: @12, cls z: @22) {
@@ -541,7 +541,7 @@ schema setbuilder_subseteq_e(pr f: @211, pr g: @221, cls z: @11) {
 
 schema setbuilder_eq_i(pr f: @111, pr g: @112) {
 	U(Ef(f, g)) |-
-		ax_extensional_m(setbuilder(f), setbuilder(g))[
+		eq_i(setbuilder(f), setbuilder(g))[
 			EiU(is_in(setbuilder(f)), is_in(setbuilder(g)))[
 				setbuilder_subseteq_i[Ee1U[@h1]]; setbuilder_subseteq_i[Ee2U[@h1]]
 			]
@@ -709,7 +709,7 @@ schema instantiate_eq_i(pr f: @11, cls x) using instantiate {
 			Ei[$c1; $c2]
 		}];
 		
-		ax_extensional_m(x, instantiate(f))[$foo]
+		eq_i(x, instantiate(f))[$foo]
 }
 
 schema instantiate_def(pr f: @11) {
@@ -765,7 +765,7 @@ schema cap_commutative_1(cls x, cls y, cls z) {
 }
 
 schema cap_commutative_2(cls x, cls y) {
-	ax_extensional_m(
+	eq_i(
 		cap(x, y),
 		cap(y, x)
 	)[Ui((cls z) => {
@@ -837,7 +837,7 @@ schema cup_eq_i(cls x: @11, cls y: @12, cls u: @21, cls v: @22) {
 	};
 	
 	eq(x, y), eq(u, v) |-
-		ax_extensional_m(cup(x, u), cup(y, v))[Ui[(cls z) => {
+		eq_i(cup(x, u), cup(y, v))[Ui[(cls z) => {
 			Ei[$foo(x, y, u, v, z)[@h1; @h2]; $foo(y, x, v, u, z)[eq_symmetric[@h1]; eq_symmetric[@h2]]]
 		}]]
 }
@@ -940,7 +940,7 @@ schema ax_bigcup_m($A$ cls a) {
 
 schema subset_cap_is_subset(cls x: @11, cls y: @12) {
 	subseteq(x, y) |-
-		ax_extensional_m(x, cap(x, y))[
+		eq_i(x, cap(x, y))[
 			Ui[(cls z) => {
 				syllE[
 					DIpqEpApq[Ue(?, z)[@h1]];
@@ -1307,7 +1307,7 @@ schema bigcup_singleton_to_element($A$ cls a: @11, cls x: @21, cls z: @31) {
 
 schema bigcup_singleton_is_element($A$ cls a: @11, cls x: @21) {
 	is_singleton(a), in(x, a) |-
-		ax_extensional_m(bigcup(a), x)[Ui[(cls z) => { Ei[
+		eq_i(bigcup(a), x)[Ui[(cls z) => { Ei[
 			cp[in(z, bigcup(a)) |- bigcup_singleton_to_element[@h1; @h2; @h3]];
 			cp[in(z, x) |- bigcup_i[@h2; @h3]]
 		] }]]
@@ -1335,7 +1335,7 @@ schema self_to_bigcup_singleton(cls x: @11, cls z: @21) {
 
 schema bigcup_singleton_is_self(cls x: @11) {
 	set(x) |-
-		ax_extensional_m(bigcup(singleton(x)), x)[Ui[(cls z) => {
+		eq_i(bigcup(singleton(x)), x)[Ui[(cls z) => {
 			Eiu[
 				in(z, bigcup(singleton(x))) |- bigcup_singleton_to_self(x, z)[@h1; @h2];
 				in(z, x) |- self_to_bigcup_singleton[@h1; @h2]
@@ -1406,7 +1406,7 @@ schema cup_to_bigcup_doubleton(cls x: @11, cls y: @21, cls w: @31) {
 
 schema bigcup_doubleton_is_cup(cls x: @11, cls y: @21) {
 	set(x), set(y) |-
-		ax_extensional_m(
+		eq_i(
 			bigcup(doubleton(x, y)),
 			cup(x, y)
 		)[
