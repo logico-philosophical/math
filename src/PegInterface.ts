@@ -115,7 +115,7 @@ export default class PI {
 			}
 
 			if (!scope.hasVariable(obj.name))
-				throw scope.error(`Undefined identifier ${obj.name}`);
+				throw scope.error(`Undefined identifier ${varObjToString(obj)}`);
 			return scope.getVariable(obj.name);
 		}
 
@@ -278,16 +278,16 @@ export default class PI {
 					return scope.hypotheses[hypnum];
 				}
 
-				throw scope.error(`Unknown selector query @${obj.name}`);
+				throw scope.error(`Unknown selector query ${varObjToString(obj)}`);
 			case '$':
 				if (!scope.has$(obj.name)) {
-					throw scope.error(`${obj.name} is not defined`);
+					throw scope.error(`${varObjToString(obj)} is not defined`);
 				}
 
 				return scope.get$(obj.name);
 			case 'normal':
 				if (!scope.hasSchema(obj.name))
-					throw scope.error(`Schema ${obj.name} is not defined`);
+					throw scope.error(`Schema ${varObjToString(obj)} is not defined`);
 
 				return scope.getSchema(obj.name);
 			default:

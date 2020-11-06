@@ -13,8 +13,8 @@ import Scope from "./Scope";
 export default class ProofExplorer {
 	public static get(scope: Scope, name: string, ktx) {
 		var DIAMOND = '&#x25C7;',
-			DOWN = '&#x25BC;',
-			UP = '&#x25B2;';
+			DOWN = '&#x25BC;';
+		// var UP = '&#x25B2;';
 		
 		if (!scope.hasSchema(name)) {
 			throw Error('wut');

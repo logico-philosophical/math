@@ -2,7 +2,6 @@ import PegInterface from './PegInterface';
 import { EvaluableObject, LineObject } from './PegInterfaceDefinitions';
 import ProofExplorer from './ProofExplorer';
 import Scope from './Scope';
-import StackTrace from './StackTrace';
 
 interface LoaderReturnType {
 	fileUri?: string;
