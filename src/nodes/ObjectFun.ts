@@ -44,7 +44,7 @@ export default class ObjectFun extends Fun {
 		}, this.trace);
 	}
 
-	public expandMeta(andFuncalls: boolean): Metaexpr {
+	public expandMetaInternal(andFuncalls: boolean): Metaexpr {
 		if (!this.expr) return this;
 		if (this.type instanceof ObjectType && this.name) return this;
 

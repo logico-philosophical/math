@@ -146,7 +146,7 @@ ${as.expandMeta(true)}
 		return this.reduced.substitute(map);
 	}
 
-	public expandMeta(andFuncalls: boolean): Metaexpr {
+	public expandMetaInternal(andFuncalls: boolean): Metaexpr {
 		return this.reduced.expandMeta(andFuncalls);
 	}
 

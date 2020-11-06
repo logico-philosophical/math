@@ -44,7 +44,7 @@ export default class Variable extends Expr0 implements Nameable {
 		return map.get(this) || this;
 	}
 
-	public expandMeta(andFuncalls: boolean): Metaexpr {
+	public expandMetaInternal(andFuncalls: boolean): Metaexpr {
 		return this;
 	}
 

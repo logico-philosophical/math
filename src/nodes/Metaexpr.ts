@@ -22,7 +22,9 @@ export enum EqualsPriority {
 }
 
 export default abstract class Metaexpr extends Node {
+	
 	public readonly type: Type;
+	private expandMetaCache: Metaexpr;
 
 	constructor(trace: StackTrace, doc: string, tex: string, type: Type) {
 		super(trace, doc, tex);
@@ -38,7 +40,12 @@ export default abstract class Metaexpr extends Node {
 	 * 
 	 * @param andFuncalls 이름 없는 Funcall도 푼다.
 	 */
-	public abstract expandMeta(andFuncalls: boolean): Metaexpr;
+	public expandMeta(andFuncalls: boolean): Metaexpr {
+		if (this.expandMetaCache) return this.expandMetaCache;
+		return this.expandMetaCache = this.expandMetaInternal(andFuncalls);
+	}
+
+	public abstract expandMetaInternal(andFuncalls: boolean): Metaexpr;
 
 	public equals(obj: Metaexpr, context: ExecutionContext): boolean {
 		if (this === obj) return true;

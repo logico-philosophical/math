@@ -69,7 +69,7 @@ export default class Tee extends Metaexpr {
 		}, this.trace);
 	}
 
-	public expandMeta(andFuncalls: boolean): Metaexpr {
+	public expandMetaInternal(andFuncalls: boolean): Metaexpr {
 		var left = this.left.map(lef => lef.expandMeta(andFuncalls));
 		var right = this.right.expandMeta(andFuncalls);
 
