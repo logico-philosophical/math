@@ -47,14 +47,19 @@
 	<body>
 		<h1>math-o-matic</h1>
 		<a href="https://github.com/logico-philosophical/math-o-matic" style="text-decoration: none;"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDE2IDE2IiB2ZXJzaW9uPSIxLjEiPjxwYXRoIGZpbGwtcnVsZT0iZXZlbm9kZCIgZD0iTTggMEMzLjU4IDAgMCAzLjU4IDAgOGMwIDMuNTQgMi4yOSA2LjUzIDUuNDcgNy41OS40LjA3LjU1LS4xNy41NS0uMzggMC0uMTktLjAxLS44Mi0uMDEtMS40OS0yLjAxLjM3LTIuNTMtLjQ5LTIuNjktLjk0LS4wOS0uMjMtLjQ4LS45NC0uODItMS4xMy0uMjgtLjE1LS42OC0uNTItLjAxLS41My42My0uMDEgMS4wOC41OCAxLjIzLjgyLjcyIDEuMjEgMS44Ny44NyAyLjMzLjY2LjA3LS41Mi4yOC0uODcuNTEtMS4wNy0xLjc4LS4yLTMuNjQtLjg5LTMuNjQtMy45NSAwLS44Ny4zMS0xLjU5LjgyLTIuMTUtLjA4LS4yLS4zNi0xLjAyLjA4LTIuMTIgMCAwIC42Ny0uMjEgMi4yLjgyLjY0LS4xOCAxLjMyLS4yNyAyLS4yNy42OCAwIDEuMzYuMDkgMiAuMjcgMS41My0xLjA0IDIuMi0uODIgMi4yLS44Mi40NCAxLjEuMTYgMS45Mi4wOCAyLjEyLjUxLjU2LjgyIDEuMjcuODIgMi4xNSAwIDMuMDctMS44NyAzLjc1LTMuNjUgMy45NS4yOS4yNS41NC43My41NCAxLjQ4IDAgMS4wNy0uMDEgMS45My0uMDEgMi4yIDAgLjIxLjE1LjQ2LjU1LjM4QTguMDEzIDguMDEzIDAgMDAxNiA4YzAtNC40Mi0zLjU4LTgtOC04eiI+PC9wYXRoPjwvc3ZnPg==" style="vertical-align: middle; margin-right:.5em">GitHub repository</a> &nbsp; <a href="../docs/build/index.html" style="text-decoration: none;"><img style="vertical-align: middle;margin-right:.5em;" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjNjY2Ij48cGF0aCBkPSJNMTQgMkg2Yy0xLjEgMC0xLjk5LjktMS45OSAyTDQgMjBjMCAxLjEuODkgMiAxLjk5IDJIMThjMS4xIDAgMi0uOSAyLTJWOGwtNi02em0yIDE2SDh2LTJoOHYyem0wLTRIOHYtMmg4djJ6bS0zLTVWMy41TDE4LjUgOUgxM3oiLz48L3N2Zz4=">documentation</a>
+		<blockquote id="bq-note-file-scheme" style="display: none;">
+			<b>참고.</b> 이 페이지는 로컬에서 <code>file://</code> 스킴으로 로드된 듯한데, 이때 CORS 정책에 의해 페이지가 작동하지 않을 수 있습니다. 이때 다음과 같은 해결책이 있습니다.</p>
+			<ul>
+				<li> 로컬 서버를 통해 접속하기. 이는 npm의 <a href="https://www.npmjs.com/package/http-server">http-server</a> 패키지를 사용하여 할 수 있습니다. 프로젝트 최상단에서 <code>npx http-server</code>를 실행한 후 터미널에 출력되는 주소로 접속하세요.
+				<li> Chrome의 경우 <code>--allow-file-access-from-files</code> 플래그를 통해 로컬 파일 로드를 가능하게 할 수 있습니다. <a href="https://stackoverflow.com/a/18137280">StackOverflow 링크</a>
+			</ul>
+			<script>
+				if (location.protocol == 'file:')
+					$('#bq-note-file-scheme').style.display = 'block';
+			</script>
+		</blockquote>
 		<h2>개요</h2>
 		이 페이지는 math-o-matic으로 만들고 있는 공리계를 보여 줍니다. 페이지 하단에 있는 버튼 중 하나를 눌러서 공리계를 로드하세요. 장치의 계산 성능에 따라 수 초 가량의 시간이 걸릴 수 있습니다.
-		<h2>로컬에서 실행하는 방법</h2>
-		<p>로컬에서 file 스킴으로 페이지를 불러왔을 경우 CORS 정책에 의해 페이지가 작동하지 않을 수 있습니다. 이때 다음과 같은 해결책이 있습니다.</p>
-		<ul>
-			<li> 로컬 서버를 통해 접속하기. 이는 npm의 <a href="https://www.npmjs.com/package/http-server">http-server</a> 패키지를 사용하여 할 수 있습니다.
-			<li> Chrome의 경우 <code>--allow-file-access-from-files</code> 플래그를 통해 로컬 파일 로드를 가능하게 할 수 있습니다. <a href="https://stackoverflow.com/a/18137280">StackOverflow 링크</a>
-		</ul>
 		<h2>핫키</h2>
 		<ul>
 			<li><kbd>X</kbd>: 증명 전부 펼치기

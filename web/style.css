@@ -61,6 +61,13 @@ kbd {
 	border-radius: .2em;
 }
 
+blockquote {
+	margin: 1em 0;
+	padding: .5em 20px;
+	border-left: 5px #202124 solid;
+	background-color: #f7f7f7;
+}
+
 .colored {
 	background-color: #202124!important;
 	color: #eee;
