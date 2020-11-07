@@ -407,37 +407,36 @@ schema recursion_theorem_2($A$ cls a: @12, cls c: @11, cls f) {
 "[$\gamma\in\mathscr A]가 되기 위한 세 번째 조건."
 schema recursion_theorem_3($A$ cls a: @12, cls c, cls f: @11) {
 	is_fun(f, a, a) |-
-		Ui[(cls n) => {
-			cp[in(n, omega()) |-
-				Ui[(cls x) => {
-					cp[in(x, a) |-
-						cp[in(pair(n, x), define_recursively(a, c, f)) |-
-							setbuilder_i[
-								pair_set_i[
-									successor_is_set[set_i[@h2]];
-									set_i[funcall_in_codomain[@h1; @h3]]
-								];
-								mp[
-									setbuilder_e[@h4];
-									UIm(
-										($G$ cls g) => {
-											I(in(g, recursion_set(a, c, f)), in(pair(n, x), g))
-										},
-										($G$ cls g) => {
-											I(in(g, recursion_set(a, c, f)), in(pair(successor(n), funcall(f, x)), g))
-										}
-									)[Ui[($G$ cls g) => {
-										I_distribute_left[cp[in(g, recursion_set(a, c, f)) |-
-											mp[@h3; Ue(?, x)[mp[
-												@h2;
-												Ue(?, n)[Ae2[Ae2[setbuilder_e[@h5]]]]
-											]]]
-										]]
-									}]]
-								]
-							][as in(pair(successor(n), funcall(f, x)), define_recursively(a, c, f))]]]
-				}]]
-		}]
+		Ui[(cls n) => { cp[in(n, omega()) |-
+			Ui[(cls x) => { cp[in(x, a) |-
+				cp[in(pair(n, x), define_recursively(a, c, f)) |-
+					setbuilder_i[
+						pair_set_i[
+							successor_is_set[set_i[@h2]];
+							set_i[funcall_in_codomain[@h1; @h3]]
+						];
+						mp[
+							setbuilder_e[@h4];
+							UIm(
+								($G$ cls g) => {
+									I(in(g, recursion_set(a, c, f)), in(pair(n, x), g))
+								},
+								($G$ cls g) => {
+									I(in(g, recursion_set(a, c, f)), in(pair(successor(n), funcall(f, x)), g))
+								}
+							)[Ui[($G$ cls g) => {
+								I_distribute_left[cp[in(g, recursion_set(a, c, f)) |-
+									mp[@h3; Ue(?, x)[mp[
+										@h2;
+										Ue(?, n)[Ae2[Ae2[setbuilder_e[@h5]]]]
+									]]]
+								]]
+							}]]
+						]
+					][as in(pair(successor(n), funcall(f, x)), define_recursively(a, c, f))]
+				]
+			] }]
+		] }]
 		[as Uin(omega(), (cls n) => {
 			Uin(a, (cls x) => {
 				I(
