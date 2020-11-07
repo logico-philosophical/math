@@ -618,7 +618,7 @@ cls setbuilder2(fun f, pr g) {
 	})
 }
 
-schema setbuilder2_i(fun f, pr g, cls z) {
+schema setbuilder2_i(fun f: @r21, pr g: @r22, cls z) {
 	set(f(z)), g(z) |-
 		setbuilder_i[
 			@h1;

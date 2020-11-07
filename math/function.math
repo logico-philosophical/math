@@ -249,11 +249,7 @@ schema make_fun_is_fun(fun f, $A$ cls a, $B$ cls b) {
 			}, f(x))[
 				Ai[
 					$fx_in_b;
-					setbuilder2_i(
-						(cls x) => { pair(x, f(x)) },
-						is_in(a),
-						x
-					)[pair_set_i[set_i[@h2]; set_i[$fx_in_b]]; @h2]
+					setbuilder2_i(?, ?, x)[pair_set_i[set_i[@h2]; set_i[$fx_in_b]]; @h2]
 					[as in(pair(x, f(x)), make_fun(f, a))]
 				]
 			];
@@ -284,12 +280,10 @@ schema make_fun_funcall(fun f, $A$ cls a: @22, $B$ cls b, cls x: @21) {
 	Uin(a, (cls x) => {in(f(x), b)}), in(x, a) |-
 		eq_symmetric[funcall_i[
 			make_fun_is_fun(f, a, b)[@h1];
-			setbuilder2_i(
-				(cls x) => { pair(x, f(x)) },
-				is_in(a),
-				x
-			)[pair_set_i[set_i[@h2]; set_i[mp[@h2; Ue(?, x)[@h1]]]]; @h2]
-			[as in(pair(x, f(x)), make_fun(f, a))]
+			setbuilder2_i(?, ?, x)[
+				pair_set_i[set_i[@h2]; set_i[mp[@h2; Ue(?, x)[@h1]]]];
+				@h2
+			][as in(pair(x, f(x)), make_fun(f, a))]
 		]]
 }
 
@@ -356,4 +350,10 @@ st is_invertible_fun(cls f, $A$ cls a, $B$ cls b) {
 		is_fun(f, a, b),
 		is_fun(rel_inverse(f), b, a)
 	)
+}
+
+"Schr[&ouml]der[&ndash]Bernstein 정리."
+schema schroeder_bernstein($A$ cls a, $B$ cls b) {
+	X((cls f) => is_injection(f, a, b)), X((cls g) => is_injection(g, b, a)) |-
+		X((cls h) => is_bijection(h, a, b))
 }
