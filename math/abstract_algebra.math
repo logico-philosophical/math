@@ -56,7 +56,7 @@ st is_semigroup($S$ cls s, $\ast$ cls f) {
 }
 
 "[$e]가 [$.(S, \ast)]의 항등원이다."
-$\left(<<\operatorname{id.\ el.}>>#1\text{ of }\mathord{\left(#2,#3\right)}\right)$
+$\left(#1\ <<\text{is identity of}>>\ \mathord{\left(#2,#3\right)}\right)$
 st is_identity_element(cls e, $S$ cls s, $\ast$ cls f) {
 	A(
 		in(e, s),
@@ -84,7 +84,7 @@ schema identity_element_Q($S$ cls s, $\ast$ cls f) {
 }
 
 "[$.(S, \ast)]의 항등원(존재한다면)."
-$\left(<<\operatorname{id.\ el.\ of}>>\mathord{\left(#1,#2\right)}\right)$
+${<<\text{identity}>>}_{\left(#1,#2\right)}$
 cls identity_element($S$ cls s, $\ast$ cls f) {
 	instantiate((cls e) => {
 		is_identity_element(e, s, f)
@@ -124,7 +124,7 @@ st is_monoid($M$ cls m, $\ast$ cls f) {
 }
 
 "[$b]가 [$.(S, \ast)]에서 [$a]의 역원이다."
-$\left(#1\ <<\mathrm{is\ inv.\ of}>>\ #2\text{ in }\mathord{\left(#3,#4\right)}\right)$
+$\left(#1\ <<\text{is inverse of}>>\ #2\text{ in }\mathord{\left(#3,#4\right)}\right)$
 st is_inverse_element(cls b, cls a, $S$ cls s, $\ast$ cls f) {
 	A(
 		in(b, s),
@@ -136,7 +136,7 @@ st is_inverse_element(cls b, cls a, $S$ cls s, $\ast$ cls f) {
 }
 
 "[$.(S, \ast)]에서 [$a]의 역원(존재한다면)."
-$\left(<<\mathrm{inv.\ of}>>\ #1\text{ in }\mathord{\left(#2,#3\right)}\right)$
+$\left(<<\text{inverse}>>\ #1\right)_{\left(#2,#3\right)}$
 cls inverse_element(cls a, $S$ cls s, $\ast$ cls f) {
 	instantiate((cls b) => {
 		is_inverse_element(b, a, s, f)
