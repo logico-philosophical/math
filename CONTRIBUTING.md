@@ -29,3 +29,10 @@ npm run build
 #### 정리
 
 정리는 증명 여부가 math-o-matic에 의해 기계적으로 확인될 수 있으므로, 정의나 공리보다 대충 작성해도 됩니다. 그러나 math-o-matic은 이해 가능한 증명을 목표로 하고 있으므로, 보다 간단한 증명을 작성하도록 노력하세요. 그 편이 정리를 증명할 때의 ***고통*** 역시 적을 것입니다.
+
+##### *Formalizing 100 Theorems*
+
+무엇을 증명해야 할지 모르겠다면 [*Formalizing 100 Theorems*](https://www.cs.ru.nl/~freek/100/) 페이지에서 골라 보세요. 현재 공리계 상에서 도전해 볼 만한 정리는 다음과 같습니다.
+
+* 25\. Schröder–Bernstein theorem
+* 63\. Cantor's theorem
