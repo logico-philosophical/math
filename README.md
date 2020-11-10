@@ -36,3 +36,7 @@ schema one_plus_one_is_two() {
 * 증명의 작성 방법에 관하여는 [설명서](https://logico-philosophical.github.io/math-o-matic/docs/build/index.html)를 참조하세요.
 * [메인 페이지](https://logico-philosophical.github.io/math-o-matic/web/index.html)에서 위 증명의 색깔 있는 부분을 클릭해 보세요.
 * Visual Studio Code와 Sublime Text 3에 대한 math-o-matic 문법 지원은 [/tools](/tools)에서 찾을 수 있습니다.
+
+## math-o-matic에 기여하기
+
+[CONTRIBUTING.md](/CONTRIBUTING.md)를 참조하세요.
