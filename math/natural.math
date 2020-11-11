@@ -170,7 +170,7 @@ schema induce_set($X$ cls x: @11) {
 		subseteq_to_eq[@h1; $omega_subseteq_x]
 }
 
-"수학적 귀납법."
+"수학적 귀납법. [~(href=https://www.cs.ru.nl/~freek/100/)[*Formalizing 100 Theorems]]의 정리 #74이다."
 schema induce(pr f) {
 	$foo = (cls z) => {
 		in(z, omega()) |-

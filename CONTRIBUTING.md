@@ -34,5 +34,9 @@ npm run build
 
 무엇을 증명해야 할지 모르겠다면 [*Formalizing 100 Theorems*](https://www.cs.ru.nl/~freek/100/) 페이지에서 골라 보세요. 현재 공리계 상에서 도전해 볼 만한 정리는 다음과 같습니다.
 
-* 25\. Schröder–Bernstein theorem
+* 25\. Schröder–Bernstein theorem (`schroeder_bernstein`)
 * 63\. Cantor's theorem
+
+이미 증명된 정리는 다음과 같습니다.
+
+* 74\. The principle of mathematical induction (`induce`)

@@ -55,7 +55,7 @@ $\left(#1\ <<\text{is left distributive over}>>\ #2 \text{on}\ #3\right)$
 st bin_op_left_distributive($\cdot$ cls f, $+$ cls g, $A$ cls a) {
 	Uin(a, (cls x) => {
 		Uin(a, (cls y) => {
-			Uin(a, (cls z) =>{
+			Uin(a, (cls z) => {
 				eq(
 					bin_op_call(f, x, bin_op_call(g, y, z)),
 					bin_op_call(g, bin_op_call(f, x, y), bin_op_call(f, x, z))
@@ -69,7 +69,7 @@ $\left(#1\ <<\text{is right distributive over}>>\ #2 \text{on}\ #3\right)$
 st bin_op_right_distributive($\cdot$ cls f, $+$ cls g, $A$ cls a) {
 	Uin(a, (cls x) => {
 		Uin(a, (cls y) => {
-			Uin(a, (cls z) =>{
+			Uin(a, (cls z) => {
 				eq(
 					bin_op_call(f, bin_op_call(g, x, y), z),
 					bin_op_call(g, bin_op_call(f, x, z), bin_op_call(f, y, z))
@@ -212,7 +212,7 @@ st is_group($G$ cls g, $\ast$ cls f) {
 	)
 }
 
-"대수학에서의 아벨군(abelian group)."
+"대수학에서의 아벨 군(abelian group)."
 $\left(<<\operatorname{abelian\ group}>>\left(#1,#2\right)\right)$
 st is_abelian_group($G$ cls g, $\ast$ cls f) {
 	A(
@@ -246,7 +246,7 @@ st is_ring($R$ cls r, $+$ cls g, $\cdot$ cls f) {
 	)
 }
 
-"대수학에서의 가환 환(commutative ring)."
+"대수학에서의 가환환(commutative ring)."
 $\left(<<\operatorname{commutative\ ring}>>\left(#1,#2,#3\right)\right)$
 st is_commutative_ring($R$ cls r, $+$ cls g, $\cdot$ cls f) {
 	A(
