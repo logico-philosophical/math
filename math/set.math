@@ -873,10 +873,10 @@ schema bigcap_i($A$ cls a, cls z) {
 schema bigcap_e($A$ cls a, cls z) {
 	in(z, bigcap(a)) |-
 		setbuilder_e((cls z) => {
-				Uin(a, (cls x) => {
-					in(z, x)
-				})
-			}, z)[@h1]
+			Uin(a, (cls x) => {
+				in(z, x)
+			})
+		}, z)[@h1]
 }
 
 schema bigcup_i($A$ cls a: @12, cls x: @11, cls z: @21) {

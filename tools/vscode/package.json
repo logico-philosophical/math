@@ -1,22 +1,22 @@
 {
-    "name": "math-o-matic",
-    "displayName": "math-o-matic",
-    "description": "math-o-matic language support",
-    "publisher": "logico-philosophical",
-    "version": "0.1.0",
-    "engines": {
-        "vscode": "^1.50.0"
-    },
-    "contributes": {
-        "languages": [{
-            "id": "math-o-matic",
-            "extensions": [".math"],
-            "configuration": "./language-configuration.json"
-        }],
-        "grammars": [{
-            "language": "math-o-matic",
-            "scopeName": "source.math-o-matic",
-            "path": "./syntaxes/math-o-matic.tmLanguage.json"
-        }]
-    }
+	"name": "math-o-matic",
+	"displayName": "math-o-matic",
+	"description": "math-o-matic language support",
+	"publisher": "logico-philosophical",
+	"version": "0.1.0",
+	"engines": {
+		"vscode": "^1.50.0"
+	},
+	"contributes": {
+		"languages": [{
+			"id": "math-o-matic",
+			"extensions": [".math"],
+			"configuration": "./language-configuration.json"
+		}],
+		"grammars": [{
+			"language": "math-o-matic",
+			"scopeName": "source.math-o-matic",
+			"path": "./syntaxes/math-o-matic.tmLanguage.json"
+		}]
+	}
 }
