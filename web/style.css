@@ -25,8 +25,27 @@ p + p {
 	margin-top: 1em;
 }
 
-pre {
+pre, code {
+	font-family: Consolas, 'Roboto Mono', monospace;
+	background-color: rgba(0,0,0,.05);
 	white-space: pre-wrap;
+	word-break: break-all;
+	tab-size: 4;
+}
+
+pre {
+	padding: 6px;
+}
+
+code {
+	font-size: .85em;
+	padding: .15em .3em;
+	border-radius: .3em;
+}
+
+pre code {
+	background-color: unset;
+	padding: 0;
 }
 
 table {
@@ -50,11 +69,11 @@ input[type=button], input[type=submit], button {
 }
 
 textarea {
-	font: .85em 'Roboto Mono', monospace;
+	font: .85em Consolas, 'Roboto Mono', monospace;
 }
 
 kbd {
-	font: .85em 'Roboto Mono', monospace;
+	font: .85em Consolas, 'Roboto Mono', monospace;
 	color: #202124;
 	border: 1px #ccc solid;
 	padding: .1em .3em;
@@ -168,7 +187,7 @@ table.explorer td.bbb {
 	right: 5px;
 	min-width: 300px;
 	max-width: calc(100% - 110px);
-	font-family: 'Roboto Mono', monospace;
+	font-family: Consolas, 'Roboto Mono', monospace;
 	pointer-events: none;
 }
 
@@ -193,11 +212,11 @@ table.explorer td.bbb {
 #console-display {
 	width: 100%;
 	white-space: pre-wrap;
-	font-size: .80em;
+	font-size: .85em;
 }
 
 #console-display .katex {
-	font-size: 1.5em;
+	font-size: 1.4em;
 }
 
 #console-display tr.error {
@@ -262,8 +281,8 @@ table.explorer td.bbb {
 .CodeMirror {
 	z-index: 10000!important;
 	border: 1px #666 solid;
-	font-size: .85em;
-	font-family: 'Roboto Mono', monospace;
+	font-size: .90em;
+	font-family: Consolas, 'Roboto Mono', monospace;
 	height: auto;
 	min-height: 90px;
 	max-height: 50%;
@@ -298,7 +317,7 @@ table.explorer td.bbb {
 	box-shadow: none;
 	border: 1px #666 solid;
 	border-radius: 0;
-	font-family: 'Roboto Mono', monospace;
+	font-family: Consolas, 'Roboto Mono', monospace;
 }
 
 .CodeMirror-hint {
