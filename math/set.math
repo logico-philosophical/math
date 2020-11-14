@@ -328,6 +328,11 @@ st Xin(cls a, pr f) {
 	})
 }
 
+schema Xin_to_X($A$ cls a: @11, pr f: @12) {
+	Xin(a, f) |-
+		XAe2(is_in(a), f)[@h1]
+}
+
 schema Xin_eq($A$ cls a: @11, $B$ cls b: @12, pr f) {
 	eq(a, b) |-
 		$foo = Ui[(cls z) => { EAi[

@@ -88,75 +88,24 @@ schema fun_dom(cls f, $A$ cls a, $B$ cls b) {
 	is_fun(f, a, b) |- eq(rel_dom(f), a)
 }
 
-"함수 호출. [$f]가 함수이고 [$x]가 [$f]의 정의역에 있을 경우 함숫값이 된다. 그러하지 아니할 때는 다음과 같다.
-
-[ul
-	[*] [$f]가 함수이고 [$x]가 [$f]의 정의역 밖일 경우 [$\varnothing]이 된다.
-	[*] 일반적으로 [$.(x, y)\in f]인 [$y]를 전부 합집합 한 것이다.
-]"
+"함수 호출. [$f]가 함수이고 [$x]가 [$f]의 정의역에 있을 경우 함숫값이 된다. 그러하지 아니할 때의 동작은 중요하지 않다."
 $#1\mathord{\left(#2\right)}{}^{<<\scriptscriptstyle\dag>>}$
-cls funcall(cls f, cls x) {
-	bigcup(rel_im_set(f, singleton(x)))
+sealed cls funcall(cls f, cls x) {
+	instantiate((cls y) => in(pair(x, y), f))
 }
 
-schema funcall_def_0(cls f, $A$ cls a, $B$ cls b, cls x, cls y) {
-	is_fun(f, a, b), in(x, a), in(y, rel_im_set(f, singleton(x))) |-
-		mpX_Xe_p(?, in(pair(x, y), f))[
-			setbuilder_e[@h3];
-			Ui[(cls z) => { cp[A(in(z, singleton(x)), in(pair(z, y), f)) |-
-				in_eq_left_1[Ae2[@h4]; pair_eq_i[singleton_e[set_i[@h2]; Ae1[@h4]]; eq_reflexive(y)]]]
-			}]
-		]
-}
-
-schema funcall_def_1(cls f, $A$ cls a, $B$ cls b, cls x, cls y) {
-	is_fun(f, a, b), in(x, a), in(y, b), in(pair(x, y), f) |-
-		setbuilder_i[
-			set_i[@h3];
-			Xi((cls z) => {A(in(z, singleton(x)), in(pair(z, y), f))}, x)[Ai[self_in_singleton[set_i[@h2]]; @h4]]
-		][as in(y, rel_im_set(f, singleton(x)))]
-}
-
-schema funcall_def_2(cls f, $A$ cls a, $B$ cls b, cls x) {
+schema funcall_Xq(cls f: @11, $A$ cls a: @12, $B$ cls b: @13, cls x: @21) {
 	is_fun(f, a, b), in(x, a) |-
-			mpX(?, is_in(rel_im_set(f, singleton(x))))[
-				fun_im_X_m[@h1; @h2];
-				Ui[(cls y) => { cp[A(in(y, b), in(pair(x, y), f)) |-
-					funcall_def_1(f, a, b, x, y)[@h1; @h2; Ae1[@h3]; Ae2[@h3]]] }]
-			]
+		$foo = fun_im_Xq_m[@h1; @h2];
+		
+		Ai[Xin_to_X[Ae1[$foo]]; Ae2[$foo]]
+		[as Xq((cls y) => in(pair(x, y), f))]
 }
 
-schema funcall_def_3(cls f, $A$ cls a, $B$ cls b, cls x) {
+schema funcall_def(cls f: @11, $A$ cls a: @12, $B$ cls b: @13, cls x: @21) using funcall {
 	is_fun(f, a, b), in(x, a) |-
-		Ui2[($y_1$ cls y1, $y_2$ cls y2) => {
-			cp[A(in(y1, rel_im_set(f, singleton(x))), in(y2, rel_im_set(f, singleton(x)))) |-
-				fun_im_Q_m[
-					@h1; @h2;
-					funcall_def_0(f, a, b, x, y1)[@h1; @h2; Ae1[@h3]];
-					funcall_def_0(f, a, b, x, y2)[@h1; @h2; Ae2[@h3]]
-				]]
-		}][as Q(is_in(rel_im_set(f, singleton(x))))]
-}
-
-schema funcall_def(cls f: @11, $A$ cls a: @12, $B$ cls b: @13, cls x: @21) {
-	is_fun(f, a, b), in(x, a) |-
-		mpX_Xe_p(?, in(pair(x, funcall(f, x)), f))[
-			funcall_def_2(f, a, b, x)[@h1; @h2];
-			Ui[(cls y) => {
-				cp[in(y, rel_im_set(f, singleton(x))) |-
-					in_eq_left_2[
-						funcall_def_0(f, a, b, x, y)[@h1; @h2; @h3];
-						pair_eq_i[
-							eq_reflexive(x);
-							bigcup_singleton_is_element[
-								XQ_to_Xq[funcall_def_2(f, a, b, x)[@h1; @h2]; funcall_def_3(f, a, b, x)[@h1; @h2]]
-								[as is_singleton(rel_im_set(f, singleton(x)))];
-								@h3
-							]
-						]
-					]]
-			}]
-		]
+		instantiate_def[funcall_Xq[@h1; @h2]]
+		[as in(pair(x, funcall(f, x)), f)]
 }
 
 schema funcall_i(cls f: @11, $A$ cls a: @12, $B$ cls b: @13, cls x: @211, cls y: @212) {
@@ -204,8 +153,7 @@ schema fun_eq_i(cls f: @11, cls g: @21, $A$ cls a: @12, $B$ cls b: @13) {
 
 schema funcall_eq_i(cls f, $x_1$ cls x1: @11, $x_2$ cls x2: @12) {
 	eq(x1, x2) |-
-		bigcup_eq_i[rel_im_set_eq_i(f, ?, ?)[singleton_eq_i[@h1]]]
-		[as eq(funcall(f, x1), funcall(f, x2))]
+		call_eq_i((cls x) => funcall(f, x), ?, ?)[@h1]
 }
 
 schema funcall_in_codomain(cls f: @11, $A$ cls a: @12, $B$ cls b: @13, cls x: @21) {
