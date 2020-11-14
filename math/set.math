@@ -1128,6 +1128,52 @@ st is_singleton_of(cls x, cls z) {
 	})
 }
 
+schema self_in_singletonlike(cls x: @11, cls z: @12) {
+	is_singleton_of(x, z) |-
+		mpE2[eq_reflexive(z); Ue(?, z)[@h1]]
+}
+
+schema singletonlike_e(cls x: @11, cls z: @12, cls w: @21) {
+	is_singleton_of(x, z), in(w, x) |-
+		mpE1[@h2; Ue(?, w)[@h1]]
+}
+
+schema is_singleton_of_Q(cls z) {
+	Ui2[($x_1$ cls x1, $x_2$ cls x2) => cp2[is_singleton_of(x1, z), is_singleton_of(x2, z) |-
+		eq_i(x1, x2)[
+			syllUE(
+				is_in(x1),
+				(cls w) => eq(w, z),
+				is_in(x2)
+			)[
+				@h1;
+				UE_flip(is_in(x2), (cls w) => eq(w, z))[@h2]
+			]
+		]
+	]][as Q((cls x) => is_singleton_of(x, z))]
+}
+
+schema is_singleton_of_example(cls z: @11) {
+	set(z) |-
+		Ui[(cls w) => setbuilder_def_set(
+			(cls w) => eq(w, z),
+			w
+		)[cp[eq(w, z) |-
+			set_is_set_2[@h1; @h2]
+		]]][as is_singleton_of(setbuilder((cls w) => eq(w, z)), z)]
+}
+
+schema is_singleton_of_Xq(cls z: @11) {
+	set(z) |-
+		Ai[
+			Xi(
+				(cls x) => is_singleton_of(x, z),
+				setbuilder((cls w) => eq(w, z))
+			)[is_singleton_of_example[@h1]];
+			is_singleton_of_Q(z)
+		][as Xq((cls x) => is_singleton_of(x, z))]
+}
+
 st is_singleton(cls x) {
 	Xq(is_in(x))
 }
@@ -1138,60 +1184,39 @@ schema is_singleton_i(cls x: @11, cls z: @12) {
 		[as is_singleton(x)]
 }
 
-"싱글턴 클래스. [$x]가 집합일 때는 일반적인 정의와 같이 [$x]만을 원소로 갖는 클래스를 만들고, [$x]가 고유 클래스(proper class)일 경우는 전체집합 [$V]가 된다.
+"싱글턴 클래스. [$x]가 집합일 때는 일반적인 정의와 같이 [$x]만을 원소로 갖는 클래스가 되고 [$x]가 고유 클래스(proper class)일 경우는 전체집합 [$V]가 되는데, [$x]가 고유 클래스일 때의 동작에는 의존하지 말라.
 
-클래스 개념이 있는 집합론에서 고유 클래스는 정의에 의해 어떤 클래스의 원소가 될 수 없으므로 고유 클래스로는 싱글턴 클래스를 만들 수 없다. 그러나 우리의 체계에서는 고유 클래스에 대해서도 singleton을 호출할 수 있다. 그러나 만들어지는 클래스는 원소의 개수가 1이 아니게 되므로 싱글턴이 되지는 않는다.
-
-만약 [$\{x\} = \{z: z=x\}]로 정의한다면 [$x]가 고유 클래스일 때 [$\{x\}]가 조용히 공집합이 되는데, 이는 공집합 공리에 의해 집합이 된다. 그러므로 순서쌍이 Kuratowski의 정의에 따라 [$.(x, y) = \{\{x\}, \{x, y\}\}]와 같이 정의될 때, 이주 지저분한 이유에 의해서 [$.(x, y)\in A\times B]이어도 [$y\in B]임을 유도할 수 없는 등의 문제가 있었다. 이때 [$\{x, y\} = \{x\}\cup\{y\}]이다.
-
-그러므로 조용히 공집합이 되는 것보다 마치 에러를 던지듯 [$V]가 되는 것이 낫다고 판단하였다. 이는 [~http://www.qedeq.org/current/doc/math/qedeq_set_theory_v1_en.pdf]의 Definition 11과 같은 방식의 정의이다. 집합에 대해서만 잘 정의되는 개념을 고유 클래스에 적용하면 고유 클래스가 만들어지는 패턴을 일반적으로 적용하면 될 듯하다.
-
-이 정의가 도입되는 과정은 [~(href=https://github.com/logico-philosophical/math-o-matic/issues/8)이슈 #8]에 기록되어 있다.
+싱글턴의 이전 정의에 관하여는 [~(href=https://github.com/logico-philosophical/math-o-matic/issues/8)이슈 #8]에 기록되어 있다.
 
 @sealed [$x]가 집합이 아닐 때 이상하게 되어 봉인되었다."
 $\left\{#1\right\}{}^{<<\scriptscriptstyle\dag>>}$
 sealed cls singleton(cls x) {
-	setbuilder((cls z) => {
-		O(N(set(x)), eq(z, x))
-	})
-}
-
-"싱글턴의 새 정의."
-$\left\{#1\right\}{}^{<<\scriptscriptstyle\ddag>>}$
-cls singleton_(cls x) {
 	instantiate(($S$ cls s) => {
 		is_singleton_of(s, x)
 	})
 }
 
-schema self_in_singleton(cls x: @11) using singleton {
-	set(x) |-
-		setbuilder_i[
-			@h1;
-			Oi2(N(set(x)), ?)[eq_reflexive(x)]
-		][as in(x, singleton(x))]
+schema singleton_def(cls z: @11) using singleton {
+	set(z) |-
+		instantiate_def((cls x) => is_singleton_of(x, z))[
+			is_singleton_of_Xq[@h1]
+		][as is_singleton_of(singleton(z), z)]
 }
 
-schema singleton_e(cls x: @11, cls z: @21) using singleton {
+schema self_in_singleton(cls x: @11) {
+	set(x) |- self_in_singletonlike[singleton_def[@h1]]
+}
+
+schema singleton_e(cls x: @11, cls z: @21) {
 	set(x), in(z, singleton(x)) |-
-		Oe1[setbuilder_e[@h2]; NNi[@h1]]
+		singletonlike_e[singleton_def[@h1]; @h2]
 }
 
 schema singleton_set_e(cls x: @111) using singleton {
 	set(singleton(x)) |-
-		NNe[Niu[N(set(x)) |-
-			Fi[
-				@h1;
-				supset_is_not_set[
-					universe_is_not_set();
-					Ui[(cls z) => cp[in(z, universe()) |-
-						setbuilder_i[
-							set_i[@h3];
-							Oi1(?, eq(z, x))[@h2]
-						][as in(z, singleton(x))]
-					]][as subseteq(universe(), singleton(x))]
-				]
-			]
+		set_i[self_in_singletonlike(singleton(x), x)[
+			instantiate_def[instantiate_set_e[@h1]]
+			[as is_singleton_of(singleton(x), x)]
 		]]
 }
 
