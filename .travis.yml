@@ -1,7 +1,7 @@
 language: node_js
 
 group: edge
-arch: amd64-graviton2
+arch: arm64-graviton2
 os: linux
 dist: focal
 virt: lxd
