@@ -1,4 +1,6 @@
+import Counter from '../Counter';
 import ExecutionContext from '../ExecutionContext';
+import { ProofType } from '../ProofType';
 import StackTrace from '../StackTrace';
 import Expr0 from './Expr0';
 import Metaexpr, { EqualsPriority } from './Metaexpr';
@@ -54,6 +56,18 @@ export default class Variable extends Expr0 implements Nameable {
 
 	protected equalsInternal(obj: Metaexpr, context: ExecutionContext): boolean {
 		return false;
+	}
+
+	protected getProofInternal(
+			hypnumMap: Map<Metaexpr, number>,
+			$Map: Map<Metaexpr, number | [number, number]>,
+			ctr: Counter): ProofType[] {
+		
+		return [{
+			_type: 'NP',
+			ctr: ctr.next(),
+			expr: this
+		}];
 	}
 
 	// pr f

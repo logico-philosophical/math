@@ -1,4 +1,6 @@
+import Counter from '../Counter';
 import ExecutionContext from '../ExecutionContext';
+import { ProofType } from '../ProofType';
 import StackTrace from '../StackTrace';
 import $Variable from './$Variable';
 import Expr0 from './Expr0';
@@ -94,6 +96,45 @@ export default class Tee extends Metaexpr {
 		}
 
 		return this.right.equals(obj.right, context);
+	}
+
+	protected getProofInternal(
+			hypnumMap: Map<Metaexpr, number>,
+			$Map: Map<Metaexpr, number | [number, number]>,
+			ctr: Counter): ProofType[] {
+		
+		hypnumMap = new Map(hypnumMap);
+		var leftlines: ProofType[] = [];
+
+		var start = ctr.peek() + 1;
+
+		this.left.forEach(l => {
+			hypnumMap.set(l, ctr.next());
+			leftlines.push({
+				_type: 'H',
+				ctr: ctr.peek(),
+				expr: l
+			});
+		});
+
+		$Map = new Map($Map);
+
+		var $lines: ProofType[] = [];
+		this.def$s.forEach($ => {
+			var lines = $.expr.getProof(hypnumMap, $Map, ctr);
+			$lines = $lines.concat(lines);
+
+			var $num = lines[lines.length - 1].ctr;
+			$Map.set($, $num);
+		});
+
+		return [{
+			_type: 'T',
+			leftlines: leftlines as any,
+			$lines,
+			rightlines: this.right.getProof(hypnumMap, $Map, ctr),
+			ctr: [start, ctr.peek()]
+		}];
 	}
 
 	public toIndentedString(indent: number, root?: boolean): string {

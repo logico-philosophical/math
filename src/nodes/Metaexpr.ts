@@ -1,4 +1,6 @@
+import Counter from "../Counter";
 import ExecutionContext from "../ExecutionContext";
+import { ProofType } from "../ProofType";
 import StackTrace from "../StackTrace";
 import Expr0 from "./Expr0";
 import Node from "./Node";
@@ -60,4 +62,37 @@ export default abstract class Metaexpr extends Node {
 	protected abstract getEqualsPriority(): EqualsPriority;
 
 	protected abstract equalsInternal(obj: Metaexpr, context: ExecutionContext): boolean;
+
+	public getProof(
+			hypnumMap: Map<Metaexpr, number>,
+			$Map: Map<Metaexpr, number | [number, number]>,
+			ctr: Counter,
+			root: boolean=false): ProofType[] {
+		
+		if (hypnumMap.has(this)) {
+			return [{
+				_type: 'R',
+				ctr: ctr.next(),
+				num: hypnumMap.get(this),
+				expr: this
+			}];
+		}
+
+		if ($Map.has(this)) {
+			return [{
+				_type: 'R',
+				ctr: ctr.next(),
+				num: $Map.get(this),
+				expr: this
+			}];
+		}
+
+		return this.getProofInternal(hypnumMap, $Map, ctr, root);
+	}
+
+	protected abstract getProofInternal(
+			hypnumMap: Map<Metaexpr, number>,
+			$Map: Map<Metaexpr, number | [number, number]>,
+			ctr: Counter,
+			root?: boolean): ProofType[];
 }

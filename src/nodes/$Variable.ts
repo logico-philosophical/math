@@ -1,4 +1,6 @@
+import Counter from "../Counter";
 import ExecutionContext from "../ExecutionContext";
+import { ProofType } from "../ProofType";
 import StackTrace from "../StackTrace";
 import Expr0 from "./Expr0";
 import Metaexpr, { EqualsPriority } from "./Metaexpr";
@@ -48,6 +50,23 @@ export default class $Variable extends Metaexpr implements Nameable {
 
 	protected equalsInternal(obj: Metaexpr, context: ExecutionContext): boolean {
 		return this.expr.equals(obj, context);
+	}
+
+	protected getProofInternal(
+			hypnumMap: Map<Metaexpr, number>,
+			$Map: Map<Metaexpr, number | [number, number]>,
+			ctr: Counter): ProofType[] {
+		
+		if (!$Map.has(this)) {
+			throw Error(`${this.name} is not defined`);
+		}
+
+		return [{
+			_type: 'R',
+			ctr: ctr.next(),
+			num: $Map.get(this),
+			expr: this.expr
+		}];
 	}
 
 	public toIndentedString(indent: number, root?: boolean): string {

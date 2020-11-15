@@ -1,10 +1,13 @@
+import Counter from '../Counter';
 import ExecutionContext from '../ExecutionContext';
+import { ProofType } from '../ProofType';
 import StackTrace from '../StackTrace';
 import Expr0 from './Expr0';
 import Fun from './Fun';
 import Funcall from './Funcall';
 import Metaexpr, { EqualsPriority } from './Metaexpr';
 import MetaType from './MetaType';
+import { isNameable } from './Nameable';
 import Node, { Precedence } from './Node';
 import ObjectType from './ObjectType';
 import Tee from './Tee';
@@ -236,6 +239,47 @@ ${as.expandMeta(true)}
 
 			throw Node.error(`Cannot dereference @${guess}`, trace);
 		})(guess, 1, parameter, argument);
+	}
+
+	protected getProofInternal(
+			hypnumMap: Map<Metaexpr, number>,
+			$Map: Map<Metaexpr, number | [number, number]>,
+			ctr: Counter): ProofType[] {
+		
+		var leftarglines: ProofType[] = [];
+		var leftargnums: (number | [number, number])[] = this.leftargs.map(l => {
+			if (hypnumMap.has(l)) return hypnumMap.get(l);
+			if ($Map.has(l)) return $Map.get(l);
+
+			var lines = l.getProof(hypnumMap, $Map, ctr);
+			leftarglines = leftarglines.concat(lines);
+			return lines[lines.length - 1].ctr;
+		});
+		
+		var args: Expr0[] = null;
+		var subjectlines: ProofType[] = [];
+		var subjectnum = hypnumMap.get(this.subject)
+			|| $Map.get(this.subject)
+			|| (this.subject instanceof Funcall && $Map.has(this.subject.fun)
+				? (args = this.subject.args, $Map.get(this.subject.fun))
+				: false)
+			|| ((s => s instanceof Fun && s.name
+					|| s instanceof Funcall && isNameable(s.fun) && s.fun.name)(this.subject)
+				? this.subject
+				: (subjectlines = this.subject.getProof(hypnumMap, $Map, ctr))[subjectlines.length-1].ctr);
+
+		return [
+			...leftarglines,
+			...subjectlines,
+			{
+				_type: 'E',
+				ctr: ctr.next(),
+				subject: subjectnum,
+				args,
+				leftargs: leftargnums,
+				reduced: this.reduced
+			}
+		];
 	}
 
 	public toIndentedString(indent: number, root?: boolean): string {
