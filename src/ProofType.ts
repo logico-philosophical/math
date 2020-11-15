@@ -2,7 +2,7 @@ import Expr0 from "./nodes/Expr0";
 import Metaexpr from "./nodes/Metaexpr";
 import Variable from "./nodes/Variable";
 
-export type ProofExplorerIntermediateType = R | RC | RCX | RS | H | NP | Wut | T | V | E;
+export type ProofType = R | RC | RCX | RS | H | NP | Wut | T | V | E;
 
 /** repeat */
 interface R {
@@ -56,15 +56,15 @@ interface T {
 	_type: 'T';
 	ctr: [number, number];
 	leftlines: H[];
-	$lines: ProofExplorerIntermediateType[];
-	rightlines: ProofExplorerIntermediateType[];
+	$lines: ProofType[];
+	rightlines: ProofType[];
 }
 
 interface V {
 	_type: 'V';
 	ctr: [number, number];
-	$lines: ProofExplorerIntermediateType[];
-	lines: ProofExplorerIntermediateType[];
+	$lines: ProofType[];
+	lines: ProofType[];
 	params: Variable[];
 }
 

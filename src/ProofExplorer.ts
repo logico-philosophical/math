@@ -1,15 +1,15 @@
+import Counter from "./Counter";
 import $Variable from "./nodes/$Variable";
 import Expr0 from "./nodes/Expr0";
 import Fun from "./nodes/Fun";
 import Funcall from "./nodes/Funcall";
 import Metaexpr from "./nodes/Metaexpr";
 import { isNameable } from "./nodes/Nameable";
-import ObjectFun from "./nodes/ObjectFun";
 import Reduction from "./nodes/Reduction";
 import Schema from "./nodes/Schema";
 import Tee from "./nodes/Tee";
 import Variable from "./nodes/Variable";
-import { ProofExplorerIntermediateType } from "./ProofExplorerIntermediateType";
+import { ProofType } from "./ProofType";
 import Scope from "./Scope";
 
 export default class ProofExplorer {
@@ -49,18 +49,18 @@ export default class ProofExplorer {
 			return ktx(expr.toTeXString(true));
 		}
 
-		var ctr = 0;
+		var ctr = new Counter();
 
 		var tree = (function getTree(
 				expr: Metaexpr,
 				hypnumMap: Map<Metaexpr, number>,
 				$Map: Map<Metaexpr, number | [number, number]>
-			): ProofExplorerIntermediateType[] {
+			): ProofType[] {
 			
 			if (hypnumMap.has(expr)) {
 				return [{
 					_type: 'R',
-					ctr: ++ctr,
+					ctr: ctr.next(),
 					num: hypnumMap.get(expr),
 					expr
 				}];
@@ -69,14 +69,14 @@ export default class ProofExplorer {
 			if ($Map.has(expr)) {
 				return [{
 					_type: 'R',
-					ctr: ++ctr,
+					ctr: ctr.next(),
 					num: $Map.get(expr),
 					expr
 				}];
 			}
 
 			if (expr instanceof Reduction) {
-				var leftarglines: ProofExplorerIntermediateType[] = [];
+				var leftarglines: ProofType[] = [];
 				var leftargnums: (number | [number, number])[] = expr.leftargs.map(l => {
 					if (hypnumMap.has(l)) return hypnumMap.get(l);
 					if ($Map.has(l)) return $Map.get(l);
@@ -87,7 +87,7 @@ export default class ProofExplorer {
 				});
 				
 				var args: Expr0[] = null;
-				var subjectlines: ProofExplorerIntermediateType[] = [];
+				var subjectlines: ProofType[] = [];
 				var subjectnum = hypnumMap.get(expr.subject)
 					|| $Map.get(expr.subject)
 					|| (expr.subject instanceof Funcall && $Map.has(expr.subject.fun)
@@ -103,7 +103,7 @@ export default class ProofExplorer {
 					...subjectlines,
 					{
 						_type: 'E',
-						ctr: ++ctr,
+						ctr: ctr.next(),
 						subject: subjectnum,
 						args,
 						leftargs: leftargnums,
@@ -114,7 +114,7 @@ export default class ProofExplorer {
 				if (hypnumMap.has(expr.fun)) {
 					return [{
 						_type: 'RC',
-						ctr: ++ctr,
+						ctr: ctr.next(),
 						schema: hypnumMap.get(expr.fun),
 						args: expr.args,
 						expr
@@ -124,7 +124,7 @@ export default class ProofExplorer {
 				if ($Map.has(expr.fun)) {
 					return [{
 						_type: 'RC',
-						ctr: ++ctr,
+						ctr: ctr.next(),
 						schema: $Map.get(expr.fun),
 						args: expr.args,
 						expr
@@ -134,7 +134,7 @@ export default class ProofExplorer {
 				if (expr.fun instanceof Schema && expr.fun.name) {
 					return [{
 						_type: 'RCX',
-						ctr: ++ctr,
+						ctr: ctr.next(),
 						expr
 					}];
 				}
@@ -142,7 +142,7 @@ export default class ProofExplorer {
 				if (!(expr.fun instanceof Schema)) {
 					return [{
 						_type: 'NP',
-						ctr: ++ctr,
+						ctr: ctr.next(),
 						expr
 					}];
 				}
@@ -153,7 +153,7 @@ export default class ProofExplorer {
 					...schemalines,
 					{
 						_type: 'RC',
-						ctr: ++ctr,
+						ctr: ctr.next(),
 						schema: schemalines[schemalines.length - 1].ctr,
 						args: expr.args,
 						expr
@@ -162,14 +162,14 @@ export default class ProofExplorer {
 			} else if (expr instanceof Variable) {
 				return [{
 					_type: 'NP',
-					ctr: ++ctr,
+					ctr: ctr.next(),
 					expr
 				}];
 			} else if (expr instanceof Fun) {
 				if (expr instanceof Schema && expr.name && expr != theexpr) {
 					return [{
 						_type: 'RS',
-						ctr: ++ctr,
+						ctr: ctr.next(),
 						expr
 					}];
 				}
@@ -177,16 +177,16 @@ export default class ProofExplorer {
 				if (!expr.expr) {
 					return [{
 						_type: 'NP',
-						ctr: ++ctr,
+						ctr: ctr.next(),
 						expr
 					}];
 				}
 
 				$Map = new Map($Map);
 
-				var start = ctr + 1;
+				var start = ctr.peek() + 1;
 
-				var $lines: ProofExplorerIntermediateType[] = [];
+				var $lines: ProofType[] = [];
 				
 				if (expr instanceof Schema) {
 					expr.def$s.forEach($ => {
@@ -203,26 +203,26 @@ export default class ProofExplorer {
 					$lines,
 					lines: getTree(expr.expr, hypnumMap, $Map),
 					params: expr.params,
-					ctr: [start ,ctr]
+					ctr: [start, ctr.peek()]
 				}];
 			} else if (expr instanceof Tee) {
 				hypnumMap = new Map(hypnumMap);
-				var leftlines = [];
+				var leftlines: ProofType[] = [];
 
-				var start = ctr + 1;
+				var start = ctr.peek() + 1;
 
 				expr.left.forEach(l => {
-					hypnumMap.set(l, ++ctr);
+					hypnumMap.set(l, ctr.next());
 					leftlines.push({
 						_type: 'H',
-						ctr,
+						ctr: ctr.peek(),
 						expr: l
 					});
 				});
 
 				$Map = new Map($Map);
 
-				var $lines: ProofExplorerIntermediateType[] = [];
+				var $lines: ProofType[] = [];
 				expr.def$s.forEach($ => {
 					var lines = getTree($.expr, hypnumMap, $Map);
 					$lines = $lines.concat(lines);
@@ -233,10 +233,10 @@ export default class ProofExplorer {
 
 				return [{
 					_type: 'T',
-					leftlines,
+					leftlines: leftlines as any,
 					$lines,
 					rightlines: getTree(expr.right, hypnumMap, $Map),
-					ctr: [start, ctr]
+					ctr: [start, ctr.peek()]
 				}];
 			} else if (expr instanceof $Variable) {
 				if (!$Map.has(expr)) {
@@ -245,7 +245,7 @@ export default class ProofExplorer {
 
 				return [{
 					_type: 'R',
-					ctr: ++ctr,
+					ctr: ctr.next(),
 					num: $Map.get(expr),
 					expr: expr.expr
 				}];
@@ -253,15 +253,15 @@ export default class ProofExplorer {
 				console.log('Unknown metaexpr', expr);
 				return [{
 					_type: '?',
-					ctr: ++ctr,
+					ctr: ctr.next(),
 					expr
 				}];
 			}
 		})(theexpr, new Map(), new Map());
 
-		var innertree: ProofExplorerIntermediateType[] = (tree[0] as any).$lines.concat((tree[0] as any).lines);
+		var innertree: ProofType[] = (tree[0] as any).$lines.concat((tree[0] as any).lines);
 
-		var ncols = (function recurse(tree: ProofExplorerIntermediateType[]): number {
+		var ncols = (function recurse(tree: ProofType[]): number {
 			return Math.max(...tree.map(t => {
 				switch (t._type) {
 					case 'V':
@@ -284,7 +284,7 @@ export default class ProofExplorer {
 		var html = '<table class="explorer">';
 		html += `<tr><th>#</th><th colspan="${ncols}">expr</th><th colspan="2">rule</th></tr>`;
 		
-		html += (function tree2html(lines: ProofExplorerIntermediateType[], left: Variable[][]) {
+		html += (function tree2html(lines: ProofType[], left: Variable[][]) {
 			return lines.map(line => {
 				switch (line._type) {
 					case 'V':
