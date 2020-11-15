@@ -1,4 +1,5 @@
 import $Variable from "./nodes/$Variable";
+import Expr0 from "./nodes/Expr0";
 import Fun from "./nodes/Fun";
 import Funcall from "./nodes/Funcall";
 import Metaexpr from "./nodes/Metaexpr";
@@ -8,10 +9,11 @@ import Reduction from "./nodes/Reduction";
 import Schema from "./nodes/Schema";
 import Tee from "./nodes/Tee";
 import Variable from "./nodes/Variable";
+import { ProofExplorerIntermediateType } from "./ProofExplorerIntermediateType";
 import Scope from "./Scope";
 
 export default class ProofExplorer {
-	public static get(scope: Scope, name: string, ktx) {
+	public static get(scope: Scope, name: string, ktx): string {
 		var DIAMOND = '&#x25C7;',
 			DOWN = '&#x25BC;';
 		// var UP = '&#x25B2;';
@@ -21,35 +23,10 @@ export default class ProofExplorer {
 		}
 	
 		var theexpr = scope.getSchema(name);
-	
-		var ncols = (function recurse(expr: Metaexpr) {
-			if (expr instanceof Reduction) {
-				return Math.max(
-					...expr.leftargs.map(recurse),
-					((expr.subject instanceof Fun && expr.subject.name)
-						|| (expr.subject instanceof Funcall
-								&& isNameable(expr.subject.fun)
-								&& expr.subject.fun.name)
-							? 0 : recurse(expr.subject)),
-					1
-				);
-			} else if (expr instanceof Schema) {
-				return Math.max(
-					...expr.def$s.map($ => recurse($.expr)),
-					recurse(expr.expr)
-				) + 1;
-			} else if (expr instanceof ObjectFun) {
-				return recurse(expr.expr) + 1;
-			} else if (expr instanceof Tee) {
-				return Math.max(
-					...expr.left.map(recurse),
-					...expr.def$s.map($ => recurse($.expr)),
-					recurse(expr.right)
-				) + 1;
-			} else {
-				return 1;
-			}
-		})(theexpr);
+
+		if (!(theexpr instanceof Schema)) {
+			throw Error('wut');
+		}
 
 		function getHtmlLine(ctr: string | number, left: any[], h1: string, h2: string | string[], options?) {
 			var padding = left.length;
@@ -64,7 +41,7 @@ export default class ProofExplorer {
 			return `<tr><th>${ctr}</th>${htmlLeft}<td ${bbb ? 'class="bbb" ' : ''}colspan="${ncols-padding}">${h1}</td>${h2 instanceof Array ? h2.map(e => `<td>${e}</td>`).join('') : `<td colspan="2">${h2}</td>`}</tr>`;
 		}
 
-		function exprToHtml(expr, expand?) {
+		function exprToHtml(expr: number | [number, number] | Metaexpr, expand?: boolean): string {
 			if (typeof expr == 'number') return `<b>${expr}</b>`;
 			if (expr instanceof Array) return `<b>${expr[0]}&ndash;${expr[1]}</b>`;
 			if (expand) return ktx(expr.expandMeta(true).toTeXString(true));
@@ -77,7 +54,8 @@ export default class ProofExplorer {
 		var tree = (function getTree(
 				expr: Metaexpr,
 				hypnumMap: Map<Metaexpr, number>,
-				$Map: Map<Metaexpr, number>) {
+				$Map: Map<Metaexpr, number | [number, number]>
+			): ProofExplorerIntermediateType[] {
 			
 			if (hypnumMap.has(expr)) {
 				return [{
@@ -98,8 +76,8 @@ export default class ProofExplorer {
 			}
 
 			if (expr instanceof Reduction) {
-				var leftarglines = [];
-				var leftargnums = expr.leftargs.map(l => {
+				var leftarglines: ProofExplorerIntermediateType[] = [];
+				var leftargnums: (number | [number, number])[] = expr.leftargs.map(l => {
 					if (hypnumMap.has(l)) return hypnumMap.get(l);
 					if ($Map.has(l)) return $Map.get(l);
 
@@ -108,8 +86,8 @@ export default class ProofExplorer {
 					return lines[lines.length - 1].ctr;
 				});
 				
-				var args = null;
-				var subjectlines = [];
+				var args: Expr0[] = null;
+				var subjectlines: ProofExplorerIntermediateType[] = [];
 				var subjectnum = hypnumMap.get(expr.subject)
 					|| $Map.get(expr.subject)
 					|| (expr.subject instanceof Funcall && $Map.has(expr.subject.fun)
@@ -208,7 +186,7 @@ export default class ProofExplorer {
 
 				var start = ctr + 1;
 
-				var $lines = [];
+				var $lines: ProofExplorerIntermediateType[] = [];
 				
 				if (expr instanceof Schema) {
 					expr.def$s.forEach($ => {
@@ -224,9 +202,7 @@ export default class ProofExplorer {
 					_type: 'V',
 					$lines,
 					lines: getTree(expr.expr, hypnumMap, $Map),
-					// getHtmlLine 함수가 이 배열을 조작하기 때문에
-					// shallow copy 해야 한다.
-					params: expr.params.slice(),
+					params: expr.params,
 					ctr: [start ,ctr]
 				}];
 			} else if (expr instanceof Tee) {
@@ -246,7 +222,7 @@ export default class ProofExplorer {
 
 				$Map = new Map($Map);
 
-				var $lines = [];
+				var $lines: ProofExplorerIntermediateType[] = [];
 				expr.def$s.forEach($ => {
 					var lines = getTree($.expr, hypnumMap, $Map);
 					$lines = $lines.concat(lines);
@@ -283,15 +259,40 @@ export default class ProofExplorer {
 			}
 		})(theexpr, new Map(), new Map());
 
+		var innertree: ProofExplorerIntermediateType[] = (tree[0] as any).$lines.concat((tree[0] as any).lines);
+
+		var ncols = (function recurse(tree: ProofExplorerIntermediateType[]): number {
+			return Math.max(...tree.map(t => {
+				switch (t._type) {
+					case 'V':
+						return Math.max(
+							recurse(t.$lines),
+							recurse(t.lines)
+						) + 1;
+					case 'T':
+						return Math.max(
+							recurse(t.leftlines),
+							recurse(t.$lines),
+							recurse(t.rightlines)
+						) + 1;
+					default:
+						return 1;
+				}
+			}));
+		})(innertree);
+
 		var html = '<table class="explorer">';
 		html += `<tr><th>#</th><th colspan="${ncols}">expr</th><th colspan="2">rule</th></tr>`;
 		
-		html += (function tree2html(lines, left) {
+		html += (function tree2html(lines: ProofExplorerIntermediateType[], left: Variable[][]) {
 			return lines.map(line => {
 				switch (line._type) {
 					case 'V':
-						return tree2html(line.$lines, left.concat([line.params]))
-							+ tree2html(line.lines, left.concat([line.params]));
+						// getHtmlLine 함수가 이 배열을 조작하기 때문에
+						// shallow copy 해야 한다.
+						var params = line.params.slice();
+						return tree2html(line.$lines, left.concat([params]))
+							+ tree2html(line.lines, left.concat([params]));
 					case 'T':
 						var newleft = left.concat([[]]);
 
@@ -373,14 +374,14 @@ export default class ProofExplorer {
 						);
 					default:
 						return getHtmlLine(
-							line.ctr,
+							(line as any).ctr,
 							left,
-							`Unknown type ${line._type}`,
+							`Unknown type ${(line as any)._type}`,
 							''
 						);
 				}
 			}).join('');
-		})(tree[0].$lines.concat(tree[0].lines), []);
+		})(innertree, []);
 		
 		html += '</table>';
 	
