@@ -1370,21 +1370,38 @@ schema doubleton_eq_e(cls x: @11, cls y: @21, cls u: @31, cls v: @41) {
 		]
 }
 
-"axiom of pairing. doubleton의 정의가 이상해졌으므로 doubleton에 의존하지 않도록 바꾸는 것이 좋을 것이다."
-axiomatic schema ax_doubleton() {
-	U2((cls x, cls y) => {
-		I(
-			A(set(x), set(y)),
-			set(doubleton(x, y))
-		)
+"axiom of pairing."
+axiomatic schema ax_pairing() {
+	Uin(universe(), (cls x) => {
+		Uin(universe(), (cls y) => {
+			Xin(universe(), ($D$ cls d) => {
+				U((cls z) => {
+					E(
+						in(z, d),
+						O(eq(z, x), eq(z, y))
+					)
+				})
+			})
+		})
 	})
 }
 
 schema doubleton_set_i(cls x: @11, cls y: @21) {
 	set(x), set(y) |-
-		mp[
-			Ai[@h1; @h2];
-			Ue2(?, x, y)[ax_doubleton()]
+		mpXin_Xe_p(?, ?, set(doubleton(x, y)))[
+			mp[universe_in_i[@h2]; Ue(?, y)[
+				mp[universe_in_i[@h1]; Ue(?, x)[ax_pairing()]]
+			]];
+			Ui[($D$ cls d) => cp[in(d, universe()) |- cp[U((cls z) => {
+				E(in(z, d), O(eq(z, x), eq(z, y)))
+			}) |-
+				subset_is_set[set_i[@h3]; Ui[(cls z) => cp[in(z, doubleton(x, y)) |-
+					mpE2[
+						doubleton_e[@h1; @h2; @h5];
+						Ue(?, z)[@h4]
+					]
+				]][as subseteq(doubleton(x, y), d)]]
+			]]]
 		]
 }
 

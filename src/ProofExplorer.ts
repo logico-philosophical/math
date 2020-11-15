@@ -1,13 +1,6 @@
 import Counter from "./Counter";
-import $Variable from "./nodes/$Variable";
-import Expr0 from "./nodes/Expr0";
-import Fun from "./nodes/Fun";
-import Funcall from "./nodes/Funcall";
 import Metaexpr from "./nodes/Metaexpr";
-import { isNameable } from "./nodes/Nameable";
-import Reduction from "./nodes/Reduction";
 import Schema from "./nodes/Schema";
-import Tee from "./nodes/Tee";
 import Variable from "./nodes/Variable";
 import { ProofType } from "./ProofType";
 import Scope from "./Scope";
