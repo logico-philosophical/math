@@ -28,7 +28,7 @@ export interface TypedefObject {
 export interface DefvObject {
 	_type: 'defv';
 	isParam: boolean;
-	guess?: string;
+	selector?: string;
 	doc: string;
 	tex: string;
 	type: TypeObject;
@@ -67,7 +67,7 @@ export interface DefschemaObject {
 export interface ReductionObject {
 	_type: 'reduction';
 	subject: MetaexprObject;
-	guesses: Array<Expr0Object | null>;
+	args: Array<Expr0Object | null>;
 	leftargs: MetaexprObject[];
 	as: MetaexprObject;
 	location: LocationObject;

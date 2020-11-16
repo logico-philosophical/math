@@ -14,21 +14,21 @@ interface VariableArgumentType {
 	type: ObjectType;
 	name: string;
 	isParam: boolean;
-	guess?: string;
+	selector?: string;
 }
 
 export default class Variable extends Expr0 implements Nameable {
 	
 	public readonly isParam: boolean;
-	public readonly guess: string;
+	public readonly selector: string;
 	public readonly type: ObjectType;
 	public readonly name: string;
 
-	constructor ({doc, tex, type, name, isParam, guess}: VariableArgumentType, trace: StackTrace) {
+	constructor ({doc, tex, type, name, isParam, selector}: VariableArgumentType, trace: StackTrace) {
 		super(trace, doc, tex, type);
 
 		this.isParam = !!isParam;
-		this.guess = guess || null;
+		this.selector = selector || null;
 
 		if (typeof name != 'string')
 			throw Node.error('Assertion failed', trace);

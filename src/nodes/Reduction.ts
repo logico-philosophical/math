@@ -15,7 +15,7 @@ import Variable from './Variable';
 
 interface ReductionArgumentType {
 	subject: Metaexpr;
-	guesses: Expr0[];
+	args: (Expr0 | null)[];
 	leftargs: Metaexpr[];
 	as: Metaexpr;
 }
@@ -23,15 +23,15 @@ interface ReductionArgumentType {
 export default class Reduction extends Metaexpr {
 	
 	public readonly subject: Metaexpr;
-	public readonly guesses: Expr0[];
+	public readonly args: (Expr0 | null)[];
 	public readonly leftargs: Metaexpr[];
 	public readonly reduced: Metaexpr;
 
-	constructor ({subject, guesses, leftargs, as}: ReductionArgumentType, context: ExecutionContext, trace: StackTrace) {
-		if (guesses) {
+	constructor ({subject, args, leftargs, as}: ReductionArgumentType, context: ExecutionContext, trace: StackTrace) {
+		if (args) {
 			let resolvedType = subject.type.resolve() as ObjectType | MetaType,
 				paramTypes = resolvedType.from,
-				argTypes = guesses.map(e => e && e.type);
+				argTypes = args.map(e => e && e.type);
 
 			if (paramTypes.length != argTypes.length)
 				throw Node.error(`Invalid number of arguments (expected ${paramTypes.length}): ${argTypes.length}`, trace);
@@ -45,18 +45,18 @@ export default class Reduction extends Metaexpr {
 
 		if (subject instanceof Fun) {
 			subject.params.forEach((p, i) => {
-				if (!(guesses && guesses[i]) && !p.guess) {
+				if (!(args && args[i]) && !p.selector) {
 					throw Node.error(`Argument #${i + 1} could not be guessed`, trace);
 				}
 			});
 	
 			var derefs = subject.params.map((p, i) => {
-				if (guesses && guesses[i]) return guesses[i];
+				if (args && args[i]) return args[i];
 
 				var tee = (subject as Fun).expr.expandMeta(false) as Tee;
 	
-				return Reduction.query(
-					p.guess,
+				return Reduction.guess(
+					p.selector,
 					tee.left, leftargs,
 					tee.right, as,
 					context, trace
@@ -67,7 +67,7 @@ export default class Reduction extends Metaexpr {
 				fun: subject,
 				args: derefs,
 			}, trace);
-		} else if (guesses) {
+		} else if (args) {
 			throw Node.error('Something\'s wrong', trace);
 		}
 	
@@ -161,57 +161,58 @@ ${as.expandMeta(true)}
 		return this.reduced.equals(obj, context);
 	}
 
-	public static query(
-			guess: string,
+	public static guess(
+			selector: string,
 			left: Metaexpr[], leftargs: Metaexpr[],
 			right: Metaexpr, as: Metaexpr,
-			context: ExecutionContext, trace: StackTrace) {
-		if (guess.length == 0) throw Node.error('wut', trace);
+			context: ExecutionContext, trace: StackTrace): Metaexpr {
+		
+		if (selector.length == 0) throw Node.error('wut', trace);
 
 		var parameter: Metaexpr, argument: Metaexpr;
 
-		if (guess[0] == 'r') {
+		if (selector[0] == 'r') {
 			if (!as) {
-				throw Node.error(`Cannot dereference @${guess}: expected output is not given`, trace);
+				throw Node.error(`Cannot dereference @${selector}: expected output is not given`, trace);
 			}
 
 			parameter = right;
 			argument = as;
 		} else {
-			var n = Number(guess[0]);
+			var n = Number(selector[0]);
 
 			if (!(1 <= n && n <= leftargs.length))
-				throw Node.error(`Cannot dereference @${guess}: antecedent index out of range`, trace);
+				throw Node.error(`Cannot dereference @${selector}: antecedent index out of range`, trace);
 
 			parameter = left[n - 1];
 			argument = leftargs[n - 1];
 		}
 
 		return (function recurse(
-				guess: string, ptr: number,
-				parameter: Metaexpr, argument: Metaexpr) {
+				ptr: number,
+				parameter: Metaexpr, argument: Metaexpr): Metaexpr {
 			argument = argument.expandMeta(true);
 			
-			if (guess.length <= ptr) return argument;
+			if (selector.length <= ptr) return argument;
 
-			if (/[0-9]/.test(guess[ptr])) {
-				var n = Number(guess[ptr]);
+			if (/[0-9]/.test(selector[ptr])) {
+				var n = Number(selector[ptr]);
 
 				if (parameter instanceof Tee && argument instanceof Tee) {
 					if (parameter.left.length != argument.left.length) {
-						throw Node.error(`Cannot dereference @${guess}: antecedent length mismatch`, trace);
+						throw Node.error(`Cannot dereference @${selector}: antecedent length mismatch`, trace);
 					}
 
 					if (!(1 <= n && n <= argument.left.length)) {
-						throw Node.error(`Cannot dereference @${guess}: antecedent index out of range`, trace);
+						throw Node.error(`Cannot dereference @${selector}: antecedent index out of range`, trace);
 					}
 
-					return recurse(guess, ptr + 1, parameter.left[n - 1], argument.left[n - 1]);
+					return recurse(ptr + 1, parameter.left[n - 1], argument.left[n - 1]);
 				}
 
 				while (true) {
 					if (!(parameter instanceof Funcall) || !(argument instanceof Funcall)) {
-						throw Node.error(`Cannot dereference @${guess}`, trace);
+						throw Node.error(`Cannot dereference @${selector}`, trace);
 					}
 
 					if (parameter.fun.equals(argument.fun, context)) {
@@ -219,26 +220,26 @@ ${as.expandMeta(true)}
 					}
 
 					if (!argument.isExpandable(context)) {
-						throw Node.error(`Cannot dereference @${guess}`, trace);
+						throw Node.error(`Cannot dereference @${selector}`, trace);
 					}
 
 					argument = argument.expandOnce(context);
 				}
 
 				if (!argument.args || !(1 <= n && n <= argument.args.length))
-					throw Node.error(`Cannot dereference @${guess}`, trace);
+					throw Node.error(`Cannot dereference @${selector}`, trace);
 
-				return recurse(guess, ptr + 1, parameter.args[n - 1], argument.args[n - 1]);
-			} else if (guess[ptr] == 'r') {
+				return recurse(ptr + 1, parameter.args[n - 1], argument.args[n - 1]);
+			} else if (selector[ptr] == 'r') {
 				if (parameter instanceof Tee && argument instanceof Tee) {
-					return recurse(guess, ptr + 1, parameter.right, argument.right);
+					return recurse(ptr + 1, parameter.right, argument.right);
 				}
 
-				throw Node.error(`Cannot dereference @${guess}`, trace);
+				throw Node.error(`Cannot dereference @${selector}`, trace);
 			}
 
-			throw Node.error(`Cannot dereference @${guess}`, trace);
-		})(guess, 1, parameter, argument);
+			throw Node.error(`Cannot dereference @${selector}`, trace);
+		})(1, parameter, argument);
 	}
 
 	protected getProofInternal(

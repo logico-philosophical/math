@@ -77,7 +77,7 @@ defparam =
 
 defschemaparam =
 	tex:(tex __)? type:type __ name:ident
-	guess:(_ ':' _ '@' g:$[a-z0-9_]+ {return g})?
+	selector:(_ ':' _ '@' g:$[a-z0-9_]+ {return g})?
 	{
 		return {
 			_type: 'defv',
@@ -86,7 +86,7 @@ defschemaparam =
 			tex: tex ? tex[0] : null,
 			type,
 			name,
-			guess,
+			selector,
 			location: location()
 		}
 	}
@@ -186,7 +186,7 @@ reduction =
 		")"
 		{return e}
 	) _
-	guesses:(
+	args:(
 		"(" _
 		a:(
 			head:('?' {return null} / expr0) _
@@ -217,7 +217,7 @@ reduction =
 		var ret = {
 			_type: 'reduction',
 			subject,
-			guesses,
+			args,
 			leftargs: leftargs[0].a,
 			as: leftargs[0].b,
 			location: location()
@@ -227,7 +227,7 @@ reduction =
 			ret = {
 				_type: 'reduction',
 				subject: ret,
-				guesses: null,
+				args: null,
 				leftargs: leftargs[i].a,
 				as: leftargs[i].b,
 				location: location()

@@ -106,7 +106,7 @@ export default class Schema extends Fun {
 		if (!root)
 			return `\\href{#${id}}\\mathsf{${Node.escapeTeX(this.name)}}`;
 	
-		return `\\href{#${id}}{\\mathsf{${Node.escapeTeX(this.name)}}}\\mathord{\\left(${this.params.map(e => e.toTeXStringWithId(Node.PREC_COMMA) + (e.guess ? `: \\texttt{@${e.guess}}` : '')).join(', ')}\\right)}:\\\\\\quad`
+		return `\\href{#${id}}{\\mathsf{${Node.escapeTeX(this.name)}}}\\mathord{\\left(${this.params.map(e => e.toTeXStringWithId(Node.PREC_COMMA) + (e.selector ? `: \\texttt{@${e.selector}}` : '')).join(', ')}\\right)}:\\\\\\quad`
 				+ this.expr.expandMeta(true).toTeXString(true);
 	}
 }

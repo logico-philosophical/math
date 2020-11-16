@@ -127,7 +127,7 @@ export default class PI {
 		return new Variable({
 			type,
 			isParam: !!obj.isParam,
-			guess: obj.guess || null,
+			selector: obj.selector || null,
 			name: obj.name,
 			doc: obj.doc,
 			tex: obj.tex
@@ -429,9 +429,9 @@ export default class PI {
 
 		var subject = PI.metaexpr(obj.subject, scope, context);
 
-		var guesses = !obj.guesses
+		var args = !obj.args
 			? null
-			: obj.guesses.map(g => {
+			: obj.args.map(g => {
 				return g && PI.expr0(g, scope);
 			});
 
@@ -443,7 +443,7 @@ export default class PI {
 
 		return new Reduction({
 			subject,
-			guesses,
+			args,
 			leftargs,
 			as
 		}, context, scope.trace);
