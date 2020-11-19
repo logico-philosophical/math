@@ -13,7 +13,7 @@ import ObjectFun from './nodes/ObjectFun';
 import ObjectType from './nodes/ObjectType';
 import Parameter from './nodes/Parameter';
 import Reduction from './nodes/Reduction';
-import Schema from './nodes/Schema';
+import Schema, { SchemaType } from './nodes/Schema';
 import Tee from './nodes/Tee';
 import Variable from './nodes/Variable';
 import { Def$Object, DefschemaObject, DefunObject, DefvObject, Expr0Object, FuncallObject, FunexprObject, MetaexprObject, ReductionObject, SchemacallObject, SchemaexprObject, StypeObject, TeeObject, TypedefObject, TypeObject, VarObject } from './PegInterfaceDefinitions';
@@ -332,13 +332,13 @@ export default class PI {
 
 		var scope = parentScope.extend('schema', name, obj.location);
 
-		var axiomatic: boolean = false,
+		var schemaType: SchemaType = 'schema',
 			doc: string = null,
 			annotations: string[] = [],
 			context = oldContext;
 
 		if (obj._type == 'defschema') {
-			axiomatic = obj.axiomatic;
+			schemaType = obj.schemaType;
 			doc = obj.doc;
 			annotations = obj.annotations;
 
@@ -393,7 +393,7 @@ export default class PI {
 
 		var expr = PI.metaexpr(obj.expr, scope, context);
 
-		return new Schema({doc, tex: null, annotations, axiomatic, name, params, context, def$s, expr}, scope.trace);
+		return new Schema({doc, tex: null, annotations, schemaType, name, params, context, def$s, expr}, scope.trace);
 	}
 
 	public static schemacall(obj: SchemacallObject, parentScope: Scope, context: ExecutionContext): Funcall {

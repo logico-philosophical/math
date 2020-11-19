@@ -12,7 +12,7 @@ cls pair(cls x, cls y) {
 	doubleton(singleton(x), doubleton(x, y))
 }
 
-schema pair_set_i(cls x: @11, cls y: @21) {
+theorem pair_set_i(cls x: @11, cls y: @21) {
 	set(x), set(y) |-
 		doubleton_set_i[
 			singleton_set_i[@h1];
@@ -21,22 +21,22 @@ schema pair_set_i(cls x: @11, cls y: @21) {
 		[as set(pair(x, y))]
 }
 
-schema pair_set_e1(cls x: @111, cls y: @112) {
+theorem pair_set_e1(cls x: @111, cls y: @112) {
 	set(pair(x, y)) |-
 		singleton_set_e[doubleton_set_e1[@h1]]
 }
 
-schema pair_set_e2(cls x: @111, cls y: @112) {
+theorem pair_set_e2(cls x: @111, cls y: @112) {
 	set(pair(x, y)) |-
 		doubleton_set_e2[doubleton_set_e2[@h1]]
 }
 
-schema pair_set_flip(cls x: @111, cls y: @112) {
+theorem pair_set_flip(cls x: @111, cls y: @112) {
 	set(pair(x, y)) |-
 		pair_set_i[pair_set_e2[@h1]; pair_set_e1[@h1]]
 }
 
-schema pair_eq_i(cls x: @11, cls y: @21, cls u: @12, cls v: @22) {
+theorem pair_eq_i(cls x: @11, cls y: @21, cls u: @12, cls v: @22) {
 	eq(x, u), eq(y, v) |-
 		doubleton_eq_i[
 			singleton_eq_i[@h1];
@@ -46,7 +46,7 @@ schema pair_eq_i(cls x: @11, cls y: @21, cls u: @12, cls v: @22) {
 }
 
 "`[Pinter]` 정리 1.30."
-schema pair_eq_e(cls x: @11, cls y: @21, cls u: @31, cls v: @41) {
+theorem pair_eq_e(cls x: @11, cls y: @21, cls u: @31, cls v: @41) {
 	set(x), set(y), set(u), set(v), eq(pair(x, y), pair(u, v)) |-
 		Oe[
 			doubleton_eq_e[
@@ -113,12 +113,12 @@ schema pair_eq_e(cls x: @11, cls y: @21, cls u: @31, cls v: @41) {
 		]
 }
 
-schema pair_eq_e1(cls x: @11, cls y: @21, cls u: @31, cls v: @41) {
+theorem pair_eq_e1(cls x: @11, cls y: @21, cls u: @31, cls v: @41) {
 	set(x), set(y), set(u), set(v), eq(pair(x, y), pair(u, v)) |-
 		Ae1[pair_eq_e[@h1; @h2; @h3; @h4; @h5]]
 }
 
-schema pair_eq_e1_v1(cls x: @211, cls y: @212, cls u: @221, cls v: @222) {
+theorem pair_eq_e1_v1(cls x: @211, cls y: @212, cls u: @221, cls v: @222) {
 	set(pair(x, y)), eq(pair(x, y), pair(u, v)) |-
 		$set_uv = set_is_set_1[@h1; @h2];
 		$set_x = pair_set_e1[@h1];
@@ -129,7 +129,7 @@ schema pair_eq_e1_v1(cls x: @211, cls y: @212, cls u: @221, cls v: @222) {
 		pair_eq_e1[$set_x; $set_y; $set_u; $set_v; @h2]
 }
 
-schema pair_eq_e1_v2(cls x: @211, cls y: @212, cls u: @221, cls v: @222) {
+theorem pair_eq_e1_v2(cls x: @211, cls y: @212, cls u: @221, cls v: @222) {
 	set(pair(u, v)), eq(pair(x, y), pair(u, v)) |-
 		$set_xy = set_is_set_2[@h1; @h2];
 		$set_x = pair_set_e1[$set_xy];
@@ -140,12 +140,12 @@ schema pair_eq_e1_v2(cls x: @211, cls y: @212, cls u: @221, cls v: @222) {
 		pair_eq_e1[$set_x; $set_y; $set_u; $set_v; @h2]
 }
 
-schema pair_eq_e2(cls x: @11, cls y: @21, cls u: @31, cls v: @41) {
+theorem pair_eq_e2(cls x: @11, cls y: @21, cls u: @31, cls v: @41) {
 	set(x), set(y), set(u), set(v), eq(pair(x, y), pair(u, v)) |-
 		Ae2[pair_eq_e[@h1; @h2; @h3; @h4; @h5]]
 }
 
-schema pair_eq_e2_v1(cls x: @211, cls y: @212, cls u: @221, cls v: @222) {
+theorem pair_eq_e2_v1(cls x: @211, cls y: @212, cls u: @221, cls v: @222) {
 	set(pair(x, y)), eq(pair(x, y), pair(u, v)) |-
 		$set_uv = set_is_set_1[@h1; @h2];
 		$set_x = pair_set_e1[@h1];
@@ -156,7 +156,7 @@ schema pair_eq_e2_v1(cls x: @211, cls y: @212, cls u: @221, cls v: @222) {
 		pair_eq_e2[$set_x; $set_y; $set_u; $set_v; @h2]
 }
 
-schema pair_eq_e2_v2(cls x: @211, cls y: @212, cls u: @221, cls v: @222) {
+theorem pair_eq_e2_v2(cls x: @211, cls y: @212, cls u: @221, cls v: @222) {
 	set(pair(u, v)), eq(pair(x, y), pair(u, v)) |-
 		$set_xy = set_is_set_2[@h1; @h2];
 		$set_x = pair_set_e1[$set_xy];
@@ -180,7 +180,7 @@ cls setbuilder_pair(pr2 f) {
 	})
 }
 
-schema setbuilder_pair_i(pr2 f: @r21, cls a: @111, cls b: @112) {
+theorem setbuilder_pair_i(pr2 f: @r21, cls a: @111, cls b: @112) {
 	set(pair(a, b)), f(a, b) |-
 		setbuilder_i[
 			@h1;
@@ -193,7 +193,7 @@ schema setbuilder_pair_i(pr2 f: @r21, cls a: @111, cls b: @112) {
 		][as in(pair(a, b), setbuilder_pair(f))]
 }
 
-schema setbuilder_pair_e(pr2 f: @121, cls a: @111, cls b: @112) {
+theorem setbuilder_pair_e(pr2 f: @121, cls a: @111, cls b: @112) {
 	in(pair(a, b), setbuilder_pair(f)) |-
 		$set_a_b = set_i[@h1];
 		mpX2_X2e_p(?, f(a, b))[
@@ -235,7 +235,7 @@ cls cartesian($A$ cls a, $B$ cls b) {
 	})
 }
 
-schema cartesian_in_i($A$ cls a: @12, $B$ cls b: @22, cls x: @11, cls y: @21) {
+theorem cartesian_in_i($A$ cls a: @12, $B$ cls b: @22, cls x: @11, cls y: @21) {
 	in(x, a), in(y, b) |-
 		setbuilder_i[
 			pair_set_i[set_i[@h1]; set_i[@h2]];
@@ -250,7 +250,7 @@ schema cartesian_in_i($A$ cls a: @12, $B$ cls b: @22, cls x: @11, cls y: @21) {
 		][as in(pair(x, y), cartesian(a, b))]
 }
 
-schema cartesian_in_e($A$ cls a: @121, $B$ cls b: @122, cls x: @111, cls y: @112) {
+theorem cartesian_in_e($A$ cls a: @121, $B$ cls b: @122, cls x: @111, cls y: @112) {
 	in(pair(x, y), cartesian(a, b)) |-
 		$set_pair_xy = set_i[@h1];
 		$set_x = pair_set_e1[$set_pair_xy];
@@ -278,11 +278,11 @@ schema cartesian_in_e($A$ cls a: @121, $B$ cls b: @122, cls x: @111, cls y: @112
 		]
 }
 
-schema cartesian_in_e1($A$ cls a: @121, $B$ cls b: @122, cls x: @111, cls y: @112) {
+theorem cartesian_in_e1($A$ cls a: @121, $B$ cls b: @122, cls x: @111, cls y: @112) {
 	in(pair(x, y), cartesian(a, b)) |- Ae1[cartesian_in_e[@h1]]
 }
 
-schema cartesian_in_e2($A$ cls a: @121, $B$ cls b: @122, cls x: @111, cls y: @112) {
+theorem cartesian_in_e2($A$ cls a: @121, $B$ cls b: @122, cls x: @111, cls y: @112) {
 	in(pair(x, y), cartesian(a, b)) |- Ae2[cartesian_in_e[@h1]]
 }
 
@@ -314,7 +314,7 @@ cls rel_dom($R$ cls r) {
 	})
 }
 
-schema rel_dom_in_i($R$ cls r: @12, cls x: @111, cls y: @112) {
+theorem rel_dom_in_i($R$ cls r: @12, cls x: @111, cls y: @112) {
 	in(pair(x, y), r) |-
 		$set_x = pair_set_e1[set_i[@h1]];
 		
@@ -344,7 +344,7 @@ cls rel_im_set($R$ cls r, $A$ cls a) {
 	})
 }
 
-schema rel_im_set_eq_i($R$ cls r, $A$ cls a: @11, $B$ cls b: @12) {
+theorem rel_im_set_eq_i($R$ cls r, $A$ cls a: @11, $B$ cls b: @12) {
 	eq(a, b) |-
 		setbuilder_eq_i(
 			(cls y) => {
@@ -372,7 +372,7 @@ sealed cls rel_inverse(cls x) {
 	})
 }
 
-schema rel_inverse_in_i(cls x: @12, cls a: @111, cls b: @112) using rel_inverse {
+theorem rel_inverse_in_i(cls x: @12, cls a: @111, cls b: @112) using rel_inverse {
 	in(pair(a, b), x) |-
 		setbuilder_pair_i[
 			pair_set_flip[set_i[@h1]];
@@ -380,19 +380,19 @@ schema rel_inverse_in_i(cls x: @12, cls a: @111, cls b: @112) using rel_inverse 
 		][as in(pair(b, a), rel_inverse(x))]
 }
 
-schema rel_inverse_in_e(cls x: @121, cls a: @111, cls b: @112) using rel_inverse {
+theorem rel_inverse_in_e(cls x: @121, cls a: @111, cls b: @112) using rel_inverse {
 	in(pair(a, b), rel_inverse(x)) |-
 		setbuilder_pair_e[@h1]
 }
 
-schema rel_inverse_in(cls x, cls a, cls b) {
+theorem rel_inverse_in(cls x, cls a, cls b) {
 	Ei[
 		cp[rel_inverse_in_i(x, a, b)];
 		cp[rel_inverse_in_e(x, b, a)]
 	]
 }
 
-schema rel_inverse_is_rel($R$ cls r: @11, $A$ cls a: @12, $B$ cls b: @13) using rel_inverse {
+theorem rel_inverse_is_rel($R$ cls r: @11, $A$ cls a: @12, $B$ cls b: @13) using rel_inverse {
 	is_rel_over_sets(r, a, b) |-
 		Ui[(cls z) => { cp[in(z, rel_inverse(r)) |-
 			mpX2_X2e_p(?, in(z, cartesian(b, a)))[
@@ -546,7 +546,7 @@ st is_strict_order($R$ cls r, $A$ cls a) {
 "이항관계를 위한 U.
 
 [$R]이 이항관계일 때 임의의 [$.(a, b)\in R]에 대해 [$f(a, b)]이면, 임의의 [$x\in R]에 대해 [$fx]이다."
-schema rel_U(pr f, $R$ cls r: @11) {
+theorem rel_U(pr f, $R$ cls r: @11) {
 	is_rel(r), U2((cls x, cls y) => {
 		I(
 			in(pair(x, y), r),
@@ -567,7 +567,7 @@ schema rel_U(pr f, $R$ cls r: @11) {
 		]}][as Uin(r, f)]
 }
 
-schema rel_eq_i($R_1$ cls r1: @11, $R_2$ cls r2: @21) {
+theorem rel_eq_i($R_1$ cls r1: @11, $R_2$ cls r2: @21) {
 	is_rel(r1), is_rel(r2), U2((cls x, cls y) => {
 		E(in(pair(x, y), r1), in(pair(x, y), r2))
 	}) |-
@@ -592,7 +592,7 @@ schema rel_eq_i($R_1$ cls r1: @11, $R_2$ cls r2: @21) {
 }
 
 "곱집합은 이항관계이다."
-schema cartesian_is_rel(cls x, cls y) {
+theorem cartesian_is_rel(cls x, cls y) {
 	Ui[(cls z) => { cp[in(z, cartesian(x, y)) |-
 		setbuilder_i[
 			set_i[@h1];
@@ -615,7 +615,7 @@ schema cartesian_is_rel(cls x, cls y) {
 	[as is_rel(cartesian(x, y))]
 }
 
-schema cartesian_inverse($A$ cls a, $B$ cls b) {
+theorem cartesian_inverse($A$ cls a, $B$ cls b) {
 	$foo = ($A$ cls a, $B$ cls b, cls x, cls y) => {
 		cp[in(pair(x, y), cartesian(a, b)) |-
 			cartesian_in_i[
@@ -634,17 +634,17 @@ schema cartesian_inverse($A$ cls a, $B$ cls b) {
 	]]
 }
 
-schema rel_subset_is_rel(cls x: @11, cls y: @12) {
+theorem rel_subset_is_rel(cls x: @11, cls y: @12) {
 	subseteq(x, y), is_rel(y) |-
 		subseteq_subseteq[@h1; @h2][as is_rel(x)]
 }
 
-schema cartesian_is_set_1($A$ cls a, $B$ cls b) {
+theorem cartesian_is_set_1($A$ cls a, $B$ cls b) {
 	set(a), set(b) |-
 		power_is_set[power_is_set[cup_is_set[@h1; @h2]]]
 }
 
-schema cartesian_is_set_21($A$ cls a: @121, $B$ cls b: @122, cls x: @111, cls y: @112) {
+theorem cartesian_is_set_21($A$ cls a: @121, $B$ cls b: @122, cls x: @111, cls y: @112) {
 	in(pair(x, y), cartesian(a, b)) |-
 		$set_pair_xy = set_i[@h1];
 		$set_x = pair_set_e1[$set_pair_xy];
@@ -683,7 +683,7 @@ schema cartesian_is_set_21($A$ cls a: @121, $B$ cls b: @122, cls x: @111, cls y:
 		][as in(pair(x, y), power(power(cup(a, b))))]
 }
 
-schema cartesian_is_set_2($A$ cls a, $B$ cls b) {
+theorem cartesian_is_set_2($A$ cls a, $B$ cls b) {
 	rel_U(is_in(power(power(cup(a, b)))), cartesian(a, b))[
 		cartesian_is_rel(a, b);
 		Ui2[(cls x, cls y) => {
@@ -694,7 +694,7 @@ schema cartesian_is_set_2($A$ cls a, $B$ cls b) {
 }
 
 "`[Pinter]` 정리 1.51. 곱집합은 집합이다."
-schema cartesian_is_set($A$ cls a: @11, $B$ cls b: @21) {
+theorem cartesian_is_set($A$ cls a: @11, $B$ cls b: @21) {
 	set(a), set(b) |-
 		subset_is_set[
 			cartesian_is_set_1(a, b)[@h1; @h2];

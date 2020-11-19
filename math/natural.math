@@ -14,13 +14,13 @@ cls successor(cls x) {
 	cup(x, singleton(x))
 }
 
-schema successor_eq_i(cls x: @11, cls y: @12) {
+theorem successor_eq_i(cls x: @11, cls y: @12) {
 	eq(x, y) |-
 		cup_eq_i[@h1; singleton_eq_i[@h1]]
 		[as eq(successor(x), successor(y))]
 }
 
-schema self_in_successor(cls x: @11) {
+theorem self_in_successor(cls x: @11) {
 	set(x) |- cup_i2(x, ?, ?)[
 		self_in_singleton(x)[@h1]
 	][as in(x, successor(x))]
@@ -45,7 +45,7 @@ cls ord_two() {
 }
 
 "따름 순서수는 집합이다."
-schema successor_is_set(cls x: @11) {
+theorem successor_is_set(cls x: @11) {
 	set(x) |- cup_is_set[
 		@h1;
 		singleton_set_i[@h1]
@@ -85,7 +85,7 @@ cls omega() {
 }
 
 "자연수 집합은 0을 포함한다. `[Pinter]`에 따르면 페아노 공리계 제1공리이다."
-schema zero_in_omega() {
+theorem zero_in_omega() {
 	bigcap_i(setbuilder((cls z) => {
 		is_successor_set(z)
 	}), ord_zero())[
@@ -100,7 +100,7 @@ schema zero_in_omega() {
 }
 
 "`[Pinter]`에 따르면 페아노 공리계 제2공리인 것."
-schema successor_in_omega(cls z: @11) {
+theorem successor_in_omega(cls z: @11) {
 	in(z, omega()) |-
 		bigcap_i(setbuilder((cls z) => {is_successor_set(z)}), successor(z))[
 			successor_is_set(z)[Xi(contains(z), omega())[@h1]];
@@ -124,7 +124,7 @@ schema successor_in_omega(cls z: @11) {
 }
 
 "[$\omega]는 successor set이다."
-schema omega_is_successor_set() {
+theorem omega_is_successor_set() {
 	Ai[
 		zero_in_omega();
 		Ui[(cls z) => {
@@ -134,7 +134,7 @@ schema omega_is_successor_set() {
 }
 
 "자연수 집합은 집합이다. ax_infinity로부터 유도된다."
-schema omega_is_set() {
+theorem omega_is_set() {
 	mpX_Xe_p(?, set(omega()))[
 		ax_infinity();
 		Ui[(cls x) => {
@@ -152,7 +152,7 @@ schema omega_is_set() {
 }
 
 "`[Pinter]` 정리 6.3."
-schema induce_set($X$ cls x: @11) {
+theorem induce_set($X$ cls x: @11) {
 	subseteq(x, omega()), in(ord_zero(), x), Uin(omega(), (cls n) => {
 		I(in(n, x), in(successor(n), x))
 	}) |-
@@ -171,7 +171,7 @@ schema induce_set($X$ cls x: @11) {
 }
 
 "수학적 귀납법. [~(href=https://www.cs.ru.nl/~freek/100/)[*Formalizing 100 Theorems]]의 정리 #74이다."
-schema induce(pr f) {
+theorem induce(pr f) {
 	$foo = (cls z) => {
 		in(z, omega()) |-
 			Eiu[
@@ -204,14 +204,14 @@ schema induce(pr f) {
 }
 
 "induce_set의 더 강력한 버전."
-schema induce_set_strong($X$ cls x: @12) {
+theorem induce_set_strong($X$ cls x: @12) {
 	in(ord_zero(), x), Uin(omega(), (cls n) => {
 		I(in(n, x), in(successor(n), x))
 	}) |- induce(is_in(x))[@h1; @h2][as subseteq(omega(), x)]
 }
 
 "`[Pinter]`에 따르면 페아노 공리계 제3공리인 것."
-schema successor_is_not_zero(cls n: @11) {
+theorem successor_is_not_zero(cls n: @11) {
 	in(n, omega()) |-
 		Ni_alt[
 			eq(successor(n), ord_zero()) |-
@@ -227,7 +227,7 @@ schema successor_is_not_zero(cls n: @11) {
 }
 
 "`[Pinter]` 보조정리 6.6."
-schema omega_in_to_subseteq(cls n: @11, cls m: @21) {
+theorem omega_in_to_subseteq(cls n: @11, cls m: @21) {
 	$base = Ui[(cls m) => { cp[in(m, ord_zero()) |-
 		NNe[Ni_alt[N(subseteq(m, ord_zero())) |-
 			Fi[@h1; emptyset_def(m)]]]] }];
@@ -265,7 +265,7 @@ schema omega_in_to_subseteq(cls n: @11, cls m: @21) {
 }
 
 "`[Pinter]`에 따르면 페아노 공리계 제5공리인 것."
-schema successor_eq_e(cls n: @11, cls m: @21) {
+theorem successor_eq_e(cls n: @11, cls m: @21) {
 	in(n, omega()), in(m, omega()), eq(successor(n), successor(m)) |-
 		$base = setbuilder_e[in_eq_right_1[self_in_successor[set_i[@h1]]; @h3]];
 		$base_dual = setbuilder_e[in_eq_right_2[self_in_successor[set_i[@h2]]; @h3]];
@@ -326,7 +326,7 @@ cls define_recursively($A$ cls a, cls c, cls f) {
 
 "[$\gamma\in\mathscr A]가 되기 위한 첫 번째 조건이다. 즉 [$\gamma\subseteq\omega\times A]이다.
 [$\gamma]가 함수가 되기 위한 첫 번째 조건이기도 하다."
-schema recursion_theorem_1($A$ cls a: @11, cls c: @21, cls f: @31) {
+theorem recursion_theorem_1($A$ cls a: @11, cls c: @21, cls f: @31) {
 	set(a), in(c, a), is_fun(f, a, a) |-
 		bigcap_is_smaller[
 			setbuilder_i[
@@ -390,7 +390,7 @@ schema recursion_theorem_1($A$ cls a: @11, cls c: @21, cls f: @31) {
 }
 
 "[$\gamma\in\mathscr A]가 되기 위한 두 번째 조건."
-schema recursion_theorem_2($A$ cls a: @12, cls c: @11, cls f) {
+theorem recursion_theorem_2($A$ cls a: @12, cls c: @11, cls f) {
 	in(c, a) |-
 		setbuilder_i[
 			pair_set_i[
@@ -405,7 +405,7 @@ schema recursion_theorem_2($A$ cls a: @12, cls c: @11, cls f) {
 }
 
 "[$\gamma\in\mathscr A]가 되기 위한 세 번째 조건."
-schema recursion_theorem_3($A$ cls a: @12, cls c, cls f: @11) {
+theorem recursion_theorem_3($A$ cls a: @12, cls c, cls f: @11) {
 	is_fun(f, a, a) |-
 		Ui[(cls n) => { cp[in(n, omega()) |-
 			Ui[(cls x) => { cp[in(x, a) |-
@@ -448,7 +448,7 @@ schema recursion_theorem_3($A$ cls a: @12, cls c, cls f: @11) {
 }
 
 "[$\gamma]가 함수가 되기 위한 두 번째 조건."
-schema recursion_theorem_4($A$ cls a: @11, cls c: @21, cls f: @31) {
+theorem recursion_theorem_4($A$ cls a: @11, cls c: @21, cls f: @31) {
 	set(a), in(c, a), is_fun(f, a, a) |-
 		$base =
 			Xi((cls x) => {
@@ -480,7 +480,7 @@ schema recursion_theorem_4($A$ cls a: @11, cls c: @21, cls f: @31) {
 }
 
 "[$\gamma]가 함수가 되기 위한 세 번째 조건의 base case."
-schema recursion_theorem_5_base($A$ cls a: @11, cls c: @21, cls f: @31) {
+theorem recursion_theorem_5_base($A$ cls a: @11, cls c: @21, cls f: @31) {
 	set(a), in(c, a), is_fun(f, a, a) |-
 		Qim((cls x) => {
 			in(pair(ord_zero(), x), define_recursively(a, c, f))
@@ -540,7 +540,7 @@ schema recursion_theorem_5_base($A$ cls a: @11, cls c: @21, cls f: @31) {
 }
 
 "[$\gamma]가 함수가 되기 위한 세 번째 조건의 step case."
-schema recursion_theorem_5_step($A$ cls a: @11, cls c: @21, cls f: @31) {
+theorem recursion_theorem_5_step($A$ cls a: @11, cls c: @21, cls f: @31) {
 	set(a), in(c, a), is_fun(f, a, a) |-
 		Ui[(cls n) => { cp[in(n, omega()) |-
 			cp[Q((cls x) => {
@@ -666,7 +666,7 @@ schema recursion_theorem_5_step($A$ cls a: @11, cls c: @21, cls f: @31) {
 }
 
 "[$\gamma]가 함수가 되기 위한 세 번째 조건."
-schema recursion_theorem_5($A$ cls a: @11, cls c: @21, cls f: @31) {
+theorem recursion_theorem_5($A$ cls a: @11, cls c: @21, cls f: @31) {
 	set(a), in(c, a), is_fun(f, a, a) |-
 		induce((cls n) => {
 			Q((cls x) => {
@@ -676,14 +676,14 @@ schema recursion_theorem_5($A$ cls a: @11, cls c: @21, cls f: @31) {
 }
 
 "[$\gamma:\omega\to A]가 함수이다."
-schema recursion_theorem_6($A$ cls a: @11, cls c: @21, cls f: @31) {
+theorem recursion_theorem_6($A$ cls a: @11, cls c: @21, cls f: @31) {
 	set(a), in(c, a), is_fun(f, a, a) |-
 		Ai[recursion_theorem_1[@h1; @h2; @h3]; UinA_i[recursion_theorem_4[@h1; @h2; @h3]; recursion_theorem_5[@h1; @h2; @h3]]]
 		[as is_fun(define_recursively(a, c, f), omega(), a)]
 }
 
 "[$\gamma]가 함수이고 재귀적으로 정의된다."
-schema recursion_theorem_7($A$ cls a: @11, cls c: @21, cls f: @31) {
+theorem recursion_theorem_7($A$ cls a: @11, cls c: @21, cls f: @31) {
 	set(a), in(c, a), is_fun(f, a, a) |-
 		$c1 = recursion_theorem_6[@h1; @h2; @h3];
 		
@@ -716,7 +716,7 @@ schema recursion_theorem_7($A$ cls a: @11, cls c: @21, cls f: @31) {
 }
 
 "[$\gamma]는 여러 개 있지 않다."
-schema recursion_theorem_8($A$ cls a: @11, cls c: @21, cls f: @31) {
+theorem recursion_theorem_8($A$ cls a: @11, cls c: @21, cls f: @31) {
 	set(a), in(c, a), is_fun(f, a, a) |-
 		Ui2[($\gamma_1$ cls g1, $\gamma_2$ cls g2) => {
 			cp2[is_recursively_defined(g1, a, c, f), is_recursively_defined(g2, a, c, f) |-
@@ -747,7 +747,7 @@ schema recursion_theorem_8($A$ cls a: @11, cls c: @21, cls f: @31) {
 }
 
 "재귀 정리(recursion theorem)."
-schema recursion_theorem($A$ cls a: @11, cls c: @21, cls f: @31) {
+theorem recursion_theorem($A$ cls a: @11, cls c: @21, cls f: @31) {
 	set(a), in(c, a), is_fun(f, a, a) |-
 		XQ_to_Xq[
 			Xi(($\gamma$ cls g) => {
@@ -765,13 +765,13 @@ cls omega_add_unary(cls n) {
 	define_recursively(omega(), n, make_fun(($\gamma$ cls g) => { successor(g) }, omega()))
 }
 
-schema successor_is_fun() {
+theorem successor_is_fun() {
 	make_fun_is_fun(($\gamma$ cls g) => {successor(g)}, omega(), omega())[
 		Ui[($\gamma$ cls g) => { cp[in(g, omega()) |- successor_in_omega[@h1]] }]
 	]
 }
 
-schema successor_funcall(cls n: @11) {
+theorem successor_funcall(cls n: @11) {
 	in(n, omega()) |-
 		make_fun_funcall(
 			($\gamma$ cls g) => { successor(g) },
@@ -782,7 +782,7 @@ schema successor_funcall(cls n: @11) {
 		]
 }
 
-schema omega_add_unary_ird(cls n) {
+theorem omega_add_unary_ird(cls n) {
 	in(n, omega()) |-
 		recursion_theorem_7[
 			omega_is_set();
@@ -799,7 +799,7 @@ cls omega_add(cls n, cls m) {
 	funcall(omega_add_unary(n), m)
 }
 
-schema omega_add_in_omega(cls n: @11, cls m: @21) {
+theorem omega_add_in_omega(cls n: @11, cls m: @21) {
 	in(n, omega()), in(m, omega()) |-
 		funcall_in_codomain[
 			Ae1[omega_add_unary_ird(n)[@h1]];
@@ -808,12 +808,12 @@ schema omega_add_in_omega(cls n: @11, cls m: @21) {
 }
 
 "`[Pinter]` 6.10의 1."
-schema omega_add_base(cls n: @11) {
+theorem omega_add_base(cls n: @11) {
 	in(n, omega()) |- Ae1[Ae2[omega_add_unary_ird(n)[@h1]]][as eq(omega_add(n, ord_zero()), n)]
 }
 
 "`[Pinter]` 6.10의 2."
-schema omega_add_step(cls n: @11, cls m: @21) {
+theorem omega_add_step(cls n: @11, cls m: @21) {
 	in(n, omega()), in(m, omega()) |-
 		eq_transitive[
 			mp[@h2; Ue(?, m)[Ae2[Ae2[omega_add_unary_ird(n)[@h1]]]]];
@@ -821,7 +821,7 @@ schema omega_add_step(cls n: @11, cls m: @21) {
 		][as eq(omega_add(n, successor(m)), successor(omega_add(n, m)))]
 }
 
-schema omega_add_one(cls n: @11) {
+theorem omega_add_one(cls n: @11) {
 	in(n, omega()) |-
 		eq_transitive[
 			omega_add_step[
@@ -832,7 +832,7 @@ schema omega_add_one(cls n: @11) {
 }
 
 "[$1+1=2]이다."
-schema one_plus_one_is_two() {
+theorem one_plus_one_is_two() {
 	omega_add_one(ord_one())[
 		successor_in_omega[zero_in_omega()][as in(ord_one(), omega())]
 	][as eq(omega_add(ord_one(), ord_one()), ord_two())]

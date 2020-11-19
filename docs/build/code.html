@@ -293,11 +293,11 @@ pr Af(pr f, pr g) {
 	(cls z) =&gt; { A(f(z), g(z)) }
 }
 </code></pre><p><code>(...) =&gt; {...}</code>는 인라인에서 매크로를 정의한 것이다.</p><h2>공리와 증명을 작성하는 방법</h2><p>공리는 다음과 같이 작성한다.</p><pre><code>&quot;연언 도입(conjunction introduction).&quot;
-<b>axiomatic</b> <b>schema</b> Ai(st p: @1, st q: @2) {
+<b>axiom</b> Ai(st p: @1, st q: @2) {
 	p, q |- A(p, q)
 }
-</code></pre><p>공리라서 <code>axiomatic</code>이 붙었다. <code>|-</code>가 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>⊢</mo></mrow><annotation encoding="application/x-tex">\vdash</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mrel">⊢</span></span></span></span>를 나타낸다. <code>@1</code>과 <code>@2</code>는 ⊦E 구문을 쓸 때 인자가 자동으로 인식되도록 하기 위한 것이다. 공리를 그냥 정의할 수는 없고 공리 스키마로 감싸야 한다. 정리 역시 그러하다. 예를 들어 다음과 같이 인자 없는 스키마로 감싸면 된다.</p><pre><code>&quot;axiom of empty set.&quot;
-<b>axiomatic</b> <b>schema</b> ax_emptyset() {
+</code></pre><p>공리라서 <code>axiom</code>이 붙었다. <code>|-</code>가 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>⊢</mo></mrow><annotation encoding="application/x-tex">\vdash</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mrel">⊢</span></span></span></span>를 나타낸다. <code>@1</code>과 <code>@2</code>는 ⊦E 구문을 쓸 때 인자가 자동으로 인식되도록 하기 위한 것이다. 공리를 그냥 정의할 수는 없고 공리 스키마로 감싸야 한다. 정리 역시 그러하다. 예를 들어 다음과 같이 인자 없는 스키마로 감싸면 된다.</p><pre><code>&quot;axiom of empty set.&quot;
+<b>axiom</b> ax_emptyset() {
 	|- set(emptyset())
 }
 </code></pre><p>증명은 다음과 같이 작성한다.</p><pre><code>&quot;연언 도입 2번.&quot;

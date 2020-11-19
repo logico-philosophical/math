@@ -16,7 +16,7 @@
 		"keywords": {
 			"patterns": [{
 				"name": "keyword.control.math-o-matic",
-				"match": "\\b(as|axiom|base|import|schema|sealed|type|using)\\b"
+				"match": "\\b(as|axiom|base|import|schema|sealed|theorem|type|using)\\b"
 			}]
 		},
 		"strings": {

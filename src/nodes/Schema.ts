@@ -1,23 +1,35 @@
 import Fun from "./Fun";
 
+export type SchemaType = 'axiom' | 'theorem' | 'schema';
+
 export default class Schema extends Fun {
 
-	public readonly axiomatic: boolean;
+	public readonly schemaType: SchemaType;
 	public readonly using: ObjectFun[];
 	public readonly def$s: $Variable[];
 	public readonly context: ExecutionContext;
 	private isProvedCache: boolean;
 
-	constructor ({doc, tex, annotations, axiomatic, name, params, context, def$s, expr}: SchemaArgumentType, trace: StackTrace) {
+	constructor ({doc, tex, annotations, schemaType, name, params, context, def$s, expr}: SchemaArgumentType, trace: StackTrace) {
 		if (!expr) {
 			throw Node.error('wut', trace);
 		}
 
+		if (schemaType != 'schema' && !name) {
+			throw Node.error(`wut`, trace);
+		}
+
 		super({doc, tex, annotations, sealed: false, rettype: null, name, params, expr}, trace);
 		
-		this.axiomatic = axiomatic;
+		this.schemaType = schemaType;
 		this.def$s = def$s || [];
 		this.context = context;
+
+		if (schemaType == 'theorem') {
+			if (!this.isProved()) {
+				throw Node.error(`Schema ${name} is marked as a theorem but it is not proved`, trace);
+			}
+		}
 	}
 	
 	public isProved(hyps?) {
@@ -27,10 +39,10 @@ export default class Schema extends Fun {
 			return this.isProvedCache;
 		}
 
-		var cache = !hyps;
+		var cache = !hyps || !hyps.length;
 		hyps = hyps || [];
 		
-		var ret = this.axiomatic || super.isProved(hyps);
+		var ret = this.schemaType == 'axiom' || super.isProved(hyps);
 		if (cache) this.isProvedCache = ret;
 		return ret;
 	}
@@ -49,7 +61,7 @@ export default class Schema extends Fun {
 			doc: null,
 			tex: null,
 			annotations: this.annotations,
-			axiomatic: this.axiomatic,
+			schemaType: 'schema',
 			name: null,
 			params: this.params,
 			context: this.context,
@@ -66,8 +78,8 @@ export default class Schema extends Fun {
 			doc: null,
 			tex: null,
 			annotations: this.annotations,
-			axiomatic: this.axiomatic,
-			name: null,
+			schemaType: 'schema',
+			name: this.name,
 			params: this.params,
 			context: this.context,
 			def$s: this.def$s,
@@ -130,7 +142,7 @@ interface SchemaArgumentType {
 	doc: string;
 	tex: string;
 	annotations: string[];
-	axiomatic: boolean;
+	schemaType: SchemaType;
 	name: string;
 	params: Parameter[];
 	context: ExecutionContext;

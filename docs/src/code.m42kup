@@ -54,15 +54,15 @@ pr Af(pr f, pr g) {
 
 [;;
 "연언 도입(conjunction introduction)."
-[**axiomatic] [**schema] `Ai(st p: @1, st q: @2) {
+[**axiom] `Ai(st p: @1, st q: @2) {
 	p, q |- A(p, q)
 }`]
 
-공리라서 [;axiomatic]이 붙었다. [;|-]가 [$\vdash]를 나타낸다. [;@1]과 [;@2]는 ⊦E 구문을 쓸 때 인자가 자동으로 인식되도록 하기 위한 것이다. 공리를 그냥 정의할 수는 없고 공리 스키마로 감싸야 한다. 정리 역시 그러하다. 예를 들어 다음과 같이 인자 없는 스키마로 감싸면 된다.
+공리라서 [;axiom]이 붙었다. [;|-]가 [$\vdash]를 나타낸다. [;@1]과 [;@2]는 ⊦E 구문을 쓸 때 인자가 자동으로 인식되도록 하기 위한 것이다. 공리를 그냥 정의할 수는 없고 공리 스키마로 감싸야 한다. 정리 역시 그러하다. 예를 들어 다음과 같이 인자 없는 스키마로 감싸면 된다.
 
 [;;
 "axiom of empty set."
-[**axiomatic] [**schema] ax_emptyset() {
+[**axiom] ax_emptyset() {
 	|- set(emptyset())
 }]
 

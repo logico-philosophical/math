@@ -207,7 +207,7 @@
 					
 					axiomSchemaList = axiomSchemaList.concat(
 						[...scope.schemaMap]
-							.filter(([k, v]) => v.axiomatic).map(([k, v]) => k)
+							.filter(([k, v]) => v.schemaType == 'axiom').map(([k, v]) => k)
 					);
 
 					notProvedList = notProvedList.concat(
@@ -217,7 +217,7 @@
 
 					provedList = provedList.concat(
 						[...scope.schemaMap]
-							.filter(([k, v]) => !v.axiomatic && v.isProved()).map(([k, v]) => k)
+							.filter(([k, v]) => v.schemaType != 'axiom' && v.isProved()).map(([k, v]) => k)
 					);
 
 					for (var [k, v] of scope.typedefMap) {
@@ -260,9 +260,7 @@
 						arr[v._id] = `<div class="block">`
 							+ `<p class="label"><a id="schema-${v.isProved() ? 'p' : 'np'}-${k}" href="#schema-${v.isProved() ? 'p' : 'np'}-${k}">${
 								v.annotations.map(a => `<b class="red">${a}</b> `).join('')
-							}<b>${
-								v.axiomatic ? 'axiomatic ' : ''
-							}schema</b> ${k}</a>(${v.params.map(p => p.toSimpleString()).join(', ')})${
+							}<b>${v.schemaType}</b> ${k}</a>(${v.params.map(p => p.toSimpleString()).join(', ')})${
 								v.context.usingList.length
 									? ` <b>using</b> ${v.context.usingList.join(', ')}`
 									: ''
@@ -271,7 +269,7 @@
 
 							+ (
 								v.expr
-									? v.axiomatic
+									? v.schemaType == 'axiom'
 										? ''
 										: '<p class="label"><b>proof explorer</b></p>'
 											+ (

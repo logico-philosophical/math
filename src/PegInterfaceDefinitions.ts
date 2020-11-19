@@ -1,3 +1,5 @@
+import { SchemaType } from "./nodes/Schema";
+
 export type LineObject = ImportObject
 		| TypedefObject
 		| DefvObject
@@ -55,7 +57,7 @@ export interface DefschemaObject {
 	_type: 'defschema';
 	doc: string;
 	annotations: string[];
-	axiomatic: boolean;
+	schemaType: SchemaType,
 	name: string;
 	params: DefvObject[];
 	using: string[];
