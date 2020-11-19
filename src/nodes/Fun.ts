@@ -9,19 +9,23 @@ export default abstract class Fun extends Expr0 implements Nameable {
 	public readonly params: Variable[];
 	public readonly expr: Metaexpr;
 
-	/*
-	 * name, expr 중 하나 이상 있어야 하고 type, expr 중
-	 * 한 개만 있어야 한다.
-	 */
-	constructor ({doc, tex, annotations, sealed, type, name, params, expr}: FunArgumentType, trace: StackTrace) {
+	constructor ({doc, tex, annotations, sealed, rettype, name, params, expr}: FunArgumentType, trace: StackTrace) {
 		if (!name && !expr)
 			throw Node.error('Anonymous fun cannot be primitive', trace);
 
-		if (type && expr)
-			throw Node.error('no', trace);
+		if (rettype && expr) {
+			if (!rettype.equals(expr.type)) {
+				throw Node.error(`Expression type ${expr.type} failed to match the return type ${rettype} of fun ${name}`, trace);
+			}
+		}
 
-		if (!type && !expr)
-			throw Node.error('Cannot guess the type of a primitive fun', trace);
+		if (!rettype && !expr) {
+			throw Node.error('Cannot guess the return type of a primitive fun', trace);
+		}
+		
+		if (sealed && !expr) {
+			throw Node.error('Cannot seal a primitive fun', trace);
+		}
 		
 		var precedence = false;
 
@@ -35,10 +39,10 @@ export default abstract class Fun extends Expr0 implements Nameable {
 		
 		super(
 			trace, doc, tex,
-			type || new (expr.type instanceof ObjectType ? ObjectType : MetaType)({
+			new ((rettype || expr.type) instanceof ObjectType ? ObjectType : MetaType)({
 				functional: true,
 				from: params.map(variable => variable.type),
-				to: expr.type as any
+				to: rettype || expr.type as any
 			})
 		);
 
@@ -177,12 +181,12 @@ import { ProofType } from '../ProofType';
 import Schema from './Schema';
 
 interface FunArgumentType {
-	doc?: string;
-	tex?: string;
+	doc: string;
+	tex: string;
 	annotations: string[];
 	sealed: boolean;
-	type?: Type;
-	name?: string;
+	rettype: Type;
+	name: string;
 	params: Variable[];
-	expr?: Metaexpr;
+	expr: Metaexpr;
 }

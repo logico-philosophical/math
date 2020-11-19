@@ -137,23 +137,29 @@ export default class PI {
 	public static fun(obj: DefunObject | FunexprObject, parentScope: Scope): ObjectFun {
 		if (obj._type != 'defun' && obj._type != 'funexpr')
 			throw Error('Assertion failed');
+		
+		var scope = parentScope.extend('fun', obj._type == 'defun' ? obj.name : '<anonymous>', obj.location);
 
-		var name = null,
-			doc = null,
+		var doc = null,
 			tex = null,
-			sealed = false;
+			sealed = false,
+			rettype: ObjectType = null,
+			name = null,
+			expr = null;
 
 		if (obj._type == 'defun') {
-			obj = obj as DefunObject;
-			name = obj.name;
 			doc = obj.doc;
 			tex = obj.tex;
 			sealed = obj.sealed;
+			
+			if (!scope.hasType(typeObjToNestedArr(obj.rettype))) {
+				throw scope.error(`Type ${typeObjToString(obj.rettype)} is not defined`);
+			}
+
+			rettype = scope.getType(typeObjToNestedArr(obj.rettype));
+			name = obj.name;
 		}
 
-		var scope = parentScope.extend('fun', name, obj.location);
-
-		var type = null;
 		var params = obj.params.map(tvo => {
 			if (!scope.hasType(typeObjToNestedArr(tvo.type)))
 				throw scope.error(`Type ${typeObjToString(tvo.type)} is not defined`);
@@ -165,40 +171,12 @@ export default class PI {
 
 			return scope.addVariable(tv) as Variable;
 		});
-		var expr = null;
 
-		switch (obj._type) {
-			case 'defun':
-				if (!scope.hasType(typeObjToNestedArr(obj.rettype)))
-					throw scope.error(`Type ${typeObjToString(obj.rettype)} is not defined`);
-
-				var rettype = scope.getType(typeObjToNestedArr(obj.rettype));
-
-				if (obj.expr) {
-					expr = PI.expr0(obj.expr, scope);
-					if (!rettype.equals(expr.type))
-						throw scope.error(`Expression type ${expr.type} failed to match the return type ${rettype} of fun ${name}`);
-				} else {
-					type = new ObjectType({
-						functional: true,
-						from: params.map(variable => variable.type),
-						to: rettype
-					});
-				}
-				break;
-			case 'funexpr':
-				expr = PI.expr0(obj.expr, scope);
-				type = null;
-				break;
-			default:
-				throw Error('wut');
+		if (obj.expr) {
+			expr = PI.expr0(obj.expr, scope);
 		}
 
-		if (!expr && sealed) {
-			throw scope.error('Cannot seal a primitive fun');
-		}
-
-		return new ObjectFun({annotations: [], sealed, type, name, params, expr, doc, tex}, scope.trace);
+		return new ObjectFun({annotations: [], sealed, rettype, name, params, expr, doc, tex}, scope.trace);
 	}
 
 	public static funcall(obj: FuncallObject, parentScope: Scope): Funcall {
@@ -396,7 +374,7 @@ export default class PI {
 
 		var expr = PI.metaexpr(obj.expr, scope, context);
 
-		return new Schema({doc, annotations, axiomatic, name, params, context, def$s, expr}, scope.trace);
+		return new Schema({doc, tex: null, annotations, axiomatic, name, params, context, def$s, expr}, scope.trace);
 	}
 
 	public static schemacall(obj: SchemacallObject, parentScope: Scope, context: ExecutionContext): Funcall {

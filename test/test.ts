@@ -30,8 +30,17 @@ describe('Program', function () {
 });
 
 describe('ObjectFun', function () {
-	it('should throw if !type && !expr', function () {
-		expect(() => new ObjectFun({annotations: [], sealed: false, params: [], type: null, expr: null}, null)).to.throw();
+	it('should throw if !rettype && !expr', function () {
+		expect(() => new ObjectFun({
+			doc: null,
+			tex: null,
+			annotations: [],
+			sealed: false,
+			rettype: null,
+			name: null,
+			params: [],
+			expr: null
+		}, null)).to.throw();
 	});
 });
 

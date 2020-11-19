@@ -13,7 +13,7 @@ export default class Schema extends Fun {
 			throw Node.error('wut', trace);
 		}
 
-		super({doc, tex, annotations, sealed: false, type: null, name, params, expr}, trace);
+		super({doc, tex, annotations, sealed: false, rettype: null, name, params, expr}, trace);
 		
 		this.axiomatic = axiomatic;
 		this.def$s = def$s || [];
@@ -46,6 +46,8 @@ export default class Schema extends Fun {
 			throw Error('Parameter collision');
 
 		return new Schema({
+			doc: null,
+			tex: null,
 			annotations: this.annotations,
 			axiomatic: this.axiomatic,
 			name: null,
@@ -61,6 +63,8 @@ export default class Schema extends Fun {
 		if (this.type instanceof ObjectType && this.name) return this;
 
 		return new Schema({
+			doc: null,
+			tex: null,
 			annotations: this.annotations,
 			axiomatic: this.axiomatic,
 			name: null,
@@ -122,11 +126,11 @@ import StackTrace from "../StackTrace";
 import ExecutionContext from "../ExecutionContext";
 
 interface SchemaArgumentType {
-	doc?: string;
-	tex?: string;
+	doc: string;
+	tex: string;
 	annotations: string[];
 	axiomatic: boolean;
-	name?: string;
+	name: string;
 	params: Variable[];
 	context: ExecutionContext;
 	def$s: $Variable[];

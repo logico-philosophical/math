@@ -9,20 +9,20 @@ import Type from "./Type";
 import Variable from "./Variable";
 
 interface ObjectFunArgumentType {
-	doc?: string;
-	tex?: string;
+	doc: string;
+	tex: string;
 	annotations: string[];
 	sealed: boolean;
-	type?: Type;
-	name?: string;
+	rettype: Type;
+	name: string;
 	params: Variable[];
-	expr?: Expr0;
+	expr: Expr0;
 }
 
 export default class ObjectFun extends Fun {
 	
-	constructor ({doc, tex, annotations, sealed, type, name, params, expr}: ObjectFunArgumentType, trace: StackTrace) {
-		super({doc, tex, annotations, sealed, type, name, params, expr}, trace);
+	constructor ({doc, tex, annotations, sealed, rettype, name, params, expr}: ObjectFunArgumentType, trace: StackTrace) {
+		super({doc, tex, annotations, sealed, rettype, name, params, expr}, trace);
 	}
 
 	public substitute(map: Map<Variable, Expr0>): Metaexpr {
@@ -36,8 +36,11 @@ export default class ObjectFun extends Fun {
 			throw Error('Parameter collision');
 
 		return new ObjectFun({
+			doc: null,
+			tex: null,
 			annotations: this.annotations,
 			sealed: this.sealed,
+			rettype: null,
 			name: null,
 			params: this.params,
 			expr: this.expr.substitute(map)
@@ -49,8 +52,11 @@ export default class ObjectFun extends Fun {
 		if (this.type instanceof ObjectType && this.name) return this;
 
 		return new ObjectFun({
+			doc: null,
+			tex: null,
 			annotations: this.annotations,
 			sealed: this.sealed,
+			rettype: null,
 			name: null,
 			params: this.params,
 			expr: this.expr.expandMeta(andFuncalls)
