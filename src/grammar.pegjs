@@ -131,8 +131,7 @@ defun =
 defschema =
 	doc:(documentation __)?
 	annotations: (a:annotation __ {return a})*
-	axiomatic:("axiomatic" __)?
-	"schema" __
+	schemaType:('axiom' / 'schema') __
 	name:ident _
 	params:(
 		"(" _
@@ -162,7 +161,7 @@ defschema =
 			_type: 'defschema',
 			doc: doc ? doc[0] : null,
 			annotations,
-			axiomatic: !!axiomatic,
+			axiomatic: schemaType == 'axiom',
 			name,
 			params,
 			using: using || [],
@@ -492,7 +491,7 @@ plain_var =
 
 keyword =
 	'as'
-	/ 'axiomatic'
+	/ 'axiom'
 	/ 'base'
 	/ 'import'
 	/ 'schema'

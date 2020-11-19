@@ -46,7 +46,7 @@ st Neq(cls x, cls y) {
 }
 
 "동일자의 식별불가능성 원리(indiscernibility of identicals)."
-axiomatic schema ax_indiscernible(pr f) {
+axiom ax_indiscernible(pr f) {
 	U2((cls x, cls y) => { I(eq(x, y), E(f(x), f(y))) })
 }
 
@@ -97,7 +97,7 @@ schema eq_def(cls x: @11, cls y: @12) {
 }
 
 "axiom of extensionality."
-axiomatic schema ax_extensional() {
+axiom ax_extensional() {
 	U2((cls x, cls y) => {
 		I(
 			U((cls z) => {
@@ -522,7 +522,7 @@ $\left\{<<:>>#1\right\}$
 cls setbuilder(pr f);
 
 "setbuilder의 defining property. f를 만족하는 임의의 [**집합]의 class를 만들게 해 준다. `[Pinter]`에서는 axiom of class construction이라 부르는 것 같다."
-axiomatic schema setbuilder_def(pr f) {
+axiom setbuilder_def(pr f) {
 	U((cls w) => {
 		E(
 			in(w, setbuilder(f)),
@@ -695,7 +695,7 @@ schema subsetbuilder_is_subset(cls x, pr f) {
 }
 
 "axiom schema of specification. 어떤 집합에서 임의 술어를 만족시키는 원소들의 class를 만들었을 때 이 class가 집합이라는 뜻이다."
-axiomatic schema ax_specify(pr f) {
+axiom ax_specify(pr f) {
 	U((cls x) => {
 		I(
 			set(x),
@@ -910,7 +910,7 @@ schema cap_is_set_2(cls x, cls y) {
 }
 
 "axiom of union."
-axiomatic schema ax_bigcup() {
+axiom ax_bigcup() {
 	U(($A$ cls a) => {
 		I(set(a), set(bigcup(a)))
 	})
@@ -979,7 +979,7 @@ cls emptyset() {
 }
 
 "axiom of empty set."
-axiomatic schema ax_emptyset() {
+axiom ax_emptyset() {
 	set(emptyset())
 }
 
@@ -1371,7 +1371,7 @@ schema doubleton_eq_e(cls x: @11, cls y: @21, cls u: @31, cls v: @41) {
 }
 
 "axiom of pairing."
-axiomatic schema ax_pairing() {
+axiom ax_pairing() {
 	Uin(universe(), (cls x) => {
 		Uin(universe(), (cls y) => {
 			Xin(universe(), ($D$ cls d) => {
@@ -1595,7 +1595,7 @@ schema singleton_subseteq_power(cls x: @11) {
 }
 
 "axiom of power set."
-axiomatic schema ax_power() {
+axiom ax_power() {
 	U((cls x) => {
 		I(
 			set(x),

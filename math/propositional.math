@@ -40,12 +40,12 @@ sealed st F() {
 }
 
 "함의 도입(implication introduction). conditional proof를 가능케 한다. 특정 힐베르트 체계(Hilbert system)에서는 메타정리(metatheorem)이며 이를 연역 정리(deduction theorem)라 부른다."
-axiomatic schema cp(st p: @11, st q: @1r) {
+axiom cp(st p: @11, st q: @1r) {
 	(p |- q) |- I(p, q)
 }
 
 "modus ponens. 함의 소거(implication elimination) 또는 전건 긍정이라고도 한다."
-axiomatic schema mp(st p: @1, st q: @22) {
+axiom mp(st p: @1, st q: @22) {
 	p, I(p, q) |- q
 }
 
@@ -56,7 +56,7 @@ schema weaken(st p: @1, st q) {
 }
 
 "연언 도입(conjunction introduction)."
-axiomatic schema Ai(st p: @1, st q: @2) {
+axiom Ai(st p: @1, st q: @2) {
 	p, q |- A(p, q)
 }
 
@@ -66,22 +66,22 @@ schema A3i(st p: @1, st q: @2, st r: @3) {
 }
 
 "연언 소거(conjunction elimination) 1."
-axiomatic schema Ae1(st p: @11, st q: @12) {
+axiom Ae1(st p: @11, st q: @12) {
 	A(p, q) |- p
 }
 
 "연언 소거(conjunction elimination) 2."
-axiomatic schema Ae2(st p: @11, st q: @12) {
+axiom Ae2(st p: @11, st q: @12) {
 	A(p, q) |- q
 }
 
 "[$\top] 도입."
-axiomatic schema Ti() {
+axiom Ti() {
 	T
 }
 
 "[$\neg]에 관한 공리."
-axiomatic schema luk3(st p: @111, st q: @121) {
+axiom luk3(st p: @111, st q: @121) {
 	I(N(p), N(q)) |- I(q, p)
 }
 

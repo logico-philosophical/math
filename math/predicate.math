@@ -128,7 +128,7 @@ schema UN_to_NX(pr f: @111) {
 }
 
 "보편 양화 도입(universal introduction)."
-axiomatic schema Ui(pr f: @1) {
+axiom Ui(pr f: @1) {
 	f |- U(f)
 }
 
@@ -139,7 +139,7 @@ schema Ui2(pr2 f: @1) {
 }
 
 "보편 양화 소거(universal elimination)."
-axiomatic schema Ue(pr f: @11, cls x) {
+axiom Ue(pr f: @11, cls x) {
 	U(f) |- f(x)
 }
 

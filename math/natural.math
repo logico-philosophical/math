@@ -67,7 +67,7 @@ st is_successor_set(cls x) {
 }
 
 "무한 공리(axiom of infinity). 즉 successor set 중에는 집합인 것이 있다."
-axiomatic schema ax_infinity() {
+axiom ax_infinity() {
 	X((cls x) => {
 		A(
 			set(x),
