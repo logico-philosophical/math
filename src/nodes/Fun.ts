@@ -6,7 +6,7 @@ export default abstract class Fun extends Expr0 implements Nameable {
 	public readonly annotations: string[];
 	public readonly sealed: boolean;
 	public readonly name: string;
-	public readonly params: Variable[];
+	public readonly params: Parameter[];
 	public readonly expr: Metaexpr;
 
 	constructor ({doc, tex, annotations, sealed, rettype, name, params, expr}: FunArgumentType, trace: StackTrace) {
@@ -75,10 +75,10 @@ export default abstract class Fun extends Expr0 implements Nameable {
 		var types = (this.type.resolve() as ObjectType | MetaType).from;
 
 		for (var i = 0; i < types.length; i++) {
-			placeholders.push(new Variable({
-				isParam: true,
+			placeholders.push(new Parameter({
 				type: types[i],
-				name: '$' + i
+				name: '$' + i,
+				selector: null
 			}, this.trace));
 		}
 
@@ -179,6 +179,7 @@ import ExecutionContext from '../ExecutionContext';
 import Counter from '../Counter';
 import { ProofType } from '../ProofType';
 import Schema from './Schema';
+import Parameter from './Parameter';
 
 interface FunArgumentType {
 	doc: string;
@@ -187,6 +188,6 @@ interface FunArgumentType {
 	sealed: boolean;
 	rettype: Type;
 	name: string;
-	params: Variable[];
+	params: Parameter[];
 	expr: Metaexpr;
 }

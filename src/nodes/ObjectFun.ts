@@ -5,6 +5,7 @@ import Fun from "./Fun";
 import Metaexpr from "./Metaexpr";
 import Node, { Precedence } from "./Node";
 import ObjectType from "./ObjectType";
+import Parameter from "./Parameter";
 import Type from "./Type";
 import Variable from "./Variable";
 
@@ -15,7 +16,7 @@ interface ObjectFunArgumentType {
 	sealed: boolean;
 	rettype: Type;
 	name: string;
-	params: Variable[];
+	params: Parameter[];
 	expr: Expr0;
 }
 

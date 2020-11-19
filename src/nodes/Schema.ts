@@ -124,6 +124,7 @@ import Variable from "./Variable";
 import ObjectFun from "./ObjectFun";
 import StackTrace from "../StackTrace";
 import ExecutionContext from "../ExecutionContext";
+import Parameter from "./Parameter";
 
 interface SchemaArgumentType {
 	doc: string;
@@ -131,7 +132,7 @@ interface SchemaArgumentType {
 	annotations: string[];
 	axiomatic: boolean;
 	name: string;
-	params: Variable[];
+	params: Parameter[];
 	context: ExecutionContext;
 	def$s: $Variable[];
 	expr: Metaexpr;

@@ -11,6 +11,7 @@ import Funcall from './nodes/Funcall';
 import Metaexpr from './nodes/Metaexpr';
 import ObjectFun from './nodes/ObjectFun';
 import ObjectType from './nodes/ObjectType';
+import Parameter from './nodes/Parameter';
 import Reduction from './nodes/Reduction';
 import Schema from './nodes/Schema';
 import Tee from './nodes/Tee';
@@ -124,13 +125,21 @@ export default class PI {
 
 		var type = scope.getType(typeObjToNestedArr(obj.type));
 
+		if (obj.isParam) {
+			return new Parameter({
+				doc: obj.doc,
+				tex: obj.tex,
+				type,
+				name: obj.name,
+				selector: obj.selector || null
+			}, scope.trace);
+		}
+
 		return new Variable({
-			type,
-			isParam: !!obj.isParam,
-			selector: obj.selector || null,
-			name: obj.name,
 			doc: obj.doc,
-			tex: obj.tex
+			tex: obj.tex,
+			type,
+			name: obj.name
 		}, scope.trace);
 	}
 
@@ -168,8 +177,13 @@ export default class PI {
 
 			if (scope.hasOwnVariable(tv.name))
 				throw scope.error(`Parameter ${tv.name} has already been declared`);
+			
+			if (!(tv instanceof Parameter)) {
+				throw Error('Something\'s wrong');
+			}
 
-			return scope.addVariable(tv) as Variable;
+			scope.addVariable(tv);
+			return tv;
 		});
 
 		if (obj.expr) {
@@ -359,7 +373,12 @@ export default class PI {
 			if (scope.hasOwnVariable(tv.name))
 				throw scope.error(`Parameter ${tv.name} has already been declared`);
 			
-			return scope.addVariable(tv) as Variable;
+			if (!(tv instanceof Parameter)) {
+				throw Error('Something\'s wrong');
+			}
+
+			scope.addVariable(tv);
+			return tv;
 		});
 
 		var def$s = obj.def$s.map($ => {

@@ -13,23 +13,16 @@ interface VariableArgumentType {
 	tex?: string;
 	type: ObjectType;
 	name: string;
-	isParam: boolean;
-	selector?: string;
 }
 
 export default class Variable extends Expr0 implements Nameable {
-	
-	public readonly isParam: boolean;
-	public readonly selector: string;
+
 	public readonly type: ObjectType;
 	public readonly name: string;
 
-	constructor ({doc, tex, type, name, isParam, selector}: VariableArgumentType, trace: StackTrace) {
+	constructor ({doc, tex, type, name}: VariableArgumentType, trace: StackTrace) {
 		super(trace, doc, tex, type);
-
-		this.isParam = !!isParam;
-		this.selector = selector || null;
-
+		
 		if (typeof name != 'string')
 			throw Node.error('Assertion failed', trace);
 
@@ -80,7 +73,7 @@ export default class Variable extends Expr0 implements Nameable {
 	}
 
 	public toTeXString(prec?: Precedence, root?: boolean): string {
-		var id = this.isParam ? `id-${this._id}` : `def-${this.name}`;
+		var id = this instanceof Parameter ? `id-${this._id}` : `def-${this.name}`;
 
 		var tex = this.tex
 			|| (
@@ -91,16 +84,6 @@ export default class Variable extends Expr0 implements Nameable {
 		
 		return `\\href{#${id}}{${tex}}`;
 	}
-
-	public toTeXStringWithId(prec?: Precedence, root?: boolean): string {
-		if (!this.isParam) throw Error('wut');
-
-		var id =`id-${this._id}`;
-
-		return [
-			`\\htmlId{${id}}{`,
-			this.toTeXString(prec, root),
-			`}`
-		].join('');
-	}
 }
+
+import Parameter from './Parameter';
