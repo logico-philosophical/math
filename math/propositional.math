@@ -105,7 +105,7 @@ schema Ni(st p: @11) using F {
 		mp[Ti(); luk3[cp[N(N(p)) |- mp[NNe[@h2]; @h1]]]]
 }
 
-schema Niu(st p: @11) {
+schema Ni_alt(st p: @11) {
 	(p |- F()) |-
 		Ni[cp[@h1]]
 }
@@ -130,13 +130,13 @@ schema Fi_c(st p: @11) {
 
 "[$\bot]을 소거한다. falsum elimination이라 불러도 좋을 것이다. Ne와 마찬가지로 폭발률을 나타낸다 할 수 있다."
 schema Fe(st p) {
-	F() |- NNe[Niu[N(p) |- @h1]]
+	F() |- NNe[Ni_alt[N(p) |- @h1]]
 }
 
 "후건 부정(modus tollens)."
 schema mt(st p: @11, st q: @21) {
 	I(p, q), N(q) |-
-		Niu[p |-
+		Ni_alt[p |-
 			Fi[mp[@h3; @h1]; @h2]]
 }
 
@@ -157,8 +157,8 @@ schema Oi2(st p, st q: @1) using O {
 "선언 소거(disjunction elimination). proof by cases라고도 한다."
 schema Oe(st p: @11, st q: @12, st r: @22) using O {
 	O(p, q), I(p, r), I(q, r) |-
-		NNe[Niu[N(r) |-
-			Fi[mp[mp[Niu[p |- Fi[mp[@h5; @h2]; @h4]]; @h1]; @h3]; @h4]
+		NNe[Ni_alt[N(r) |-
+			Fi[mp[mp[Ni_alt[p |- Fi[mp[@h5; @h2]; @h4]]; @h1]; @h3]; @h4]
 		]]
 }
 
@@ -259,21 +259,21 @@ schema contrapose(st p: @11, st q: @12) {
 }
 
 "contrapose의 다른 버전."
-schema contrapose_u(st p: @11, st q: @1r) {
+schema contrapose_alt(st p: @11, st q: @1r) {
 	(p |- q) |- N(q) |- mp[@h2; contrapose[cp[@h1]]]
 }
 
 schema NO_to_AN(st p: @111, st q: @112) {
 	N(O(p, q)) |-
 		Ai[
-			Niu[
+			Ni_alt[
 				p |-
 					Fi[
 						Oi1(?, q)[@h2];
 						@h1
 					]
 			];
-			Niu[
+			Ni_alt[
 				q |-
 					Fi[
 						Oi2(p, ?)[@h2];
@@ -285,7 +285,7 @@ schema NO_to_AN(st p: @111, st q: @112) {
 
 schema AN_to_NO(st p: @111, st q: @121) {
 	A(N(p), N(q)) |-
-		Niu[O(p, q) |- Oe[
+		Ni_alt[O(p, q) |- Oe[
 			@h2;
 			Fi_c[Ae1[@h1]];
 			Fi_c[Ae2[@h1]]
@@ -294,7 +294,7 @@ schema AN_to_NO(st p: @111, st q: @121) {
 
 schema NA_to_ON(st p: @111, st q: @112) {
 	N(A(p, q)) |-
-		NNe[Niu[N(O(N(p), N(q))) |- Fi[
+		NNe[Ni_alt[N(O(N(p), N(q))) |- Fi[
 			Ai[
 				NNe[Ae1[NO_to_AN[@h2]]];
 				NNe[Ae2[NO_to_AN[@h2]]]
@@ -305,7 +305,7 @@ schema NA_to_ON(st p: @111, st q: @112) {
 
 schema ON_to_NA(st p: @111, st q: @112) {
 	O(N(p), N(q)) |-
-		Niu[A(p, q) |- Oeu[
+		Ni_alt[A(p, q) |- Oeu[
 			@h1;
 			(N(p) |- Fi[
 				Ae1[@h2]; @h3
@@ -318,7 +318,7 @@ schema ON_to_NA(st p: @111, st q: @112) {
 
 "무모순율(law of noncontradiction)."
 schema lnc(st p) {
-	Niu[A(p, N(p)) |- Fi[
+	Ni_alt[A(p, N(p)) |- Fi[
 		Ae1[@h1];
 		Ae2[@h1]
 	]]
@@ -326,7 +326,7 @@ schema lnc(st p) {
 
 "배중률(law of excluded middle)."
 schema lxm(st p) {
-	NNe[Niu[N(O(p, N(p))) |- Fi[
+	NNe[Ni_alt[N(O(p, N(p))) |- Fi[
 		Ai[
 			NNe[Ae2[NO_to_AN[@h1]]];
 			Ae1[NO_to_AN[@h1]]
@@ -398,12 +398,12 @@ schema OI(st p: @11, st q: @12, st r: @22, st s: @32) {
 
 schema Oe1(st p: @11, st q: @12) {
 	O(p, q), N(p) |-
-		NNe[Niu[N(q) |- Fi[@h1; AN_to_NO[Ai[@h2; @h3]]]]]
+		NNe[Ni_alt[N(q) |- Fi[@h1; AN_to_NO[Ai[@h2; @h3]]]]]
 }
 
 schema Oe2(st p: @11, st q: @12) {
 	O(p, q), N(q) |-
-		NNe[Niu[N(p) |- Fi[@h1; AN_to_NO[Ai[@h3; @h2]]]]]
+		NNe[Ni_alt[N(p) |- Fi[@h1; AN_to_NO[Ai[@h3; @h2]]]]]
 }
 
 schema O1Ai(st p: @11, st q: @21, st r: @12) {

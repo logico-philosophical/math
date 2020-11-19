@@ -205,7 +205,7 @@ schema eq_symmetric(cls x: @11, cls y: @12) {
 
 schema Neq_symmetric(cls x: @11, cls y: @12) {
 	Neq(x, y) |-
-		Niu[eq(y, x) |- Fi[eq_symmetric[@h2]; @h1]]
+		Ni_alt[eq(y, x) |- Fi[eq_symmetric[@h2]; @h1]]
 		[as Neq(y, x)]
 }
 
@@ -943,7 +943,7 @@ schema subset_is_set(cls x: @21, cls y: @22) {
 
 schema supset_is_not_set(cls x: @111, cls y: @22) {
 	N(set(x)), subseteq(x, y) |-
-		Niu[set(y) |- Fi[subset_is_set[@h3; @h2]; @h1]]
+		Ni_alt[set(y) |- Fi[subset_is_set[@h3; @h2]; @h1]]
 }
 
 "차집합."
@@ -985,7 +985,7 @@ axiom ax_emptyset() {
 
 "emptyset의 defining property."
 schema emptyset_def(cls z) {
-	Niu[in(z, emptyset()) |-
+	Ni_alt[in(z, emptyset()) |-
 		setbuilder_e[@h1]]
 	[as Nin(z, emptyset())]
 }
@@ -1034,8 +1034,8 @@ cls russell_set() {
 
 "러셀 집합은 집합이 아니다."
 schema russell_set_is_not_set() {
-	Niu[set(russell_set()) |-
-		$russell_in_russell = NNe[Niu[Nin(russell_set(), russell_set()) |-
+	Ni_alt[set(russell_set()) |-
+		$russell_in_russell = NNe[Ni_alt[Nin(russell_set(), russell_set()) |-
 			Fi[
 				setbuilder_i[
 					@h1;
@@ -1111,7 +1111,7 @@ schema instantiate_not_set_i(pr f: @111) using instantiate {
 
 schema instantiate_set_e(pr f: @111) {
 	set(instantiate(f)) |-
-		NNe[Niu[N(Xq(f)) |-
+		NNe[Ni_alt[N(Xq(f)) |-
 			Fi[@h1; instantiate_not_set_i[@h2]]
 		]]
 }

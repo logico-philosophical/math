@@ -213,7 +213,7 @@ schema induce_set_strong($X$ cls x: @12) {
 "`[Pinter]`에 따르면 페아노 공리계 제3공리인 것."
 schema successor_is_not_zero(cls n: @11) {
 	in(n, omega()) |-
-		Niu[
+		Ni_alt[
 			eq(successor(n), ord_zero()) |-
 				Fi[
 					in_eq_right_1[
@@ -229,7 +229,7 @@ schema successor_is_not_zero(cls n: @11) {
 "`[Pinter]` 보조정리 6.6."
 schema omega_in_to_subseteq(cls n: @11, cls m: @21) {
 	$base = Ui[(cls m) => { cp[in(m, ord_zero()) |-
-		NNe[Niu[N(subseteq(m, ord_zero())) |-
+		NNe[Ni_alt[N(subseteq(m, ord_zero())) |-
 			Fi[@h1; emptyset_def(m)]]]] }];
 			
 	$step = Ui[(cls n) => { cp[in(n, omega()) |-
@@ -273,9 +273,9 @@ schema successor_eq_e(cls n: @11, cls m: @21) {
 		$c1 = in(n, singleton(m)) |- singleton_e[set_i[@h2]; @h4];
 		$c1_dual = in(m, singleton(n)) |- singleton_e[set_i[@h1]; @h4];
 		
-		NNe[Niu[Neq(n, m) |-
-			$c2 = omega_in_to_subseteq[@h2; Oe2[$base; Niu[in(n, singleton(m)) |- Fi[$c1[@h5]; @h4]]]];
-			$c2_dual = omega_in_to_subseteq[@h1; Oe2[$base_dual; Niu[in(m, singleton(n)) |- Fi[$c1_dual[@h5]; Neq_symmetric[@h4]]]]];
+		NNe[Ni_alt[Neq(n, m) |-
+			$c2 = omega_in_to_subseteq[@h2; Oe2[$base; Ni_alt[in(n, singleton(m)) |- Fi[$c1[@h5]; @h4]]]];
+			$c2_dual = omega_in_to_subseteq[@h1; Oe2[$base_dual; Ni_alt[in(m, singleton(n)) |- Fi[$c1_dual[@h5]; Neq_symmetric[@h4]]]]];
 			Fi[subseteq_to_eq[$c2; $c2_dual]; @h4]]]
 }
 
@@ -485,7 +485,7 @@ schema recursion_theorem_5_base($A$ cls a: @11, cls c: @21, cls f: @31) {
 		Qim((cls x) => {
 			in(pair(ord_zero(), x), define_recursively(a, c, f))
 		}, c)[Ui[(cls d) => { cp[in(pair(ord_zero(), d), define_recursively(a, c, f)) |-
-			NNe[Niu[Neq(d, c) |-
+			NNe[Ni_alt[Neq(d, c) |-
 				$c1 = subseteq_subseteq[
 					setminus_is_smaller(define_recursively(a, c, f), singleton(pair(ord_zero(), d)));
 					recursion_theorem_1[@h1; @h2; @h3]
@@ -493,7 +493,7 @@ schema recursion_theorem_5_base($A$ cls a: @11, cls c: @21, cls f: @31) {
 				
 				$c2 = setminus_i[
 					recursion_theorem_2(a, c, f)[@h2];
-					Niu[in(pair(ord_zero(), c), singleton(pair(ord_zero(), d))) |-
+					Ni_alt[in(pair(ord_zero(), c), singleton(pair(ord_zero(), d))) |-
 						Fi[
 							eq_symmetric[pair_eq_e2[
 								ax_emptyset(); set_i[@h2];
@@ -514,7 +514,7 @@ schema recursion_theorem_5_base($A$ cls a: @11, cls c: @21, cls f: @31) {
 									];
 									mp[@h7; Ue(?, x)[mp[@h6; Ue(?, n)[recursion_theorem_3(a, c, f)[@h3]]]]]
 								];
-								Niu[in(pair(successor(n), funcall(f, x)), singleton(pair(ord_zero(), d))) |-
+								Ni_alt[in(pair(successor(n), funcall(f, x)), singleton(pair(ord_zero(), d))) |-
 									Fi[
 										pair_eq_e1_v2[set_i[@h4]; singleton_e[set_i[@h4]; @h9]];
 										successor_is_not_zero[@h6]
@@ -555,7 +555,7 @@ schema recursion_theorem_5_step($A$ cls a: @11, cls c: @21, cls f: @31) {
 							Qim((cls x) => {
 								in(pair(successor(n), x), define_recursively(a, c, f))
 							}, funcall(f, x))[Ui[(cls u) => { cp[in(pair(successor(n), u), define_recursively(a, c, f)) |-
-								NNe[Niu[Neq(u, funcall(f, x)) |-
+								NNe[Ni_alt[Neq(u, funcall(f, x)) |-
 									$c1 = subseteq_subseteq[
 										setminus_is_smaller(define_recursively(a, c, f), singleton(pair(successor(n), u)));
 										recursion_theorem_1[@h1; @h2; @h3]
@@ -563,7 +563,7 @@ schema recursion_theorem_5_step($A$ cls a: @11, cls c: @21, cls f: @31) {
 
 									$c2 = setminus_i[
 										recursion_theorem_2(a, c, f)[@h2];
-										Niu[in(pair(ord_zero(), c), singleton(pair(successor(n), u))) |-
+										Ni_alt[in(pair(ord_zero(), c), singleton(pair(successor(n), u))) |-
 											Fi[
 												eq_symmetric[pair_eq_e1_v2[
 													set_i[@h8];
@@ -588,7 +588,7 @@ schema recursion_theorem_5_step($A$ cls a: @11, cls c: @21, cls f: @31) {
 												$c3_c1 = Neq(successor(m), successor(n)) |-
 													setminus_i[
 														$foo;
-														Niu[in(pair(successor(m), funcall(f, v)), singleton(pair(successor(n), u))) |-
+														Ni_alt[in(pair(successor(m), funcall(f, v)), singleton(pair(successor(n), u))) |-
 															Fi[
 																pair_eq_e1_v2[
 																	set_i[@h8];
@@ -602,7 +602,7 @@ schema recursion_theorem_5_step($A$ cls a: @11, cls c: @21, cls f: @31) {
 													in_eq_left_2[
 														setminus_i[
 															mp[@h7; mp[@h6; Ue(?, x)[mp[@h4; Ue(?, n)[recursion_theorem_3(a, c, f)[@h3]]]]]];
-															Niu[in(pair(successor(n), funcall(f, x)), singleton(pair(successor(n), u))) |-
+															Ni_alt[in(pair(successor(n), funcall(f, x)), singleton(pair(successor(n), u))) |-
 																Fi[
 																	eq_symmetric[pair_eq_e2_v1[set_i[@h14]; singleton_e[set_i[@h8]; @h14]]];
 																	@h9
