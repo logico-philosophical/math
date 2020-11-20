@@ -175,7 +175,7 @@ theorem mtU(pr f: @111, pr g: @112) {
 	U(If(f, g)), N(U(g)) |-
 		Ni_alt[
 			U(f) |-
-				Ne(?, F())[
+				Ne(?, F)[
 					mpU[@h3; @h1];
 					@h2
 				]

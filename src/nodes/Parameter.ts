@@ -16,7 +16,7 @@ export default class Parameter extends Variable {
 	public readonly selector: string;
 
 	constructor ({doc, tex, type, name, selector}: ParameterArgumentType, trace: StackTrace) {
-		super({doc, tex, type, name}, trace);
+		super({doc, tex, sealed: false, type, name, expr: null}, trace);
 
 		this.selector = selector;
 	}

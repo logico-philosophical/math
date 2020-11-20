@@ -154,7 +154,7 @@ ${as.expandMeta(true)}
 	}
 
 	protected getEqualsPriority(): EqualsPriority {
-		return EqualsPriority.FOUR;
+		return EqualsPriority.FIVE;
 	}
 
 	protected equalsInternal(obj: Metaexpr, context: ExecutionContext): boolean {
@@ -212,6 +212,10 @@ ${as.expandMeta(true)}
 				}
 
 				while (true) {
+					while (argument instanceof Variable && argument.expr) {
+						argument = argument.expr;
+					}
+
 					if (!(parameter instanceof Funcall && argument instanceof Funcall)) {
 						throw Node.error(`Cannot dereference @${selector}`, trace);
 					}

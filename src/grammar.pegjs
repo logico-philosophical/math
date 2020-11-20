@@ -48,15 +48,28 @@ typedef =
 	}
 
 defv =
-	doc:(documentation __)? tex:(tex __)? type:type __ name:ident _ sem
+	doc:(documentation __)?
+	tex:(tex __)?
+	sealed:('sealed' __)?
+	type:type __
+	name:ident _
+	expr:(
+		"=" _
+		expr:expr0 _
+		sem
+		{return expr}
+		/ sem {return null}
+	)
 	{
 		return {
 			_type: 'defv',
 			isParam: false,
 			doc: doc ? doc[0] : null,
 			tex: tex ? tex[0] : null,
+			sealed: !!sealed,
 			type,
 			name,
+			expr,
 			location: location()
 		}
 	}

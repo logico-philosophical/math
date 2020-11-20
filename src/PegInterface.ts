@@ -125,6 +125,8 @@ export default class PI {
 
 		var type = scope.getType(typeObjToNestedArr(obj.type));
 
+		var expr = obj.expr ? PI.expr0(obj.expr, scope) : null;
+
 		if (obj.isParam) {
 			return new Parameter({
 				doc: obj.doc,
@@ -138,8 +140,10 @@ export default class PI {
 		return new Variable({
 			doc: obj.doc,
 			tex: obj.tex,
+			sealed: !!obj.sealed,
 			type,
-			name: obj.name
+			name: obj.name,
+			expr: expr || null
 		}, scope.trace);
 	}
 
@@ -347,14 +351,14 @@ export default class PI {
 				throw Error('duh');
 			}
 
-			var using: ObjectFun[] = obj.using.map(name => {
+			var using: (Variable | ObjectFun)[] = obj.using.map(name => {
 				if (!scope.hasVariable(name)) {
 					throw scope.error(`Variable ${name} is not defined`);
 				}
 
 				var fun = scope.getVariable(name);
 
-				if (!(fun instanceof ObjectFun)) {
+				if (!fun.expr) {
 					throw scope.error(`${name} is not a macro`);
 				}
 

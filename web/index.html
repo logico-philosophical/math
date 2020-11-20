@@ -262,7 +262,7 @@
 								v.annotations.map(a => `<b class="red">${a}</b> `).join('')
 							}<b>${v.schemaType}</b> ${k}</a>(${v.params.map(p => p.toSimpleString()).join(', ')})${
 								v.context.usingList.length
-									? ` <b>using</b> ${v.context.usingList.join(', ')}`
+									? ` <b>using</b> ${v.context.usingList.map(u => u.name).join(', ')}`
 									: ''
 							}</p>`
 							+ `<div class="math">${ktx(v.toTeXString(true, true))}</div>`

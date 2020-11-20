@@ -79,7 +79,7 @@ export default class Schema extends Fun {
 			tex: null,
 			annotations: this.annotations,
 			schemaType: 'schema',
-			name: this.name,
+			name: null,
 			params: this.params,
 			context: this.context,
 			def$s: this.def$s,

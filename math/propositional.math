@@ -34,10 +34,8 @@ $\top$
 st T;
 
 "falsum (F). 즉 임의의 모순명제를 표시한다."
-$<<\bot>>$
-sealed st F() {
-	N(T)
-}
+$\bot$
+sealed st F = N(T);
 
 "함의 도입(implication introduction). conditional proof를 가능케 한다. 특정 힐베르트 체계(Hilbert system)에서는 메타정리(metatheorem)이며 이를 연역 정리(deduction theorem)라 부른다."
 axiom cp(st p: @11, st q: @1r) {
@@ -101,12 +99,12 @@ theorem NNi(st p: @1) {
 
 "부정 도입(negation introduction). 귀류법(reductio ad absurdum)이라고도 한다."
 theorem Ni(st p: @11) using F {
-	I(p, F()) |-
+	I(p, F) |-
 		mp[Ti(); luk3[cp[N(N(p)) |- mp[NNe[@h2]; @h1]]]]
 }
 
 theorem Ni_alt(st p: @11) {
-	(p |- F()) |-
+	(p |- F) |-
 		Ni[cp[@h1]]
 }
 
@@ -121,7 +119,7 @@ theorem Ne(st p: @1, st q) {
 
 "[$\bot]을 도입한다. falsum introduction이라 불러도 좋을 것이다."
 theorem Fi(st p: @1) {
-	Ne(p, F())
+	Ne(p, F)
 }
 
 theorem Fi_c(st p: @11) {
@@ -130,7 +128,7 @@ theorem Fi_c(st p: @11) {
 
 "[$\bot]을 소거한다. falsum elimination이라 불러도 좋을 것이다. Ne와 마찬가지로 폭발률을 나타낸다 할 수 있다."
 theorem Fe(st p) {
-	F() |- NNe[Ni_alt[N(p) |- @h1]]
+	F |- NNe[Ni_alt[N(p) |- @h1]]
 }
 
 "후건 부정(modus tollens)."

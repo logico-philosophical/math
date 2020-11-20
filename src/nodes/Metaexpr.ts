@@ -11,7 +11,7 @@ import Variable from "./Variable";
  * 숫자가 큰 것이 우선순위가 높다.
  */
 export enum EqualsPriority {
-	/** Variable */
+	/** Variable (primitive) */
 	ZERO,
 	/** Fun */
 	ONE,
@@ -19,8 +19,10 @@ export enum EqualsPriority {
 	TWO,
 	/** Funcall */
 	THREE,
+	/** Variable (macro) */
+	FOUR,
 	/** $Variable, Reduction */
-	FOUR
+	FIVE
 }
 
 export default abstract class Metaexpr extends Node {
@@ -53,13 +55,13 @@ export default abstract class Metaexpr extends Node {
 		if (this === obj) return true;
 		if (!this.type.equals(obj.type)) return false;
 
-		if (obj.getEqualsPriority() > this.getEqualsPriority())
+		if (obj.getEqualsPriority(context) > this.getEqualsPriority(context))
 			return obj.equalsInternal(this, context);
 		
 		return this.equalsInternal(obj, context);
 	}
 
-	protected abstract getEqualsPriority(): EqualsPriority;
+	protected abstract getEqualsPriority(context: ExecutionContext): EqualsPriority;
 
 	protected abstract equalsInternal(obj: Metaexpr, context: ExecutionContext): boolean;
 

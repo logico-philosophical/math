@@ -45,7 +45,7 @@ export default class $Variable extends Metaexpr implements Nameable {
 	}
 
 	protected getEqualsPriority(): EqualsPriority {
-		return EqualsPriority.FOUR;
+		return EqualsPriority.FIVE;
 	}
 
 	protected equalsInternal(obj: Metaexpr, context: ExecutionContext): boolean {

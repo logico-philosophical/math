@@ -11,22 +11,32 @@ import ObjectType from './ObjectType';
 interface VariableArgumentType {
 	doc?: string;
 	tex?: string;
+	sealed: boolean;
 	type: ObjectType;
 	name: string;
+	expr: Expr0;
 }
 
 export default class Variable extends Expr0 implements Nameable {
 
+	public readonly sealed: boolean;
 	public readonly type: ObjectType;
 	public readonly name: string;
+	public readonly expr: Expr0;
 
-	constructor ({doc, tex, type, name}: VariableArgumentType, trace: StackTrace) {
+	constructor ({doc, tex, sealed, type, name, expr}: VariableArgumentType, trace: StackTrace) {
 		super(trace, doc, tex, type);
 		
 		if (typeof name != 'string')
 			throw Node.error('Assertion failed', trace);
+		
+		if (sealed && !expr) {
+			throw Node.error('Cannot seal a primitive fun', trace);
+		}
 
+		this.sealed = sealed;
 		this.name = name;
+		this.expr = expr;
 	}
 
 	public isProved(hyps) {
@@ -43,11 +53,19 @@ export default class Variable extends Expr0 implements Nameable {
 		return this;
 	}
 
-	protected getEqualsPriority(): EqualsPriority {
-		return EqualsPriority.ZERO;
+	protected getEqualsPriority(context: ExecutionContext): EqualsPriority {
+		return this.expr && (!this.sealed || context.canUse(this))
+			? EqualsPriority.FOUR
+			: EqualsPriority.ZERO;
 	}
 
 	protected equalsInternal(obj: Metaexpr, context: ExecutionContext): boolean {
+		if (!this.expr) return false;
+
+		if (!this.sealed || context.canUse(this)) {
+			return this.expr.equals(obj, context);
+		}
+
 		return false;
 	}
 

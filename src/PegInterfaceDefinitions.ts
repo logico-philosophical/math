@@ -33,8 +33,10 @@ export interface DefvObject {
 	selector?: string;
 	doc: string;
 	tex: string;
+	sealed?: boolean;
 	type: TypeObject;
 	name: string;
+	expr?: Expr0Object;
 	location: LocationObject;
 }
 
