@@ -34,6 +34,10 @@ export default class Variable extends Expr0 implements Nameable {
 			throw Node.error('Cannot seal a primitive fun', trace);
 		}
 
+		if (expr && !type.equals(expr.type)) {
+			throw Node.error(`Expression type ${expr.type} failed to match the type ${type} of variable ${name}`, trace);
+		}
+
 		this.sealed = sealed;
 		this.name = name;
 		this.expr = expr;
@@ -100,7 +104,11 @@ export default class Variable extends Expr0 implements Nameable {
 					: `\\mathrm{${Node.escapeTeX(this.name)}}`
 			);
 		
-		return `\\href{#${id}}{${tex}}`;
+		var expr = this.expr
+			? `\\coloneqq ${this.expr.toTeXString(Node.PREC_COLONEQQ)}`
+			: '';
+		
+		return `\\href{#${id}}{${tex}}${expr}`;
 	}
 }
 
