@@ -61,6 +61,12 @@ export default class With extends Metaexpr {
 
 		$Map = new Map($Map);
 
+		var def: ProofType = {
+			_type: 'def',
+			ctr: ctr.next(),
+			var: this.variable
+		};
+
 		var $lines = this.def$s.map($ => {
 			var lines = $.expr.getProof(hypnumMap, $Map, ctr);
 			var $num = lines[lines.length - 1].ctr;
@@ -69,11 +75,7 @@ export default class With extends Metaexpr {
 		}).flat(1);
 
 		return [
-			{
-				_type: 'def',
-				ctr: ctr.next(),
-				var: this.variable
-			},
+			def,
 			...$lines,
 			...this.expr.getProof(hypnumMap, $Map, ctr)
 		];
