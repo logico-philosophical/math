@@ -33,9 +33,8 @@ export default class With extends Metaexpr {
 			throw Error('Parameter collision');
 		
 		map = new Map(map);
-		map.set(this.variable, this.variable.expr);
 
-		return this.expr.substitute(map);
+		return this.expandMeta(false).substitute(map);
 	}
 
 	protected expandMetaInternal(andFuncalls: boolean): Metaexpr {

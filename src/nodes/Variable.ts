@@ -49,9 +49,7 @@ export default class Variable extends Expr0 implements Nameable {
 
 	public substitute(map: Map<Variable, Expr0>): Metaexpr {
 		if (map.has(this)) return map.get(this);
-		if (!this.expr) return this;
-
-		return this; // this.expr.substitute(map);
+		return this;
 	}
 
 	protected expandMetaInternal(andFuncalls: boolean): Metaexpr {
