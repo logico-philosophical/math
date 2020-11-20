@@ -54,11 +54,8 @@ export default abstract class Fun extends Expr0 implements Nameable {
 		this.expr = expr;
 	}
 
-	public isProved(hyps?) {
-		hyps = hyps || [];
-		
-		return super.isProved(hyps)
-			|| this.expr && this.expr.isProved(hyps);
+	protected isProvedInternal(hypotheses: Metaexpr[]): boolean {
+		return this.expr && this.expr.isProved(hypotheses);
 	}
 
 	protected getEqualsPriority(): EqualsPriority {

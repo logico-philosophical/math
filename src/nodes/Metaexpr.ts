@@ -65,6 +65,18 @@ export default abstract class Metaexpr extends Node {
 
 	protected abstract equalsInternal(obj: Metaexpr, context: ExecutionContext): boolean;
 
+	public isProved(hypotheses?: Metaexpr[]): boolean {
+		hypotheses = hypotheses || [];
+
+		for (var i = 0; i < hypotheses.length; i++) {
+			if (hypotheses[i] == this) return true;
+		}
+
+		return this.isProvedInternal(hypotheses);
+	}
+
+	protected abstract isProvedInternal(hypotheses: Metaexpr[]): boolean;
+
 	public getProof(
 			hypnumMap: Map<Metaexpr, number>,
 			$Map: Map<Metaexpr, number | [number, number]>,

@@ -37,9 +37,9 @@ export default class ProofExplorer {
 		function exprToHtml(expr: number | [number, number] | Metaexpr, expand?: boolean): string {
 			if (typeof expr == 'number') return `<b>${expr}</b>`;
 			if (expr instanceof Array) return `<b>${expr[0]}&ndash;${expr[1]}</b>`;
-			if (expand) return ktx(expr.expandMeta(true).toTeXString(true));
+			if (expand) return ktx(expr.expandMeta(true).toTeXString(true, true));
 			
-			return ktx(expr.toTeXString(true));
+			return ktx(expr.toTeXString(true, true));
 		}
 
 		var tree = expr.getProof(new Map(), new Map(), new Counter(), true);
@@ -57,7 +57,6 @@ export default class ProofExplorer {
 					case 'T':
 						return Math.max(
 							recurse(t.leftlines),
-							recurse(t.$lines),
 							recurse(t.rightlines)
 						) + 1;
 					default:
@@ -100,11 +99,6 @@ export default class ProofExplorer {
 								);
 							}).join('');
 						}
-
-						ret += tree2html(
-							line.$lines,
-							newleft
-						);
 
 						ret += tree2html(
 							line.rightlines,
@@ -157,13 +151,15 @@ export default class ProofExplorer {
 							exprToHtml(line.expr, true),
 							'<b class="red">not proved</b>'
 						);
-					default:
+					case 'def':
 						return getHtmlLine(
-							(line as any).ctr,
+							line.ctr,
 							left,
-							`Unknown type ${(line as any)._type}`,
-							''
+							exprToHtml(line.var),
+							'definition'
 						);
+					default:
+						throw Error(`Unknown type ${(line as any)._type}`);
 				}
 			}).join('');
 		})(innertree, []);

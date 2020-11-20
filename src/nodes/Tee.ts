@@ -12,7 +12,7 @@ import Variable from './Variable';
 
 interface TeeArgumentType {
 	left: Metaexpr[];
-	def$s?: $Variable[];
+	def$s: $Variable[];
 	right: Metaexpr;
 }
 
@@ -56,10 +56,8 @@ export default class Tee extends Metaexpr {
 		this.precedence = Node.PREC_COMMA;
 	}
 
-	public isProved(hyps?) {
-		hyps = hyps || [];
-	
-		return super.isProved(hyps) || this.right.isProved(hyps.concat(this.left));
+	protected isProvedInternal(hypotheses: Metaexpr[]): boolean {
+		return this.right.isProved(hypotheses.concat(this.left));
 	}
 
 	public substitute(map: Map<Variable, Expr0>): Metaexpr {
@@ -67,7 +65,9 @@ export default class Tee extends Metaexpr {
 		var right = this.right.substitute(map);
 
 		return new Tee({
-			left, right
+			left,
+			def$s: null,
+			right
 		}, this.trace);
 	}
 
@@ -75,7 +75,7 @@ export default class Tee extends Metaexpr {
 		var left = this.left.map(lef => lef.expandMeta(andFuncalls));
 		var right = this.right.expandMeta(andFuncalls);
 
-		return new Tee({left, right}, this.trace);
+		return new Tee({left, def$s: null, right}, this.trace);
 	}
 
 	protected getEqualsPriority(): EqualsPriority {
@@ -104,35 +104,32 @@ export default class Tee extends Metaexpr {
 			ctr: Counter): ProofType[] {
 		
 		hypnumMap = new Map(hypnumMap);
-		var leftlines: ProofType[] = [];
 
 		var start = ctr.peek() + 1;
 
-		this.left.forEach(l => {
+		var leftlines: ProofType[] = this.left.map(l => {
 			hypnumMap.set(l, ctr.next());
-			leftlines.push({
+			
+			return {
 				_type: 'H',
 				ctr: ctr.peek(),
 				expr: l
-			});
+			};
 		});
 
 		$Map = new Map($Map);
 
-		var $lines: ProofType[] = [];
-		this.def$s.forEach($ => {
+		var $lines = this.def$s.map($ => {
 			var lines = $.expr.getProof(hypnumMap, $Map, ctr);
-			$lines = $lines.concat(lines);
-
 			var $num = lines[lines.length - 1].ctr;
 			$Map.set($, $num);
-		});
+			return lines;
+		}).flat(1);
 
 		return [{
 			_type: 'T',
 			leftlines: leftlines as any,
-			$lines,
-			rightlines: this.right.getProof(hypnumMap, $Map, ctr),
+			rightlines: $lines.concat(this.right.getProof(hypnumMap, $Map, ctr)),
 			ctr: [start, ctr.peek()]
 		}];
 	}

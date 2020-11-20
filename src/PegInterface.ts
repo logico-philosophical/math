@@ -16,7 +16,8 @@ import Reduction from './nodes/Reduction';
 import Schema, { SchemaType } from './nodes/Schema';
 import Tee from './nodes/Tee';
 import Variable from './nodes/Variable';
-import { Def$Object, DefschemaObject, DefunObject, DefvObject, Expr0Object, FuncallObject, FunexprObject, MetaexprObject, ReductionObject, SchemacallObject, SchemaexprObject, StypeObject, TeeObject, TypedefObject, TypeObject, VarObject } from './PegInterfaceDefinitions';
+import With from './nodes/With';
+import { Def$Object, DefschemaObject, DefunObject, DefvObject, Expr0Object, FuncallObject, FunexprObject, MetaexprObject, ReductionObject, SchemacallObject, SchemaexprObject, StypeObject, TeeObject, TypedefObject, TypeObject, VarObject, WithObject } from './PegInterfaceDefinitions';
 import Scope, { NestedTypeInput } from './Scope';
 
 function typeObjToString(obj: TypeObject): string {
@@ -174,9 +175,6 @@ export default class PI {
 		}
 
 		var params = obj.params.map(tvo => {
-			if (!scope.hasType(typeObjToNestedArr(tvo.type)))
-				throw scope.error(`Type ${typeObjToString(tvo.type)} is not defined`);
-
 			var tv = PI.variable(tvo, scope);
 
 			if (scope.hasOwnVariable(tv.name))
@@ -213,8 +211,9 @@ export default class PI {
 	}
 
 	public static metaexpr(obj: MetaexprObject, parentScope: Scope, context: ExecutionContext): Metaexpr {
-		if (!['tee', 'reduction', 'schemacall', 'schemaexpr', 'var'].includes(obj._type))
+		if (!['tee', 'reduction', 'schemacall', 'schemaexpr', 'var', 'with'].includes(obj._type)) {
 			throw Error('Assertion failed');
+		}
 
 		// don't extend scope
 		var scope = parentScope;
@@ -230,6 +229,8 @@ export default class PI {
 				return PI.schema(obj, scope, context);
 			case 'var':
 				return PI.metavar(obj, scope);
+			case 'with':
+				return PI.with(obj, scope, context);
 			default:
 				throw Error('wut');
 		}
@@ -289,6 +290,43 @@ export default class PI {
 			default:
 				throw scope.error(`Unknown type ${obj.type}`);
 		}
+	}
+
+	public static with(obj: WithObject, parentScope: Scope, context: ExecutionContext): With {
+		if (obj._type != 'with') {
+			throw Error('Assertion failed');
+		}
+
+		var scope = parentScope.extend('with', null, obj.location);
+
+		var tv = PI.variable(obj.with, scope);
+
+		if (scope.hasOwnVariable(tv.name))
+			throw scope.error(`Parameter ${tv.name} has already been declared`);
+		
+		if (!(tv instanceof Variable)) {
+			throw Error('Something\'s wrong');
+		}
+
+		scope.addVariable(tv);
+
+		var def$s = obj.def$s.map($ => {
+			var $v = PI.def$($, scope, context);
+
+			if (scope.hasOwn$($v.name)) {
+				throw scope.error(`${$.name} has already been declared`);
+			}
+
+			return scope.add$($v);
+		});
+
+		var expr = PI.metaexpr(obj.expr, scope, context);
+
+		return new With({
+			variable: tv,
+			def$s,
+			expr
+		}, scope.trace);
 	}
 
 	public static tee(obj: TeeObject, parentScope: Scope, context: ExecutionContext): Tee {
@@ -369,9 +407,6 @@ export default class PI {
 		}
 
 		var params = obj.params.map(tvo => {
-			if (!scope.hasType(typeObjToNestedArr(tvo.type)))
-				throw scope.error(`Type ${typeObjToString(tvo.type)} is not defined`);
-
 			var tv = PI.variable(tvo, scope);
 
 			if (scope.hasOwnVariable(tv.name))

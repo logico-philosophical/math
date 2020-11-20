@@ -43,14 +43,15 @@ export default class Variable extends Expr0 implements Nameable {
 		this.expr = expr;
 	}
 
-	public isProved(hyps) {
-		hyps = hyps || [];
-	
-		return super.isProved(hyps);
+	protected isProvedInternal(hypotheses: Metaexpr[]): boolean {
+		return false;
 	}
 
 	public substitute(map: Map<Variable, Expr0>): Metaexpr {
-		return map.get(this) || this;
+		if (map.has(this)) return map.get(this);
+		if (!this.expr) return this;
+
+		return this; // this.expr.substitute(map);
 	}
 
 	protected expandMetaInternal(andFuncalls: boolean): Metaexpr {
@@ -104,7 +105,7 @@ export default class Variable extends Expr0 implements Nameable {
 					: `\\mathrm{${Node.escapeTeX(this.name)}}`
 			);
 		
-		var expr = this.expr
+		var expr = root && this.expr
 			? `\\coloneqq ${this.expr.toTeXString(Node.PREC_COLONEQQ)}`
 			: '';
 		

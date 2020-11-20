@@ -64,16 +64,6 @@ export default abstract class Node {
 		return {precedence, code};
 	}
 
-	public isProved(hyps?): boolean {
-		hyps = hyps || [];
-
-		for (var i = 0; i < hyps.length; i++) {
-			if (hyps[i] == this) return true;
-		}
-
-		return false;
-	}
-
 	/*
 	* false corresponds to 0.
 	* true corresponds to w * 2.

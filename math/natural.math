@@ -392,277 +392,346 @@ theorem recursion_theorem_1($A$ cls a: @11, cls c: @21, cls f: @31) {
 "[$\gamma\in\mathscr A]가 되기 위한 두 번째 조건."
 theorem recursion_theorem_2($A$ cls a: @12, cls c: @11, cls f) {
 	in(c, a) |-
-		setbuilder_i[
-			pair_set_i[
-			set_i[zero_in_omega()];
-			set_i[@h1]
-		];
-			Ui[($G$ cls g) => {
-				cp[in(g, recursion_set(a, c, f)) |- Ae1[Ae2[setbuilder_e[@h2]]]]
-			}]
-		]
-		[as in(pair(ord_zero(), c), define_recursively(a, c, f))]
+		with ($\mathscr A$ cls aa = recursion_set(a, c, f)) {
+		with ($\gamma$ cls g = define_recursively(a, c, f)) {
+			setbuilder_i[
+				pair_set_i[
+				set_i[zero_in_omega()];
+				set_i[@h1]
+			];
+				Ui[($G$ cls g) => {
+					cp[in(g, aa) |- Ae1[Ae2[setbuilder_e[@h2]]]]
+				}]
+			]
+			[as in(pair(ord_zero(), c), g)]
+		}
+		}
 }
 
 "[$\gamma\in\mathscr A]가 되기 위한 세 번째 조건."
 theorem recursion_theorem_3($A$ cls a: @12, cls c, cls f: @11) {
 	is_fun(f, a, a) |-
-		Ui[(cls n) => { cp[in(n, omega()) |-
-			Ui[(cls x) => { cp[in(x, a) |-
-				cp[in(pair(n, x), define_recursively(a, c, f)) |-
-					setbuilder_i[
-						pair_set_i[
-							successor_is_set[set_i[@h2]];
-							set_i[funcall_in_codomain[@h1; @h3]]
-						];
-						mp[
-							setbuilder_e[@h4];
-							UIm(
-								($G$ cls g) => {
-									I(in(g, recursion_set(a, c, f)), in(pair(n, x), g))
-								},
-								($G$ cls g) => {
-									I(in(g, recursion_set(a, c, f)), in(pair(successor(n), funcall(f, x)), g))
-								}
-							)[Ui[($G$ cls g) => {
-								I_distribute_left[cp[in(g, recursion_set(a, c, f)) |-
-									mp[@h3; Ue(?, x)[mp[
-										@h2;
-										Ue(?, n)[Ae2[Ae2[setbuilder_e[@h5]]]]
-									]]]
-								]]
-							}]]
-						]
-					][as in(pair(successor(n), funcall(f, x)), define_recursively(a, c, f))]
-				]
+		with ($\mathscr A$ cls aa = recursion_set(a, c, f)) {
+		with ($\gamma$ cls g = define_recursively(a, c, f)) {
+			Ui[(cls n) => { cp[in(n, omega()) |-
+				Ui[(cls x) => { cp[in(x, a) |-
+					cp[in(pair(n, x), g) |-
+						setbuilder_i[
+							pair_set_i[
+								successor_is_set[set_i[@h2]];
+								set_i[funcall_in_codomain[@h1; @h3]]
+							];
+							mp[
+								setbuilder_e[@h4];
+								UIm(
+									($G$ cls g) => {
+										I(in(g, aa), in(pair(n, x), g))
+									},
+									($G$ cls g) => {
+										I(in(g, aa), in(pair(successor(n), funcall(f, x)), g))
+									}
+								)[Ui[($G$ cls g) => {
+									I_distribute_left[cp[in(g, aa) |-
+										mp[@h3; Ue(?, x)[mp[
+											@h2;
+											Ue(?, n)[Ae2[Ae2[setbuilder_e[@h5]]]]
+										]]]
+									]]
+								}]]
+							]
+						][as in(pair(successor(n), funcall(f, x)), g)]
+					]
+				] }]
 			] }]
-		] }]
-		[as Uin(omega(), (cls n) => {
-			Uin(a, (cls x) => {
-				I(
-					in(pair(n, x), define_recursively(a, c, f)),
-					in(pair(successor(n), funcall(f, x)), define_recursively(a, c, f))
-				)
-			})
-		})]
+			[as Uin(omega(), (cls n) => {
+				Uin(a, (cls x) => {
+					I(
+						in(pair(n, x), g),
+						in(pair(successor(n), funcall(f, x)), g)
+					)
+				})
+			})]
+		}
+		}
 }
 
 "[$\gamma]가 함수가 되기 위한 두 번째 조건."
 theorem recursion_theorem_4($A$ cls a: @11, cls c: @21, cls f: @31) {
 	set(a), in(c, a), is_fun(f, a, a) |-
-		$base =
-			Xi((cls x) => {
-				A(in(x, a), in(pair(ord_zero(), x), define_recursively(a, c, f)))
-			}, c)[Ai[@h2; recursion_theorem_2(a, c, f)[@h2]]]
-			[as Xin(a, (cls x) => {in(pair(ord_zero(), x), define_recursively(a, c, f))})];
-		
-		$step = Ui[(cls n) => { cp[in(n, omega()) |-
-			cp[Xin(a, (cls x) => { in(pair(n, x), define_recursively(a, c, f)) }) |-
-				mpXin_Xe_p(?, ?, Xin(a, (cls x) => {in(pair(successor(n), x), define_recursively(a, c, f))}))[
-					@h5;
-					Ui[(cls x) => { cp[in(x, a) |-
-						cp[in(pair(n, x), define_recursively(a, c, f)) |-
-							Xi((cls x) => {
-								A(in(x, a), in(pair(successor(n), x), define_recursively(a, c, f)))
-							}, funcall(f, x))[Ai[
-								funcall_in_codomain[@h3; @h6];
-								mp[@h7; mp[@h6; Ue(?, x)[mp[@h4; Ue(?, n)[recursion_theorem_3(a, c, f)[@h3]]]]]]
-							]]]
-					] }]
+		with ($\gamma$ cls g = define_recursively(a, c, f)) {
+			$base =
+				Xi((cls x) => {
+					A(in(x, a), in(pair(ord_zero(), x), g))
+				}, c)[Ai[
+					@h2;
+					recursion_theorem_2(a, c, f)[@h2]
+					[as in(pair(ord_zero(), c), g)]
 				]]
-		] }];
-		
-		induce((cls n) => {
-			Xin(a, (cls x) => {
-				in(pair(n, x), define_recursively(a, c, f))
-			})
-		})[$base; $step]
+				[as Xin(a, (cls x) => {in(pair(ord_zero(), x), g)})];
+			
+			$step = Ui[(cls n) => { cp[in(n, omega()) |-
+				cp[Xin(a, (cls x) => { in(pair(n, x), g) }) |-
+					mpXin_Xe_p(?, ?, Xin(a, (cls x) => {in(pair(successor(n), x), g)}))[
+						@h5;
+						Ui[(cls x) => { cp[in(x, a) |-
+							cp[in(pair(n, x), g) |-
+								Xi((cls x) => {
+									A(in(x, a), in(pair(successor(n), x), g))
+								}, funcall(f, x))[Ai[
+									funcall_in_codomain[@h3; @h6];
+									mp[@h7; mp[@h6; Ue(?, x)[mp[@h4; Ue(?, n)[
+										recursion_theorem_3(a, c, f)[@h3]
+										[as Uin(omega(), (cls n) => {
+											Uin(a, (cls x) => {
+												I(
+													in(pair(n, x), g),
+													in(pair(successor(n), funcall(f, x)), g)
+												)
+											})
+										})]
+									]]]]]
+								]]]
+						] }]
+					]]
+			] }];
+			
+			induce((cls n) => {
+				Xin(a, (cls x) => {
+					in(pair(n, x), g)
+				})
+			})[$base; $step]
+		}
 }
 
 "[$\gamma]가 함수가 되기 위한 세 번째 조건의 base case."
 theorem recursion_theorem_5_base($A$ cls a: @11, cls c: @21, cls f: @31) {
 	set(a), in(c, a), is_fun(f, a, a) |-
-		Qim((cls x) => {
-			in(pair(ord_zero(), x), define_recursively(a, c, f))
-		}, c)[Ui[(cls d) => { cp[in(pair(ord_zero(), d), define_recursively(a, c, f)) |-
-			NNe[Ni_alt[Neq(d, c) |-
-				$c1 = subseteq_subseteq[
-					setminus_is_smaller(define_recursively(a, c, f), singleton(pair(ord_zero(), d)));
-					recursion_theorem_1[@h1; @h2; @h3]
-				];
-				
-				$c2 = setminus_i[
-					recursion_theorem_2(a, c, f)[@h2];
-					Ni_alt[in(pair(ord_zero(), c), singleton(pair(ord_zero(), d))) |-
-						Fi[
-							eq_symmetric[pair_eq_e2[
-								ax_emptyset(); set_i[@h2];
-								ax_emptyset(); pair_set_e2[set_i[@h4]];
-								singleton_e[set_i[@h4]; @h6]]];
-							@h5
-						]]
-				];
-				
-				$c3 = Ui[(cls n) => { cp[in(n, omega()) |-
-					Ui[(cls x) => { cp[in(x, a) |-
-						cp[in(pair(n, x), setminus(define_recursively(a, c, f), singleton(pair(ord_zero(), d)))) |-
-							setminus_i[
-								mp[
-									in_subseteq[
-										@h8;
-										setminus_is_smaller(define_recursively(a, c, f), singleton(pair(ord_zero(), d)))
-									];
-									mp[@h7; Ue(?, x)[mp[@h6; Ue(?, n)[recursion_theorem_3(a, c, f)[@h3]]]]]
-								];
-								Ni_alt[in(pair(successor(n), funcall(f, x)), singleton(pair(ord_zero(), d))) |-
-									Fi[
-										pair_eq_e1_v2[set_i[@h4]; singleton_e[set_i[@h4]; @h9]];
-										successor_is_not_zero[@h6]
-									]]
+		with ($\gamma$ cls g = define_recursively(a, c, f)) {
+			Qim((cls x) => {
+				in(pair(ord_zero(), x), g)
+			}, c)[Ui[(cls d) => { cp[in(pair(ord_zero(), d), g) |-
+				NNe[Ni_alt[Neq(d, c) |-
+					$c1 = subseteq_subseteq[
+						setminus_is_smaller(g, singleton(pair(ord_zero(), d)));
+						recursion_theorem_1[@h1; @h2; @h3]
+						[as subseteq(g, cartesian(omega(), a))]
+					];
+					
+					$c2 = setminus_i[
+						recursion_theorem_2(a, c, f)[@h2]
+						[as in(pair(ord_zero(), c), g)];
+						Ni_alt[in(pair(ord_zero(), c), singleton(pair(ord_zero(), d))) |-
+							Fi[
+								eq_symmetric[pair_eq_e2[
+									ax_emptyset(); set_i[@h2];
+									ax_emptyset(); pair_set_e2[set_i[@h4]];
+									singleton_e[set_i[@h4]; @h6]]];
+								@h5
 							]]
-					] }]
-				] }];
-				
-				$gamma_is_smaller = bigcap_is_smaller[
-					setbuilder_i[
-						subset_is_set[cartesian_is_set[omega_is_set(); @h1]; $c1];
-						Ai[$c1; Ai[$c2; $c3]]
+					];
+					
+					$c3 = Ui[(cls n) => { cp[in(n, omega()) |-
+						Ui[(cls x) => { cp[in(x, a) |-
+							cp[in(pair(n, x), setminus(g, singleton(pair(ord_zero(), d)))) |-
+								setminus_i[
+									mp[
+										in_subseteq[
+											@h8;
+											setminus_is_smaller(g, singleton(pair(ord_zero(), d)))
+										];
+										mp[@h7; Ue(?, x)[mp[@h6; Ue(?, n)[
+											recursion_theorem_3(a, c, f)[@h3]
+											[as Uin(omega(), (cls n) => {
+												Uin(a, (cls x) => {
+													I(
+														in(pair(n, x), g),
+														in(pair(successor(n), funcall(f, x)), g)
+													)
+												})
+											})]
+										]]]]
+									];
+									Ni_alt[in(pair(successor(n), funcall(f, x)), singleton(pair(ord_zero(), d))) |-
+										Fi[
+											pair_eq_e1_v2[set_i[@h4]; singleton_e[set_i[@h4]; @h9]];
+											successor_is_not_zero[@h6]
+										]]
+								]]
+						] }]
+					] }];
+					
+					$gamma_is_smaller = bigcap_is_smaller[
+						setbuilder_i[
+							subset_is_set[cartesian_is_set[omega_is_set(); @h1]; $c1];
+							Ai[$c1; Ai[$c2; $c3]]
+						]
+						[as in(setminus(g, singleton(pair(ord_zero(), d))), recursion_set(a, c, f))]
+					];
+					
+					Fi[
+						self_in_singleton[set_i[@h4]];
+						setminus_e2[in_subseteq[@h4; $gamma_is_smaller]]
 					]
-					[as in(setminus(define_recursively(a, c, f), singleton(pair(ord_zero(), d))), recursion_set(a, c, f))]
-				];
-				
-				Fi[
-					self_in_singleton[set_i[@h4]];
-					setminus_e2[in_subseteq[@h4; $gamma_is_smaller]]
-				]
-			]]
-		] }]]
+				]]
+			] }]]
+		}
 }
 
 "[$\gamma]가 함수가 되기 위한 세 번째 조건의 step case."
 theorem recursion_theorem_5_step($A$ cls a: @11, cls c: @21, cls f: @31) {
 	set(a), in(c, a), is_fun(f, a, a) |-
-		Ui[(cls n) => { cp[in(n, omega()) |-
-			cp[Q((cls x) => {
-				in(pair(n, x), define_recursively(a, c, f))
-			}) |-
-				mpXin_Xe_p(?, ?, Q((cls x) => {
-					in(pair(successor(n), x), define_recursively(a, c, f))
-				}))[
-					mp[@h4; Ue(?, n)[recursion_theorem_4[@h1; @h2; @h3]]];
-					Ui[(cls x) => { cp[in(x, a) |-
-						cp[in(pair(n, x), define_recursively(a, c, f)) |-
-							Qim((cls x) => {
-								in(pair(successor(n), x), define_recursively(a, c, f))
-							}, funcall(f, x))[Ui[(cls u) => { cp[in(pair(successor(n), u), define_recursively(a, c, f)) |-
-								NNe[Ni_alt[Neq(u, funcall(f, x)) |-
-									$c1 = subseteq_subseteq[
-										setminus_is_smaller(define_recursively(a, c, f), singleton(pair(successor(n), u)));
-										recursion_theorem_1[@h1; @h2; @h3]
-									];
+		with ($\gamma$ cls g = define_recursively(a, c, f)) {
+			Ui[(cls n) => { cp[in(n, omega()) |-
+				cp[Q((cls x) => {
+					in(pair(n, x), g)
+				}) |-
+					mpXin_Xe_p(?, ?, Q((cls x) => {
+						in(pair(successor(n), x), g)
+					}))[
+						mp[@h4; Ue(?, n)[
+							recursion_theorem_4[@h1; @h2; @h3]
+							[as Uin(omega(), (cls n) => {
+								Xin(a, (cls x) => {
+									in(pair(n, x), g)
+								})
+							})]
+						]];
+						Ui[(cls x) => { cp[in(x, a) |-
+							cp[in(pair(n, x), g) |-
+								Qim((cls x) => {
+									in(pair(successor(n), x), g)
+								}, funcall(f, x))[Ui[(cls u) => { cp[in(pair(successor(n), u), g) |-
+									NNe[Ni_alt[Neq(u, funcall(f, x)) |-
+										$c1 = subseteq_subseteq[
+											setminus_is_smaller(g, singleton(pair(successor(n), u)));
+											recursion_theorem_1[@h1; @h2; @h3]
+											[as subseteq(g, cartesian(omega(), a))]
+										];
 
-									$c2 = setminus_i[
-										recursion_theorem_2(a, c, f)[@h2];
-										Ni_alt[in(pair(ord_zero(), c), singleton(pair(successor(n), u))) |-
-											Fi[
-												eq_symmetric[pair_eq_e1_v2[
-													set_i[@h8];
-													singleton_e[set_i[@h8]; @h10]
-												]];
-												successor_is_not_zero[@h4]
-											]]
-									];
+										$c2 = setminus_i[
+											recursion_theorem_2(a, c, f)[@h2]
+											[as in(pair(ord_zero(), c), g)];
+											Ni_alt[in(pair(ord_zero(), c), singleton(pair(successor(n), u))) |-
+												Fi[
+													eq_symmetric[pair_eq_e1_v2[
+														set_i[@h8];
+														singleton_e[set_i[@h8]; @h10]
+													]];
+													successor_is_not_zero[@h4]
+												]]
+										];
 
-									$c3 = Ui[(cls m) => { cp[in(m, omega()) |-
-										Ui[(cls v) => { cp[in(v, a) |-
-											cp[in(pair(m, v), setminus(define_recursively(a, c, f), singleton(pair(successor(n), u)))) |-
-												$bar = in_subseteq[
-													@h12;
-													setminus_is_smaller(define_recursively(a, c, f), singleton(pair(successor(n), u)))
-												];
-												$foo = mp[
-													$bar;
-													mp[@h11; Ue(?, v)[mp[@h10; Ue(?, m)[recursion_theorem_3(a, c, f)[@h3]]]]]
-												];
-
-												$c3_c1 = Neq(successor(m), successor(n)) |-
-													setminus_i[
-														$foo;
-														Ni_alt[in(pair(successor(m), funcall(f, v)), singleton(pair(successor(n), u))) |-
-															Fi[
-																pair_eq_e1_v2[
-																	set_i[@h8];
-																	singleton_e[set_i[@h8]; @h14]
-																];
-																@h13
-															]]
+										$c3 = Ui[(cls m) => { cp[in(m, omega()) |-
+											Ui[(cls v) => { cp[in(v, a) |-
+												cp[in(pair(m, v), setminus(g, singleton(pair(successor(n), u)))) |-
+													$bar = in_subseteq[
+														@h12;
+														setminus_is_smaller(g, singleton(pair(successor(n), u)))
+													];
+													$foo = mp[
+														$bar;
+														mp[@h11; Ue(?, v)[mp[@h10; Ue(?, m)[
+															recursion_theorem_3(a, c, f)[@h3]
+															[as Uin(omega(), (cls n) => {
+																Uin(a, (cls x) => {
+																	I(
+																		in(pair(n, x), g),
+																		in(pair(successor(n), funcall(f, x)), g)
+																	)
+																})
+															})]
+														]]]]
 													];
 
-												$c3_c2 = eq(successor(m), successor(n)) |-
-													in_eq_left_2[
+													$c3_c1 = Neq(successor(m), successor(n)) |-
 														setminus_i[
-															mp[@h7; mp[@h6; Ue(?, x)[mp[@h4; Ue(?, n)[recursion_theorem_3(a, c, f)[@h3]]]]]];
-															Ni_alt[in(pair(successor(n), funcall(f, x)), singleton(pair(successor(n), u))) |-
+															$foo;
+															Ni_alt[in(pair(successor(m), funcall(f, v)), singleton(pair(successor(n), u))) |-
 																Fi[
-																	eq_symmetric[pair_eq_e2_v1[set_i[@h14]; singleton_e[set_i[@h8]; @h14]]];
-																	@h9
+																	pair_eq_e1_v2[
+																		set_i[@h8];
+																		singleton_e[set_i[@h8]; @h14]
+																	];
+																	@h13
 																]]
 														];
-														pair_eq_i[
-															@h13;
-															funcall_eq_i(f, ?, ?)[
-																mp[
-																	Ai[
-																		in_eq_left_1[
-																			$bar;
-																			pair_eq_i[
-																				successor_eq_e[@h10; @h4; @h13];
-																				eq_reflexive(v)
-																			]
+
+													$c3_c2 = eq(successor(m), successor(n)) |-
+														in_eq_left_2[
+															setminus_i[
+																mp[@h7; mp[@h6; Ue(?, x)[mp[@h4; Ue(?, n)[
+																	recursion_theorem_3(a, c, f)[@h3]
+																	[as Uin(omega(), (cls n) => {
+																		Uin(a, (cls x) => {
+																			I(
+																				in(pair(n, x), g),
+																				in(pair(successor(n), funcall(f, x)), g)
+																			)
+																		})
+																	})]
+																]]]]];
+																Ni_alt[in(pair(successor(n), funcall(f, x)), singleton(pair(successor(n), u))) |-
+																	Fi[
+																		eq_symmetric[pair_eq_e2_v1[set_i[@h14]; singleton_e[set_i[@h8]; @h14]]];
+																		@h9
+																	]]
+															];
+															pair_eq_i[
+																@h13;
+																funcall_eq_i(f, ?, ?)[
+																	mp[
+																		Ai[
+																			in_eq_left_1[
+																				$bar;
+																				pair_eq_i[
+																					successor_eq_e[@h10; @h4; @h13];
+																					eq_reflexive(v)
+																				]
+																			];
+																			@h7
 																		];
-																		@h7
-																	];
-																	Ue2(?, v, x)[@h5]
+																		Ue2(?, v, x)[@h5]
+																	]
 																]
 															]
-														]
-													];
+														];
 
-												Oeu[
-													lxm(eq(successor(m), successor(n)));
-													$c3_c2; $c3_c1
+													Oeu[
+														lxm(eq(successor(m), successor(n)));
+														$c3_c2; $c3_c1
+													]
 												]
-											]
-										] }]
-									] }];
+											] }]
+										] }];
 
-									$gamma_is_smaller = bigcap_is_smaller[
-										setbuilder_i[
-											subset_is_set[cartesian_is_set[omega_is_set(); @h1]; $c1];
-											Ai[$c1; Ai[$c2; $c3]]
-										][as in(setminus(define_recursively(a, c, f), singleton(pair(successor(n), u))), recursion_set(a, c, f))]
-									];
+										$gamma_is_smaller = bigcap_is_smaller[
+											setbuilder_i[
+												subset_is_set[cartesian_is_set[omega_is_set(); @h1]; $c1];
+												Ai[$c1; Ai[$c2; $c3]]
+											][as in(setminus(g, singleton(pair(successor(n), u))), recursion_set(a, c, f))]
+										];
 
-									Fi[
-										self_in_singleton[set_i[@h8]];
-										setminus_e2[in_subseteq[@h8; $gamma_is_smaller]]
-									]
-								]]
-							] }]]
-						]
-					] }]
+										Fi[
+											self_in_singleton[set_i[@h8]];
+											setminus_e2[in_subseteq[@h8; $gamma_is_smaller]]
+										]
+									]]
+								] }]]
+							]
+						] }]
+					]
 				]
-			]
-		] }][as Uin(omega(), (cls n) => {
-			I(
-				Q((cls x) => {
-					in(pair(n, x), define_recursively(a, c, f))
-				}),
-				Q((cls x) => {
-					in(pair(successor(n), x), define_recursively(a, c, f))
-				})
-			)
-		})]
+			] }][as Uin(omega(), (cls n) => {
+				I(
+					Q((cls x) => {
+						in(pair(n, x), g)
+					}),
+					Q((cls x) => {
+						in(pair(successor(n), x), g)
+					})
+				)
+			})]
+		}
 }
 
 "[$\gamma]가 함수가 되기 위한 세 번째 조건."
@@ -685,34 +754,54 @@ theorem recursion_theorem_6($A$ cls a: @11, cls c: @21, cls f: @31) {
 "[$\gamma]가 함수이고 재귀적으로 정의된다."
 theorem recursion_theorem_7($A$ cls a: @11, cls c: @21, cls f: @31) {
 	set(a), in(c, a), is_fun(f, a, a) |-
-		$c1 = recursion_theorem_6[@h1; @h2; @h3];
-		
-		$c2 = eq_symmetric[funcall_i[$c1; recursion_theorem_2(a, c, f)[@h2]]];
-		
-		$c3 = Ui[(cls n) => { cp[in(n, omega()) |-
-			mpXin_Xe_p(?, ?, eq(
-				funcall(define_recursively(a, c, f), successor(n)),
-				funcall(f, funcall(define_recursively(a, c, f), n))
-			))[
-				mp[@h4; Ue(?, n)[recursion_theorem_4[@h1; @h2; @h3]]];
-				Ui[(cls x) => { cp[in(x, a) |-
-					cp[in(pair(n, x), define_recursively(a, c, f)) |-
-						eq_transitive[
-							eq_symmetric[funcall_i[
-								$c1;
-								mp[
-									@h6;
-									mp[@h5; Ue(?, x)[mp[@h4; Ue(?, n)[recursion_theorem_3(a, c, f)[@h3]]]]]
-								]
-							]];
-							funcall_eq_i(f, ?, ?)[funcall_i[$c1; @h6]]
-						]]
-				] }]
-			]
-		] }];
-		
-		Ai[$c1; Ai[$c2; $c3]]
-		[as is_recursively_defined(define_recursively(a, c, f), a, c, f)]
+		with ($\gamma$ cls g = define_recursively(a, c, f)) {
+			$c1 = recursion_theorem_6[@h1; @h2; @h3]
+			[as is_fun(g, omega(), a)];
+			
+			$c2 = eq_symmetric[funcall_i[$c1; recursion_theorem_2(a, c, f)[@h2][as in(pair(ord_zero(), c), g)]]];
+			
+			$c3 = Ui[(cls n) => { cp[in(n, omega()) |-
+				mpXin_Xe_p(?, ?, eq(
+					funcall(g, successor(n)),
+					funcall(f, funcall(g, n))
+				))[
+					mp[@h4; Ue(?, n)[
+						recursion_theorem_4[@h1; @h2; @h3]
+						[as Uin(omega(), (cls n) => {
+							Xin(a, (cls x) => {
+								in(pair(n, x), g)
+							})
+						})]
+					]];
+					Ui[(cls x) => { cp[in(x, a) |-
+						cp[in(pair(n, x), g) |-
+							eq_transitive[
+								eq_symmetric[funcall_i[
+									$c1;
+									mp[
+										@h6;
+										mp[@h5; Ue(?, x)[mp[@h4; Ue(?, n)[
+											recursion_theorem_3(a, c, f)[@h3]
+											[as Uin(omega(), (cls n) => {
+												Uin(a, (cls x) => {
+													I(
+														in(pair(n, x), g),
+														in(pair(successor(n), funcall(f, x)), g)
+													)
+												})
+											})]
+										]]]]
+									]
+								]];
+								funcall_eq_i(f, ?, ?)[funcall_i[$c1; @h6]]
+							]]
+					] }]
+				]
+			] }];
+			
+			Ai[$c1; Ai[$c2; $c3]]
+			[as is_recursively_defined(g, a, c, f)]
+		}
 }
 
 "[$\gamma]는 여러 개 있지 않다."

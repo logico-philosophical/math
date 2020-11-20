@@ -137,12 +137,9 @@ ${as.expandMeta(true)}
 		}
 	}
 
-	public isProved(hyps?): boolean {
-		hyps = hyps || [];
-		
-		return super.isProved(hyps)
-			|| this.subject.isProved(hyps)
-				&& this.leftargs.every(l => l.isProved(hyps));
+	protected isProvedInternal(hypotheses: Metaexpr[]): boolean {
+		return this.subject.isProved(hypotheses)
+			&& this.leftargs.every(l => l.isProved(hypotheses));
 	}
 
 	public substitute(map: Map<Variable, Expr0>): Metaexpr {

@@ -53,7 +53,7 @@ export interface DefunObject {
 }
 
 export type Expr0Object = FuncallObject | FunexprObject | VarObject;
-export type MetaexprObject = TeeObject | ReductionObject | SchemacallObject | VarObject | SchemaexprObject;
+export type MetaexprObject = TeeObject | ReductionObject | SchemacallObject | WithObject | VarObject | SchemaexprObject;
 
 export interface DefschemaObject {
 	_type: 'defschema';
@@ -101,6 +101,14 @@ export interface FunexprObject {
 export interface SchemaexprObject {
 	_type: 'schemaexpr';
 	params: DefvObject[];
+	def$s: Def$Object[];
+	expr: MetaexprObject;
+	location: LocationObject;
+}
+
+export interface WithObject {
+	_type: 'with';
+	with: DefvObject;
 	def$s: Def$Object[];
 	expr: MetaexprObject;
 	location: LocationObject;

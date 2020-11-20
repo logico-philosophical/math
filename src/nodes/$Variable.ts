@@ -29,11 +29,8 @@ export default class $Variable extends Metaexpr implements Nameable {
 		this.expr = expr;
 	}
 
-	public isProved(hyps?): boolean {
-		hyps = hyps || [];
-		
-		return super.isProved(hyps)
-			|| this.expr.isProved(hyps);
+	protected isProvedInternal(hypotheses: Metaexpr[]): boolean {
+		return this.expr.isProved(hypotheses);
 	}
 
 	public substitute(map: Map<Variable, Expr0>): Metaexpr {

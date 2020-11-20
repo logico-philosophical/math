@@ -2,7 +2,7 @@ import Expr0 from "./nodes/Expr0";
 import Metaexpr from "./nodes/Metaexpr";
 import Variable from "./nodes/Variable";
 
-export type ProofType = R | RC | RCX | RS | H | NP | Wut | T | V | E;
+export type ProofType = R | RC | RCX | RS | H | NP | Wut | T | V | E | Def;
 
 /** repeat */
 interface R {
@@ -56,7 +56,6 @@ interface T {
 	_type: 'T';
 	ctr: [number, number];
 	leftlines: H[];
-	$lines: ProofType[];
 	rightlines: ProofType[];
 }
 
@@ -75,4 +74,10 @@ interface E {
 	args: Expr0[];
 	leftargs: (number | [number, number])[];
 	reduced: Metaexpr;
+}
+
+interface Def {
+	_type: 'def';
+	ctr: number;
+	var: Variable;
 }

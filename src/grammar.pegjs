@@ -365,6 +365,37 @@ schemaexpr =
 		}
 	}
 
+with =
+	'with' _ '(' _
+	tex:(tex __)?
+	type:type __
+	varname:ident _
+	"=" _
+	varexpr:expr0 _
+	')' _ '{' _
+	defdollars: (d:defdollar _ {return d})* _
+	expr:metaexpr _
+	'}'
+	{
+		return {
+			_type: 'with',
+			with: {
+				_type: 'defv',
+				isParam: false,
+				doc: null,
+				tex: tex ? tex[0] : null,
+				sealed: false,
+				type,
+				name: varname,
+				expr: varexpr,
+				location: location()
+			},
+			def$s: defdollars,
+			expr,
+			location: location()
+		}
+	}
+
 metaexpr =
 	left:(
 		l:(
@@ -399,6 +430,7 @@ metaexpr_internal_1 =
 	/ schemacall
 	/ var
 	/ schemaexpr
+	/ with
 	/ "(" _ e:metaexpr _ ")" {return e}
 
 expr0 =
@@ -511,6 +543,7 @@ keyword =
 	/ 'sealed'
 	/ 'type'
 	/ 'using'
+	/ 'with'
 
 annotation =
 	'@discouraged'

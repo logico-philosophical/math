@@ -52,10 +52,8 @@ export default class Funcall extends Expr0 {
 		this.args = args;
 	}
 
-	public isProved(hyps?) {
-		hyps = hyps || [];
-	
-		return super.isProved(hyps) || this.fun.isProved(hyps);
+	protected isProvedInternal(hypotheses: Metaexpr[]): boolean {
+		return this.fun.isProved(hypotheses);
 	}
 
 	public substitute(map: Map<Variable, Expr0>): Metaexpr {
