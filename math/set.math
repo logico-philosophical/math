@@ -829,22 +829,26 @@ theorem cup_eq_i(cls x: @11, cls y: @12, cls u: @21, cls v: @22) {
 }
 
 "일반화된 교집합."
-$<<\bigcap>>#1$
+$\left(<<\bigcap>>#1\right)$
 cls bigcap($A$ cls a) {
 	setbuilder((cls z) => {
-		Uin(a, (cls x) => {
-			in(z, x)
-		})
+		Uin(a, (cls x) => in(z, x))
 	})
 }
 
 "일반화된 합집합."
-$<<\bigcup>>#1$
+$\left(<<\bigcup>>#1\right)$
 cls bigcup($A$ cls a) {
 	setbuilder((cls z) => {
-		Xin(a, (cls x) => {
-			in(z, x)
-		})
+		Xin(a, (cls x) => in(z, x))
+	})
+}
+
+"일반적으로 [$\bigcup_{x\in A} f(x)]라 쓰는 것."
+$\left(<<\bigcup>>_{\in #1}#2\right)$
+cls bigcup2($A$ cls a, fun f) {
+	setbuilder2(f, (cls z) => {
+		Xin(a, (cls x) => in(z, x))
 	})
 }
 

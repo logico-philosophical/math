@@ -49,6 +49,9 @@ export default class Variable extends Expr0 implements Nameable {
 
 	public substitute(map: Map<Variable, Expr0>): Metaexpr {
 		if (map.has(this)) return map.get(this);
+
+		// 매크로 변수는 스코프 밖에서 보이지 않으므로 치환될 것을 갖지 않는다는
+		// 생각이 들어 있다.
 		return this;
 	}
 

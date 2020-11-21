@@ -29,7 +29,8 @@ export default class ObjectFun extends Fun {
 	public substitute(map: Map<Variable, Expr0>): Metaexpr {
 		if (!this.expr) return this;
 
-		// 이름이 있는 것은 최상단에만 선언되므로 치환되어야 할 것을 포함하지 않으므로 확인하지 않는다는 생각이 들어 있다.
+		// 이름이 있는 것은 스코프 밖에서 보이지 않으므로 치환될 것을
+		// 갖지 않는다는 생각이 들어 있다.
 		if (this.name) return this;
 
 		// 위의 this.name 조건을 지우면 특수한 경우에 이게 발생할지도 모른다.
