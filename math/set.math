@@ -847,8 +847,8 @@ cls bigcup($A$ cls a) {
 "일반적으로 [$\bigcup_{x\in A} f(x)]라 쓰는 것."
 $\left(<<\bigcup>>_{\in #1}#2\right)$
 cls bigcup2($A$ cls a, fun f) {
-	setbuilder2(f, (cls z) => {
-		Xin(a, (cls x) => in(z, x))
+	setbuilder((cls z) => {
+		Xin(a, (cls x) => in(z, f(x)))
 	})
 }
 
