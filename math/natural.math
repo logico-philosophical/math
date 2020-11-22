@@ -992,3 +992,26 @@ cls fun_composite_recursive(cls f, cls n) {
 		($\gamma$ cls g) => rel_composite(f, g)
 	)
 }
+
+schema schroeder_bernstein_1($A$ cls a, $B$ cls b, cls f, cls g) {
+	is_injection(f, a, b), is_injection(g, b, a) |-
+		with ($A^\ast$ cls aa = bigcup2(omega, (cls n) => {
+			rel_im_set(
+				fun_composite_recursive(rel_composite(g, f), n),
+				setminus(a, rel_im_set(g, b))
+			)
+		})) {
+			with (cls h = cup(
+				rel_restrict(f, aa),
+				rel_restrict(rel_inverse(g), setminus(a, aa))
+			)) {
+				is_bijection(h, a, b)
+			}
+		}
+}
+
+"Schr[&ouml]der[&ndash]Bernstein 정리."
+schema schroeder_bernstein($A$ cls a, $B$ cls b) {
+	X((cls f) => is_injection(f, a, b)), X((cls g) => is_injection(g, b, a)) |-
+		X((cls h) => is_bijection(h, a, b))
+}

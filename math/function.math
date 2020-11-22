@@ -305,9 +305,3 @@ st is_invertible_fun(cls f, $A$ cls a, $B$ cls b) {
 		is_fun(rel_inverse(f), b, a)
 	)
 }
-
-"Schr[&ouml]der[&ndash]Bernstein 정리."
-schema schroeder_bernstein($A$ cls a, $B$ cls b) {
-	X((cls f) => is_injection(f, a, b)), X((cls g) => is_injection(g, b, a)) |-
-		X((cls h) => is_bijection(h, a, b))
-}

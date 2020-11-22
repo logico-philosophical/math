@@ -418,6 +418,17 @@ cls rel_composite(cls x, cls y) {
 	})
 }
 
+"이항관계의 제한(restriction)."
+$\left(#1{<<\upharpoonright>>}_{#2}\right)$
+cls rel_restrict($R$ cls r, $A$ cls a) {
+	setbuilder_pair((cls x, cls y) => {
+		A(
+			in(pair(x, y), r),
+			in(x, a)
+		)
+	})
+}
+
 "이항관계의 반사성(reflexivity)."
 st rel_reflexive($R$ cls r, $A$ cls a) {
 	Uin(a, (cls x) => { in(pair(x, x), r) })
