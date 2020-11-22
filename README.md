@@ -15,9 +15,9 @@ math-o-matic은 공리계(axiomatic system)를 만들고, 그 공리계 상에�
 ```
 "[$1+1=2]이다."
 schema one_plus_one_is_two() {
-    omega_add_one(ord_one())[
-        successor_in_omega[zero_in_omega()][as in(ord_one(), omega())]
-    ][as eq(omega_add(ord_one(), ord_one()), ord_two())]
+    omega_add_one(ord_one)[
+        successor_in_omega[zero_in_omega()][as in(ord_one, omega)]
+    ][as eq(omega_add(ord_one, ord_one), ord_two)]
 }
 ```
 
