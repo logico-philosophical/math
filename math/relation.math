@@ -301,7 +301,7 @@ st is_rel_over_set($R$ cls r, $A$ cls a) {
 "정의역과 치역에 관한 조건이 없는 이항관계. [$V\times V]의 부분집합이다. `[Pinter]`에서 graph라 부르는 것이다."
 $\left(<<\operatorname{relation}>> #1\right)$
 st is_rel($R$ cls r) {
-	is_rel_over_set(r, universe())
+	is_rel_over_set(r, universe)
 }
 
 "이항관계의 정의역(domain)."
@@ -557,7 +557,7 @@ theorem rel_U(pr f, $R$ cls r: @11) {
 			mpX2_X2e_p(?, f(z))[
 				X2Ae1(
 					(cls x, cls y) => { eq(z, pair(x, y)) },
-					(cls x, cls y) => { A(in(x, universe()), in(y, universe())) }
+					(cls x, cls y) => { A(in(x, universe), in(y, universe)) }
 				)[setbuilder_e[in_subseteq[@h3; @h1]]];
 				Ui2[(cls x, cls y) => {
 					cp[eq(z, pair(x, y)) |-
@@ -597,7 +597,7 @@ theorem cartesian_is_rel(cls x, cls y) {
 		setbuilder_i[
 			set_i[@h1];
 			mpX2(?, (cls a, cls b) => {
-				A(eq(z, pair(a, b)), A(in(a, universe()), in(b, universe())))
+				A(eq(z, pair(a, b)), A(in(a, universe), in(b, universe)))
 			})[
 				setbuilder_e[@h1];
 				Ui2[(cls a, cls b) => { cp2[eq(z, pair(a, b)), A(in(a, x), in(b, y)) |-
@@ -610,7 +610,7 @@ theorem cartesian_is_rel(cls x, cls y) {
 					]
 				] }]
 			]
-		][as in(z, cartesian(universe(), universe()))]
+		][as in(z, cartesian(universe, universe))]
 	] }]
 	[as is_rel(cartesian(x, y))]
 }

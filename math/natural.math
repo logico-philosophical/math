@@ -27,15 +27,15 @@ theorem self_in_successor(cls x: @11) {
 }
 
 "순서수(ordinal number)로서의 0."
-$<<0_\omega>>$
-cls ord_zero = emptyset();
+$0_\omega$
+cls ord_zero = emptyset;
 
 "순서수(ordinal number)로서의 1. 0의 따름 순서수이다."
-$<<1_\omega>>$
+$1_\omega$
 cls ord_one = successor(ord_zero);
 
 "순서수(ordinal number)로서의 2. 1의 따름 순서수이다."
-$<<2_\omega>>$
+$2_\omega$
 cls ord_two = successor(ord_one);
 
 "따름 순서수는 집합이다."
@@ -50,7 +50,7 @@ theorem successor_is_set(cls x: @11) {
 $\left(<<\operatorname{successor\ set}>> #1\right)$
 st is_successor_set(cls x) {
 	A(
-		in(emptyset(), x),
+		in(emptyset, x),
 		U((cls z) => {
 			I(
 				in(z ,x),

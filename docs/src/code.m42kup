@@ -63,7 +63,7 @@ pr Af(pr f, pr g) {
 [;;
 "axiom of empty set."
 [**axiom] ax_emptyset() {
-	|- set(emptyset())
+	|- set(emptyset)
 }]
 
 증명은 다음과 같이 작성한다.

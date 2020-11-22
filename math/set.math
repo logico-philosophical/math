@@ -977,74 +977,66 @@ theorem setminus_e2(cls x: @121, cls y: @122, cls z: @11) {
 }
 
 "공집합."
-$<<\varnothing>>$
-cls emptyset() {
-	setbuilder((cls z) => { F })
-}
+$\varnothing$
+cls emptyset = setbuilder((cls z) => { F });
 
 "axiom of empty set."
 axiom ax_emptyset() {
-	set(emptyset())
+	set(emptyset)
 }
 
 "emptyset의 defining property."
 theorem emptyset_def(cls z) {
-	Ni_alt[in(z, emptyset()) |-
+	Ni_alt[in(z, emptyset) |-
 		setbuilder_e[@h1]]
-	[as Nin(z, emptyset())]
+	[as Nin(z, emptyset)]
 }
 
 "universal class."
-$<<V>>$
-cls universe() {
-	setbuilder((cls z) => { T })
-}
+$V$
+cls universe = setbuilder((cls z) => { T });
 
 theorem universe_in_i(cls x: @11) {
 	set(x) |-
 		setbuilder_i[@h1; Ti()]
-		[as in(x, universe())]
+		[as in(x, universe)]
 }
 
 theorem universe_subseteq_i($X$ cls x) {
 	Ui[(cls z) => {cp[in(z, x) |- universe_in_i[set_i[@h1]]]}]
-	[as subseteq(x, universe())]
+	[as subseteq(x, universe)]
 }
 
 theorem cup_universe_is_universe($X$ cls x) {
 	subseteq_to_eq[
-		Ui[(cls z) => {cp[in(z, cup(x, universe())) |-
+		Ui[(cls z) => {cp[in(z, cup(x, universe)) |-
 			universe_in_i[set_i[@h1]]]}]
-		[as subseteq(cup(x, universe()), universe())];
-		cup_is_bigger_2(x, universe())
+		[as subseteq(cup(x, universe), universe)];
+		cup_is_bigger_2(x, universe)
 	]
 }
 
 theorem universe_cup_is_universe($X$ cls x) {
 	subseteq_to_eq[
-		Ui[(cls z) => {cp[in(z, cup(universe(), x)) |-
+		Ui[(cls z) => {cp[in(z, cup(universe, x)) |-
 			universe_in_i[set_i[@h1]]]}]
-		[as subseteq(cup(universe(), x), universe())];
-		cup_is_bigger_1(universe(), x)
+		[as subseteq(cup(universe, x), universe)];
+		cup_is_bigger_1(universe, x)
 	]
 }
 
 "러셀 집합. 사실 집합이 아니라 proper class이다."
-cls russell_set() {
-	setbuilder((cls z) => {
-		Nin(z, z)
-	})
-}
+cls russell_set = setbuilder((cls z) => Nin(z, z));
 
 "러셀 집합은 집합이 아니다."
 theorem russell_set_is_not_set() {
-	Ni_alt[set(russell_set()) |-
-		$russell_in_russell = NNe[Ni_alt[Nin(russell_set(), russell_set()) |-
+	Ni_alt[set(russell_set) |-
+		$russell_in_russell = NNe[Ni_alt[Nin(russell_set, russell_set) |-
 			Fi[
 				setbuilder_i[
 					@h1;
 					@h2
-				][as in(russell_set(), russell_set())];
+				][as in(russell_set, russell_set)];
 				@h2
 			]]];
 
@@ -1054,7 +1046,7 @@ theorem russell_set_is_not_set() {
 
 "전체집합은 집합이 아니다."
 theorem universe_is_not_set() {
-	supset_is_not_set[russell_set_is_not_set(); universe_subseteq_i(russell_set())]
+	supset_is_not_set[russell_set_is_not_set(); universe_subseteq_i(russell_set)]
 }
 
 "descriptor operator. [$f]를 만족하는 클래스가 존재하고 유일하다면 그 클래스이며 아니면 [$V]이다.
@@ -1100,7 +1092,7 @@ theorem instantiate_not_set_i(pr f: @111) using instantiate {
 	N(Xq(f)) |-
 		supset_is_not_set[
 			universe_is_not_set();
-			Ui[(cls z) => cp[in(z, universe()) |-
+			Ui[(cls z) => cp[in(z, universe) |-
 				setbuilder_i[
 					set_i[@h2];
 					cp[Xq(f) |-
@@ -1109,7 +1101,7 @@ theorem instantiate_not_set_i(pr f: @111) using instantiate {
 						)))[@h3; @h1]
 					]
 				][as in(z, instantiate(f))]
-			]][as subseteq(universe(), instantiate(f))]
+			]][as subseteq(universe, instantiate(f))]
 		]
 }
 
@@ -1376,9 +1368,9 @@ theorem doubleton_eq_e(cls x: @11, cls y: @21, cls u: @31, cls v: @41) {
 
 "axiom of pairing."
 axiom ax_pairing() {
-	Uin(universe(), (cls x) => {
-		Uin(universe(), (cls y) => {
-			Xin(universe(), ($D$ cls d) => {
+	Uin(universe, (cls x) => {
+		Uin(universe, (cls y) => {
+			Xin(universe, ($D$ cls d) => {
 				U((cls z) => {
 					E(
 						in(z, d),
@@ -1396,7 +1388,7 @@ theorem doubleton_set_i(cls x: @11, cls y: @21) {
 			mp[universe_in_i[@h2]; Ue(?, y)[
 				mp[universe_in_i[@h1]; Ue(?, x)[ax_pairing()]]
 			]];
-			Ui[($D$ cls d) => cp[in(d, universe()) |- cp[U((cls z) => {
+			Ui[($D$ cls d) => cp[in(d, universe) |- cp[U((cls z) => {
 				E(in(z, d), O(eq(z, x), eq(z, y)))
 			}) |-
 				subset_is_set[set_i[@h3]; Ui[(cls z) => cp[in(z, doubleton(x, y)) |-
