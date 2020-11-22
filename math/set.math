@@ -1122,6 +1122,19 @@ theorem instantiate_def(pr f: @11) {
 		]
 }
 
+$\left(\begin{cases}
+	#2 & <<\text{if}>>\ #1 \\
+	#3 & \text{otherwise}
+\end{cases}\right)$
+sealed cls if(st p, cls x, cls y) {
+	setbuilder((cls z) => {
+		A(
+			I(p, in(z, x)),
+			I(N(p), in(z, y))
+		)
+	})
+}
+
 $\left(#1\ <<\text{is singleton of}>>\ #2\right)$
 st is_singleton_of(cls x, cls z) {
 	U((cls w) => {

@@ -327,7 +327,7 @@ cls recursion_set($A$ cls a, cls c, cls f) {
 	[*] 임의의 [$n\in\omega]에 대하여, [$\gamma(n^+)=f(\gamma(n))]
 ]
 을 만족하는 함수 [$\gamma:\omega\to A]를 만든다. [$c]와 [$f]가 조건을 만족하지 않으면 만들어지지 않는다. `[Pinter]`의 정리 6.8에 등장한다."
-cls define_recursively($A$ cls a, cls c, cls f) {
+sealed cls define_recursively($A$ cls a, cls c, cls f) {
 	bigcap(recursion_set(a, c, f))
 }
 
@@ -338,7 +338,7 @@ cls define_recursively_m($A$ cls a, cls c, fun f) {
 
 "[$\gamma\in\mathscr A]가 되기 위한 첫 번째 조건이다. 즉 [$\gamma\subseteq\omega\times A]이다.
 [$\gamma]가 함수가 되기 위한 첫 번째 조건이기도 하다."
-theorem recursion_theorem_1($A$ cls a: @11, cls c: @21, cls f: @31) {
+theorem recursion_theorem_1($A$ cls a: @11, cls c: @21, cls f: @31) using define_recursively {
 	set(a), in(c, a), is_fun(f, a, a) |-
 		bigcap_is_smaller[
 			setbuilder_i[
@@ -402,7 +402,7 @@ theorem recursion_theorem_1($A$ cls a: @11, cls c: @21, cls f: @31) {
 }
 
 "[$\gamma\in\mathscr A]가 되기 위한 두 번째 조건."
-theorem recursion_theorem_2($A$ cls a: @12, cls c: @11, cls f) {
+theorem recursion_theorem_2($A$ cls a: @12, cls c: @11, cls f) using define_recursively {
 	in(c, a) |-
 		with ($\mathscr A$ cls aa = recursion_set(a, c, f)) {
 		with ($\gamma$ cls g = define_recursively(a, c, f)) {
@@ -421,7 +421,7 @@ theorem recursion_theorem_2($A$ cls a: @12, cls c: @11, cls f) {
 }
 
 "[$\gamma\in\mathscr A]가 되기 위한 세 번째 조건."
-theorem recursion_theorem_3($A$ cls a: @12, cls c, cls f: @11) {
+theorem recursion_theorem_3($A$ cls a: @12, cls c, cls f: @11) using define_recursively {
 	is_fun(f, a, a) |-
 		with ($\mathscr A$ cls aa = recursion_set(a, c, f)) {
 		with ($\gamma$ cls g = define_recursively(a, c, f)) {
@@ -516,7 +516,7 @@ theorem recursion_theorem_4($A$ cls a: @11, cls c: @21, cls f: @31) {
 }
 
 "[$\gamma]가 함수가 되기 위한 세 번째 조건의 base case."
-theorem recursion_theorem_5_base($A$ cls a: @11, cls c: @21, cls f: @31) {
+theorem recursion_theorem_5_base($A$ cls a: @11, cls c: @21, cls f: @31) using define_recursively {
 	set(a), in(c, a), is_fun(f, a, a) |-
 		with ($\gamma$ cls g = define_recursively(a, c, f)) {
 			Qim((cls x) => {
@@ -590,7 +590,7 @@ theorem recursion_theorem_5_base($A$ cls a: @11, cls c: @21, cls f: @31) {
 }
 
 "[$\gamma]가 함수가 되기 위한 세 번째 조건의 step case."
-theorem recursion_theorem_5_step($A$ cls a: @11, cls c: @21, cls f: @31) {
+theorem recursion_theorem_5_step($A$ cls a: @11, cls c: @21, cls f: @31) using define_recursively {
 	set(a), in(c, a), is_fun(f, a, a) |-
 		with ($\gamma$ cls g = define_recursively(a, c, f)) {
 			Ui[(cls n) => { cp[in(n, omega) |-
@@ -1001,9 +1001,13 @@ schema schroeder_bernstein_1($A$ cls a, $B$ cls b, cls f, cls g) {
 				setminus(a, rel_im_set(g, b))
 			)
 		})) {
-			with (cls h = cup(
-				rel_restrict(f, aa),
-				rel_restrict(rel_inverse(g), setminus(a, aa))
+			with (cls h = make_fun(
+				(cls x) => if(
+					in(x, aa),
+					funcall(f, x),
+					funcall(rel_inverse(g), x)
+				),
+				a
 			)) {
 				is_bijection(h, a, b)
 			}
