@@ -294,6 +294,21 @@ st is_recursively_defined($\gamma$ cls g, $A$ cls a, cls c, cls f) {
 	)
 }
 
+st is_recursively_defined_m($\gamma$ cls g, $A$ cls a, cls c, fun f) {
+	A(
+		is_fun(g, omega(), a),
+		A(
+			eq(funcall(g, ord_zero()), c),
+			Uin(omega(), (cls n) => {
+				eq(
+					funcall(g, successor(n)),
+					f(funcall(g, n))
+				)
+			})
+		)
+	)
+}
+
 "`[Pinter]` 6.8에 나오는 [$\mathscr A]."
 cls recursion_set($A$ cls a, cls c, cls f) {
 	setbuilder(($G$ cls g) => {
@@ -322,6 +337,11 @@ cls recursion_set($A$ cls a, cls c, cls f) {
 을 만족하는 함수 [$\gamma:\omega\to A]를 만든다. [$c]와 [$f]가 조건을 만족하지 않으면 만들어지지 않는다. `[Pinter]`의 정리 6.8에 등장한다."
 cls define_recursively($A$ cls a, cls c, cls f) {
 	bigcap(recursion_set(a, c, f))
+}
+
+"메타함수 [$f]를 위한 define_recursively."
+cls define_recursively_m($A$ cls a, cls c, fun f) {
+	define_recursively(a, c, make_fun(f, a))
 }
 
 "[$\gamma\in\mathscr A]가 되기 위한 첫 번째 조건이다. 즉 [$\gamma\subseteq\omega\times A]이다.
@@ -804,6 +824,29 @@ theorem recursion_theorem_7($A$ cls a: @11, cls c: @21, cls f: @31) {
 		}
 }
 
+theorem recursion_theorem_7m($A$ cls a: @11, cls c: @21, fun f) {
+	set(a), in(c, a), Uin(a, ($\gamma$ cls g) => in(f(g), a)) |-
+		with ($\gamma$ cls g = define_recursively_m(a, c, f)) {
+			$make_fun_f_is_fun = make_fun_is_fun(f, a, a)[@h3];
+			
+			$ird = recursion_theorem_7[@h1; @h2; $make_fun_f_is_fun]
+			[as is_recursively_defined(g, a, c, make_fun(f, a))];
+			
+			$is_fun = Ae1[$ird];
+			
+			$rec = Ae2[$ird];
+			$base = Ae1[$rec];
+			$step = Ae2[$rec];
+			
+			$newstep = Ui[(cls n) => cp[in(n, omega()) |-
+				eq_transitive[mp[@h4; Ue(?, n)[$step]]; make_fun_funcall(f, a, a, ?)[@h3; funcall_in_codomain[$is_fun; @h4]]]
+			]];
+			
+			Ai[$is_fun; Ai[$base; $newstep]]
+			[as is_recursively_defined_m(g, a, c, f)]
+		}
+}
+
 "[$\gamma]는 여러 개 있지 않다."
 theorem recursion_theorem_8($A$ cls a: @11, cls c: @21, cls f: @31) {
 	set(a), in(c, a), is_fun(f, a, a) |-
@@ -851,7 +894,11 @@ theorem recursion_theorem($A$ cls a: @11, cls c: @21, cls f: @31) {
 "자연수를 더하는 연산. 단항연산이다."
 $\left(#1<<+_\omega>>\cdot\right)$
 cls omega_add_unary(cls n) {
-	define_recursively(omega(), n, make_fun(($\gamma$ cls g) => { successor(g) }, omega()))
+	define_recursively_m(
+		omega(),
+		n,
+		($\gamma$ cls g) => successor(g)
+	)
 }
 
 theorem successor_is_fun() {
@@ -873,13 +920,12 @@ theorem successor_funcall(cls n: @11) {
 
 theorem omega_add_unary_ird(cls n) {
 	in(n, omega()) |-
-		recursion_theorem_7[
-			omega_is_set();
-			@h1;
-			successor_is_fun()
-		][as is_recursively_defined(
-			omega_add_unary(n), omega(), n, make_fun(($\gamma$ cls g) => {successor(g)}, omega())
-		)]
+		$foo = Ui[($\gamma$ cls g) => cp[
+			in(g, omega()) |- successor_in_omega[@h2]
+		]][as Uin(omega(), ($\gamma$ cls g) => in(successor(g), omega()))];
+		
+		recursion_theorem_7m(?, ?, ($\gamma$ cls g) => successor(g))[omega_is_set(); @h1; $foo]
+		[as is_recursively_defined_m(omega_add_unary(n), omega(), n, ($\gamma$ cls g) => successor(g))]
 }
 
 "자연수 덧셈."
@@ -904,10 +950,8 @@ theorem omega_add_base(cls n: @11) {
 "`[Pinter]` 6.10의 2."
 theorem omega_add_step(cls n: @11, cls m: @21) {
 	in(n, omega()), in(m, omega()) |-
-		eq_transitive[
-			mp[@h2; Ue(?, m)[Ae2[Ae2[omega_add_unary_ird(n)[@h1]]]]];
-			successor_funcall[omega_add_in_omega[@h1; @h2]]
-		][as eq(omega_add(n, successor(m)), successor(omega_add(n, m)))]
+		mp[@h2; Ue(?, m)[Ae2[Ae2[omega_add_unary_ird(n)[@h1]]]]]
+		[as eq(omega_add(n, successor(m)), successor(omega_add(n, m)))]
 }
 
 theorem omega_add_one(cls n: @11) {
@@ -925,4 +969,34 @@ theorem one_plus_one_is_two() {
 	omega_add_one(ord_one())[
 		successor_in_omega[zero_in_omega()][as in(ord_one(), omega())]
 	][as eq(omega_add(ord_one(), ord_one()), ord_two())]
+}
+
+"자연수를 곱하는 연산. 단항연산이다.
+
+[$n\times 0 = 0] 및 [$n\times m^+ = n + n\times m]으로 재귀적으로 정의된다."
+$\left(#1<<\times_\omega>>\cdot\right)$
+cls omega_mul_unary(cls n) {
+	define_recursively_m(
+		omega(),
+		ord_zero(),
+		($\gamma$ cls g) => {
+			omega_add(n, g)
+		}
+	)
+}
+
+"자연수 곱셈."
+$!<prec=299>#1<<\times_\omega>>#2$
+cls omega_mul(cls n, cls m) {
+	funcall(omega_mul_unary(n), m)
+}
+
+"endofunction [$f]의 합성을 [$n]번 한 것. [$f]가 endofunction일 때만 제대로 정의된다."
+${#1}^{#2}$
+cls fun_composite_recursive(cls f, cls n) {
+	define_recursively_m(
+		power(cartesian(rel_dom(f), rel_dom(f))),
+		fun_id(rel_dom(f)),
+		($\gamma$ cls g) => rel_composite(f, g)
+	)
 }

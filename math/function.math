@@ -248,6 +248,12 @@ cls make_fun_pair([(cls, cls) -> cls] f, $A$ cls a, $B$ cls b) {
 	)
 }
 
+"집합 [$A] 상에서의 항등함수(identity function)."
+$<<\operatorname{id}>>_{#1}$
+cls fun_id($A$ cls a) {
+	make_fun((cls x) => x, a)
+}
+
 "전사함수(surjective function). onto라고도 한다."
 $<<\mathop\mathrm{surjection}>>\left(#1: #2 \to #3\right)$
 st is_surjection(cls f, $A$ cls a, $B$ cls b) {
