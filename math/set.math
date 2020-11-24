@@ -298,7 +298,7 @@ theorem UinA_i(pr f: @12, pr g: @22, cls x: @11) {
 		}][as Uin(x, Af(f, g))]
 }
 
-theorem Uin_subset(cls a: @12, cls b: @11, pr f: @22) {
+theorem Uin_subset(cls a: @11, cls b: @12, pr f: @22) {
 	subseteq(a, b), Uin(b, f) |-
 		syllU(is_in(a), is_in(b), f)[@h1; @h2]
 		[as Uin(a, f)]
@@ -849,22 +849,6 @@ cls bigcap($A$ cls a) {
 	})
 }
 
-"일반화된 합집합."
-$\left(<<\bigcup>>#1\right)$
-cls bigcup($A$ cls a) {
-	setbuilder((cls z) => {
-		Xin(a, (cls x) => in(z, x))
-	})
-}
-
-"일반적으로 [$\bigcup_{x\in A} f(x)]라 쓰는 것."
-$\left(<<\bigcup>>_{\in #1}#2\right)$
-cls bigcup2($A$ cls a, fun f) {
-	setbuilder((cls z) => {
-		Xin(a, (cls x) => in(z, f(x)))
-	})
-}
-
 theorem bigcap_i($A$ cls a, cls z) {
 	set(z), Uin(a, (cls x) => {
 		in(z, x)
@@ -880,26 +864,6 @@ theorem bigcap_e($A$ cls a, cls z) {
 				in(z, x)
 			})
 		}, z)[@h1]
-}
-
-theorem bigcup_i($A$ cls a: @12, cls x: @11, cls z: @21) {
-	in(x, a), in(z, x) |-
-		setbuilder_i[
-			set_i[@h2];
-			Xi((cls w) => {
-				A(in(w, a), in(z, w))
-			}, x)[Ai[@h1; @h2]]
-		][as in(z, bigcup(a))]
-}
-
-theorem bigcup_eq_i($A$ cls a: @11, $B$ cls b: @12) {
-	eq(a, b) |-
-		setbuilder_eq_i(
-			(cls z) => {Xin(a, contains(z))},
-			(cls z) => {Xin(b, contains(z))}
-		)[
-			Ui[(cls z) => { Xin_eq(?, ?, contains(z))[@h1] }]
-		][as eq(bigcup(a), bigcup(b))]
 }
 
 theorem bigcap_is_smaller($A$ cls a: @12, cls x: @11) {
@@ -924,6 +888,50 @@ theorem cap_is_set_2(cls x, cls y) {
 		cap_is_set_1(y, x)[@h1];
 		cap_commutative_2(y, x)
 	]
+}
+
+"일반화된 합집합."
+$\left(<<\bigcup>>#1\right)$
+cls bigcup($A$ cls a) {
+	setbuilder((cls z) => {
+		Xin(a, (cls x) => in(z, x))
+	})
+}
+
+"일반적으로 [$\bigcup_{x\in A} f(x)]라 쓰는 것."
+$\left(<<\bigcup>>_{\in #1}#2\right)$
+cls bigcup2($A$ cls a, fun f) {
+	setbuilder((cls z) => {
+		Xin(a, (cls x) => in(z, f(x)))
+	})
+}
+
+theorem bigcup_i($A$ cls a: @12, cls x: @11, cls z: @21) {
+	in(x, a), in(z, x) |-
+		setbuilder_i[
+			set_i[@h2];
+			Xi((cls w) => {
+				A(in(w, a), in(z, w))
+			}, x)[Ai[@h1; @h2]]
+		][as in(z, bigcup(a))]
+}
+
+theorem bigcup2_i($A$ cls a: @12, fun f: @r22, cls x: @11, cls z: @21) {
+	in(x, a), in(z, f(x)) |-
+		setbuilder_i[
+			set_i[@h2];
+			Xi((cls x) => A(in(x, a), in(z, f(x))), x)[Ai[@h1; @h2]]
+		][as in(z, bigcup2(a, f))]
+}
+
+theorem bigcup_eq_i($A$ cls a: @11, $B$ cls b: @12) {
+	eq(a, b) |-
+		setbuilder_eq_i(
+			(cls z) => {Xin(a, contains(z))},
+			(cls z) => {Xin(b, contains(z))}
+		)[
+			Ui[(cls z) => { Xin_eq(?, ?, contains(z))[@h1] }]
+		][as eq(bigcup(a), bigcup(b))]
 }
 
 "axiom of union."
@@ -1146,6 +1154,48 @@ sealed cls if(st p, cls x, cls y) {
 			I(N(p), in(z, y))
 		)
 	})
+}
+
+theorem if_def_1(st p: @1, cls x: @r12, cls y: @r13) using if {
+	p |-
+		eq_i(if(p, x, y), x)[Ui[(cls z) => {
+			$1 = cp[in(z, x) |-
+				setbuilder_i[
+					set_i[@h2];
+					Ai[
+						weaken(?, p)[@h2];
+						Nec2(?, in(z, y))[@h1]
+					]
+				][as in(z, if(p, x, y))]
+			];
+
+			$2 = cp[in(z, if(p, x, y)) |-
+				mp[@h1; Ae1[setbuilder_e[@h2]]]
+			];
+
+			 Ei[$2; $1]
+		 }]]
+}
+
+theorem if_def_2(st p: @11, cls x: @r12, cls y: @r13) using if {
+	N(p) |-
+		eq_i(if(p, x, y), y)[Ui[(cls z) => {
+			$1 = cp[in(z, y) |-
+				setbuilder_i[
+					set_i[@h2];
+					Ai[
+						Nec1(?, in(z, x))[@h1];
+						weaken(?, N(p))[@h2]
+					]
+				][as in(z, if(p, x, y))]
+			];
+
+			$2 = cp[in(z, if(p, x, y)) |-
+				mp[@h1; Ae2[setbuilder_e[@h2]]]
+			];
+
+			 Ei[$2; $1]
+		 }]]
 }
 
 $\left(#1\ <<\text{is singleton of}>>\ #2\right)$

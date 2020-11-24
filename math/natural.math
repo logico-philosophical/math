@@ -993,12 +993,53 @@ cls fun_composite_recursive(cls f, cls n) {
 	)
 }
 
+schema schroeder_bernstein_tmp($A$ cls a, $B$ cls b, cls f, cls g, cls x) {
+	is_injection(f, a, b), is_injection(g, b, a) |-
+		with ($A^\ast$ cls aa = bigcup2(omega, (cls n) => {
+			rel_im_set(
+				fun_composite_recursive(rel_composite(g, f), n),
+				setminus(a, rel_im(g))
+			)
+		})) {
+			with ($\mathfrak h$ fun hh = (cls x) => if(
+				in(x, aa),
+				funcall(f, x),
+				funcall(rel_inverse(g), x)
+			)) {
+				with (cls h = make_fun(hh, a)) {
+					in(x, a) |-
+						/* OI2[
+							lxm(in(x, aa));
+							cp[Nin(x, aa) |-
+								setminus_i[@h3; @h4]
+							]
+						] */
+						$c1 = in(x, aa) |-
+							$f_is_fun = Ae1[@h1];
+							$y_is_fx = if_def_1(?, funcall(f, x), funcall(rel_inverse(g), x))[@h4];
+							in_eq_left_2[
+								funcall_in_codomain[$f_is_fun; @h3];
+								$y_is_fx
+							];
+						
+						Nin(x, aa) |-
+							$x_in_a_minus_aa = setminus_i[@h3; @h4];
+							$y_is_g_inv_x = if_def_2(?, funcall(f, x), funcall(rel_inverse(g), x))[@h4];
+							
+							$g_inv_is_bijection = bijection_inverse_is_bijection[injection_to_bijection[@h2]];
+							
+							Ai[$x_in_a_minus_aa; $y_is_g_inv_x]
+				}
+			}
+		}
+}
+
 schema schroeder_bernstein_1($A$ cls a, $B$ cls b, cls f, cls g) {
 	is_injection(f, a, b), is_injection(g, b, a) |-
 		with ($A^\ast$ cls aa = bigcup2(omega, (cls n) => {
 			rel_im_set(
 				fun_composite_recursive(rel_composite(g, f), n),
-				setminus(a, rel_im_set(g, b))
+				setminus(a, rel_im(g))
 			)
 		})) {
 			with (cls h = make_fun(

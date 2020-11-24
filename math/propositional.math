@@ -117,6 +117,11 @@ theorem Ne(st p: @1, st q) {
 	p, N(p) |- mp[@h1; Nec1(?, q)[@h2]]
 }
 
+theorem Nec2(st p: @1, st q: @r2) {
+	p |-
+		cp[N(p) |- Ne(?, q)[@h1; @h2]]
+}
+
 "[$\bot]을 도입한다. falsum introduction이라 불러도 좋을 것이다."
 theorem Fi(st p: @1) {
 	Ne(p, F)

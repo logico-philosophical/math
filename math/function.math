@@ -165,6 +165,20 @@ theorem funcall_in_codomain(cls f: @11, $A$ cls a: @12, $B$ cls b: @13, cls x: @
 		]
 }
 
+theorem fun_im_in_codomain(cls f: @11, $A$ cls a: @12, $B$ cls b: @13) {
+	is_fun(f, a, b) |-
+		Ui[(cls y) => cp[in(y, rel_im(f)) |-
+			$Xx_xy_in_f = setbuilder_e[@h2];
+			
+			mpX_Xe_p(?, in(y, b))[
+				$Xx_xy_in_f;
+				Ui[(cls x) => cp[in(pair(x, y), f) |-
+					cartesian_in_e2[in_subseteq[@h3; Ae1[@h1]]]
+				]]
+			]
+		]][as subseteq(rel_im(f), b)]
+}
+
 "매개변수가 하나인 메타함수로 함수를 만든다."
 $\left[#1\right]_{<<\in>>#2}$
 cls make_fun(fun f, $A$ cls a) {
@@ -393,6 +407,21 @@ theorem bijection_is_injection(cls f: @11, $A$ cls a: @12, $B$ cls b: @13) {
 				Ae2[mp[@h2; Ue(?, y)[Ae2[@h1]]]]
 			]]
 		][as is_injection(f, a, b)]
+}
+
+schema injection_to_bijection(cls f: @11, $A$ cls a: @12, $B$ cls b: @13) {
+	is_injection(f, a, b) |-
+		$f_is_fun = Ae1[@h1];
+		$surjection = surjection_i[$f_is_fun];
+		$fun = Ae1[$surjection];
+		$f_is_inj = Ae2[@h1];
+		
+		$inj = Uin_subset[fun_im_in_codomain[$f_is_fun]; $f_is_inj];
+		
+		$injection = Ai[$fun; $inj]
+		[as is_injection(f, a, rel_im(f))];
+		
+		bijection_i[$surjection; $injection]
 }
 
 $<<\mathop\mathrm{invertible\ fun.}>>\left(#1: #2 \to #3\right)$
