@@ -557,7 +557,7 @@ st is_strict_order($R$ cls r, $A$ cls a) {
 "이항관계를 위한 U.
 
 [$R]이 이항관계일 때 임의의 [$.(a, b)\in R]에 대해 [$f(a, b)]이면, 임의의 [$x\in R]에 대해 [$fx]이다."
-theorem rel_U(pr f, $R$ cls r: @11) {
+theorem rel_U(pr f: @r2, $R$ cls r: @11) {
 	is_rel(r), U2((cls x, cls y) => {
 		I(
 			in(pair(x, y), r),
@@ -718,4 +718,15 @@ schema rel_composite_associative(cls x, cls y, cls z) {
 		rel_composite(rel_composite(x, y), z),
 		rel_composite(x, rel_composite(y, z))
 	)
+}
+
+schema rel_inverse_subseteq($A$ cls a: @21, $B$ cls b: @22) {
+	is_rel(a), subseteq(a, b) |-
+		rel_U(is_in(rel_inverse(b)), ?)[
+			rel_inverse_is_rel[@h1]
+			[as is_rel(rel_inverse(a))];
+			Ui2[(cls x, cls y) => cp[in(pair(x, y), rel_inverse(a)) |-
+				rel_inverse_in_i[in_subseteq[rel_inverse_in_e[@h3]; @h2]]
+			]]
+		][as subseteq(rel_inverse(a), rel_inverse(b))]
 }

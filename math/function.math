@@ -267,6 +267,64 @@ st is_surjection(cls f, $A$ cls a, $B$ cls b) {
 	)
 }
 
+theorem surjection_i(cls f: @11, $A$ cls a: @12, $B$ cls b: @13) {
+	is_fun(f, a, b) |-
+		with ($B'$ cls b2 = rel_im(f)) {
+			$c1 = rel_U(is_in(cartesian(a, rel_im(f))), ?)[
+				fun_is_rel[@h1];
+				Ui2[(cls x, cls y) => cp[in(pair(x, y), f) |-
+					$xy_in_ab = in_subseteq[@h2; Ae1[@h1]];
+					$x_in_a = cartesian_in_e1[$xy_in_ab];
+					$y_in_b = cartesian_in_e2[$xy_in_ab];
+
+					$y_in_im = setbuilder_i[
+						set_i[$y_in_b];
+						Xi((cls x) => in(pair(x, y), f), x)[@h2]
+					][as in(y, rel_im(f))];
+
+					cartesian_in_i[$x_in_a; $y_in_im]
+				]]
+			][as subseteq(f, cartesian(a, rel_im(f)))];
+			
+			$c23 = Ui[(cls x) => cp[in(x, a) |-
+				$c2 = mpX(?, (cls y) => A(
+					in(y, rel_im(f)),
+					in(pair(x, y), f)
+				))[
+					Ae1[mp[@h2; Ue(?, x)[Ae2[@h1]]]];
+					Ui[(cls y) => cp2[in(y, b), in(pair(x, y), f) |-
+						Ai[cartesian_in_e2[in_subseteq[@h4; $c1]]; @h4]
+					]]
+				][as Xin(rel_im(f), (cls y) => in(pair(x, y), f))];
+				
+				$c3 = Ae2[mp[@h2; Ue(?, x)[Ae2[@h1]]]];
+				
+				Ai[$c2; $c3]
+			]];
+			
+			$is_fun = Ai[$c1; $c23]
+			[as is_fun(f, a, rel_im(f))];
+			
+			$surjective = Ui[(cls y) => cp[in(y, rel_im(f)) |-
+				mpX(?, (cls x) => A(
+					in(x, a),
+					in(pair(x, y), f)
+				))[
+					setbuilder_e[@h2];
+					Ui[(cls x) => cp[in(pair(x, y), f) |-
+						Ai[
+							cartesian_in_e1[in_subseteq[@h3; Ae1[@h1]]];
+							@h3
+						]
+					]]
+				][as Xin(a, (cls x) => in(pair(x, y), f))]
+			]];
+			
+			Ai[$is_fun; $surjective]
+			[as is_surjection(f, a, rel_im(f))]
+		}
+}
+
 "단사함수(injective function). 일대일함수(one-to-one function)라고도 한다."
 $<<\mathop\mathrm{injection}>>\left(#1: #2 \to #3\right)$
 st is_injection(cls f, $A$ cls a, $B$ cls b) {
@@ -298,10 +356,125 @@ st is_bijection(cls f, $A$ cls a, $B$ cls b) {
 	)
 }
 
+theorem bijection_i(cls f: @11, $A$ cls a: @12, $B$ cls b: @13) {
+	is_surjection(f, a, b), is_injection(f, a, b) |-
+		$is_fun = Ae1[@h1];
+		
+		Ai[
+			$is_fun;
+			Ui[(cls y) => cp[in(y, b) |-
+				Ai[
+					mp[@h3; Ue(?, y)[Ae2[@h1]]];
+					mp[@h3; Ue(?, y)[Ae2[@h2]]]
+				]
+			]]
+		][as is_bijection(f, a, b)]
+}
+
+theorem bijection_is_surjection(cls f: @11, $A$ cls a: @12, $B$ cls b: @13) {
+	is_bijection(f, a, b) |-
+		$is_fun = Ae1[@h1];
+		
+		Ai[
+			$is_fun;
+			Ui[(cls y) => cp[in(y, b) |-
+				Ae1[mp[@h2; Ue(?, y)[Ae2[@h1]]]]
+			]]
+		][as is_surjection(f, a, b)]
+}
+
+theorem bijection_is_injection(cls f: @11, $A$ cls a: @12, $B$ cls b: @13) {
+	is_bijection(f, a, b) |-
+		$is_fun = Ae1[@h1];
+		
+		Ai[
+			$is_fun;
+			Ui[(cls y) => cp[in(y, b) |-
+				Ae2[mp[@h2; Ue(?, y)[Ae2[@h1]]]]
+			]]
+		][as is_injection(f, a, b)]
+}
+
 $<<\mathop\mathrm{invertible\ fun.}>>\left(#1: #2 \to #3\right)$
 st is_invertible_fun(cls f, $A$ cls a, $B$ cls b) {
 	A(
 		is_fun(f, a, b),
 		is_fun(rel_inverse(f), b, a)
 	)
+}
+
+theorem bijection_inverse_is_bijection(cls f: @11, $A$ cls a: @12, $B$ cls b: @13) {
+	is_bijection(f, a, b) |-
+		$f_is_fun = Ae1[@h1];
+		$f_is_rel = fun_is_rel[$f_is_fun];
+		$f_in_ab = Ae1[$f_is_fun];
+		$fXq1 = Ae2[$f_is_fun];
+		$fXq2 = Ae2[@h1];
+		
+		$f_inv_in_ba = subseteq_eq[
+			rel_inverse_subseteq[$f_is_rel; $f_in_ab];
+			cartesian_inverse(a, b)
+		];
+		
+		$f_inv_Xq1 = Ui[(cls y) => cp[in(y, b) |-
+			$Xq = mp[@h2; Ue(?, y)[$fXq2]];
+			$X = Ae1[$Xq];
+			$Q = Ae2[$Xq];
+			
+			$X_inv = mpXin(?, ?, (cls x) => in(pair(y, x), rel_inverse(f)))[
+				$X;
+				Ui[(cls x) => cp[in(x, a) |-
+					cp[in(pair(x, y), f) |-
+						rel_inverse_in_i[@h4]
+					]
+				]]
+			];
+			
+			$Q_inv = QU[
+				$Q;
+				Ui[(cls x) => cp[in(pair(y, x), rel_inverse(f)) |-
+					rel_inverse_in_e[@h3]
+				]]
+			][as Q((cls x) => in(pair(y, x), rel_inverse(f)))];
+			
+			Ai[$X_inv; $Q_inv]
+		]];
+		
+		$f_inv_is_fun = Ai[$f_inv_in_ba; $f_inv_Xq1]
+		[as is_fun(rel_inverse(f), b, a)];
+		
+		$f_inv_Xq2 = Ui[(cls x) => cp[in(x, a) |-
+			$Xq = mp[@h2; Ue(?, x)[$fXq1]];
+			$X = Ae1[$Xq];
+			$Q = Ae2[$Xq];
+			
+			$X_inv = mpXin(?, ?, (cls y) => in(pair(y, x), rel_inverse(f)))[
+				$X;
+				Ui[(cls y) => cp[in(y, b) |-
+					cp[in(pair(x, y), f) |-
+						rel_inverse_in_i[@h4]
+					]
+				]]
+			];
+			
+			$Q_inv = QU[
+				$Q;
+				Ui[(cls y) => cp[in(pair(y, x), rel_inverse(f)) |-
+					rel_inverse_in_e[@h3]
+				]]
+			][as Q((cls y) => in(pair(y, x), rel_inverse(f)))];
+			
+			Ai[$X_inv; $Q_inv]
+		]];
+		
+		Ai[$f_inv_is_fun; $f_inv_Xq2]
+		[as is_bijection(rel_inverse(f), b, a)]
+}
+
+schema bijection_is_invertible(cls f: @11, $A$ cls a: @12, $B$ cls b: @13) {
+	is_bijection(f, a, b) |-
+		Ai[
+			Ae1[@h1];
+			Ae1[bijection_inverse_is_bijection[@h1]]
+		][as is_invertible_fun(f, a, b)]
 }

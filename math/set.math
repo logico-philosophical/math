@@ -268,7 +268,7 @@ theorem eq_subseteq(cls x: @11, cls y: @12, cls z: @22) {
 		subseteq_subseteq[eq_to_subseteq_1[@h1]; @h2]
 }
 
-theorem subseteq_eq(cls x, cls y, cls z) {
+theorem subseteq_eq(cls x: @11, cls y: @12, cls z: @22) {
 	subseteq(x, y), eq(y, z) |-
 		subseteq_subseteq[@h1; eq_to_subseteq_1[@h2]]
 }
@@ -464,6 +464,19 @@ theorem Qim(pr f, cls c) {
 				I(f(x), eq(x, c))
 			})
 		}, c)[@h1]]
+}
+
+schema QU(pr f: @11, pr g: @r1) {
+	Q(f), U(If(g, f)) |-
+		Ui2[(cls x, cls y) => cp2[g(x), g(y) |-
+			mp[
+				Ai[
+					mp[@h3; Ue(?, x)[@h2]];
+					mp[@h4; Ue(?, y)[@h2]]
+				];
+				Ue2(?, x, y)[@h1]
+			]
+		]][as Q(g)]
 }
 
 "유일 존재 양화(unique existential quantification)."
