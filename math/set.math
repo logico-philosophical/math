@@ -849,6 +849,25 @@ cls bigcap($A$ cls a) {
 	})
 }
 
+"일반적으로 [$\bigcap_{x\in A} f(x)]라 쓰는 것. bigcap보다 일반적이다."
+$\left(<<\bigcap>>_{\in #1}#2\right)$
+cls bigcap2($A$ cls a, fun f) {
+	setbuilder((cls z) => {
+		Uin(a, (cls x) => in(z, f(x)))
+	})
+}
+
+"일반적으로 [$\bigcap_{fx} g(x)]라 쓰는 것. bigcap2보다 일반적이다. bigcap2와 달리 고유 클래스(proper class)들의 교집합을 만들 수 있다는 장점이 있다."
+$\left(<<\bigcap>>_{#1}#2\right)$
+cls bigcap3(pr f, fun g) {
+	setbuilder((cls z) => {
+		U((cls x) => I(
+			f(x),
+			in(z, g(x))
+		))
+	})
+}
+
 theorem bigcap_i($A$ cls a, cls z) {
 	set(z), Uin(a, (cls x) => {
 		in(z, x)
@@ -898,11 +917,22 @@ cls bigcup($A$ cls a) {
 	})
 }
 
-"일반적으로 [$\bigcup_{x\in A} f(x)]라 쓰는 것."
+"일반적으로 [$\bigcup_{x\in A} f(x)]라 쓰는 것. bigcup보다 일반적이다."
 $\left(<<\bigcup>>_{\in #1}#2\right)$
 cls bigcup2($A$ cls a, fun f) {
 	setbuilder((cls z) => {
 		Xin(a, (cls x) => in(z, f(x)))
+	})
+}
+
+"일반적으로 [$\bigcup_{fx} g(x)]라 쓰는 것. bigcup2보다 일반적이다. bigcup2와 달리 고유 클래스(proper class)들의 합집합을 만들 수 있다는 장점이 있다."
+$\left(<<\bigcup>>_{#1}#2\right)$
+cls bigcup3(pr f, fun g) {
+	setbuilder((cls z) => {
+		X((cls x) => A(
+			f(x),
+			in(z, g(x))
+		))
 	})
 }
 
