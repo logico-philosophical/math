@@ -418,6 +418,14 @@ cls rel_composite(cls x, cls y) {
 	})
 }
 
+theorem rel_composite_in_i(cls f: @12, cls g: @22, cls x: @111, cls y: @112, cls z: @212) {
+	in(pair(x, y), f), in(pair(y, z), g) |-
+		setbuilder_pair_i[
+			pair_set_i[pair_set_e1[set_i[@h1]]; pair_set_e2[set_i[@h2]]];
+			Xi((cls y) => A(in(pair(x, y), f), in(pair(y, z), g)), y)[Ai[@h1; @h2]]
+		][as in(pair(x, z), rel_composite(g, f))]
+}
+
 "이항관계의 제한(restriction)."
 $\left(#1{<<\upharpoonright>>}_{#2}\right)$
 cls rel_restrict($R$ cls r, $A$ cls a) {
@@ -552,6 +560,26 @@ st is_strict_order($R$ cls r, $A$ cls a) {
 			rel_transitive(r, a)
 		)
 	)
+}
+
+theorem setbuilder_pair_is_rel(pr2 f: @r11) {
+	with ($A$ cls aa = setbuilder_pair(f)) {
+		|- Ui[(cls z) => cp[in(z, aa) |-
+			mpX2_X2e_p(?, in(z, cartesian(universe, universe)))[
+				setbuilder_e[@h1];
+				Ui2[(cls a, cls b) => cp2[eq(z, pair(a, b)), f(a, b) |-
+					$set_ab = set_i[in_eq_left_1[@h1; @h2]];
+					$a_in_V = universe_in_i[pair_set_e1[$set_ab]];
+					$b_in_V = universe_in_i[pair_set_e2[$set_ab]];
+
+					in_eq_left_2[
+						cartesian_in_i[$a_in_V; $b_in_V];
+						@h2
+					]
+				]]
+			]
+		]][as is_rel(aa)]
+	}
 }
 
 "이항관계를 위한 U.

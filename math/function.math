@@ -84,6 +84,88 @@ theorem fun_is_rel(cls f: @11, $A$ cls a: @12, $B$ cls b: @13) {
 	]
 }
 
+theorem fun_composite_is_fun(cls f: @11, cls g: @21, $A$ cls a: @12, $B$ cls b: @13, $C$ cls c: @23) {
+	is_fun(f, a, b), is_fun(g, b, c) |-
+		with (cls h = rel_composite(g, f)) {
+			$h_is_rel = setbuilder_pair_is_rel[][as is_rel(h)];
+			
+			$c1 = rel_U(is_in(cartesian(a, c)), ?)[
+				$h_is_rel;
+				Ui2[(cls x, cls z) => cp[in(pair(x, z), h) |-
+					$X = setbuilder_pair_e[@h3]
+					[as X((cls y) => A(in(pair(x, y), f), in(pair(y, z), g)))];
+
+					$U = Ui[(cls y) => cp2[in(pair(x, y), f), in(pair(y, z), g) |-
+						$x_in_a = cartesian_in_e1[in_subseteq[@h4; Ae1[@h1]]];
+						$z_in_c = cartesian_in_e2[in_subseteq[@h5; Ae1[@h2]]];
+
+						cartesian_in_i[$x_in_a; $z_in_c]
+					]];
+
+					mpX_Xe_p(?, in(pair(x, z), cartesian(a, c)))[$X; $U]
+				]]
+			][as subseteq(rel_composite(g, f), cartesian(a, c))];
+			
+			$c23 = Ui[(cls x) => cp[in(x, a) |-
+				$fXq = mp[@h3; Ue(?, x)[Ae2[@h1]]];
+				$fX = Ae1[$fXq];
+				$fQ = Ae2[$fXq];
+				
+				$c2 = mpX_Xe_p(?, Xin(c, (cls z) => in(pair(x, z), rel_composite(g, f))))[
+					$fX;
+					Ui[(cls y) => cp2[in(y, b), in(pair(x, y), f) |-
+						$gX = Ae1[mp[@h4; Ue(?, y)[Ae2[@h2]]]]
+						[as Xin(c, (cls z) => in(pair(y, z), g))];
+
+						mpXin(?, ?, (cls z) => in(pair(x, z), rel_composite(g, f)))[
+							$gX;
+							Ui[(cls z) => cp[in(z, c) |-
+								cp[in(pair(y, z), g) |-
+									rel_composite_in_i[@h5; @h7]
+								]
+							]]
+						]
+					]]
+				];
+				
+				$c3 = Ui2[($z_1$ cls z1, $z_2$ cls z2) => cp2[in(pair(x, z1), h), in(pair(x, z2), h) |-
+					mpX_Xe_p(?, eq(z1, z2))[
+						setbuilder_pair_e[@h4]
+						[as X(($y_1$ cls y1) => A(in(pair(x, y1), f), in(pair(y1, z1), g)))];
+						Ui[($y_1$ cls y1) => cp2[in(pair(x, y1), f), in(pair(y1, z1), g) |-
+							mpX_Xe_p(?, eq(z1, z2))[
+								setbuilder_pair_e[@h5]
+								[as X(($y_2$ cls y2) => A(in(pair(x, y2), f), in(pair(y2, z2), g)))];
+								Ui[($y_2$ cls y2) => cp2[in(pair(x, y2), f), in(pair(y2, z2), g) |-
+									fun_im_Q_m[
+										@h2;
+										fun_in_e1[@h2; @h7];
+										@h7;
+										in_eq_left_2[
+											@h9;
+											pair_eq_i[
+												mp[
+													Ai[@h6; @h8];
+													Ue2(?, y1, y2)[$fQ]
+												];
+												eq_reflexive(z2)
+											]
+										]
+									]
+								]]
+							]
+						]]
+					]
+				]][as Q((cls z) => in(pair(x, z), h))];
+				
+				Ai[$c2; $c3]
+			]];
+			
+			Ai[$c1; $c23]
+			[as is_fun(h, a, c)]
+		}
+}
+
 schema fun_dom(cls f, $A$ cls a, $B$ cls b) {
 	is_fun(f, a, b) |- eq(rel_dom(f), a)
 }
