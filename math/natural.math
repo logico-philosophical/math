@@ -468,15 +468,15 @@ theorem recursion_theorem_3($A$ cls a: @12, cls c, cls f: @11) using define_recu
 }
 
 "[$\gamma]가 함수가 되기 위한 두 번째 조건."
-theorem recursion_theorem_4($A$ cls a: @11, cls c: @21, cls f: @31) {
-	set(a), in(c, a), is_fun(f, a, a) |-
+theorem recursion_theorem_4($A$ cls a: @12, cls c: @11, cls f: @21) {
+	in(c, a), is_fun(f, a, a) |-
 		with ($\gamma$ cls g = define_recursively(a, c, f)) {
 			$base =
 				Xi((cls x) => {
 					A(in(x, a), in(pair(ord_zero, x), g))
 				}, c)[Ai[
-					@h2;
-					recursion_theorem_2(a, c, f)[@h2]
+					@h1;
+					recursion_theorem_2(a, c, f)[@h1]
 					[as in(pair(ord_zero, c), g)]
 				]]
 				[as Xin(a, (cls x) => {in(pair(ord_zero, x), g)})];
@@ -484,15 +484,15 @@ theorem recursion_theorem_4($A$ cls a: @11, cls c: @21, cls f: @31) {
 			$step = Ui[(cls n) => { cp[in(n, omega) |-
 				cp[Xin(a, (cls x) => { in(pair(n, x), g) }) |-
 					mpXin_Xe_p(?, ?, Xin(a, (cls x) => {in(pair(successor(n), x), g)}))[
-						@h5;
+						@h4;
 						Ui[(cls x) => { cp[in(x, a) |-
 							cp[in(pair(n, x), g) |-
 								Xi((cls x) => {
 									A(in(x, a), in(pair(successor(n), x), g))
 								}, funcall(f, x))[Ai[
-									funcall_in_codomain[@h3; @h6];
-									mp[@h7; mp[@h6; Ue(?, x)[mp[@h4; Ue(?, n)[
-										recursion_theorem_3(a, c, f)[@h3]
+									funcall_in_codomain[@h2; @h5];
+									mp[@h6; mp[@h5; Ue(?, x)[mp[@h3; Ue(?, n)[
+										recursion_theorem_3(a, c, f)[@h2]
 										[as Uin(omega, (cls n) => {
 											Uin(a, (cls x) => {
 												I(
@@ -601,7 +601,7 @@ theorem recursion_theorem_5_step($A$ cls a: @11, cls c: @21, cls f: @31) using d
 						in(pair(successor(n), x), g)
 					}))[
 						mp[@h4; Ue(?, n)[
-							recursion_theorem_4[@h1; @h2; @h3]
+							recursion_theorem_4[@h2; @h3]
 							[as Uin(omega, (cls n) => {
 								Xin(a, (cls x) => {
 									in(pair(n, x), g)
@@ -759,7 +759,7 @@ theorem recursion_theorem_5($A$ cls a: @11, cls c: @21, cls f: @31) {
 "[$\gamma:\omega\to A]가 함수이다."
 theorem recursion_theorem_6($A$ cls a: @11, cls c: @21, cls f: @31) {
 	set(a), in(c, a), is_fun(f, a, a) |-
-		Ai[recursion_theorem_1[@h1; @h2; @h3]; UinA_i[recursion_theorem_4[@h1; @h2; @h3]; recursion_theorem_5[@h1; @h2; @h3]]]
+		Ai[recursion_theorem_1[@h1; @h2; @h3]; UinA_i[recursion_theorem_4[@h2; @h3]; recursion_theorem_5[@h1; @h2; @h3]]]
 		[as is_fun(define_recursively(a, c, f), omega, a)]
 }
 
@@ -778,7 +778,7 @@ theorem recursion_theorem_7($A$ cls a: @11, cls c: @21, cls f: @31) {
 					funcall(f, funcall(g, n))
 				))[
 					mp[@h4; Ue(?, n)[
-						recursion_theorem_4[@h1; @h2; @h3]
+						recursion_theorem_4[@h2; @h3]
 						[as Uin(omega, (cls n) => {
 							Xin(a, (cls x) => {
 								in(pair(n, x), g)
