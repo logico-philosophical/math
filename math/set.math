@@ -1638,6 +1638,14 @@ cls power(cls x) {
 	})
 }
 
+theorem power_in_i(cls x: @11, cls z: @21) {
+	set(x), subseteq(z, x) |-
+		setbuilder_i[
+			subset_is_set[@h1; @h2];
+			@h2
+		][as in(z, power(x))]
+}
+
 theorem power_def_Ue(cls x, cls y) {
 	set(x) |-
 		Eiu[

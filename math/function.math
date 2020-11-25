@@ -27,6 +27,32 @@ st is_fun(cls f, $A$ cls a, $B$ cls b) {
 	)
 }
 
+"함수공간(function space)."
+$\left\{#1<<\to>>#2\right\}$
+cls fun_set($A$ cls a, $B$ cls b) {
+	setbuilder((cls f) => is_fun(f, a, b))
+}
+
+schema fun_set_in_i(cls f: @31, $A$ cls a: @11, $B$ cls b: @21) {
+	set(a), set(b), is_fun(f, a, b) |-
+		setbuilder_i[
+			subset_is_set[
+				cartesian_is_set[@h1; @h2];
+				Ae1[@h3]
+			];
+			@h3
+		][as in(f, fun_set(a, b))]
+}
+
+schema fun_set_subseteq_cartesian($A$ cls a, $B$ cls b) {
+	Ui[(cls f) => cp[in(f, fun_set(a, b)) |-
+		setbuilder_i[
+			set_i[@h1];
+			Ae1[setbuilder_e[@h1]]
+		][as in(f, power(cartesian(a, b)))]
+	]][as subseteq(fun_set(a, b), power(cartesian(a, b)))]
+}
+
 theorem fun_subseteq_cartesian(cls f: @11, $A$ cls a: @12, $B$ cls b: @13) {
 	is_fun(f, a, b) |- Ae1[@h1]
 }
@@ -166,8 +192,29 @@ theorem fun_composite_is_fun(cls f: @11, cls g: @21, $A$ cls a: @12, $B$ cls b: 
 		}
 }
 
-schema fun_dom(cls f, $A$ cls a, $B$ cls b) {
-	is_fun(f, a, b) |- eq(rel_dom(f), a)
+theorem fun_dom(cls f: @11, $A$ cls a: @12, $B$ cls b: @13) {
+	is_fun(f, a, b) |-
+		$E = Ui[(cls x) => {
+			$c1 = cp[in(x, rel_dom(f)) |-
+				mpX_Xe_p(?, in(x, a))[
+					setbuilder_e[@h2];
+					Ui[(cls y) => cp[in(pair(x, y), f) |-
+						fun_in_e1[@h1; @h3]
+					]]
+				]
+			];
+
+			$c2 = cp[in(x, a) |-
+				setbuilder_i[
+					set_i[@h2];
+					Xin_to_X[fun_im_X_m[@h1; @h2]]
+				][as in(x, rel_dom(f))]
+			];
+
+			Ei[$c1; $c2]
+		}];
+		
+		eq_i(rel_dom(f), a)[$E]
 }
 
 "함수 호출. [$f]가 함수이고 [$x]가 [$f]의 정의역에 있을 경우 함숫값이 된다. 그러하지 아니할 때의 동작은 중요하지 않다."
@@ -274,7 +321,14 @@ cls make_fun(fun f, $A$ cls a) {
 	)
 }
 
-theorem make_fun_is_fun(fun f, $A$ cls a, $B$ cls b) {
+schema make_fun_in_i(fun f: @r21, $A$ cls a: @32, cls z: @11) {
+	set(z), set(f(z)), in(z, a) |-
+		setbuilder2_i(?, ?, z)[
+			pair_set_i[@h1; @h2]; @h3
+		][as in(pair(z, f(z)), make_fun(f, a))]
+}
+
+theorem make_fun_is_fun(fun f: @r11, $A$ cls a: @r2, $B$ cls b: @r3) {
 	Uin(a, (cls x) => {
 		in(f(x), b)
 	}) |-
@@ -348,6 +402,75 @@ cls make_fun_pair([(cls, cls) -> cls] f, $A$ cls a, $B$ cls b) {
 $<<\operatorname{id}>>_{#1}$
 cls fun_id($A$ cls a) {
 	make_fun((cls x) => x, a)
+}
+
+theorem fun_id_is_fun($A$ cls a) {
+	make_fun_is_fun(
+		(cls x) => x,
+		a, a
+	)[Ui[(cls x) => Ipp(in(x, a))]]
+	[as is_fun(fun_id(a), a, a)]
+}
+
+theorem fun_id_funcall($A$ cls a: @12, cls x: @11) {
+	in(x, a) |-
+		make_fun_funcall((cls x) => x, a, a, x)[
+			Ui[(cls x) => Ipp(in(x, a))];
+			@h1
+		][as eq(funcall(fun_id(a), x), x)]
+}
+
+theorem fun_id_im_set($A$ cls a: @12, $B$ cls b: @11) {
+	subseteq(b, a) |-
+		with (cls f = fun_id(a)) {
+			$E = Ui[(cls y) => {
+				$c1 = cp[in(y, rel_im_set(f, b)) |-
+					mpXin_Xe_p(?, ?, in(y, b))[
+						setbuilder_e[@h2];
+						Ui[(cls x) => cp[in(x, b) |-
+							cp[in(pair(x, y), fun_id(a)) |-
+								mpX_Xe_p(?, in(y, b))[
+									setbuilder_e[@h4];
+									Ui[(cls z) => cp2[eq(pair(x, y), pair(z, z)), in(z, a) |-
+										$x_is_z = pair_eq_e1_v1[
+											set_i[@h4];
+											@h5
+										];
+
+										$y_is_z = pair_eq_e2_v1[
+											set_i[@h4];
+											@h5
+										];
+
+										in_eq_left_1[
+											@h3;
+											eq_transitive[$x_is_z; eq_symmetric[$y_is_z]]
+										]
+									]]
+								]
+							]
+						]]
+					]
+				];
+
+				$c2 = cp[in(y, b) |-
+					$y_in_a = in_subseteq[@h2; @h1];
+					$set_y = set_i[@h2];
+
+					$yy_in_id = make_fun_in_i((cls x) => x, a, y)[$set_y; $set_y; $y_in_a]
+					[as in(pair(y, y), f)];
+
+					setbuilder_i[
+						$set_y;
+						Xi((cls x) => A(in(x, b), in(pair(x, y), f)), y)[Ai[@h2; $yy_in_id]]
+					][as in(y, rel_im_set(f, b))]
+				];
+
+				Ei[$c1; $c2]
+			}];
+			
+			eq_i(rel_im_set(f, b), b)[$E]
+		}
 }
 
 "전사함수(surjective function). onto라고도 한다."
