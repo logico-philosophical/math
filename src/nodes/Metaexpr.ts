@@ -52,6 +52,9 @@ export default abstract class Metaexpr extends Node {
 	protected abstract expandMetaInternal(andFuncalls: boolean): Metaexpr;
 
 	public equals(obj: Metaexpr, context: ExecutionContext): boolean {
+		// console.log(`${this}\n\n${obj}`);
+		// var ret = (() => {
+		
 		if (this === obj) return true;
 		if (!this.type.equals(obj.type)) return false;
 
@@ -59,6 +62,10 @@ export default abstract class Metaexpr extends Node {
 			return obj.equalsInternal(this, context);
 		
 		return this.equalsInternal(obj, context);
+
+		// })();
+		// console.log(`${this}\n\n${obj}\n\n${ret}`);
+		// return ret;
 	}
 
 	protected abstract getEqualsPriority(context: ExecutionContext): EqualsPriority;

@@ -80,6 +80,10 @@ export default class Funcall extends Expr0 {
 			callee = callee.expr;
 		}
 
+		while (callee instanceof Variable && callee.expr) {
+			callee = callee.expr;
+		}
+
 		if (callee instanceof Funcall) {
 			return callee.isExpandable(context);
 		}
@@ -97,6 +101,10 @@ export default class Funcall extends Expr0 {
 		var callee: Metaexpr = this.fun;
 
 		while (callee instanceof $Variable) {
+			callee = callee.expr;
+		}
+
+		while (callee instanceof Variable && callee.expr) {
 			callee = callee.expr;
 		}
 
