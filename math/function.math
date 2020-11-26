@@ -374,7 +374,7 @@ theorem make_fun_is_fun(fun f: @r11, $A$ cls a: @r2, $B$ cls b: @r3) {
 		Ai[$c1; $c23][as is_fun(make_fun(f, a), a, b)]
 }
 
-theorem make_fun_funcall(fun f, $A$ cls a: @22, $B$ cls b, cls x: @21) {
+theorem make_fun_funcall(fun f: @r111, $A$ cls a: @22, $B$ cls b, cls x: @21) {
 	Uin(a, (cls x) => {in(f(x), b)}), in(x, a) |-
 		eq_symmetric[funcall_i[
 			make_fun_is_fun(f, a, b)[@h1];
