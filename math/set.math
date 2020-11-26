@@ -885,6 +885,12 @@ theorem bigcap_e($A$ cls a, cls z) {
 		}, z)[@h1]
 }
 
+schema bigcap3_i(pr f: @r21, fun g: @r22, cls z: @11) {
+	set(z), U((cls x) => I(f(x), in(z, g(x)))) |-
+		setbuilder_i[@h1; @h2]
+		[as in(z, bigcap3(f, g))]
+}
+
 theorem bigcap_is_smaller($A$ cls a: @12, cls x: @11) {
 	in(x, a) |-
 		Ui[(cls z) => {
@@ -896,6 +902,13 @@ theorem bigcap_is_smaller($A$ cls a: @12, cls x: @11) {
 					]
 			]
 		}][as subseteq(bigcap(a), x)]
+}
+
+theorem bigcap3_is_smaller(pr f: @r11, fun g: @r12, cls x) {
+	f(x) |-
+		Ui[(cls z) => cp[in(z, bigcap3(f, g)) |-
+			mp[@h1; Ue(?, x)[setbuilder_e[@h2]]]
+		]][as subseteq(bigcap3(f, g), g(x))]
 }
 
 theorem cap_is_set_1(cls x, cls y) {
