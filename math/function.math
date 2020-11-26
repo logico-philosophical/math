@@ -33,7 +33,7 @@ cls fun_set($A$ cls a, $B$ cls b) {
 	setbuilder((cls f) => is_fun(f, a, b))
 }
 
-schema fun_set_in_i(cls f: @31, $A$ cls a: @11, $B$ cls b: @21) {
+theorem fun_set_in_i(cls f: @31, $A$ cls a: @11, $B$ cls b: @21) {
 	set(a), set(b), is_fun(f, a, b) |-
 		setbuilder_i[
 			subset_is_set[
@@ -44,7 +44,7 @@ schema fun_set_in_i(cls f: @31, $A$ cls a: @11, $B$ cls b: @21) {
 		][as in(f, fun_set(a, b))]
 }
 
-schema fun_set_subseteq_cartesian($A$ cls a, $B$ cls b) {
+theorem fun_set_subseteq_cartesian($A$ cls a, $B$ cls b) {
 	Ui[(cls f) => cp[in(f, fun_set(a, b)) |-
 		setbuilder_i[
 			set_i[@h1];
@@ -321,7 +321,7 @@ cls make_fun(fun f, $A$ cls a) {
 	)
 }
 
-schema make_fun_in_i(fun f: @r21, $A$ cls a: @32, cls z: @11) {
+theorem make_fun_in_i(fun f: @r21, $A$ cls a: @32, cls z: @11) {
 	set(z), set(f(z)), in(z, a) |-
 		setbuilder2_i(?, ?, z)[
 			pair_set_i[@h1; @h2]; @h3
@@ -614,7 +614,7 @@ theorem bijection_is_injection(cls f: @11, $A$ cls a: @12, $B$ cls b: @13) {
 		][as is_injection(f, a, b)]
 }
 
-schema injection_to_bijection(cls f: @11, $A$ cls a: @12, $B$ cls b: @13) {
+theorem injection_to_bijection(cls f: @11, $A$ cls a: @12, $B$ cls b: @13) {
 	is_injection(f, a, b) |-
 		$f_is_fun = Ae1[@h1];
 		$surjection = surjection_i[$f_is_fun];
@@ -705,7 +705,7 @@ theorem bijection_inverse_is_bijection(cls f: @11, $A$ cls a: @12, $B$ cls b: @1
 		[as is_bijection(rel_inverse(f), b, a)]
 }
 
-schema bijection_is_invertible(cls f: @11, $A$ cls a: @12, $B$ cls b: @13) {
+theorem bijection_is_invertible(cls f: @11, $A$ cls a: @12, $B$ cls b: @13) {
 	is_bijection(f, a, b) |-
 		Ai[
 			Ae1[@h1];

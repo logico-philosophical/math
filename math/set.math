@@ -466,7 +466,7 @@ theorem Qim(pr f, cls c) {
 		}, c)[@h1]]
 }
 
-schema QU(pr f: @11, pr g: @r1) {
+theorem QU(pr f: @11, pr g: @r1) {
 	Q(f), U(If(g, f)) |-
 		Ui2[(cls x, cls y) => cp2[g(x), g(y) |-
 			mp[
@@ -885,7 +885,7 @@ theorem bigcap_e($A$ cls a, cls z) {
 		}, z)[@h1]
 }
 
-schema bigcap3_i(pr f: @r21, fun g: @r22, cls z: @11) {
+theorem bigcap3_i(pr f: @r21, fun g: @r22, cls z: @11) {
 	set(z), U((cls x) => I(f(x), in(z, g(x)))) |-
 		setbuilder_i[@h1; @h2]
 		[as in(z, bigcap3(f, g))]

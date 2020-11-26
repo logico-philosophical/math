@@ -748,7 +748,7 @@ schema rel_composite_associative(cls x, cls y, cls z) {
 	)
 }
 
-schema rel_inverse_subseteq($A$ cls a: @21, $B$ cls b: @22) {
+theorem rel_inverse_subseteq($A$ cls a: @21, $B$ cls b: @22) {
 	is_rel(a), subseteq(a, b) |-
 		rel_U(is_in(rel_inverse(b)), ?)[
 			rel_inverse_is_rel[@h1]
