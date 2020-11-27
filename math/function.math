@@ -557,6 +557,14 @@ st is_injection(cls f, $A$ cls a, $B$ cls b) {
 	)
 }
 
+schema injection_dom_Q_m(cls f: @11, $A$ cls a: @12, $B$ cls b: @13, $x_1$ cls x1: @311, $x_2$ cls x2: @411, cls y: @21) {
+	is_injection(f, a, b), in(y, b), in(pair(x1, y), f), in(pair(x2, y), f) |-
+		mp[
+			Ai[@h3; @h4];
+			Ue2(?, x1, x2)[mp[@h2; Ue(?, y)[Ae2[@h1]]]]
+		]
+}
+
 "전단사함수(bijective function). [~(href=#def-is_fun)is_fun]의 정의와의 유사성에 주목하라."
 $<<\mathop\mathrm{bijection}>>\left(#1: #2 \to #3\right)$
 st is_bijection(cls f, $A$ cls a, $B$ cls b) {
