@@ -688,7 +688,7 @@ cls subsetbuilder(cls x, pr f) {
 	})
 }
 
-theorem subsetbuilder_i(cls x: @12, pr f, cls z: @11) {
+theorem subsetbuilder_i(cls x: @12, pr f: @r22, cls z: @11) {
 	in(z, x), f(z) |-
 		setbuilder_i[
 			set_i[@h1];

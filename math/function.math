@@ -720,3 +720,43 @@ theorem bijection_is_invertible(cls f: @11, $A$ cls a: @12, $B$ cls b: @13) {
 			Ae1[bijection_inverse_is_bijection[@h1]]
 		][as is_invertible_fun(f, a, b)]
 }
+
+"칸토어의 정리(Cantor's theorem). [~(href=https://www.cs.ru.nl/~freek/100/)[*Formalizing 100 Theorems]]의 정리 #63이다."
+theorem cantor($A$ cls a: @11, cls f: @r11) {
+	set(a) |-
+		Ni_alt[is_surjection(f, a, power(a)) |-
+			with ($B$ cls b = subsetbuilder(a, (cls x) => Nin(x, funcall(f, x)))) {
+				$f_is_fun = Ae1[@h2];
+				
+				$b_subseteq_a = id(subseteq(b, a))[
+					subsetbuilder_is_subset(a, (cls x) => Nin(x, funcall(f, x)))
+				];
+				
+				$b_in_power_a = power_in_i[@h1; $b_subseteq_a];
+				
+				$X = mp[$b_in_power_a; Ue(?, b)[Ae2[@h2]]];
+				
+				$U = Ui[($\xi$ cls xi) => cp2[in(xi, a), in(pair(xi, b), f) |-
+					$b_is_f_xi = funcall_i[$f_is_fun; @h4];
+					
+					$xi_Nin_f_xi = Ni_alt[in(xi, funcall(f, xi)) |-
+						Fi[
+							@h5;
+							subsetbuilder_e[in_eq_right_2[@h5; $b_is_f_xi]]
+						]
+					][as Nin(xi, funcall(f, xi))];
+					
+					$xi_in_b = subsetbuilder_i[
+						@h3;
+						$xi_Nin_f_xi
+					][as in(xi, b)];
+					
+					$xi_in_f_xi = in_eq_right_1[$xi_in_b; $b_is_f_xi];
+					
+					Fi[$xi_in_f_xi; $xi_Nin_f_xi]
+				]];
+				
+				mpX_Xe_p(?, F)[$X; $U]
+			}
+		]
+}
