@@ -25,7 +25,7 @@ schema one_plus_one_is_two() {
 
 The above code produces&hellip;
 
-<p align="center"><img src="https://i.imgur.com/RvQeHtO.png" width="500px"><br>
+<p align="center"><img src="https://i.imgur.com/nZm8nRL.png" width="500px"><br>
 <i>A proof of</i> <code>1 + 1 = 2</code></p>
 
 &hellip;a proof of the equation `1 + 1 = 2`. The proof is verified by the math-o-matic program, and the name of the theorem is colored green if the proof is valid. The **proof explorer** also shows the individual steps of the proof in a human-readable format. The names in green refer to theorems that are already proved, and the symbols in blue are predefined notions.
