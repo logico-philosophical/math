@@ -952,7 +952,8 @@ theorem omega_add_one(cls n: @11) {
 "[$1+1=2]이다."
 theorem one_plus_one_is_two() {
 	omega_add_one(ord_one)[
-		successor_in_omega[zero_in_omega()][as in(ord_one, omega)]
+		successor_in_omega[zero_in_omega()]
+		[as in(ord_one, omega)]
 	][as eq(omega_add(ord_one, ord_one), ord_two)]
 }
 
