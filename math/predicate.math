@@ -165,6 +165,16 @@ theorem NNiU(pr f: @11) {
 	U(f) |- Ui[(cls x) => NNi[Ue(?, x)[@h1]]][as U(Nf(Nf(f)))]
 }
 
+theorem NU_to_XN(pr f: @111) {
+	N(U(f)) |- 
+		mp[@h1; contrapose(U(Nf(Nf(f))), U(f))[cp[NNeU(f)]]][as X(Nf(f))]
+}
+
+theorem XN_to_NU(pr f: @111) {
+	X(Nf(f)) |- 
+		mp[@h1; contrapose(U(f), U(Nf(Nf(f))))[cp[NNiU(f)]]][as N(U(f))]
+}
+
 "U를 위한 contrapose."
 theorem contrapose_U(pr f: @111, pr g: @112) {
 	U(If(f, g)) |- Ui[(cls x) => {
