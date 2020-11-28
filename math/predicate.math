@@ -155,6 +155,16 @@ theorem Ui_c(st p) {
 	cp[Ui_p(p)]
 }
 
+"pr 타입을 위한 NNe."
+theorem NNeU(pr f: @1111) {
+	U(Nf(Nf(f))) |- Ui[(cls x) => NNe[Ue(?, x)[@h1]]][as U(f)]
+}
+
+"pr 타입을 위한 NNi."
+theorem NNiU(pr f: @11) {
+	U(f) |- Ui[(cls x) => NNi[Ue(?, x)[@h1]]][as U(Nf(Nf(f)))]
+}
+
 "U를 위한 contrapose."
 theorem contrapose_U(pr f: @111, pr g: @112) {
 	U(If(f, g)) |- Ui[(cls x) => {
