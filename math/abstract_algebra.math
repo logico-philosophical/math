@@ -212,6 +212,15 @@ st is_group($G$ cls g, $\ast$ cls f) {
 	)
 }
 
+"부분군(subgroup)."
+$\left(#1{<<\leq>>}_{#3}#2\right)$
+st subgroup(cls H, cls G, $\ast$ cls f) {
+	A(
+		subseteq(H, G),
+		is_group(H, rel_restrict(f, cartesian(H, H)))
+	)
+}
+
 "대수학에서의 아벨 군(abelian group)."
 $\left(<<\operatorname{abelian\ group}>>\left(#1,#2\right)\right)$
 st is_abelian_group($G$ cls g, $\ast$ cls f) {
