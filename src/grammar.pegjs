@@ -219,7 +219,7 @@ reduction =
 		b:(
 			_ '[' _
 			'as' __
-			m:metaexpr
+			m:metaexpr _
 			']'
 			{return m}
 		)?
