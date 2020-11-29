@@ -98,7 +98,7 @@ export default class ObjectFun extends Fun {
 		}
 
 		if (!root)
-			return `\\href{#def-${this.name}}\\mathrm{${Node.escapeTeX(this.name)}}`;
+			return `\\href{#def-${this.name}}{${Node.makeTeXName(this.name)}}`;
 	
 		if (!this.expr)
 			return this.funcallToTeXString(this.params, prec);
@@ -119,7 +119,7 @@ export default class ObjectFun extends Fun {
 		return (
 			!this.name
 				? this.toTeXString(false)
-				: `\\href{#def-${this.name}}{${this.name.length == 1 ? Node.escapeTeX(this.name) : `\\mathrm{${Node.escapeTeX(this.name)}}`}}`
+				: `\\href{#def-${this.name}}{${Node.makeTeXName(this.name)}}`
 		) + `\\mathord{\\left(${args.join(', ')}\\right)}`;
 	}
 }

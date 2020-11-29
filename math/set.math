@@ -1259,7 +1259,7 @@ theorem singletonlike_e(cls x: @11, cls z: @12, cls w: @21) {
 }
 
 theorem is_singleton_of_Q(cls z) {
-	Ui2[($x_1$ cls x1, $x_2$ cls x2) => cp2[is_singleton_of(x1, z), is_singleton_of(x2, z) |-
+	Ui2[(cls x1, cls x2) => cp2[is_singleton_of(x1, z), is_singleton_of(x2, z) |-
 		eq_i(x1, x2)[
 			syllUE(
 				is_in(x1),
@@ -1342,7 +1342,7 @@ theorem singleton_set_e(cls x: @111) using singleton {
 
 theorem singleton_Q(cls x: @11) {
 	set(x) |-
-		Ui2[($z_1$ cls z1, $z_2$ cls z2) => {
+		Ui2[(cls z1, cls z2) => {
 			cp2[in(z1, singleton(x)), in(z2, singleton(x)) |-
 				eq_transitive[
 					singleton_e[@h1; @h2];

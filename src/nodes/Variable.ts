@@ -99,12 +99,7 @@ export default class Variable extends Expr0 implements Nameable {
 	public toTeXString(prec?: Precedence, root?: boolean): string {
 		var id = this instanceof Parameter ? `id-${this._id}` : `def-${this.name}`;
 
-		var tex = this.tex
-			|| (
-				this.name.length == 1
-					? Node.escapeTeX(this.name)
-					: `\\mathrm{${Node.escapeTeX(this.name)}}`
-			);
+		var tex = this.tex || Node.makeTeXName(this.name);
 		
 		var expr = root && this.expr
 			? `\\coloneqq ${this.expr.toTeXString(Node.PREC_COLONEQQ)}`

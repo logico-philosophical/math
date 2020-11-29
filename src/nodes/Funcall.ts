@@ -301,9 +301,7 @@ export default class Funcall extends Expr0 {
 		return (
 			!(isNameable(this.fun) && this.fun.name) || this.fun instanceof Variable
 				? this.fun.toTeXString(false)
-				: this.fun.name.length == 1
-					? Node.escapeTeX(this.fun.name)
-					: `\\mathrm{${Node.escapeTeX(this.fun.name)}}`
+				: Node.makeTeXName(this.fun.name)
 		) + `\\mathord{\\left(${args.join(', ')}\\right)}`;
 	}
 }

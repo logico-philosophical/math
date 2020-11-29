@@ -118,7 +118,7 @@ st is_identity_element(cls e, $S$ cls s, $\ast$ cls f) {
 
 "항등원은 여러 개 있지 않다."
 theorem identity_element_Q($S$ cls s, $\ast$ cls f) {
-	Ui2[($e_1$ cls e1, $e_2$ cls e2) => {
+	Ui2[(cls e1, cls e2) => {
 		cp2[is_identity_element(e1, s, f), is_identity_element(e2, s, f) |-
 		$e1_in_s = Ae1[@h1];
 		$e2_in_s = Ae1[@h2];
