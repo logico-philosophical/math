@@ -115,7 +115,7 @@ st X(pr f) {
 $!<prec=249><<\exists^2>>#1$
 st X2(pr2 f) {
 	X((cls x) => {
-		X((cls y) => { f(x, y) })
+		X((cls y) => f(x, y))
 	})
 }
 
@@ -148,7 +148,7 @@ theorem Ue2(pr2 f: @11, cls x, cls y) {
 }
 
 theorem Ui_p(st p: @1) {
-	p |- Ui((cls x) => { p })[(cls x) => { p }]
+	p |- Ui((cls x) => p)[(cls x) => p]
 }
 
 theorem Ui_c(st p) {
@@ -271,14 +271,14 @@ theorem UO(pr f, pr g) {
 	cp[UOm(f, g)]
 }
 
-"UU의 m형. 재미있게도 Ui 및 Ue로부터 유도할 수 있다."
+"UU의 m형."
 theorem UUm(pr2 f: @11) {
-	U2((cls x, cls y) => { f(x, y) }) |-
+	U2((cls x, cls y) => f(x, y)) |-
 		Ui[(cls y) => {
 			Ui[(cls x) => {
 				Ue2(?, x, y)[@h1]
 			}]
-		}][as U2((cls y, cls x) => { f(x, y) })]
+		}][as U2((cls y, cls x) => f(x, y))]
 }
 
 "[$\forall x\forall y]랑 [$\forall y\forall x]가 같다는 것."
@@ -295,10 +295,10 @@ theorem UE_flip(pr f: @111, pr g: @112) {
 
 theorem EiU(pr f: @111, pr g: @112) {
 	U(If(f, g)), U(If(g, f)) |-
-		Ui[(cls z) => { Ei[
+		Ui[(cls z) => Ei[
 			Ue(?, z)[@h1][as I(f(z), g(z))];
 			Ue(?, z)[@h2][as I(g(z), f(z))]
-		] }][as U(Ef(f, g))]
+		]][as U(Ef(f, g))]
 }
 
 "Ee1의 U형."
@@ -349,18 +349,18 @@ theorem UEe(pr f: @111, pr g: @112) {
 
 theorem syllU(pr f: @111, pr g: @112, pr h: @212) {
 	U(If(f, g)), U(If(g, h)) |-
-		Ui[(cls x) => { syll[
+		Ui[(cls x) => syll[
 			Ue(?, x)[@h1][as I(f(x), g(x))];
 			Ue(?, x)[@h2][as I(g(x), h(x))]
-		] }][as U(If(f, h))]
+		]][as U(If(f, h))]
 }
 
 theorem syllUE(pr f: @111, pr g: @112, pr h: @212) {
 	U(Ef(f, g)), U(Ef(g, h)) |-
-		Ui[(cls x) => { syllE[
+		Ui[(cls x) => syllE[
 			Ue(?, x)[@h1][as E(f(x), g(x))];
 			Ue(?, x)[@h2][as E(g(x), h(x))]
-		] }][as U(Ef(f, h))]
+		]][as U(Ef(f, h))]
 }
 
 "존재 양화 도입(existential introduction). Ue와 합치면 [$\forall f \vdash \exists f]가 될 것도 같으나 어떤 class x가 있어야 한다."
@@ -372,9 +372,9 @@ theorem Xi(pr f: @r1, cls x: @12) {
 
 theorem Xi2(pr2 f, cls x, cls y) {
 	f(x, y) |- Xi((cls x) => {
-		X((cls y) => { f(x, y) })
+		X((cls y) => f(x, y))
 	}, x)[
-		Xi((cls y) => { f(x, y) }, y)[@h1]
+		Xi((cls y) => f(x, y), y)[@h1]
 	][as X2(f)]
 }
 
@@ -404,9 +404,9 @@ theorem mpX2(pr2 f: @11, pr2 g: @212) {
 						Ue2(?, x, y)[id(U2((cls x, cls y) => {
 							I(f(x, y), g(x, y))
 						}))[@h2]];
-						Ue(?, y)[NNe(U((cls y) => {N(g(x, y))}))[Ue(?, x)[NNe[@h3]]]]
+						Ue(?, y)[NNe(U((cls y) => N(g(x, y))))[Ue(?, x)[NNe[@h3]]]]
 					]
-				}]][as N(X((cls y) => {f(x, y)}))]
+				}]][as N(X((cls y) => f(x, y)))]
 			}];
 			@h1
 		]]]
@@ -441,26 +441,26 @@ theorem mpXE2(pr f, pr g) {
 
 "st 타입을 위한 존재 양화 소거(existential elimination)."
 theorem Xe_p(st p) {
-	X((cls z) => { p }) |-
+	X((cls z) => p) |-
 		NNe[Ni_alt[N(p) |-
 			Fi[
 				@h1;
-				NNi[Ui_p[@h2]][as N(X((cls z) => { p }))]
+				NNi[Ui_p[@h2]][as N(X((cls z) => p))]
 			]]]
 }
 
 theorem X2e_p(st p) {
-	X2((cls x, cls y) => { p }) |-
-		Xe_p(p)[Xe_p(X((cls y) => { p }))[@h1]]
+	X2((cls x, cls y) => p) |-
+		Xe_p(p)[Xe_p(X((cls y) => p))[@h1]]
 }
 
 theorem mpX_Xe_p(pr f: @11, st p) {
-	X(f), U(If(f, (cls z) => { p })) |-
+	X(f), U(If(f, (cls z) => p)) |-
 		Xe_p(p)[mpX[@h1; @h2]]
 }
 
 theorem mpX2_X2e_p(pr2 f: @11, st p) {
-	X2(f), U2(If2(f, (cls x, cls y) => { p })) |-
+	X2(f), U2(If2(f, (cls x, cls y) => p)) |-
 		X2e_p(p)[mpX2[@h1; @h2]]
 }
 

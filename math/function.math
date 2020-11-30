@@ -79,7 +79,7 @@ theorem fun_im_X(cls f: @11, $A$ cls a: @12, $B$ cls b: @13) {
 					Ae1[mp[@h2; Ue(?, x)[fun_im_Xq[@h1]]]]
 			)]
 		}]
-		[as Uin(a, (cls x) => {Xin(b, (cls y) => {in(pair(x, y), f)})})]
+		[as Uin(a, (cls x) => Xin(b, (cls y) => in(pair(x, y), f)))]
 }
 
 theorem fun_im_X_m(cls f: @11, $A$ cls a: @12, $B$ cls b: @13, cls x: @21) {
@@ -95,7 +95,7 @@ theorem fun_im_Q(cls f: @11, $A$ cls a: @12, $B$ cls b: @13) {
 					Ae2[mp[@h2; Ue(?, x)[fun_im_Xq[@h1]]]]
 			)]
 		}]
-		[as Uin(a, (cls x) => {Q((cls y) => {in(pair(x, y), f)})})]
+		[as Uin(a, (cls x) => Q((cls y) => in(pair(x, y), f)))]
 }
 
 theorem fun_im_Q_m(cls f: @11, $A$ cls a: @12, $B$ cls b: @13, cls x: @21, cls y1: @312, cls y2: @412) {
@@ -262,7 +262,7 @@ theorem funcall_e(cls f: @11, $A$ cls a: @12, $B$ cls b: @13, cls x: @21, cls y:
 
 theorem fun_eq_i(cls f: @11, cls g: @21, $A$ cls a: @12, $B$ cls b: @13) {
 	$bar = (cls f, cls g, $A$ cls a, $B$ cls b) => {
-		is_fun(f, a, b), is_fun(g, a, b), Uin(a, (cls x) => {eq(funcall(f, x), funcall(g, x))}) |-
+		is_fun(f, a, b), is_fun(g, a, b), Uin(a, (cls x) => eq(funcall(f, x), funcall(g, x))) |-
 			$foo = Ui2[(cls x, cls y) => {
 				cp[in(pair(x, y), f) |-
 					$x_in_a = fun_in_e1[@h1; @h4];
@@ -273,10 +273,10 @@ theorem fun_eq_i(cls f: @11, cls g: @21, $A$ cls a: @12, $B$ cls b: @13) {
 			[as subseteq(f, g)]
 	};
 	
-	is_fun(f, a, b), is_fun(g, a, b), Uin(a, (cls x) => {eq(funcall(f, x), funcall(g, x))}) |-
+	is_fun(f, a, b), is_fun(g, a, b), Uin(a, (cls x) => eq(funcall(f, x), funcall(g, x))) |-
 		subseteq_to_eq[
 			$bar(f, g, a, b)[@h1; @h2; @h3];
-			$bar(g, f, a, b)[@h2; @h1; Ui[(cls x) => { cp[in(x, a) |- eq_symmetric[mp[@h4; Ue(?, x)[@h3]]]] }]]
+			$bar(g, f, a, b)[@h2; @h1; Ui[(cls x) => cp[in(x, a) |- eq_symmetric[mp[@h4; Ue(?, x)[@h3]]]]]]
 		]
 }
 
@@ -289,8 +289,8 @@ theorem funcall_in_codomain(cls f: @11, $A$ cls a: @12, $B$ cls b: @13, cls x: @
 	is_fun(f, a, b), in(x, a) |-
 		mpX_Xe_p(?, in(funcall(f, x), b))[
 			fun_im_X_m[@h1; @h2];
-			Ui[(cls y) => { cp[A(in(y, b), in(pair(x, y), f)) |-
-				in_eq_left_1[Ae1[@h3]; fun_im_Q_m[@h1; @h2; Ae2[@h3]; funcall_def(f, a, b, x)[@h1; @h2]]]] }]
+			Ui[(cls y) => cp[A(in(y, b), in(pair(x, y), f)) |-
+				in_eq_left_1[Ae1[@h3]; fun_im_Q_m[@h1; @h2; Ae2[@h3]; funcall_def(f, a, b, x)[@h1; @h2]]]]]
 		]
 }
 
@@ -332,15 +332,15 @@ theorem make_fun_is_fun(fun f: @r11, $A$ cls a: @r2, $B$ cls b: @r3) {
 	Uin(a, (cls x) => {
 		in(f(x), b)
 	}) |-
-		$c1 = Ui[(cls w) => { cp[in(w, make_fun(f, a)) |-
+		$c1 = Ui[(cls w) => cp[in(w, make_fun(f, a)) |-
 			mpX_Xe_p(?, in(w, cartesian(a, b)))[
 				setbuilder_e[@h2];
-				Ui[(cls z) => { cp2[eq(w, pair(z, f(z))), in(z, a) |-
-					in_eq_left_2[cartesian_in_i[@h4; mp[@h4; Ue(?, z)[@h1]]]; @h3]] }]
+				Ui[(cls z) => cp2[eq(w, pair(z, f(z))), in(z, a) |-
+					in_eq_left_2[cartesian_in_i[@h4; mp[@h4; Ue(?, z)[@h1]]]; @h3]]]
 			]
-		] }][as subseteq(make_fun(f, a), cartesian(a, b))];
+		]][as subseteq(make_fun(f, a), cartesian(a, b))];
 		
-		$c23 = Ui[(cls x) => { cp[in(x, a) |-
+		$c23 = Ui[(cls x) => cp[in(x, a) |-
 			$fx_in_b = mp[@h2; Ue(?, x)[@h1]];
 			$c2 = Xi((cls y) => {
 				A(in(y, b), in(pair(x, y), make_fun(f, a)))
@@ -352,30 +352,30 @@ theorem make_fun_is_fun(fun f: @r11, $A$ cls a: @r2, $B$ cls b: @r3) {
 				]
 			];
 			
-			$c3 = Qim((cls y) => {in(pair(x, y), make_fun(f, a))}, f(x))[
-				Ui[(cls y) => { cp[in(pair(x, y), make_fun(f, a)) |-
+			$c3 = Qim((cls y) => in(pair(x, y), make_fun(f, a)), f(x))[
+				Ui[(cls y) => cp[in(pair(x, y), make_fun(f, a)) |-
 					mpX_Xe_p(?, eq(y, f(x)))[
 						setbuilder_e[@h3];
-						Ui[(cls z) => { cp[A(eq(pair(x, y), pair(z, f(z))), in(z, a)) |-
+						Ui[(cls z) => cp[A(eq(pair(x, y), pair(z, f(z))), in(z, a)) |-
 							$pair_eq = Ae1[@h4];
 
-							ax_indiscernible_m2((cls z) => {eq(y, f(z))}, ?, ?)[
+							ax_indiscernible_m2((cls z) => eq(y, f(z)), ?, ?)[
 								pair_eq_e1_v1[set_i[@h3]; $pair_eq];
 								pair_eq_e2_v1[set_i[@h3]; $pair_eq]
 							]
-						] }]
+						]]
 					]
-				] }]
+				]]
 			];
 			
 			Ai[$c2; $c3]
-		] }];
+		]];
 		
 		Ai[$c1; $c23][as is_fun(make_fun(f, a), a, b)]
 }
 
 theorem make_fun_funcall(fun f: @r111, $A$ cls a: @22, $B$ cls b, cls x: @21) {
-	Uin(a, (cls x) => {in(f(x), b)}), in(x, a) |-
+	Uin(a, (cls x) => in(f(x), b)), in(x, a) |-
 		eq_symmetric[funcall_i[
 			make_fun_is_fun(f, a, b)[@h1];
 			setbuilder2_i(?, ?, x)[

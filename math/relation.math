@@ -204,13 +204,13 @@ theorem setbuilder_pair_e(pr2 f: @121, cls a: @111, cls b: @112) {
 					f(c, d)
 				)
 			})];
-			Ui2[(cls c, cls d) => { cp2[eq(pair(a, b), pair(c, d)), f(c, d) |-
+			Ui2[(cls c, cls d) => cp2[eq(pair(a, b), pair(c, d)), f(c, d) |-
 				ax_indiscernible2_m2(f, ?, ?, ?, ?)[
 					pair_eq_e1_v1[$set_a_b; @h2];
 					pair_eq_e2_v1[$set_a_b; @h2];
 					@h3
 				]
-			] }]
+			]]
 		]
 }
 
@@ -262,7 +262,7 @@ theorem cartesian_in_e($A$ cls a: @121, $B$ cls b: @122, cls x: @111, cls y: @11
 					A(eq(z, pair(u, v)), A(in(u, a), in(v, b)))
 				})
 			}, ?)[@h1];
-			Ui2[(cls u, cls v) => { cp[A(eq(pair(x, y), pair(u, v)), A(in(u, a), in(v, b))) |-
+			Ui2[(cls u, cls v) => cp[A(eq(pair(x, y), pair(u, v)), A(in(u, a), in(v, b))) |-
 				$foo = Ae2[@h2];
 				$u_in_a = Ae1[$foo];
 				$v_in_b = Ae2[$foo];
@@ -274,7 +274,7 @@ theorem cartesian_in_e($A$ cls a: @121, $B$ cls b: @122, cls x: @111, cls y: @11
 					in_eq_left_2[$u_in_a; pair_eq_e1[$set_x; $set_y; $u_is_set; $v_is_set; $Ae1h4]];
 					in_eq_left_2[$v_in_b; pair_eq_e2[$set_x; $set_y; $u_is_set; $v_is_set; $Ae1h4]]
 				]
-			] }]
+			]]
 		]
 }
 
@@ -394,15 +394,15 @@ theorem rel_inverse_in(cls x, cls a, cls b) {
 
 theorem rel_inverse_is_rel($R$ cls r: @11, $A$ cls a: @12, $B$ cls b: @13) using rel_inverse {
 	is_rel_over_sets(r, a, b) |-
-		Ui[(cls z) => { cp[in(z, rel_inverse(r)) |-
+		Ui[(cls z) => cp[in(z, rel_inverse(r)) |-
 			mpX2_X2e_p(?, in(z, cartesian(b, a)))[
 				setbuilder_e[@h2];
-				Ui2[(cls x, cls y) => { cp2[eq(z, pair(x, y)), in(pair(y, x), r) |-
+				Ui2[(cls x, cls y) => cp2[eq(z, pair(x, y)), in(pair(y, x), r) |-
 					$foo = cartesian_in_e[in_subseteq[@h4; @h1]];
 					in_eq_left_2[cartesian_in_i[Ae2[$foo]; Ae1[$foo]]; @h3]
-				] }]
+				]]
 			]
-		] }][as is_rel_over_sets(rel_inverse(r), b, a)]
+		]][as is_rel_over_sets(rel_inverse(r), b, a)]
 }
 
 "이항관계의 합성(composition)."
@@ -439,12 +439,12 @@ cls rel_restrict($R$ cls r, $A$ cls a) {
 
 "이항관계의 반사성(reflexivity)."
 st rel_reflexive($R$ cls r, $A$ cls a) {
-	Uin(a, (cls x) => { in(pair(x, x), r) })
+	Uin(a, (cls x) => in(pair(x, x), r))
 }
 
 "이항관계의 비반사성(irreflexivity)."
 st rel_irreflexive($R$ cls r, $A$ cls a) {
-	Uin(a, (cls x) => { Nin(pair(x, x), r) })
+	Uin(a, (cls x) => Nin(pair(x, x), r))
 }
 
 "이항관계의 대칭성(symmetry)."
@@ -592,18 +592,18 @@ theorem rel_U(pr f: @r2, $R$ cls r: @11) {
 			f(pair(x, y))
 		)
 	}) |-
-		Ui[(cls z) => {cp[in(z, r) |-
+		Ui[(cls z) => cp[in(z, r) |-
 			mpX2_X2e_p(?, f(z))[
 				X2Ae1(
-					(cls x, cls y) => { eq(z, pair(x, y)) },
-					(cls x, cls y) => { A(in(x, universe), in(y, universe)) }
+					(cls x, cls y) => eq(z, pair(x, y)),
+					(cls x, cls y) => A(in(x, universe), in(y, universe))
 				)[setbuilder_e[in_subseteq[@h3; @h1]]];
 				Ui2[(cls x, cls y) => {
 					cp[eq(z, pair(x, y)) |-
 						ax_indiscernible_m2(f, ?, ?)[@h4; mp[in_eq_left_1[@h3; @h4]; Ue2(?, x, y)[@h2]]]]
 				}]
 			]
-		]}][as Uin(r, f)]
+		]][as Uin(r, f)]
 }
 
 theorem rel_eq_i($R_1$ cls r1: @11, $R_2$ cls r2: @21) {
@@ -632,14 +632,14 @@ theorem rel_eq_i($R_1$ cls r1: @11, $R_2$ cls r2: @21) {
 
 "곱집합은 이항관계이다."
 theorem cartesian_is_rel(cls x, cls y) {
-	Ui[(cls z) => { cp[in(z, cartesian(x, y)) |-
+	Ui[(cls z) => cp[in(z, cartesian(x, y)) |-
 		setbuilder_i[
 			set_i[@h1];
 			mpX2(?, (cls a, cls b) => {
 				A(eq(z, pair(a, b)), A(in(a, universe), in(b, universe)))
 			})[
 				setbuilder_e[@h1];
-				Ui2[(cls a, cls b) => { cp2[eq(z, pair(a, b)), A(in(a, x), in(b, y)) |-
+				Ui2[(cls a, cls b) => cp2[eq(z, pair(a, b)), A(in(a, x), in(b, y)) |-
 					Ai[
 						@h2;
 						Ai[
@@ -647,10 +647,10 @@ theorem cartesian_is_rel(cls x, cls y) {
 							universe_in_i[set_i[Ae2[@h3]]]
 						]
 					]
-				] }]
+				]]
 			]
 		][as in(z, cartesian(universe, universe))]
-	] }]
+	]]
 	[as is_rel(cartesian(x, y))]
 }
 
@@ -695,20 +695,20 @@ theorem cartesian_is_set($A$ cls a: @11, $B$ cls b: @21) using pair {
 					
 					$1 = setbuilder_i[
 						singleton_set_i(x)[$set_x];
-						Ui[(cls z) => { cp[in(z, singleton(x)) |-
-							in_eq_left_2[$x_in_cup_ab; singleton_e[$set_x; @h4]]] }]
-						[as subseteq(singleton(x), cup(a, b))]
+						Ui[(cls z) => cp[in(z, singleton(x)) |-
+							in_eq_left_2[$x_in_cup_ab; singleton_e[$set_x; @h4]]]
+						][as subseteq(singleton(x), cup(a, b))]
 					][as in(singleton(x), power(cup(a, b)))];
 					
 					$2 = setbuilder_i[
 						doubleton_set_i[$set_x; $set_y];
-						Ui[(cls z) => { cp[in(z, doubleton(x, y)) |-
+						Ui[(cls z) => cp[in(z, doubleton(x, y)) |-
 							Oeu[
 								doubleton_e[$set_x; $set_y; @h4];
 								eq(z, x) |- in_eq_left_2[$x_in_cup_ab; @h5];
 								eq(z, y) |- in_eq_left_2[$y_in_cup_ab; @h5]
 							]
-						] }][as subseteq(doubleton(x, y), cup(a, b))]
+						]][as subseteq(doubleton(x, y), cup(a, b))]
 					][as in(doubleton(x, y), power(cup(a, b)))];
 					
 					setbuilder_i[
