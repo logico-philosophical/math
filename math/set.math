@@ -717,8 +717,93 @@ axiom ax_specify(pr f) {
 	})
 }
 
-theorem ax_specify_m(pr f, cls x: @11) {
+theorem ax_specify_m(pr f: @r12, cls x: @11) {
 	set(x) |- mp[@h1; Ue(?, x)[ax_specify(f)]]
+}
+
+theorem subset_is_set(cls x: @21, cls y: @22) {
+	set(y), subseteq(x, y) |-
+		with (cls x2 = subsetbuilder(y, is_in(x))) {
+			$eq = eq_i(x, x2)[Ui[(cls z) => {
+				$c1 = cp[in(z, x) |-
+					$z_in_y = in_subseteq[@h3; @h2];
+
+					subsetbuilder_i[$z_in_y; @h3]
+					[as in(z, x2)]
+				];
+
+				$c2 = cp[in(z, x2) |-
+					Ae2[setbuilder_e[@h3]]
+					[as in(z, x)]
+				];
+
+				Ei[$c1; $c2]
+			}]];
+			
+			$set2 = ax_specify_m[@h1][as set(x2)];
+			
+			set_is_set_2[$set2; $eq]
+		}
+}
+
+theorem supset_is_not_set(cls x: @111, cls y: @22) {
+	N(set(x)), subseteq(x, y) |-
+		Ni_alt[set(y) |- Fi[subset_is_set[@h3; @h2]; @h1]]
+}
+
+"공집합."
+$\varnothing$
+cls emptyset = setbuilder((cls z) => { F });
+
+"axiom of empty set."
+axiom ax_emptyset() {
+	set(emptyset)
+}
+
+"emptyset의 defining property."
+theorem emptyset_def(cls z) {
+	Ni_alt[in(z, emptyset) |-
+		setbuilder_e[@h1]]
+	[as Nin(z, emptyset)]
+}
+
+"universal class."
+$V$
+cls universe = setbuilder((cls z) => { T });
+
+theorem universe_in_i(cls x: @11) {
+	set(x) |-
+		setbuilder_i[@h1; Ti()]
+		[as in(x, universe)]
+}
+
+theorem universe_subseteq_i($X$ cls x) {
+	Ui[(cls z) => {cp[in(z, x) |- universe_in_i[set_i[@h1]]]}]
+	[as subseteq(x, universe)]
+}
+
+"러셀 집합. 사실 집합이 아니라 proper class이다."
+cls russell_set = setbuilder((cls z) => Nin(z, z));
+
+"러셀 집합은 집합이 아니다."
+theorem russell_set_is_not_set() {
+	Ni_alt[set(russell_set) |-
+		$russell_in_russell = NNe[Ni_alt[Nin(russell_set, russell_set) |-
+			Fi[
+				setbuilder_i[
+					@h1;
+					@h2
+				][as in(russell_set, russell_set)];
+				@h2
+			]]];
+
+		Fi[$russell_in_russell; setbuilder_e[$russell_in_russell]]
+	]
+}
+
+"전체집합은 집합이 아니다."
+theorem universe_is_not_set() {
+	supset_is_not_set[russell_set_is_not_set(); universe_subseteq_i(russell_set)]
 }
 
 "교집합."
@@ -839,6 +924,24 @@ theorem cup_eq_i(cls x: @11, cls y: @12, cls u: @21, cls v: @22) {
 		eq_i(cup(x, u), cup(y, v))[Ui[(cls z) => {
 			Ei[$foo(x, y, u, v, z)[@h1; @h2]; $foo(y, x, v, u, z)[eq_symmetric[@h1]; eq_symmetric[@h2]]]
 		}]]
+}
+
+theorem cup_universe_is_universe($X$ cls x) {
+	subseteq_to_eq[
+		Ui[(cls z) => {cp[in(z, cup(x, universe)) |-
+			universe_in_i[set_i[@h1]]]}]
+		[as subseteq(cup(x, universe), universe)];
+		cup_is_bigger_2(x, universe)
+	]
+}
+
+theorem universe_cup_is_universe($X$ cls x) {
+	subseteq_to_eq[
+		Ui[(cls z) => {cp[in(z, cup(universe, x)) |-
+			universe_in_i[set_i[@h1]]]}]
+		[as subseteq(cup(universe, x), universe)];
+		cup_is_bigger_1(universe, x)
+	]
 }
 
 "일반화된 교집합."
@@ -978,6 +1081,21 @@ theorem bigcup_eq_i($A$ cls a: @11, $B$ cls b: @12) {
 }
 
 "axiom of union."
+axiom ax_union() {
+	Uin(universe, ($\mathscr A$ cls aa) => {
+		Xin(universe, ($U$ cls u) => {
+			U((cls z) => {
+				E(
+					in(z, u),
+					Xin(aa, ($A$ cls a) => {
+						in(z, a)
+					})
+				)
+			})
+		})
+	})
+}
+
 axiom ax_bigcup() {
 	U(($A$ cls a) => {
 		I(set(a), set(bigcup(a)))
@@ -1004,16 +1122,6 @@ theorem subset_cap_is_subset(cls x: @11, cls y: @12) {
 		]
 }
 
-theorem subset_is_set(cls x: @21, cls y: @22) {
-	set(y), subseteq(x, y) |-
-		set_is_set_2[cap_is_set_2(x, y)[@h1]; subset_cap_is_subset[@h2]]
-}
-
-theorem supset_is_not_set(cls x: @111, cls y: @22) {
-	N(set(x)), subseteq(x, y) |-
-		Ni_alt[set(y) |- Fi[subset_is_set[@h3; @h2]; @h1]]
-}
-
 "차집합."
 $!<prec=300>#1<<\setminus>>#2$
 cls setminus(cls x, cls y) {
@@ -1038,79 +1146,6 @@ theorem setminus_is_smaller(cls x, cls y) {
 theorem setminus_e2(cls x: @121, cls y: @122, cls z: @11) {
 	in(z, setminus(x, y)) |-
 		Ae2[setbuilder_e[@h1]]
-}
-
-"공집합."
-$\varnothing$
-cls emptyset = setbuilder((cls z) => { F });
-
-"axiom of empty set."
-axiom ax_emptyset() {
-	set(emptyset)
-}
-
-"emptyset의 defining property."
-theorem emptyset_def(cls z) {
-	Ni_alt[in(z, emptyset) |-
-		setbuilder_e[@h1]]
-	[as Nin(z, emptyset)]
-}
-
-"universal class."
-$V$
-cls universe = setbuilder((cls z) => { T });
-
-theorem universe_in_i(cls x: @11) {
-	set(x) |-
-		setbuilder_i[@h1; Ti()]
-		[as in(x, universe)]
-}
-
-theorem universe_subseteq_i($X$ cls x) {
-	Ui[(cls z) => {cp[in(z, x) |- universe_in_i[set_i[@h1]]]}]
-	[as subseteq(x, universe)]
-}
-
-theorem cup_universe_is_universe($X$ cls x) {
-	subseteq_to_eq[
-		Ui[(cls z) => {cp[in(z, cup(x, universe)) |-
-			universe_in_i[set_i[@h1]]]}]
-		[as subseteq(cup(x, universe), universe)];
-		cup_is_bigger_2(x, universe)
-	]
-}
-
-theorem universe_cup_is_universe($X$ cls x) {
-	subseteq_to_eq[
-		Ui[(cls z) => {cp[in(z, cup(universe, x)) |-
-			universe_in_i[set_i[@h1]]]}]
-		[as subseteq(cup(universe, x), universe)];
-		cup_is_bigger_1(universe, x)
-	]
-}
-
-"러셀 집합. 사실 집합이 아니라 proper class이다."
-cls russell_set = setbuilder((cls z) => Nin(z, z));
-
-"러셀 집합은 집합이 아니다."
-theorem russell_set_is_not_set() {
-	Ni_alt[set(russell_set) |-
-		$russell_in_russell = NNe[Ni_alt[Nin(russell_set, russell_set) |-
-			Fi[
-				setbuilder_i[
-					@h1;
-					@h2
-				][as in(russell_set, russell_set)];
-				@h2
-			]]];
-
-		Fi[$russell_in_russell; setbuilder_e[$russell_in_russell]]
-	]
-}
-
-"전체집합은 집합이 아니다."
-theorem universe_is_not_set() {
-	supset_is_not_set[russell_set_is_not_set(); universe_subseteq_i(russell_set)]
 }
 
 "descriptor operator. [$f]를 만족하는 클래스가 존재하고 유일하다면 그 클래스이며 아니면 [$V]이다.
