@@ -1080,7 +1080,7 @@ theorem bigcup_eq_i($A$ cls a: @11, $B$ cls b: @12) {
 		][as eq(bigcup(a), bigcup(b))]
 }
 
-"axiom of union."
+"합집합 공리(axiom of union)."
 axiom ax_union() {
 	Uin(universe, ($\mathscr A$ cls aa) => {
 		Xin(universe, ($U$ cls u) => {
@@ -1096,18 +1096,39 @@ axiom ax_union() {
 	})
 }
 
-axiom ax_bigcup() {
-	U(($A$ cls a) => {
-		I(set(a), set(bigcup(a)))
-	})
-}
+theorem bigcup_is_set($\mathscr A$ cls aa: @11) {
+	set(aa) |-
+		$X = mp[universe_in_i[@h1]; Ue(?, aa)[ax_union()]];
+		$U = Ui[($U$ cls u) => cp2[in(u, universe), U((cls z) => {
+			E(in(z, u), Xin(aa, ($A$ cls a) => in(z, a)))
+		}) |-
+			$eq = eq_i(u, bigcup(aa))[Ui[(cls z) => {
+				$Ue = Ue(?, z)[@h3];
 
-theorem ax_bigcup_m($A$ cls a) {
-	set(a) |-
-		mp[
-			@h1;
-			Ue(?, a)[ax_bigcup()]
-		]
+				$c1 = cp[in(z, u) |-
+					$z_is_set = set_i[@h4];
+					setbuilder_i[
+						$z_is_set;
+						mpE1[@h4; $Ue]
+					][as in(z, bigcup(aa))]
+				];
+
+				$c2 = cp[in(z, bigcup(aa)) |-
+					$sbe = setbuilder_e[@h4]
+					[as Xin(aa, ($A$ cls a) => in(z, a))];
+
+					mpE2[$sbe; $Ue]
+				];
+
+				Ei[$c1; $c2]
+			}]];
+			
+			$U_is_set = set_i[@h2];
+			
+			set_is_set_1[$U_is_set; $eq]
+		]];
+		
+		mpX_Xe_p(?, set(bigcup(aa)))[$X; $U]
 }
 
 theorem subset_cap_is_subset(cls x: @11, cls y: @12) {
@@ -1699,7 +1720,7 @@ theorem bigcup_doubleton_is_cup(cls x: @11, cls y: @21) {
 theorem cup_is_set(cls x: @11, cls y: @21) {
 	set(x), set(y) |-
 		set_is_set_1[
-			ax_bigcup_m(doubleton(x, y))[
+			bigcup_is_set(doubleton(x, y))[
 				doubleton_set_i[@h1; @h2]
 			];
 			bigcup_doubleton_is_cup[
