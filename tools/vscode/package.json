@@ -3,6 +3,10 @@
 	"displayName": "math-o-matic",
 	"description": "math-o-matic language support",
 	"publisher": "logico-philosophical",
+	"repository": {
+		"type": "git",
+		"url": "http://github.com/logico-philosophical/math-o-matic.git"
+	},
 	"version": "0.1.0",
 	"engines": {
 		"vscode": "^1.50.0"

@@ -4,10 +4,6 @@ import set;
 import relation;
 import function;
 
-############################
-##### ABSTRACT ALGEBRA #####
-############################
-
 "이항연산. 즉 [$A\times A]에서 [$A]로의 함수이다."
 $\left(<<\operatorname{bin.\ op.}>>#1\text{ on }#2\right)$
 st is_bin_op($\ast$ cls f, $A$ cls a) {

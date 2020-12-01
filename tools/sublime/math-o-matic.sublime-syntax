@@ -13,7 +13,7 @@ contexts:
           scope: punctuation.definition.string.end.math-o-matic
           pop: true
 
-    - match: '//|\#'
+    - match: '//'
       scope: punctuation.definition.comment.math-o-matic
       push:
         - meta_scope: comment.line.math-o-matic

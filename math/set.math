@@ -1,10 +1,6 @@
 import propositional;
 import predicate;
 
-############################
-######## SET THEORY ########
-############################
-
 "집합론에서 정의하는 [$\in] 관계."
 $!<prec=450>#1<<\in>>#2$
 st in(cls x, cls y);

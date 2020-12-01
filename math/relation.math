@@ -2,10 +2,6 @@ import propositional;
 import predicate;
 import set;
 
-###########################
-######## RELATIONS ########
-###########################
-
 "순서쌍(ordered pair). Kuratowski의 정의이다."
 $\left(#1<<,>>#2\right)$
 sealed cls pair(cls x, cls y) {

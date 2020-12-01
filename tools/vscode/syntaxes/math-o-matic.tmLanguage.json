@@ -28,11 +28,6 @@
 			"patterns": [
 				{
 					"name": "comment.line.double-slash.math-o-matic",
-					"begin": "#",
-					"end": "$"
-				},
-				{
-					"name": "comment.line.math-o-matic",
 					"begin": "//",
 					"end": "$"
 				},

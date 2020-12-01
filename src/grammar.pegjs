@@ -569,8 +569,7 @@ tex =
 	}
 
 comment =
-	"#" (!newline .)*
-	/ "//" (!newline .)*
+	"//" (!newline .)*
 	/ "/*" (!"*/" .)* "*/"
 
 newline =

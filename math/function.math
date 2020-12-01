@@ -3,10 +3,6 @@ import predicate;
 import set;
 import relation;
 
-###########################
-######## FUNCTIONS ########
-###########################
-
 "어떤 [$\langle f, A, B\rangle]가 함수이다.
 
 [$f\subseteq A\times B]이고 임의의 [$x\in A]에 대해 [$.(x, y)\in f]를 만족하는 유일한 [$y]가 존재한다는 뜻이다."

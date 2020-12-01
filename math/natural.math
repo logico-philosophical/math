@@ -4,10 +4,6 @@ import set;
 import relation;
 import function;
 
-###########################
-##### NATURAL NUMBERS #####
-###########################
-
 "따름 순서수(successor ordinal)."
 ${#1}^{<<+>>}$
 cls successor(cls x) {
