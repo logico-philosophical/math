@@ -3,7 +3,6 @@ import ExecutionContext from "../src/ExecutionContext";
 chai.use(require('chai-as-promised'));
 import Metaexpr from "../src/nodes/Metaexpr";
 import ObjectFun from "../src/nodes/ObjectFun";
-import Schema from "../src/nodes/Schema";
 import Program from "../src/Program";
 var pegjs = require('pegjs');
 var fs = require('fs');
@@ -19,7 +18,7 @@ describe('Program', function () {
 	[
 		'propositional', 'predicate', 'set',
 		'relation', 'function', 'natural',
-		'abstract_algebra'
+		'algebra'
 	].forEach(name => {
 		it(`can load ${name}.math`, async function () {
 			await program.loadModule(name, (filename: string) => ({
