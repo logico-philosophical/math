@@ -483,7 +483,7 @@ st Xq(pr f) {
 }
 
 "[~(href=#schema-p-Qi)Qi]와 비교하라."
-theorem Xqi(pr f, cls c) {
+theorem Xqi(pr f) {
 	X((cls c) => {
 		U((cls x) => {
 			E(f(x), eq(x, c))
@@ -507,7 +507,7 @@ theorem Xqim(pr f, cls c) {
 	U((cls x) => {
 		E(f(x), eq(x, c))
 	}) |-
-		Xqi(f, c)[Xi((cls c) => U((cls x) => {
+		Xqi(f)[Xi((cls c) => U((cls x) => {
 			E(f(x), eq(x, c))
 		}), c)[@h1]]
 }

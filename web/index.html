@@ -65,10 +65,8 @@
 			<li><kbd>X</kbd>: 증명 전부 펼치기
 			<li><kbd>R</kbd>, <kbd>F7</kbd>: 다시 로드
 			<li><kbd>C</kbd>: 콘솔 여닫기
-			<li><kbd>Backspace</kbd>, <kbd>J</kbd>: 뒤로가기
-			<li><kbd>K</kbd>: 앞으로 가기
 		</ul>
-		<h2>몇 가지 컨트롤에 관하여</h2>
+		<h2>우상단 컨트롤에 관하여</h2>
 		<ul>
 			<li>expand all 버튼은 <kbd>X</kbd> 키를 눌러 클릭할 수 있으며 증명탐색을 전부 활성화합니다. 성능에 부정적 영향이 있을 수 있습니다.
 			<li>reload 버튼은 <kbd>R</kbd> 키를 눌러 클릭할 수 있으며 파일을 다시 불러와서 목록을 재작성합니다. 단 그 과정에서 에러가 발생하였을 경우 이전 목록이 보존되므로 새로운 코드를 작성할 때 유용하게 사용할 수 있습니다.
@@ -368,16 +366,6 @@
 			hotkeys('r,f7', (evt, handler) => {
 				evt.preventDefault();
 				reload();
-			});
-
-			hotkeys('backspace,j', (evt, handler) => {
-				evt.preventDefault();
-				history.back();
-			});
-
-			hotkeys('k', (evt, handler) => {
-				evt.preventDefault();
-				history.forward();
 			});
 
 			hotkeys('x', (evt, handler) => {
