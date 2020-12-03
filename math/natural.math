@@ -332,7 +332,7 @@ cls define_recursively_m($A$ cls a, cls c, fun f) {
 	define_recursively(a, c, make_fun(f, a))
 }
 
-"[$\gamma\in\mathscr A]가 되기 위한 첫 번째 조건이다. 즉 [$\gamma\subseteq\omega\times A]이다.
+"is_recursive_supset의 첫 번째 조건. 즉 [$\gamma\subseteq\omega\times A]이다.
 [$\gamma]가 함수가 되기 위한 첫 번째 조건이기도 하다."
 theorem recursion_theorem_1($A$ cls a: @12, cls c: @11, cls f: @21) using define_recursively {
 	in(c, a), is_fun(f, a, a) |-
@@ -391,7 +391,7 @@ theorem recursion_theorem_1($A$ cls a: @12, cls c: @11, cls f: @21) using define
 		[as subseteq(define_recursively(a, c, f), cartesian(omega, a))]
 }
 
-"[$\gamma\in\mathscr A]가 되기 위한 두 번째 조건."
+"is_recursive_supset의 두 번째 조건."
 theorem recursion_theorem_2($A$ cls a: @12, cls c: @11, cls f) using define_recursively {
 	in(c, a) |-
 		$set_0c = pair_set_i[
@@ -407,7 +407,7 @@ theorem recursion_theorem_2($A$ cls a: @12, cls c: @11, cls f) using define_recu
 		][as in(pair(ord_zero, c), define_recursively(a, c, f))]
 }
 
-"[$\gamma\in\mathscr A]가 되기 위한 세 번째 조건."
+"is_recursive_supset의 세 번째 조건."
 theorem recursion_theorem_3($A$ cls a: @12, cls c, cls f: @11) using define_recursively {
 	is_fun(f, a, a) |-
 		with ($\gamma$ cls g = define_recursively(a, c, f)) {
