@@ -336,7 +336,7 @@ cls rel_im($R$ cls r) {
 }
 
 "어떤 집합에 의한 상(image)."
-$#1\mathord{\left[#2\right]}{}^{<<\scriptscriptstyle\dag>>}$
+$#1{\left[#2\right]}{}^{<<\scriptscriptstyle\dag>>}$
 cls rel_im_set($R$ cls r, $A$ cls a) {
 	setbuilder((cls y) => {
 		Xin(a, (cls x) => {

@@ -16,7 +16,7 @@ cls bin_op_call($\ast$ cls f, cls x, cls y) {
 	funcall(f, pair(x, y))
 }
 
-$\left(#1\ <<\text{is associative on}>>\ #2\right)$
+$\left({#1}\ <<\text{is associative on}>>\ {#2}\right)$
 st bin_op_associative($\ast$ cls f, $A$ cls a) {
 	Uin(a, (cls x) => {
 		Uin(a, (cls y) => {
@@ -36,7 +36,7 @@ st bin_op_associative($\ast$ cls f, $A$ cls a) {
 	})
 }
 
-$\left(#1\ <<\text{is commutative on}>>\ #2\right)$
+$\left({#1}\ <<\text{is commutative on}>>\ {#2}\right)$
 st bin_op_commutative($\ast$ cls f, $A$ cls a) {
 	Uin(a, (cls x) => {
 		Uin(a, (cls y) => {
@@ -47,7 +47,7 @@ st bin_op_commutative($\ast$ cls f, $A$ cls a) {
 	})
 }
 
-$\left(#1\ <<\text{is left distributive over}>>\ #2 \text{on}\ #3\right)$
+$\left({#1}\ <<\text{is left distributive over}>>\ {#2}\ \text{on}\ {#3}\right)$
 st bin_op_left_distributive($\cdot$ cls f, $+$ cls g, $A$ cls a) {
 	Uin(a, (cls x) => {
 		Uin(a, (cls y) => {
@@ -61,7 +61,7 @@ st bin_op_left_distributive($\cdot$ cls f, $+$ cls g, $A$ cls a) {
 	})
 }
 
-$\left(#1\ <<\text{is right distributive over}>>\ #2 \text{on}\ #3\right)$
+$\left({#1}\ <<\text{is right distributive over}>>\ {#2}\ \text{on}\ {#3}\right)$
 st bin_op_right_distributive($\cdot$ cls f, $+$ cls g, $A$ cls a) {
 	Uin(a, (cls x) => {
 		Uin(a, (cls y) => {
@@ -75,7 +75,7 @@ st bin_op_right_distributive($\cdot$ cls f, $+$ cls g, $A$ cls a) {
 	})
 }
 
-$\left(#1\ <<\text{is distributive over}>>\ #2 \text{on}\ #3\right)$
+$\left({#1}\ <<\text{is distributive over}>>\ {#2}\ \text{on}\ {#3}\right)$
 st bin_op_distributive($\cdot$ cls f, $+$ cls g, $A$ cls a) {
 	A(
 		bin_op_left_distributive(f, g, a),
@@ -99,7 +99,7 @@ st is_semigroup($S$ cls s, $\ast$ cls f) {
 }
 
 "[$e]가 [$.(S, \ast)]의 항등원이다."
-$\left(#1\ <<\text{is identity of}>>\ \mathord{\left(#2,#3\right)}\right)$
+$\left({#1}\ <<\text{is identity of}>>\ {\left(#2,#3\right)}\right)$
 st is_identity_element(cls e, $S$ cls s, $\ast$ cls f) {
 	A(
 		in(e, s),
@@ -176,7 +176,7 @@ st is_commutative_monoid($M$ cls m, $\ast$ cls f) {
 }
 
 "[$b]가 [$.(S, \ast)]에서 [$a]의 역원이다."
-$\left(#1\ <<\text{is inverse of}>>\ #2\text{ in }\mathord{\left(#3,#4\right)}\right)$
+$\left({#1}\ <<\text{is inverse of}>>\ {#2}\ \text{in}\ {\left(#3,#4\right)}\right)$
 st is_inverse_element(cls b, cls a, $S$ cls s, $\ast$ cls f) {
 	A(
 		in(b, s),
@@ -188,7 +188,7 @@ st is_inverse_element(cls b, cls a, $S$ cls s, $\ast$ cls f) {
 }
 
 "[$.(S, \ast)]에서 [$a]의 역원(존재한다면)."
-$\left(<<\text{inverse}>>\ #1\right)_{\left(#2,#3\right)}$
+$\left(<<\operatorname{inverse}>>#1\right)_{\left(#2,#3\right)}$
 cls inverse_element(cls a, $S$ cls s, $\ast$ cls f) {
 	instantiate((cls b) => {
 		is_inverse_element(b, a, s, f)
@@ -209,7 +209,7 @@ st is_group($G$ cls g, $\ast$ cls f) {
 }
 
 "부분군(subgroup)."
-$\left(#1{<<\leq>>}_{#3}#2\right)$
+$\left(#1<<\leq>>_{#3}#2\right)$
 st subgroup(cls H, cls G, $\ast$ cls f) {
 	A(
 		subseteq(H, G),
