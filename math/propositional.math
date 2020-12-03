@@ -161,7 +161,7 @@ theorem Oe(st p: @11, st q: @12, st r: @22) using O {
 		]]
 }
 
-theorem Oeu(st p: @11, st q: @12, st r: @2r) {
+theorem Oe_alt(st p: @11, st q: @12, st r: @2r) {
 	O(p, q), (p |- r), (q |- r) |- Oe[
 		@h1;
 		cp[@h2];
@@ -175,7 +175,7 @@ theorem Ei(st p: @11, st q: @12) using E {
 }
 
 "Ei의 다른 버전."
-theorem Eiu(st p: @11, st q: @21) {
+theorem Ei_alt(st p: @11, st q: @21) {
 	(p |- q), (q |- p) |-
 		Ei[cp[@h1]; cp[@h2]]
 }
@@ -304,7 +304,7 @@ theorem NA_to_ON(st p: @111, st q: @112) {
 
 theorem ON_to_NA(st p: @111, st q: @112) {
 	O(N(p), N(q)) |-
-		Ni_alt[A(p, q) |- Oeu[
+		Ni_alt[A(p, q) |- Oe_alt[
 			@h1;
 			(N(p) |- Fi[
 				Ae1[@h2]; @h3
@@ -439,15 +439,15 @@ theorem EAi(st p: @11, st q: @12, st r: @21, st s: @22) {
 
 theorem EOi(st p: @11, st q: @12, st r: @21, st s: @22) {
 	E(p, q), E(r, s) |-
-		Eiu[
+		Ei_alt[
 			O(p, r) |-
-				Oeu[
+				Oe_alt[
 					@h3;
 					p |- Oi1(?, s)[mpE1[@h4; @h1]];
 					r |- Oi2(q, ?)[mpE1[@h4; @h2]]
 				];
 			O(q, s) |-
-				Oeu[
+				Oe_alt[
 					@h3;
 					q |- Oi1(?, r)[mpE2[@h4; @h1]];
 					s |- Oi2(p, ?)[mpE2[@h4; @h2]]

@@ -216,7 +216,7 @@ theorem eq_transitive(cls x: @11, cls y: @12, cls z: @22) {
 
 theorem eq_transitive_El(cls x: @11, cls y: @12, cls z) {
 	eq(x, y) |-
-		Eiu[
+		Ei_alt[
 			eq(z, x) |- eq_transitive[@h2; @h1];
 			eq(z, y) |- eq_symmetric[eq_transitive[@h1; eq_symmetric[@h2]]]
 		]
@@ -231,7 +231,7 @@ theorem eq_transitive_Er(cls x: @11, cls y: @12, cls z) {
 }
 
 theorem eq_simple(cls x, cls y) {
-	Eiu[
+	Ei_alt[
 		eq_Ae1(x, y);
 		eq_i(x, y)
 	]
@@ -351,7 +351,7 @@ theorem Xin_eq($A$ cls a: @11, $B$ cls b: @12, pr f) {
 			)[@h2; $foo]
 			[as Xin(a, f)];
 			
-		Eiu[$c1; $c2]
+		Ei_alt[$c1; $c2]
 }
 
 "Xin을 위한 mp."
@@ -843,7 +843,7 @@ theorem cap_commutative_0(cls x: @121, cls y: @122, cls z: @11) {
 }
 
 theorem cap_commutative_1(cls x, cls y, cls z) {
-	Eiu[cap_commutative_0(x, y, z); cap_commutative_0(y, x, z)]
+	Ei_alt[cap_commutative_0(x, y, z); cap_commutative_0(y, x, z)]
 }
 
 theorem cap_commutative_2(cls x, cls y) {
@@ -910,7 +910,7 @@ theorem cup_eq_i(cls x: @11, cls y: @12, cls u: @21, cls v: @22) {
 			cp[in(z, cup(x, u)) |-
 				setbuilder_i[
 					set_i[@h3];
-					Oeu[
+					Oe_alt[
 						setbuilder_e[@h3];
 						in(z, x) |- Oi1(?, in(z, v))[in_eq_right_1[@h4; @h1]];
 						in(z, u) |- Oi2(in(z, y), ?)[in_eq_right_1[@h4; @h2]]
@@ -1634,7 +1634,7 @@ theorem self_to_bigcup_singleton(cls x: @11, cls z: @21) {
 theorem bigcup_singleton_is_self(cls x: @11) {
 	set(x) |-
 		eq_i(bigcup(singleton(x)), x)[Ui[(cls z) => {
-			Eiu[
+			Ei_alt[
 				in(z, bigcup(singleton(x))) |- bigcup_singleton_to_self(x, z)[@h1; @h2];
 				in(z, x) |- self_to_bigcup_singleton[@h1; @h2]
 			]
@@ -1752,7 +1752,7 @@ theorem power_in_i(cls x: @11, cls z: @21) {
 
 theorem power_def_Ue(cls x, cls y) {
 	set(x) |-
-		Eiu[
+		Ei_alt[
 			in(y, power(x)) |- setbuilder_e[@h2];
 			subseteq(y, x) |-
 				setbuilder_i[subset_is_set[@h1; @h2]; @h2]

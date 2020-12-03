@@ -699,7 +699,7 @@ theorem cartesian_is_set($A$ cls a: @11, $B$ cls b: @21) using pair {
 					$2 = setbuilder_i[
 						doubleton_set_i[$set_x; $set_y];
 						Ui[(cls z) => cp[in(z, doubleton(x, y)) |-
-							Oeu[
+							Oe_alt[
 								doubleton_e[$set_x; $set_y; @h4];
 								eq(z, x) |- in_eq_left_2[$x_in_cup_ab; @h5];
 								eq(z, y) |- in_eq_left_2[$y_in_cup_ab; @h5]
@@ -710,7 +710,7 @@ theorem cartesian_is_set($A$ cls a: @11, $B$ cls b: @21) using pair {
 					setbuilder_i[
 						pair_set_i[$set_x; $set_y];
 						Ui[(cls z) => cp[in(z, doubleton(singleton(x), doubleton(x, y))) |-
-							Oeu[
+							Oe_alt[
 								doubleton_e[singleton_set_i[$set_x]; doubleton_set_i[$set_x; $set_y]; @h4];
 								eq(z, singleton(x)) |- in_eq_left_2[$1; @h5];
 								eq(z, doubleton(x, y)) |- in_eq_left_2[$2; @h5]

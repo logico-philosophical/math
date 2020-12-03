@@ -162,7 +162,7 @@ theorem induce_set($X$ cls x: @11) {
 theorem induce(pr f) {
 	$foo = (cls z) => {
 		in(z, omega) |-
-			Eiu[
+			Ei_alt[
 				f(z) |- subsetbuilder_i(omega, f, z)[@h1; @h2];
 				in(z, subsetbuilder(omega, f)) |- subsetbuilder_e[@h2]
 			]
@@ -227,7 +227,7 @@ theorem omega_in_to_subseteq(cls n: @11, cls m: @21) {
 			Ui[(cls m) => cp[in(m, successor(n)) |-
 				$n_subseteq_successor_n = id(subseteq(n, successor(n)))[cup_is_bigger_1(n, singleton(n))];
 				
-				Oeu[
+				Oe_alt[
 					cup_e[@h3];
 					in(m, n) |-
 						subseteq_subseteq[
@@ -695,7 +695,7 @@ theorem recursion_theorem_5_step($A$ cls a: @12, cls c: @11, cls f: @21) using d
 															]
 														];
 
-													Oeu[
+													Oe_alt[
 														lxm(eq(successor(m), successor(n)));
 														$c3_c2; $c3_c1
 													]

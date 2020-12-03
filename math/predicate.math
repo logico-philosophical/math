@@ -492,7 +492,7 @@ theorem XOm2(pr f: @111, pr g: @121) {
 }
 "[$\exists]과 [$\lor] 간의 분배법칙 같은 것. UA로부터 증명할 수 있다."
 theorem XO(pr f, pr g) {
-	Eiu[XOm1(f, g); XOm2(f, g)]
+	Ei_alt[XOm1(f, g); XOm2(f, g)]
 }
 
 theorem ON_to_NA_U(pr f, pr g) {
