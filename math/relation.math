@@ -300,6 +300,11 @@ st is_rel($R$ cls r) {
 	is_rel_over_set(r, universe)
 }
 
+$\left(#2\mathrel{#1}#3\right){}^{\scriptscriptstyle<<\dag>>}$
+st rel_call(${\sim}$ cls r, cls a, cls b) {
+	in(pair(a, b), r)
+}
+
 "이항관계의 정의역(domain)."
 $!<prec=200><<\operatorname{dom}>>#1$
 cls rel_dom($R$ cls r) {
@@ -534,6 +539,25 @@ st is_equiv_rel($R$ cls r, $A$ cls a) {
 	A(
 		is_preorder(r, a),
 		rel_symmetric(r, a)
+	)
+}
+
+"동치류(equivalence class). [$\sim]이 클래스 [$A] 상에서의 동치관계일 때, [$A]의 원소 [$x]에 대해 정의된다.
+
+예를 들어 [$\Z_6 = \{1, 2, 3, 4, 5, 6\}] 상에서 [$a\sim b]가 [$a\equiv b\pmod 3]으로 정의될 때 [$`[1]_{\Z_6, \sim} = \{1, 4\}`]가 된다."
+$\left[#1\right]_{#2,#3}^{\scriptscriptstyle<<\dag>>}$
+cls equiv_cls(cls x, $A$ cls a, ${\sim}$ cls r) {
+	subsetbuilder(a, (cls z) => {rel_call(r, z, x)})
+}
+
+"몫집합(quotient set).
+
+예를 들어 [$\Z_6 = \{1, 2, 3, 4, 5, 6\}] 상에서 [$a\sim b]가 [$a\equiv b\pmod 3]으로 정의될 때 [$\Z_6/{\sim} = \{\{1, 4\}, \{2, 5\}, \{3, 6\}\}]이 된다."
+$\left(#1<</>>#2\right)$
+cls quotient_set($A$ cls a, ${\sim}$ cls r) {
+	setbuilder2(
+		(cls x) => equiv_cls(x, a, r),
+		is_in(a)
 	)
 }
 
