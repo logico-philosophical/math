@@ -3,17 +3,23 @@ import propositional;
 "클래스 타입. 술어 논리에서 쓰인다."
 type cls;
 
-"class 하나를 받는 술어 타입."
+"단항 술어(unary predicate)."
 type [cls -> st] pr;
 
-"class 두 개를 받는 술어 타입."
+"이항 술어."
 type [(cls, cls) -> st] pr2;
 
-"class 세 개를 받는 술어 타입."
+"삼항 술어."
 type [(cls, cls, cls) -> st] pr3;
 
-"class 하나를 받는 메타함수 타입."
+"사항 술어."
+type [(cls, cls, cls, cls) -> st] pr4;
+
+"단항 메타함수."
 type [cls -> cls] fun;
+
+"이항 메타함수."
+type [(cls, cls) -> cls] fun2;
 
 "pr 타입을 위한 A."
 $\left(#1<<\land>>#2\right)$

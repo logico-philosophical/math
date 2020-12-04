@@ -278,7 +278,7 @@ theorem call_eq_i(fun f, cls x: @11, cls y: @12) {
 
 "어떤 class 내에서의 forall."
 $!<prec=249><<\forall>>_{\in #1}#2$
-st Uin(cls a, pr f) {
+st Uin($A$ cls a, pr f) {
 	U((cls z) => {
 		I(
 			in(z, a),
@@ -287,20 +287,53 @@ st Uin(cls a, pr f) {
 	})
 }
 
-theorem UinA_i(pr f: @12, pr g: @22, cls x: @11) {
-	Uin(x, f), Uin(x, g) |-
-		Ui[(cls z) => cp[in(z, x) |-
-			Ai[mp[@h3; Ue(?, z)[@h1]]; mp[@h3; Ue(?, z)[@h2]]]]
-		][as Uin(x, Af(f, g))]
+$!<prec=249><<\forall>>_{\in #1\times #2}#3$
+st Uin2($A$ cls a, $B$ cls b, pr2 f) {
+	Uin(a, (cls x) => {
+		Uin(b, (cls y) => {
+			f(x, y)
+		})
+	})
 }
 
-theorem Uin_subset(cls a: @11, cls b: @12, pr f: @22) {
+$!<prec=249><<\forall>>_{\in #1\times #2\times #3}#4$
+st Uin3($A$ cls a, $B$ cls b, $C$ cls c, pr3 f) {
+	Uin(a, (cls x) => {
+		Uin(b, (cls y) => {
+			Uin(c, (cls z) => {
+				f(x, y, z)
+			})
+		})
+	})
+}
+
+$!<prec=249><<\forall>>_{\in #1\times #2\times #3\times #4}#5$
+st Uin4($A$ cls a, $B$ cls b, $C$ cls c, $D$ cls d, pr4 f) {
+	Uin(a, (cls x) => {
+		Uin(b, (cls y) => {
+			Uin(c, (cls z) => {
+				Uin(d, (cls w) => {
+					f(x, y, z, w)
+				})
+			})
+		})
+	})
+}
+
+theorem UinA_i(pr f: @12, pr g: @22, $A$ cls a: @11) {
+	Uin(a, f), Uin(a, g) |-
+		Ui[(cls z) => cp[in(z, a) |-
+			Ai[mp[@h3; Ue(?, z)[@h1]]; mp[@h3; Ue(?, z)[@h2]]]]
+		][as Uin(a, Af(f, g))]
+}
+
+theorem Uin_subset($A$ cls a: @11, $B$ cls b: @12, pr f: @22) {
 	subseteq(a, b), Uin(b, f) |-
 		syllU(is_in(a), is_in(b), f)[@h1; @h2]
 		[as Uin(a, f)]
 }
 
-theorem UUin_to_UinU(cls a, pr2 f) {
+theorem UUin_to_UinU($A$ cls a, pr2 f) {
 	U((cls z) => {
 		Uin(a, (cls w) => f(z, w))
 	}) |-
@@ -316,12 +349,45 @@ theorem UUin_to_UinU(cls a, pr2 f) {
 
 "어떤 class 내에서의 exists. Uin과 달리 and로 연결된다."
 $!<prec=249><<\exists>>_{\in #1}#2$
-st Xin(cls a, pr f) {
+st Xin($A$ cls a, pr f) {
 	X((cls z) => {
 		A(
 			in(z, a),
 			f(z)
 		)
+	})
+}
+
+$!<prec=249><<\exists>>_{\in #1\times #2}#3$
+st Xin2($A$ cls a, $B$ cls b, pr2 f) {
+	Xin(a, (cls x) => {
+		Xin(b, (cls y) => {
+			f(x, y)
+		})
+	})
+}
+
+$!<prec=249><<\exists>>_{\in #1\times #2\times #3}#4$
+st Xin3($A$ cls a, $B$ cls b, $C$ cls c, pr3 f) {
+	Xin(a, (cls x) => {
+		Xin(b, (cls y) => {
+			Xin(c, (cls z) => {
+				f(x, y, z)
+			})
+		})
+	})
+}
+
+$!<prec=249><<\exists>>_{\in #1\times #2\times #3\times #4}#5$
+st Xin4($A$ cls a, $B$ cls b, $C$ cls c, $D$ cls d, pr4 f) {
+	Xin(a, (cls x) => {
+		Xin(b, (cls y) => {
+			Xin(c, (cls z) => {
+				Xin(d, (cls w) => {
+					f(x, y, z, w)
+				})
+			})
+		})
 	})
 }
 
