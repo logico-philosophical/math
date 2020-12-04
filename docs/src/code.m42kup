@@ -70,7 +70,7 @@ pr Af(pr f, pr g) {
 
 [;;
 "연언 도입 2번."
-[**schema]` A3i(st p: @1, st q: @2, st r: @3) {
+[**theorem]` A3i(st p: @1, st q: @2, st r: @3) {
 	p, q, r |- Ai[Ai[@h1, @h2], @h3]
 }`
 ]

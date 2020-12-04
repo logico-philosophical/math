@@ -304,7 +304,7 @@ pr Af(pr f, pr g) {
 	|- set(emptyset)
 }
 </code></pre><p>증명은 다음과 같이 작성한다.</p><pre><code>&quot;연언 도입 2번.&quot;
-<b>schema</b> A3i(st p: @1, st q: @2, st r: @3) {
+<b>theorem</b> A3i(st p: @1, st q: @2, st r: @3) {
 	p, q, r |- Ai[Ai[@h1, @h2], @h3]
 }
 </code></pre><p><code>@h1</code>, <code>@h2</code>, <code>@h3</code>이 각각 1&ndash;3번째 가정 <code>p</code>, <code>q</code>, <code>r</code>을 나타낸다. <code>Ai[@h1, @h2]</code>가 <code>Ai[p, q]</code>인데, 이는 <code>Ai(p, q)[p, q]</code>가 인자 생략된 것이다. 즉 <code>(p, q |- A(p, q))[p, q]</code>인데, 대괄호를 쓴 것이 ⊦E 구문을 적용하라는 뜻으로 <code>p, q</code>를 <code>|-</code>의 좌변과 비교하여 같으면 <code>A(p, q)</code>가 증명되는 방식이다. 그러므로 <code>Ai[@h1, @h2]</code>가 <code>A(p, q)</code>가 되고, <code>Ai[A(p, q), r]</code>이 <code>A(A(p, q), r)</code>이 된다. 즉 Fitch 표기법으로 다음과 같은 증명을 한 것이다.</p><pre><code>1 ┃ p                      가정
