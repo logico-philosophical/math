@@ -976,7 +976,7 @@ cls omega_mul(cls n, cls m) {
 }
 
 $\left(n<<\mapsto>> {#1}^n{\left(#2\right)}\right)$
-cls fun_composite_recursive_(cls f, cls x) {
+cls fun_iterated_(cls f, cls x) {
 	define_recursively_m(
 		rel_dom(f),
 		x,
@@ -984,7 +984,7 @@ cls fun_composite_recursive_(cls f, cls x) {
 	)
 }
 
-theorem fun_composite_recursive_ird(cls f: @11, cls x: @21, $A$ cls a: @12) {
+theorem fun_iterated_ird(cls f: @11, cls x: @21, $A$ cls a: @12) {
 	is_fun(f, a, a), in(x, a) |-
 		$dom_f_is_a = fun_dom[@h1];
 		
@@ -994,21 +994,21 @@ theorem fun_composite_recursive_ird(cls f: @11, cls x: @21, $A$ cls a: @12) {
 				$z_in_a = in_eq_right_1[@h3; $dom_f_is_a];
 				in_eq_right_2[funcall_in_codomain[@h1; $z_in_a]; $dom_f_is_a]
 			]]
-		][as is_recursively_defined_m(fun_composite_recursive_(f, x), rel_dom(f), x, ($\gamma$ cls g) => funcall(f, g))]
+		][as is_recursively_defined_m(fun_iterated_(f, x), rel_dom(f), x, ($\gamma$ cls g) => funcall(f, g))]
 }
 
 ${#1}^{#2}{\left(#3\right)}{}^{\scriptscriptstyle<<\dag\text{discouraged}>>}$
-sealed cls fun_composite_recursive_call(cls f, cls n, cls x) {
-	funcall(fun_composite_recursive_(f, x), n)
+sealed cls fun_iterated_call(cls f, cls n, cls x) {
+	funcall(fun_iterated_(f, x), n)
 }
 
-"endofunction [$f]의 합성을 [$n]번 한 것. [$f]가 endofunction일 때만 제대로 정의된다."
+"반복합성함수(iterated function). 자기함수(endofunction) [$f]의 합성을 [$n]번 한 것이다. [$f]가 자기함수일 때만 제대로 정의된다."
 ${#1}^{#2}{}^{\scriptscriptstyle<<\dag>>}$
-cls fun_composite_recursive(cls f, cls n) {
-	make_fun((cls x) => fun_composite_recursive_call(f, n, x), rel_dom(f))
+cls fun_iterated(cls f, cls n) {
+	make_fun((cls x) => fun_iterated_call(f, n, x), rel_dom(f))
 }
 
-theorem fun_composite_recursive_def(cls f: @11, $A$ cls a: @12, cls n: @21, cls x: @31) using fun_composite_recursive_call {
+theorem fun_iterated_def(cls f: @11, $A$ cls a: @12, cls n: @21, cls x: @31) using fun_iterated_call {
 	is_fun(f, a, a), in(n, omega), in(x, a) |-
 		
 		$fun_dom = fun_dom[@h1];
@@ -1017,29 +1017,29 @@ theorem fun_composite_recursive_def(cls f: @11, $A$ cls a: @12, cls n: @21, cls 
 			$x_in_a = in_eq_right_1[@h4; $fun_dom];
 
 			in_eq_right_1[
-				funcall_in_codomain[Ae1[fun_composite_recursive_ird[@h1; $x_in_a]]; @h2]
-				[as in(fun_composite_recursive_call(f, n, x), rel_dom(f))];
+				funcall_in_codomain[Ae1[fun_iterated_ird[@h1; $x_in_a]]; @h2]
+				[as in(fun_iterated_call(f, n, x), rel_dom(f))];
 				fun_dom[@h1]
 			]
 		]];
 		
 		make_fun_funcall(?, ?, a, ?)[$dom_to_a; in_eq_right_2[@h3; $fun_dom]]
 		[as eq(
-			funcall(fun_composite_recursive(f, n), x),
-			fun_composite_recursive_call(f, n, x)
+			funcall(fun_iterated(f, n), x),
+			fun_iterated_call(f, n, x)
 		)]
 }
 
-theorem fun_composite_recursive_base(cls f: @11, cls x: @21, $A$ cls a: @12) using fun_composite_recursive_call {
+theorem fun_iterated_base(cls f: @11, cls x: @21, $A$ cls a: @12) using fun_iterated_call {
 	is_fun(f, a, a), in(x, a) |-
 		eq_transitive[
-			fun_composite_recursive_def[@h1; zero_in_omega(); @h2];
-			Ae1[Ae2[fun_composite_recursive_ird(f, x, a)[@h1; @h2]]]
-			[as eq(fun_composite_recursive_call(f, ord_zero, x), x)]
+			fun_iterated_def[@h1; zero_in_omega(); @h2];
+			Ae1[Ae2[fun_iterated_ird(f, x, a)[@h1; @h2]]]
+			[as eq(fun_iterated_call(f, ord_zero, x), x)]
 		]
 }
 
-theorem fun_composite_recursive_is_fun(cls f: @11, $A$ cls a: @12, cls n: @21) using fun_composite_recursive_call {
+theorem fun_iterated_is_fun(cls f: @11, $A$ cls a: @12, cls n: @21) using fun_iterated_call {
 	is_fun(f, a, a), in(n, omega) |-
 		$fun_dom = fun_dom[@h1];
 		
@@ -1047,30 +1047,30 @@ theorem fun_composite_recursive_is_fun(cls f: @11, $A$ cls a: @12, cls n: @21) u
 			$x_in_a = in_eq_right_1[@h3; $fun_dom];
 
 			in_eq_right_1[
-				funcall_in_codomain[Ae1[fun_composite_recursive_ird[@h1; $x_in_a]]; @h2]
-				[as in(fun_composite_recursive_call(f, n, x), rel_dom(f))];
+				funcall_in_codomain[Ae1[fun_iterated_ird[@h1; $x_in_a]]; @h2]
+				[as in(fun_iterated_call(f, n, x), rel_dom(f))];
 				fun_dom[@h1]
 			]
-		]]][as is_fun(fun_composite_recursive(f, n), rel_dom(f), a)];
+		]]][as is_fun(fun_iterated(f, n), rel_dom(f), a)];
 		
 		ax_indiscernible_m1(
-			($B$ cls b) => is_fun(fun_composite_recursive(f, n), b, a),
+			($B$ cls b) => is_fun(fun_iterated(f, n), b, a),
 			?, ?
 		)[$fun_dom; $dom_to_a]
 }
 
-theorem fun_composite_recursive_im_base(cls f: @11, $A$ cls a: @12, $B$ cls b: @21) {
+theorem fun_iterated_im_base(cls f: @11, $A$ cls a: @12, $B$ cls b: @21) {
 	is_fun(f, a, a), subseteq(b, a) |-
-		$f0_is_fun = fun_composite_recursive_is_fun[
+		$f0_is_fun = fun_iterated_is_fun[
 			@h1;
 			zero_in_omega()
 		];
 		
 		$foo = Ui[(cls y) => {
-			$c1 = cp[in(y, rel_im_set(fun_composite_recursive(f, ord_zero), b)) |-
+			$c1 = cp[in(y, rel_im_set(fun_iterated(f, ord_zero), b)) |-
 				$xy_in_f0 = setbuilder_e[@h3];
 
-				$U = Ui[(cls x) => cp2[in(x, b), in(pair(x, y), fun_composite_recursive(f, ord_zero)) |-
+				$U = Ui[(cls x) => cp2[in(x, b), in(pair(x, y), fun_iterated(f, ord_zero)) |-
 					$x_in_a = in_subseteq[@h4; @h2];
 
 					$y_is_x = eq_transitive[
@@ -1078,7 +1078,7 @@ theorem fun_composite_recursive_im_base(cls f: @11, $A$ cls a: @12, $B$ cls b: @
 							$f0_is_fun;
 							@h5
 						];
-						fun_composite_recursive_base[@h1; in_subseteq[@h4; @h2]]
+						fun_iterated_base[@h1; in_subseteq[@h4; @h2]]
 					];
 
 					in_eq_left_2[@h4; $y_is_x]
@@ -1093,27 +1093,27 @@ theorem fun_composite_recursive_im_base(cls f: @11, $A$ cls a: @12, $B$ cls b: @
 					funcall_def[$f0_is_fun; $y_in_a];
 					pair_eq_i[
 						eq_reflexive(y);
-						fun_composite_recursive_base[@h1; $y_in_a]
+						fun_iterated_base[@h1; $y_in_a]
 					]
 				];
 
 				setbuilder_i[
 					set_i[@h3];
-					Xi((cls x) => A(in(x, b), in(pair(x, y), fun_composite_recursive(f, ord_zero))), y)[Ai[@h3; $yy_in_f0]]
-				][as in(y, rel_im_set(fun_composite_recursive(f, ord_zero), b))]
+					Xi((cls x) => A(in(x, b), in(pair(x, y), fun_iterated(f, ord_zero))), y)[Ai[@h3; $yy_in_f0]]
+				][as in(y, rel_im_set(fun_iterated(f, ord_zero), b))]
 			];
 
 			Ei[$c1; $c2]
 		}];
 		
-		eq_i(rel_im_set(fun_composite_recursive(f, ord_zero), b), b)[$foo]
+		eq_i(rel_im_set(fun_iterated(f, ord_zero), b), b)[$foo]
 }
 
 theorem schroeder_bernstein_1($A$ cls a: @12, $B$ cls b: @13, cls f: @11, cls g: @21) {
 	is_injection(f, a, b), is_injection(g, b, a) |-
 		with ($A^\ast$ cls aa = bigcup2(omega, (cls n) => {
 			rel_im_set(
-				fun_composite_recursive(rel_composite(g, f), n),
+				fun_iterated(rel_composite(g, f), n),
 				setminus(a, rel_im(g))
 			)
 		})) {
@@ -1145,9 +1145,9 @@ theorem schroeder_bernstein_1($A$ cls a: @12, $B$ cls b: @13, cls f: @11, cls g:
 							$g_inv_is_function = Ae1[$g_inv_is_bijection];
 							
 							$gf_is_fun = fun_composite_is_fun[$f_is_fun; $g_is_fun];
-							$f0_is_fun = fun_composite_recursive_is_fun[$gf_is_fun; zero_in_omega()];
+							$f0_is_fun = fun_iterated_is_fun[$gf_is_fun; zero_in_omega()];
 							
-							$0 = fun_composite_recursive_im_base[
+							$0 = fun_iterated_im_base[
 								$gf_is_fun;
 								setminus_is_smaller(a, rel_im(g))
 							];
@@ -1184,7 +1184,7 @@ schema schroeder_bernstein_2($A$ cls a, $B$ cls b, cls f, cls g) {
 	is_injection(f, a, b), is_injection(g, b, a) |-
 		with ($A^\ast$ cls aa = bigcup2(omega, (cls n) => {
 			rel_im_set(
-				fun_composite_recursive(rel_composite(g, f), n),
+				fun_iterated(rel_composite(g, f), n),
 				setminus(a, rel_im(g))
 			)
 		})) {
