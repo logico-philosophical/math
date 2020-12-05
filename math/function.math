@@ -131,7 +131,6 @@ theorem fun_composite_is_fun(cls f: @11, cls g: @21, $A$ cls a: @12, $B$ cls b: 
 			$c23 = Ui[(cls x) => cp[in(x, a) |-
 				$fXq = mp[@h3; Ue(?, x)[Ae2[@h1]]];
 				$fX = Ae1[$fXq];
-				$fQ = Ae2[$fXq];
 				
 				$c2 = mpX_Xe_p(?, Xin(c, (cls z) => in(pair(x, z), rel_composite(g, f))))[
 					$fX;
@@ -149,6 +148,8 @@ theorem fun_composite_is_fun(cls f: @11, cls g: @21, $A$ cls a: @12, $B$ cls b: 
 						]
 					]]
 				];
+
+				$fQ = Ae2[$fXq];
 				
 				$c3 = Ui2[(cls z1, cls z2) => cp2[in(pair(x, z1), h), in(pair(x, z2), h) |-
 					mpX_Xe_p(?, eq(z1, z2))[
