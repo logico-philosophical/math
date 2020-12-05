@@ -482,7 +482,7 @@ st is_surjection(cls f, $A$ cls a, $B$ cls b) {
 	)
 }
 
-theorem surjection_i(cls f: @11, $A$ cls a: @12, $B$ cls b: @13) {
+theorem fun_to_surjection(cls f: @11, $A$ cls a: @12, $B$ cls b: @13) {
 	is_fun(f, a, b) |-
 		with ($B'$ cls b2 = rel_im(f)) {
 			$c1 = rel_U(is_in(cartesian(a, rel_im(f))), ?)[
@@ -621,7 +621,7 @@ theorem bijection_is_injection(cls f: @11, $A$ cls a: @12, $B$ cls b: @13) {
 theorem injection_to_bijection(cls f: @11, $A$ cls a: @12, $B$ cls b: @13) {
 	is_injection(f, a, b) |-
 		$f_is_fun = Ae1[@h1];
-		$surjection = surjection_i[$f_is_fun];
+		$surjection = fun_to_surjection[$f_is_fun];
 		$fun = Ae1[$surjection];
 		$f_is_inj = Ae2[@h1];
 		
