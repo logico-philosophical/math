@@ -106,6 +106,38 @@ theorem fun_is_rel(cls f: @11, $A$ cls a: @12, $B$ cls b: @13) {
 	]
 }
 
+theorem fun_composite_is_fun_1(cls f, cls g, $A$ cls a, $B$ cls b, $C$ cls c) {
+	Uin(a, (cls x) => {
+		Xin(b, (cls y) => in(pair(x, y), f))
+	}),
+	Uin(b, (cls y) => {
+		Xin(c, (cls z) => in(pair(y, z), g))
+	}) |-
+		with (cls h = rel_composite(g, f)) {
+			Ui[(cls x) => cp[in(x, a) |-
+				$fX = mp[@h3; Ue(?, x)[@h1]];
+				
+				mpX_Xe_p(?, Xin(c, (cls z) => in(pair(x, z), rel_composite(g, f))))[
+					$fX;
+					Ui[(cls y) => cp2[in(y, b), in(pair(x, y), f) |-
+						$gX = mp[@h4; Ue(?, y)[@h2]];
+
+						mpXin(?, ?, (cls z) => in(pair(x, z), rel_composite(g, f)))[
+							$gX;
+							Ui[(cls z) => cp[in(z, c) |-
+								cp[in(pair(y, z), g) |-
+									rel_composite_in_i[@h5; @h7]
+								]
+							]]
+						]
+					]]
+				]
+			]][as Uin(a, (cls x) => {
+				Xin(c, (cls z) => in(pair(x, z), h))
+			})]
+		}
+}
+
 theorem fun_composite_is_fun(cls f: @11, cls g: @21, $A$ cls a: @12, $B$ cls b: @13, $C$ cls c: @23) {
 	is_fun(f, a, b), is_fun(g, b, c) |-
 		with (cls h = rel_composite(g, f)) {
