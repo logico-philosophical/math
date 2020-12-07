@@ -490,6 +490,15 @@ st Q(pr f) {
 	})
 }
 
+theorem NX_to_Q(pr f: @111) {
+	N(X(f)) |-
+		Ui2[(cls x, cls y) => cp2[f(x), f(y) |-
+			$Nfx = Ue(?, x)[NX_to_UN[@h1]];
+			
+			Fe(eq(x, y))[Fi[@h2; $Nfx]]
+		]][as Q(f)]
+}
+
 theorem Qi(pr f) {
 	X((cls c) => {
 		U((cls x) => {
