@@ -337,9 +337,9 @@ theorem fun_im_in_codomain(cls f: @11, $A$ cls a: @12, $B$ cls b: @13) {
 		]][as subseteq(rel_im(f), b)]
 }
 
-"매개변수가 하나인 메타함수로 함수를 만든다."
+"매개변수가 하나인 메타함수로 함수를 만든다. 함수를 [$x\mapsto x^2]처럼 표현하는 것과 비슷한 방식이다."
 $\left[#1\right]_{<<\in>>#2}$
-cls make_fun(fun f, $A$ cls a) {
+cls map(fun f, $A$ cls a) {
 	setbuilder2(
 		(cls z) => {
 			pair(z, f(z))
@@ -350,39 +350,39 @@ cls make_fun(fun f, $A$ cls a) {
 	)
 }
 
-theorem make_fun_in_i(fun f: @r21, $A$ cls a: @32, cls z: @11) {
+theorem map_in_i(fun f: @r21, $A$ cls a: @32, cls z: @11) {
 	set(z), set(f(z)), in(z, a) |-
 		setbuilder2_i(?, ?, z)[
 			pair_set_i[@h1; @h2]; @h3
-		][as in(pair(z, f(z)), make_fun(f, a))]
+		][as in(pair(z, f(z)), map(f, a))]
 }
 
-theorem make_fun_is_fun(fun f: @r11, $A$ cls a: @r2, $B$ cls b: @r3) {
+theorem map_is_fun(fun f: @r11, $A$ cls a: @r2, $B$ cls b: @r3) {
 	Uin(a, (cls x) => {
 		in(f(x), b)
 	}) |-
-		$c1 = Ui[(cls w) => cp[in(w, make_fun(f, a)) |-
+		$c1 = Ui[(cls w) => cp[in(w, map(f, a)) |-
 			mpX_Xe_p(?, in(w, cartesian(a, b)))[
 				setbuilder_e[@h2];
 				Ui[(cls z) => cp2[eq(w, pair(z, f(z))), in(z, a) |-
 					in_eq_left_2[cartesian_in_i[@h4; mp[@h4; Ue(?, z)[@h1]]]; @h3]]]
 			]
-		]][as subseteq(make_fun(f, a), cartesian(a, b))];
+		]][as subseteq(map(f, a), cartesian(a, b))];
 		
 		$c23 = Ui[(cls x) => cp[in(x, a) |-
 			$fx_in_b = mp[@h2; Ue(?, x)[@h1]];
 			$c2 = Xi((cls y) => {
-				A(in(y, b), in(pair(x, y), make_fun(f, a)))
+				A(in(y, b), in(pair(x, y), map(f, a)))
 			}, f(x))[
 				Ai[
 					$fx_in_b;
 					setbuilder2_i(?, ?, x)[pair_set_i[set_i[@h2]; set_i[$fx_in_b]]; @h2]
-					[as in(pair(x, f(x)), make_fun(f, a))]
+					[as in(pair(x, f(x)), map(f, a))]
 				]
 			];
 			
-			$c3 = Qim((cls y) => in(pair(x, y), make_fun(f, a)), f(x))[
-				Ui[(cls y) => cp[in(pair(x, y), make_fun(f, a)) |-
+			$c3 = Qim((cls y) => in(pair(x, y), map(f, a)), f(x))[
+				Ui[(cls y) => cp[in(pair(x, y), map(f, a)) |-
 					mpX_Xe_p(?, eq(y, f(x)))[
 						setbuilder_e[@h3];
 						Ui[(cls z) => cp[A(eq(pair(x, y), pair(z, f(z))), in(z, a)) |-
@@ -400,23 +400,23 @@ theorem make_fun_is_fun(fun f: @r11, $A$ cls a: @r2, $B$ cls b: @r3) {
 			Ai[$c2; $c3]
 		]];
 		
-		Ai[$c1; $c23][as is_fun(make_fun(f, a), a, b)]
+		Ai[$c1; $c23][as is_fun(map(f, a), a, b)]
 }
 
-theorem make_fun_funcall(fun f: @r111, $A$ cls a: @22, $B$ cls b, cls x: @21) {
+theorem map_funcall(fun f: @r111, $A$ cls a: @22, $B$ cls b, cls x: @21) {
 	Uin(a, (cls x) => in(f(x), b)), in(x, a) |-
 		eq_symmetric[funcall_i[
-			make_fun_is_fun(f, a, b)[@h1];
+			map_is_fun(f, a, b)[@h1];
 			setbuilder2_i(?, ?, x)[
 				pair_set_i[set_i[@h2]; set_i[mp[@h2; Ue(?, x)[@h1]]]];
 				@h2
-			][as in(pair(x, f(x)), make_fun(f, a))]
+			][as in(pair(x, f(x)), map(f, a))]
 		]]
 }
 
-"매개변수가 두 개인 메타함수로 함수를 만든다."
+"매개변수가 두 개인 메타함수로 함수를 만든다. 함수를 [$.(x, y)\mapsto x^2 + y^2]처럼 표현하는 것과 비슷한 방식이다."
 $\left[#1\right]_{<<\in>>#2 \times #3}$
-cls make_fun_pair([(cls, cls) -> cls] f, $A$ cls a, $B$ cls b) {
+cls map_pair([(cls, cls) -> cls] f, $A$ cls a, $B$ cls b) {
 	setbuilder2_pair(
 		(cls x, cls y) => {
 			pair(pair(x, y), f(x, y))
@@ -430,11 +430,11 @@ cls make_fun_pair([(cls, cls) -> cls] f, $A$ cls a, $B$ cls b) {
 "집합 [$A] 상에서의 항등함수(identity function)."
 $<<\operatorname{id}>>_{#1}$
 cls fun_id($A$ cls a) {
-	make_fun((cls x) => x, a)
+	map((cls x) => x, a)
 }
 
 theorem fun_id_is_fun($A$ cls a) {
-	make_fun_is_fun(
+	map_is_fun(
 		(cls x) => x,
 		a, a
 	)[Ui[(cls x) => Ipp(in(x, a))]]
@@ -443,7 +443,7 @@ theorem fun_id_is_fun($A$ cls a) {
 
 theorem fun_id_funcall($A$ cls a: @12, cls x: @11) {
 	in(x, a) |-
-		make_fun_funcall((cls x) => x, a, a, x)[
+		map_funcall((cls x) => x, a, a, x)[
 			Ui[(cls x) => Ipp(in(x, a))];
 			@h1
 		][as eq(funcall(fun_id(a), x), x)]
@@ -486,7 +486,7 @@ theorem fun_id_im_set($A$ cls a: @12, $B$ cls b: @11) {
 					$y_in_a = in_subseteq[@h2; @h1];
 					$set_y = set_i[@h2];
 
-					$yy_in_id = make_fun_in_i((cls x) => x, a, y)[$set_y; $set_y; $y_in_a]
+					$yy_in_id = map_in_i((cls x) => x, a, y)[$set_y; $set_y; $y_in_a]
 					[as in(pair(y, y), f)];
 
 					setbuilder_i[

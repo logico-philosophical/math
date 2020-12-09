@@ -329,7 +329,7 @@ sealed cls define_recursively($A$ cls a, cls c, cls f) {
 
 "메타함수 [$f]를 위한 define_recursively."
 cls define_recursively_m($A$ cls a, cls c, fun f) {
-	define_recursively(a, c, make_fun(f, a))
+	define_recursively(a, c, map(f, a))
 }
 
 "is_recursive_supset의 첫 번째 조건. 즉 [$\gamma\subseteq\omega\times A]이다.
@@ -810,10 +810,10 @@ theorem recursion_theorem_7($A$ cls a: @12, cls c: @11, cls f: @21) {
 theorem recursion_theorem_7m($A$ cls a: @12, cls c: @11, fun f: @r4) {
 	in(c, a), Uin(a, ($\gamma$ cls g) => in(f(g), a)) |-
 		with ($\gamma$ cls g = define_recursively_m(a, c, f)) {
-			$make_fun_f_is_fun = make_fun_is_fun(f, a, a)[@h2];
+			$map_f_is_fun = map_is_fun(f, a, a)[@h2];
 			
-			$ird = recursion_theorem_7[@h1; $make_fun_f_is_fun]
-			[as is_recursively_defined(g, a, c, make_fun(f, a))];
+			$ird = recursion_theorem_7[@h1; $map_f_is_fun]
+			[as is_recursively_defined(g, a, c, map(f, a))];
 			
 			$is_fun = Ae1[$ird];
 			
@@ -822,7 +822,7 @@ theorem recursion_theorem_7m($A$ cls a: @12, cls c: @11, fun f: @r4) {
 			$step = Ae2[$rec];
 			
 			$newstep = Ui[(cls n) => cp[in(n, omega) |-
-				eq_transitive[mp[@h3; Ue(?, n)[$step]]; make_fun_funcall(f, a, a, ?)[@h2; funcall_in_codomain[$is_fun; @h3]]]
+				eq_transitive[mp[@h3; Ue(?, n)[$step]]; map_funcall(f, a, a, ?)[@h2; funcall_in_codomain[$is_fun; @h3]]]
 			]];
 			
 			Ai[$is_fun; Ai[$base; $newstep]]
@@ -885,14 +885,14 @@ cls omega_add_unary(cls n) {
 }
 
 theorem successor_is_fun() {
-	make_fun_is_fun(($\gamma$ cls g) => successor(g), omega, omega)[
+	map_is_fun(($\gamma$ cls g) => successor(g), omega, omega)[
 		Ui[($\gamma$ cls g) => cp[in(g, omega) |- successor_in_omega[@h1]]]
 	]
 }
 
 theorem successor_funcall(cls n: @11) {
 	in(n, omega) |-
-		make_fun_funcall(
+		map_funcall(
 			($\gamma$ cls g) => successor(g),
 			omega, omega, ?
 		)[
@@ -1005,7 +1005,7 @@ sealed cls fun_iterated_call(cls f, cls n, cls x) {
 "반복합성함수(iterated function). 자기함수(endofunction) [$f]의 합성을 [$n]번 한 것이다. [$f]가 자기함수일 때만 제대로 정의된다."
 ${#1}^{#2}{}^{\scriptscriptstyle<<\dag>>}$
 cls fun_iterated(cls f, cls n) {
-	make_fun((cls x) => fun_iterated_call(f, n, x), rel_dom(f))
+	map((cls x) => fun_iterated_call(f, n, x), rel_dom(f))
 }
 
 theorem fun_iterated_def(cls f: @11, $A$ cls a: @12, cls n: @21, cls x: @31) using fun_iterated_call {
@@ -1023,7 +1023,7 @@ theorem fun_iterated_def(cls f: @11, $A$ cls a: @12, cls n: @21, cls x: @31) usi
 			]
 		]];
 		
-		make_fun_funcall(?, ?, a, ?)[$dom_to_a; in_eq_right_2[@h3; $fun_dom]]
+		map_funcall(?, ?, a, ?)[$dom_to_a; in_eq_right_2[@h3; $fun_dom]]
 		[as eq(
 			funcall(fun_iterated(f, n), x),
 			fun_iterated_call(f, n, x)
@@ -1043,7 +1043,7 @@ theorem fun_iterated_is_fun(cls f: @11, $A$ cls a: @12, cls n: @21) using fun_it
 	is_fun(f, a, a), in(n, omega) |-
 		$fun_dom = fun_dom[@h1];
 		
-		$dom_to_a = make_fun_is_fun[Ui[(cls x) => cp[in(x, rel_dom(f)) |-
+		$dom_to_a = map_is_fun[Ui[(cls x) => cp[in(x, rel_dom(f)) |-
 			$x_in_a = in_eq_right_1[@h3; $fun_dom];
 
 			in_eq_right_1[
@@ -1122,7 +1122,7 @@ theorem schroeder_bernstein_1($A$ cls a: @12, $B$ cls b: @13, cls f: @11, cls g:
 				funcall(f, x),
 				funcall(rel_inverse(g), x)
 			)) {
-				with (cls h = make_fun(hh, a)) {
+				with (cls h = map(hh, a)) {
 					$f_is_fun = Ae1[@h1];
 					$g_is_fun = Ae1[@h2];
 
@@ -1173,7 +1173,7 @@ theorem schroeder_bernstein_1($A$ cls a: @12, $B$ cls b: @13, cls f: @11, cls g:
 						Oe[$b; $c1; $c2]
 					]];
 					
-					make_fun_is_fun[$y_in_b]
+					map_is_fun[$y_in_b]
 					[as is_fun(h, a, b)]
 				}
 			}
@@ -1188,7 +1188,7 @@ schema schroeder_bernstein_2($A$ cls a, $B$ cls b, cls f, cls g) {
 				setminus(a, rel_im(g))
 			)
 		})) {
-			with (cls h = make_fun(
+			with (cls h = map(
 				(cls x) => if(
 					in(x, aa),
 					funcall(f, x),
