@@ -212,7 +212,7 @@ theorem setbuilder_pair_e(pr2 f: @121, cls a: @111, cls b: @112) {
 
 "순서쌍을 위한 setbuilder2. 즉 [$\{f(a, b): g(a, b)\}]이다."
 $\left\{#1<<:>>#2\right\}$
-cls setbuilder2_pair([(cls, cls) -> cls] f, pr2 g) {
+cls setbuilder2_pair(fun2 f, pr2 g) {
 	setbuilder((cls z) => {
 		X2((cls a, cls b) => {
 			A(

@@ -416,7 +416,7 @@ theorem map_funcall(fun f: @r111, $A$ cls a: @22, $B$ cls b, cls x: @21) {
 
 "매개변수가 두 개인 메타함수로 함수를 만든다. 함수를 [$.(x, y)\mapsto x^2 + y^2]처럼 표현하는 것과 비슷한 방식이다."
 $\left[#1\right]_{<<\in>>#2 \times #3}$
-cls map_pair([(cls, cls) -> cls] f, $A$ cls a, $B$ cls b) {
+cls map2(fun2 f, $A$ cls a, $B$ cls b) {
 	setbuilder2_pair(
 		(cls x, cls y) => {
 			pair(pair(x, y), f(x, y))
