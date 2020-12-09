@@ -333,6 +333,13 @@ theorem Uin_subset($A$ cls a: @11, $B$ cls b: @12, pr f: @22) {
 		[as Uin(a, f)]
 }
 
+theorem U_to_Uin($A$ cls a: @r1, pr f: @11) {
+	U(f) |-
+		Ui[(cls z) => cp[in(z, a) |-
+			Ue(?, z)[@h1]
+		]][as Uin(a, f)]
+}
+
 theorem UUin_to_UinU($A$ cls a, pr2 f) {
 	U((cls z) => {
 		Uin(a, (cls w) => f(z, w))

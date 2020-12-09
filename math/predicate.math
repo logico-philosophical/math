@@ -113,6 +113,11 @@ st X(pr f) {
 	N(U(Nf(f)))
 }
 
+$!<prec=249><<\nexists>>#1$
+st NX(pr f) {
+	N(X(f))
+}
+
 "pr2를 위한 존재 양화. X에 의존한다."
 $!<prec=249><<\exists^2>>#1$
 st X2(pr2 f) {
@@ -126,7 +131,7 @@ theorem NX_to_UN(pr f: @111) {
 }
 
 theorem UN_to_NX(pr f: @111) {
-	U(Nf(f)) |- NNi[@h1][as N(X(f))]
+	U(Nf(f)) |- NNi[@h1][as NX(f)]
 }
 
 "보편 양화 도입(universal introduction)."
