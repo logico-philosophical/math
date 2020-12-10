@@ -19,6 +19,16 @@ module.exports = {
 			file: 'code'
 		},
 		{
+			name: '문법',
+			dir: 'syntax',
+			list: [
+				{
+					name: 'import',
+					file: 'import'
+				}
+			]
+		},
+		{
 			name: '우선순위',
 			file: 'precedence'
 		},
