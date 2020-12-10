@@ -1,5 +1,5 @@
 import PegInterface from './PegInterface';
-import { EvaluableObject, LineObject } from './PegInterfaceDefinitions';
+import { EvaluableObject, ImportOrLineObject } from './PegInterfaceDefinitions';
 import ProofExplorer from './ProofExplorer';
 import Scope from './Scope';
 
@@ -40,7 +40,7 @@ export default class Program {
 		return scope;
 	}
 
-	public async feed(lines: LineObject[], scope: Scope=this.scope, loader) {
+	public async feed(lines: ImportOrLineObject[], scope: Scope=this.scope, loader) {
 		for (var i = 0; i < lines.length; i++) {
 			var line = lines[i];
 			

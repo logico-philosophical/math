@@ -1,9 +1,11 @@
 start =
-	_ lines:(a:line _ {return a})* {return lines}
+	_
+	imports:(i:import _ {return i})*
+	lines:(a:line _ {return a})*
+	{return imports.concat(lines)}
 
 line =
-	import
-	/ typedef
+	typedef
 	/ defv
 	/ defun
 	/ defschema

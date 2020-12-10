@@ -1,7 +1,8 @@
 import { SchemaType } from "./nodes/Schema";
 
-export type LineObject = ImportObject
-		| TypedefObject
+export type ImportOrLineObject = ImportObject | LineObject;
+
+export type LineObject = TypedefObject
 		| DefvObject
 		| DefunObject
 		| DefschemaObject;
