@@ -11,9 +11,21 @@ interface LoaderReturnType {
 type LoaderType = (packageName: string) => (LoaderReturnType | Promise<LoaderReturnType>);
 
 export default class Program {
+	
 	public scope: Scope;
 	public readonly parser;
 	public readonly scopeMap: Map<string, Scope> = new Map();
+
+	/**
+	 * A temporary list used by {@link loadModuleInternal} method.
+	 * 
+	 * This is the list of filenames of the files with a temporary mark during a
+	 * depth-first topological sort. Node that the file is considered to be
+	 * marked with a permanent mark if {@code this.scopeMap} has the filename.
+	 * 
+	 * See https://en.wikipedia.org/wiki/Topological_sorting#Depth-first_search.
+	 */
+	private loadingModules: string[];
 	
 	constructor (parser) {
 		if (!parser) throw Error('no');
@@ -21,13 +33,31 @@ export default class Program {
 	}
 
 	public async loadModule(filename: string, loader: LoaderType): Promise<Scope> {
+		this.loadingModules = [];
 		return this.scope = await this.loadModuleInternal(filename, loader);
 	}
 
 	private async loadModuleInternal(filename: string, loader: LoaderType): Promise<Scope> {
+		// the file has a permanent mark
 		if (this.scopeMap.has(filename)) {
 			return this.scopeMap.get(filename);
 		}
+
+		var loadingModuleIndex = this.loadingModules.indexOf(filename);
+
+		// the file has a temporary mark
+		if (loadingModuleIndex >= 0) {
+			if (loadingModuleIndex == this.loadingModules.length - 1) {
+				throw Error(`Cannot self import (${filename})`);
+			}
+
+			var cycle = this.loadingModules.slice(loadingModuleIndex).concat(filename);
+
+			throw Error(`Circular import detected (${cycle.join(' -> ')}). Sadly, circular import is currently not supported.`);
+		}
+
+		// mark the file with a temporary mark
+		this.loadingModules.push(filename);
 
 		var {fileUri, code} = await loader(filename);
 
@@ -36,11 +66,17 @@ export default class Program {
 
 		await this.feed(parsed, scope, loader);
 
+		// remove temporary mark
+		if (this.loadingModules.pop() != filename) {
+			throw Error('Something\'s wrong');
+		}
+
+		// mark the file with a permanent mark
 		this.scopeMap.set(filename, scope);
 		return scope;
 	}
 
-	public async feed(lines: ImportOrLineObject[], scope: Scope=this.scope, loader) {
+	public async feed(lines: ImportOrLineObject[], scope: Scope=this.scope, loader: LoaderType) {
 		for (var i = 0; i < lines.length; i++) {
 			var line = lines[i];
 			
