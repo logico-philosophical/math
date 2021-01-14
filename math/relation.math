@@ -321,7 +321,7 @@ theorem rel_dom_in_i($R$ cls r: @12, cls x: @111, cls y: @112) {
 		
 		setbuilder_i[
 			$set_x;
-			Xi((cls y) => {in(pair(x, y), r)}, y)[@h1]
+			Xi((cls y) => in(pair(x, y), r), y)[@h1]
 		][as in(x, rel_dom(r))]
 }
 
@@ -547,7 +547,7 @@ st is_equiv_rel($R$ cls r, $A$ cls a) {
 예를 들어 [$\Z_6 = \{1, 2, 3, 4, 5, 6\}] 상에서 [$a\sim b]가 [$a\equiv b\pmod 3]으로 정의될 때 [$`[1]_{\Z_6, \sim} = \{1, 4\}`]가 된다."
 $\left[#1\right]_{#2,#3}^{\scriptscriptstyle<<\dag>>}$
 cls equiv_cls(cls x, $A$ cls a, ${\sim}$ cls r) {
-	subsetbuilder(a, (cls z) => {rel_call(r, z, x)})
+	subsetbuilder(a, (cls z) => rel_call(r, z, x))
 }
 
 "몫집합(quotient set).

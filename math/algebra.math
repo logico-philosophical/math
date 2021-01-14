@@ -135,23 +135,23 @@ cls identity_element($S$ cls s, $\ast$ cls f) {
 }
 
 theorem identity_element_def($S$ cls s, $\ast$ cls f) {
-	X((cls e) => {is_identity_element(e, s, f)}) |-
+	X((cls e) => is_identity_element(e, s, f)) |-
 		instantiate_def[XQ_to_Xq[@h1; identity_element_Q(s, f)]]
 		[as is_identity_element(identity_element(s, f), s, f)]
 }
 
 theorem identity_element_in($S$ cls s, $\ast$ cls f) {
-	X((cls e) => {is_identity_element(e, s, f)}) |-
+	X((cls e) => is_identity_element(e, s, f)) |-
 		Ae1[identity_element_def(s, f)[@h1]]
 }
 
 theorem identity_element_eq_1(cls a, $S$ cls s, $\ast$ cls f) {
-	in(a, s), X((cls e) => {is_identity_element(e, s, f)}) |-
+	in(a, s), X((cls e) => is_identity_element(e, s, f)) |-
 		Ae1[mp[@h1; Ue(?, a)[Ae2[identity_element_def(s, f)[@h2]]]]]
 }
 
 theorem identity_element_eq_2(cls a, $S$ cls s, $\ast$ cls f) {
-	in(a, s), X((cls e) => {is_identity_element(e, s, f)}) |-
+	in(a, s), X((cls e) => is_identity_element(e, s, f)) |-
 		Ae2[mp[@h1; Ue(?, a)[Ae2[identity_element_def(s, f)[@h2]]]]]
 }
 
