@@ -81,11 +81,12 @@ axiom luk3(st p: @111, st q: @121) {
 
 "이중부정 소거(double negation elimination)."
 theorem NNe(st p: @111) {
-	N(N(p)) |-
+	N(N(p)) |- {
 		mp[
 			Ti();
 			luk3[luk3[weaken(?, N(N(T)))[@h1]]]
 		]
+	}
 }
 
 "이중부정 도입(double negation introduction)."
@@ -95,13 +96,15 @@ theorem NNi(st p: @1) {
 
 "부정 도입(negation introduction). 귀류법(reductio ad absurdum)이라고도 한다."
 theorem Ni(st p: @11) using F {
-	I(p, F) |-
+	I(p, F) |- {
 		mp[Ti(); luk3[cp[N(N(p)) |- mp[NNe[@h2]; @h1]]]]
+	}
 }
 
 theorem Ni_alt(st p: @11) {
-	(p |- F) |-
+	(p |- F) |- {
 		Ni[cp[@h1]]
+	}
 }
 
 theorem Nec1(st p: @11, st q) {
@@ -114,8 +117,9 @@ theorem Ne(st p: @1, st q) {
 }
 
 theorem Nec2(st p: @1, st q: @r2) {
-	p |-
+	p |- {
 		cp[N(p) |- Ne(?, q)[@h1; @h2]]
+	}
 }
 
 "[$\bot]을 도입한다. falsum introduction이라 불러도 좋을 것이다."
@@ -134,31 +138,36 @@ theorem Fe(st p) {
 
 "후건 부정(modus tollens)."
 theorem mt(st p: @11, st q: @21) {
-	I(p, q), N(q) |-
-		Ni_alt[p |-
-			Fi[mp[@h3; @h1]; @h2]]
+	I(p, q), N(q) |- {
+		Ni_alt[p |- {
+			Fi[mp[@h3; @h1]; @h2]
+		}]
+	}
 }
 
 "선언 도입(disjunction introduction) 1."
 theorem Oi1(st p: @1, st q) using O {
-	p |-
+	p |- {
 		cp[N(p) |- Ne(?, q)[@h1; @h2]]
 		[as O(p, q)]
+	}
 }
 
 "선언 도입(disjunction introduction) 2."
 theorem Oi2(st p, st q: @1) using O {
-	q |-
+	q |- {
 		cp[N(p) |- @h1]
 		[as O(p, q)]
+	}
 }
 
 "선언 소거(disjunction elimination). proof by cases라고도 한다."
 theorem Oe(st p: @11, st q: @12, st r: @22) using O {
-	O(p, q), I(p, r), I(q, r) |-
-		NNe[Ni_alt[N(r) |-
+	O(p, q), I(p, r), I(q, r) |- {
+		NNe[Ni_alt[N(r) |- {
 			Fi[mp[mp[Ni_alt[p |- Fi[mp[@h5; @h2]; @h4]]; @h1]; @h3]; @h4]
-		]]
+		}]]
+	}
 }
 
 theorem Oe_alt(st p: @11, st q: @12, st r: @2r) {
@@ -176,8 +185,9 @@ theorem Ei(st p: @11, st q: @12) using E {
 
 "Ei의 다른 버전."
 theorem Ei_alt(st p: @11, st q: @21) {
-	(p |- q), (q |- p) |-
+	(p |- q), (q |- p) |- {
 		Ei[cp[@h1]; cp[@h2]]
+	}
 }
 
 "쌍조건문 소거(biconditional elimination) 1."
@@ -191,13 +201,15 @@ theorem Ee2(st p: @11, st q: @12) using E {
 }
 
 theorem cp2(st p: @11, st q: @12, st r: @1r) {
-	(p, q |- r) |-
+	(p, q |- r) |- {
 		cp[A(p, q) |- @h1[Ae1[@h2]; Ae2[@h2]]]
+	}
 }
 
 theorem A_flip(st p: @11, st q: @12) {
-	A(p, q) |-
+	A(p, q) |- {
 		Ai[Ae2[@h1]; Ae1[@h1]]
+	}
 }
 
 theorem E_flip(st p: @11, st q: @12) {
@@ -205,13 +217,15 @@ theorem E_flip(st p: @11, st q: @12) {
 }
 
 theorem mpE1(st p: @1, st q: @22) {
-	p, E(p, q) |-
+	p, E(p, q) |- {
 		mp[@h1; Ee1[@h2]]
+	}
 }
 
 theorem mpE2(st p: @1, st q: @21) {
-	p, E(q, p) |-
+	p, E(q, p) |- {
 		mp[@h1; Ee2[@h2]]
+	}
 }
 
 "가언적 삼단논법(hypothetical syllogism)."
@@ -223,8 +237,9 @@ theorem syll(st p: @11, st q: @12, st r: @22) {
 
 "syll을 두 번 적용한 것. 사단논법이라 해도 좋을 것이다."
 theorem syll4(st p: @11, st q: @21, st r: @31, st s: @32) {
-	I(p, q), I(q, r), I(r, s) |-
+	I(p, q), I(q, r), I(r, s) |- {
 		syll[syll[@h1; @h2]; @h3]
+	}
 }
 
 "E를 위한 syll."
@@ -242,8 +257,9 @@ theorem syllE(st p: @11, st q: @12, st r: @22) {
 }
 
 theorem syllE4(st p: @11, st q: @21, st r: @31, st s: @32) {
-	E(p, q), E(q, r), E(r, s) |-
+	E(p, q), E(q, r), E(r, s) |- {
 		syllE[syllE[@h1; @h2]; @h3]
+	}
 }
 
 "sequent calculus의 I 규칙 같은 것. 표현형식을 바꾸는 데 쓰이고 있다."
@@ -253,8 +269,9 @@ theorem id(st p) {
 
 "대우명제(contrapositive)를 유도한다."
 theorem contrapose(st p: @11, st q: @12) {
-	I(p, q) |-
+	I(p, q) |- {
 		cp[N(q) |- mt[@h1; @h2]]
+	}
 }
 
 "contrapose의 다른 버전."
@@ -263,36 +280,40 @@ theorem contrapose_alt(st p: @11, st q: @1r) {
 }
 
 theorem NO_to_AN(st p: @111, st q: @112) {
-	N(O(p, q)) |-
+	N(O(p, q)) |- {
 		Ai[
 			Ni_alt[
-				p |-
+				p |- {
 					Fi[
 						Oi1(?, q)[@h2];
 						@h1
 					]
+				}
 			];
 			Ni_alt[
-				q |-
+				q |- {
 					Fi[
 						Oi2(p, ?)[@h2];
 						@h1
 					]
+				}
 			]
 		]
+	}
 }
 
 theorem AN_to_NO(st p: @111, st q: @121) {
-	A(N(p), N(q)) |-
+	A(N(p), N(q)) |- {
 		Ni_alt[O(p, q) |- Oe[
 			@h2;
 			Fi_c[Ae1[@h1]];
 			Fi_c[Ae2[@h1]]
 		]]
+	}
 }
 
 theorem NA_to_ON(st p: @111, st q: @112) {
-	N(A(p, q)) |-
+	N(A(p, q)) |- {
 		NNe[Ni_alt[N(O(N(p), N(q))) |- Fi[
 			Ai[
 				NNe[Ae1[NO_to_AN[@h2]]];
@@ -300,10 +321,11 @@ theorem NA_to_ON(st p: @111, st q: @112) {
 			];
 			@h1
 		]]]
+	}
 }
 
 theorem ON_to_NA(st p: @111, st q: @112) {
-	O(N(p), N(q)) |-
+	O(N(p), N(q)) |- {
 		Ni_alt[A(p, q) |- Oe_alt[
 			@h1;
 			(N(p) |- Fi[
@@ -313,6 +335,7 @@ theorem ON_to_NA(st p: @111, st q: @112) {
 				Ae2[@h2]; @h3
 			])
 		]]
+	}
 }
 
 "무모순율(law of noncontradiction)."
@@ -347,71 +370,81 @@ theorem swap(st p: @11, st q: @121, st r: @122) {
 }
 
 theorem swap_m(st p: @11, st q: @121, st r: @122) {
-	I(p, I(q, r)), q |-
+	I(p, I(q, r)), q |- {
 		mp[@h2; swap[@h1]]
+	}
 }
 
 "currying."
 theorem curry(st p: @111, st q: @112, st r: @12) {
-	I(A(p, q), r) |-
+	I(A(p, q), r) |- {
 		cp[p |- cp[q |- mp[Ai[@h2; @h3]; @h1]]]
+	}
 }
 
 "uncurrying."
 theorem uncurry(st p: @11, st q: @121, st r: @122) {
-	I(p, I(q, r)) |-
+	I(p, I(q, r)) |- {
 		cp[A(p, q) |- mp[Ae2[@h2]; mp[Ae1[@h2]; @h1]]]
+	}
 }
 
 theorem O_flip(st p: @11, st q: @12) {
-	O(p, q) |-
+	O(p, q) |- {
 		Oe[
 			@h1;
 			cp[Oi2(q, p)];
 			cp[Oi1(q, p)]
 		]
+	}
 }
 
 theorem OI1(st p: @11, st q: @12, st r: @22) {
-	O(p, q), I(p, r) |-
+	O(p, q), I(p, r) |- {
 		Oe[
 			@h1;
 			cp[p |- Oi1(?, q)[mp[p; @h2]]];
 			cp[q |- Oi2(r, ?)[q]]
 		]
+	}
 }
 
 theorem OI2(st p: @11, st q: @12, st r: @22) {
-	O(p, q), I(q, r) |-
+	O(p, q), I(q, r) |- {
 		Oe[
 			@h1;
 			cp[p |- Oi1(?, r)[@h3]];
 			cp[q |- Oi2(p, ?)[mp[@h3; @h2]]]
 		]
+	}
 }
 
 theorem OI(st p: @11, st q: @12, st r: @22, st s: @32) {
-	O(p, q), I(p, r), I(q, s) |-
+	O(p, q), I(p, r), I(q, s) |- {
 		OI2[OI1[@h1; @h2]; @h3]
+	}
 }
 
 theorem Oe1(st p: @11, st q: @12) {
-	O(p, q), N(p) |-
+	O(p, q), N(p) |- {
 		NNe[Ni_alt[N(q) |- Fi[@h1; AN_to_NO[Ai[@h2; @h3]]]]]
+	}
 }
 
 theorem Oe2(st p: @11, st q: @12) {
-	O(p, q), N(q) |-
+	O(p, q), N(q) |- {
 		NNe[Ni_alt[N(p) |- Fi[@h1; AN_to_NO[Ai[@h3; @h2]]]]]
+	}
 }
 
 theorem O1Ai(st p: @11, st q: @21, st r: @12) {
-	O(p, r), O(q, r) |-
+	O(p, r), O(q, r) |- {
 		Oe[
 			lxm(r);
 			cp[r |- Oi2(A(p, q), ?)[@h3]];
 			cp[N(r) |- Oi1(?, r)[Ai[Oe2[@h1; @h3]; Oe2[@h2; @h3]]]]
 		]
+	}
 }
 
 theorem O2Ai(st p: @11, st q: @12, st r: @22) {
@@ -422,45 +455,52 @@ theorem O2Ai(st p: @11, st q: @12, st r: @22) {
 }
 
 theorem I_distribute_left(st p: @11, st q: @121, st r: @122) {
-	I(p, I(q, r)) |-
+	I(p, I(q, r)) |- {
 		cp[
-			I(p, q) |-
+			I(p, q) |- {
 				cp[p |- mp[mp[@h3; @h2]; mp[@h3; @h1]]]
+			}
 		]
+	}
 }
 
 theorem EAi(st p: @11, st q: @12, st r: @21, st s: @22) {
-	E(p ,q), E(r, s) |-
+	E(p ,q), E(r, s) |- {
 		Ei[
 			cp2[p, r |- Ai[mpE1[@h3; @h1]; mpE1[@h4; @h2]]];
 			cp2[q, s |- Ai[mpE2[@h3; @h1]; mpE2[@h4; @h2]]]
 		]
+	}
 }
 
 theorem EOi(st p: @11, st q: @12, st r: @21, st s: @22) {
-	E(p, q), E(r, s) |-
+	E(p, q), E(r, s) |- {
 		Ei_alt[
-			O(p, r) |-
+			O(p, r) |- {
 				Oe_alt[
 					@h3;
 					p |- Oi1(?, s)[mpE1[@h4; @h1]];
 					r |- Oi2(q, ?)[mpE1[@h4; @h2]]
-				];
-			O(q, s) |-
+				]
+			};
+			O(q, s) |- {
 				Oe_alt[
 					@h3;
 					q |- Oi1(?, r)[mpE2[@h4; @h1]];
 					s |- Oi2(p, ?)[mpE2[@h4; @h2]]
 				]
+			}
 		]
+	}
 }
 
 theorem DIpqEpApq(st p: @11, st q: @12) {
-	I(p, q) |-
+	I(p, q) |- {
 		Ei[
 			cp[p |- Ai[@h2; mp[@h2; @h1]]];
 			cp[A(p, q) |- Ae1[@h2]]
 		]
+	}
 }
 
 theorem Ipp(st p) {

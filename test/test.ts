@@ -18,7 +18,7 @@ describe('Program', function () {
 	[
 		'propositional', 'predicate', 'set',
 		'relation', 'function', 'natural',
-		'algebra'
+		'algebra', 'integer'
 	].forEach(name => {
 		it(`can load ${name}.math`, async function () {
 			await program.loadModule(name, (filename: string) => ({

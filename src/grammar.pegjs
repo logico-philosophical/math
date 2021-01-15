@@ -367,6 +367,34 @@ schemaexpr =
 		}
 	}
 
+tee =
+	left:(
+		l:(
+			head:metaexpr_internal_1 _
+			tail:("," _ e:metaexpr_internal_1 _ {return e})*
+			{return [head].concat(tail)}
+		)? {return l || []}
+	)
+	"|-" _
+	foo:(
+		expr:metaexpr_internal_0
+		{return {defdollars: [], expr}}
+		/ "{" _
+		defdollars: (d:defdollar _ {return d})* _
+		expr:metaexpr _
+		"}"
+		{return {defdollars, expr}}
+	)
+	{
+		return {
+			_type: 'tee',
+			def$s: foo.defdollars,
+			left,
+			right: foo.expr,
+			location: location()
+		}
+	}
+
 with =
 	'with' _ '(' _
 	tex:(tex __)?
@@ -399,29 +427,11 @@ with =
 	}
 
 metaexpr =
+	metaexpr_internal_0
+
+metaexpr_internal_0 =
 	tee
 	/ metaexpr_internal_1
-
-tee =
-	left:(
-		l:(
-			head:metaexpr_internal_1 _
-			tail:("," _ e:metaexpr_internal_1 _ {return e})*
-			{return [head].concat(tail)}
-		)? {return l || []}
-	)
-	"|-" _
-	defdollars: (d:defdollar _ {return d})* _
-	right:metaexpr
-	{
-		return {
-			_type: 'tee',
-			def$s: defdollars,
-			left,
-			right,
-			location: location()
-		}
-	}
 
 /*
  * 다음이 성립하여야 한다.
