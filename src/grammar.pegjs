@@ -399,6 +399,10 @@ with =
 	}
 
 metaexpr =
+	tee
+	/ metaexpr_internal_1
+
+tee =
 	left:(
 		l:(
 			head:metaexpr_internal_1 _
@@ -418,7 +422,6 @@ metaexpr =
 			location: location()
 		}
 	}
-	/ metaexpr_internal_1
 
 /*
  * 다음이 성립하여야 한다.
