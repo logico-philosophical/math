@@ -8,19 +8,7 @@ import relation;
 [$f\subseteq A\times B]이고 임의의 [$x\in A]에 대해 [$.(x, y)\in f]를 만족하는 유일한 [$y]가 존재한다는 뜻이다."
 $<<\mathop\mathrm{function}>>\left(#1: #2 \to #3\right)$
 st is_fun(cls f, $A$ cls a, $B$ cls b) {
-	A(
-		subseteq(f, cartesian(a, b)),
-		Uin(a, (cls x) => {
-			A(
-				Xin(b, (cls y) => {
-					in(pair(x, y), f)
-				}),
-				Q((cls y) => {
-					in(pair(x, y), f)
-				})
-			)
-		})
-	)
+	A(subseteq(f, cartesian(a, b)), Uin(a, (cls x) => A(Xin(b, (cls y) => in(pair(x, y), f)), Q((cls y) => in(pair(x, y), f)))))
 }
 
 "함수공간(function space)."
@@ -31,184 +19,222 @@ cls fun_set($A$ cls a, $B$ cls b) {
 
 theorem fun_set_in_i(cls f: @31, $A$ cls a: @11, $B$ cls b: @21) {
 	set(a), set(b), is_fun(f, a, b) |- {
-		setbuilder_i[
-			subset_is_set[
-				cartesian_is_set[@h1; @h2];
-				Ae1[@h3]
-			];
+		[
+			[
+				[@h1; @h2] > cartesian_is_set;
+				@h3 > Ae1
+			] > subset_is_set;
 			@h3
-		][as in(f, fun_set(a, b))]
+		] > setbuilder_i as in(f, fun_set(a, b))
 	}
 }
 
 theorem fun_set_subseteq_cartesian($A$ cls a, $B$ cls b) {
-	Ui[(cls f) => cp[in(f, fun_set(a, b)) |- {
-		setbuilder_i[
-			set_i[@h1];
-			Ae1[setbuilder_e[@h1]]
-		][as in(f, power(cartesian(a, b)))]
-	}]][as subseteq(fun_set(a, b), power(cartesian(a, b)))]
+	(cls f) => {
+		in(f, fun_set(a, b)) |- {
+			[
+				@h1 > set_i;
+				@h1 > setbuilder_e > Ae1
+			] > setbuilder_i as in(f, power(cartesian(a, b)))
+		} > cp
+	} > Ui as subseteq(fun_set(a, b), power(cartesian(a, b)))
 }
 
 theorem fun_subseteq_cartesian(cls f: @11, $A$ cls a: @12, $B$ cls b: @13) {
-	is_fun(f, a, b) |- Ae1[@h1]
+	is_fun(f, a, b) |- {
+		@h1 > Ae1
+	}
 }
 
 theorem fun_in_e1(cls f: @11, $A$ cls a: @12, $B$ cls b: @13, cls x: @211, cls y: @212) {
 	is_fun(f, a, b), in(pair(x, y), f) |- {
-		cartesian_in_e1[in_subseteq[@h2; fun_subseteq_cartesian[@h1]]]
+		[
+			@h2;
+			@h1 > fun_subseteq_cartesian
+		] > in_subseteq > cartesian_in_e1
 	}
 }
 
 theorem fun_im_Xq(cls f: @11, $A$ cls a: @12, $B$ cls b: @13) {
-	is_fun(f, a, b) |- Ae2[@h1]
+	is_fun(f, a, b) |- {
+		@h1 > Ae2
+	}
 }
 
 theorem fun_im_Xq_m(cls f: @11, $A$ cls a: @12, $B$ cls b: @13, cls x: @21) {
 	is_fun(f, a, b), in(x, a) |- {
-		mp[@h2; Ue(?, x)[fun_im_Xq[@h1]]]
+		[
+			@h2;
+			@h1 > fun_im_Xq > Ue(?, x)
+		] > mp
 	}
 }
 
 theorem fun_im_X(cls f: @11, $A$ cls a: @12, $B$ cls b: @13) {
 	is_fun(f, a, b) |- {
-		Ui[(cls x) => {
-			cp[in(x, a) |- {
-				Ae1[mp[@h2; Ue(?, x)[fun_im_Xq[@h1]]]]
-			}]
-		}]
-		[as Uin(a, (cls x) => Xin(b, (cls y) => in(pair(x, y), f)))]
+		(cls x) => {
+			in(x, a) |- {
+				[
+					@h2;
+					@h1 > fun_im_Xq > Ue(?, x)
+				] > mp > Ae1
+			} > cp
+		} > Ui as Uin(a, (cls x) => Xin(b, (cls y) => in(pair(x, y), f)))
 	}
 }
 
 theorem fun_im_X_m(cls f: @11, $A$ cls a: @12, $B$ cls b: @13, cls x: @21) {
 	is_fun(f, a, b), in(x, a) |- {
-		mp[@h2; Ue(?, x)[fun_im_X[@h1]]]
+		[
+			@h2;
+			@h1 > fun_im_X > Ue(?, x)
+		] > mp
 	}
 }
 
 theorem fun_im_Q(cls f: @11, $A$ cls a: @12, $B$ cls b: @13) {
 	is_fun(f, a, b) |- {
-		Ui[(cls x) => {
-			cp[in(x, a) |- {
-				Ae2[mp[@h2; Ue(?, x)[fun_im_Xq[@h1]]]]
-			}]
-		}]
-		[as Uin(a, (cls x) => Q((cls y) => in(pair(x, y), f)))]
+		(cls x) => {
+			in(x, a) |- {
+				[
+					@h2;
+					@h1 > fun_im_Xq > Ue(?, x)
+				] > mp > Ae2
+			} > cp
+		} > Ui as Uin(a, (cls x) => Q((cls y) => in(pair(x, y), f)))
 	}
 }
 
 theorem fun_im_Q_alt(cls f: @11, $A$ cls a: @12, $B$ cls b: @13) {
 	is_fun(f, a, b) |- {
-		Ui[(cls x) => {
+		(cls x) => {
 			$O = lxm(in(x, a));
 
-			$c1 = Ue(?, x)[fun_im_Q[@h1]];
+			$c1 = @h1 > fun_im_Q > Ue(?, x);
 
-			$c2 = cp[Nin(x, a) |- {
-				NX_to_Q[UN_to_NX((cls y) => in(pair(x, y), f))[Ui[(cls y) => Ni_alt[in(pair(x, y), f) |- {
-					Fi[
-						cartesian_in_e1[in_subseteq[
-							@h3;
-							fun_subseteq_cartesian[@h1]
-						]];
-						@h2
-					]
-				}]]]]
-			}];
+			$c2 = Nin(x, a) |- {
+				(cls y) => {
+					in(pair(x, y), f) |- {
+						[
+							[
+								@h3;
+								@h1 > fun_subseteq_cartesian
+							] > in_subseteq > cartesian_in_e1;
+							@h2
+						] > Fi
+					} > Ni_alt
+				} > Ui > UN_to_NX((cls y) => in(pair(x, y), f)) > NX_to_Q
+			} > cp;
 
-			Oe[$O; $c1; $c2]
-		}]
+			[$O; $c1; $c2] > Oe
+		} > Ui
 	}
 }
 
 theorem fun_im_Q_m(cls f: @11, $A$ cls a: @12, $B$ cls b: @13, cls x: @21, cls y1: @312, cls y2: @412) {
 	is_fun(f, a, b), in(x, a), in(pair(x, y1), f), in(pair(x, y2), f) |- {
-		mp[Ai[@h3; @h4]; Ue2(?, y1, y2)[mp[@h2; Ue(?, x)[fun_im_Q[@h1]]]]]
+		[
+			[@h3; @h4] > Ai;
+			[
+				@h2;
+				@h1 > fun_im_Q > Ue(?, x)
+			] > mp > Ue2(?, y1, y2)
+		] > mp
 	}
 }
 
 theorem fun_is_rel(cls f: @11, $A$ cls a: @12, $B$ cls b: @13) {
-	is_fun(f, a, b) |- rel_subset_is_rel[
-		fun_subseteq_cartesian(f, a, b)[@h1];
-		cartesian_is_rel(a, b)
-	]
+	is_fun(f, a, b) |- {
+		[
+			@h1 > fun_subseteq_cartesian(f, a, b);
+			cartesian_is_rel(a, b)
+		] > rel_subset_is_rel
+	}
 }
 
 theorem fun_composite_is_fun_1(cls f, cls g, $A$ cls a, $B$ cls b, $C$ cls c) {
-	Uin(a, (cls x) => {
-		Xin(b, (cls y) => in(pair(x, y), f))
-	}),
-	Uin(b, (cls y) => {
-		Xin(c, (cls z) => in(pair(y, z), g))
-	}) |- {
+	Uin(a, (cls x) => Xin(b, (cls y) => in(pair(x, y), f))),
+	Uin(b, (cls y) => Xin(c, (cls z) => in(pair(y, z), g))) |- {
 		with (cls h = rel_composite(g, f)) {
-			Ui[(cls x) => cp[in(x, a) |- {
-				$fX = mp[@h3; Ue(?, x)[@h1]];
-				
-				mpX_Xe_p(?, Xin(c, (cls z) => in(pair(x, z), rel_composite(g, f))))[
-					$fX;
-					Ui[(cls y) => cp2[in(y, b), in(pair(x, y), f) |- {
-						$gX = mp[@h4; Ue(?, y)[@h2]];
+			(cls x) => {
+				in(x, a) |- {
+					$fX = [
+						@h3;
+						@h1 > Ue(?, x)
+					] > mp;
 
-						mpXin(?, ?, (cls z) => in(pair(x, z), rel_composite(g, f)))[
-							$gX;
-							Ui[(cls z) => cp[in(z, c) |- {
-								cp[in(pair(y, z), g) |- {
-									rel_composite_in_i[@h5; @h7]
-								}]
-							}]]
-						]
-					}]]
-				]
-			}]][as Uin(a, (cls x) => {
-				Xin(c, (cls z) => in(pair(x, z), h))
-			})]
+					[
+						$fX;
+						(cls y) => {
+							in(y, b), in(pair(x, y), f) |- {
+								$gX = [
+									@h4;
+									@h2 > Ue(?, y)
+								] > mp;
+
+								[
+									$gX;
+									(cls z) => {
+										in(z, c) |- {
+											in(pair(y, z), g) |- {
+												[@h5; @h7] > rel_composite_in_i
+											} > cp
+										} > cp
+									} > Ui
+								] > mpXin(?, ?, (cls z) => in(pair(x, z), rel_composite(g, f)))
+							} > cp2
+						} > Ui
+					] > mpX_Xe_p(?, Xin(c, (cls z) => in(pair(x, z), rel_composite(g, f))))
+				} > cp
+			} > Ui as Uin(a, (cls x) => Xin(c, (cls z) => in(pair(x, z), h)))
 		}
 	}
 }
 
 theorem fun_composite_is_fun_2(cls f, cls g) {
-	U((cls x) => {
-		Q((cls y) => in(pair(x, y), f))
-	}),
-	U((cls y) => {
-		Q((cls z) => in(pair(y, z), g))
-	}) |- {
+	U((cls x) => Q((cls y) => in(pair(x, y), f))),
+	U((cls y) => Q((cls z) => in(pair(y, z), g))) |- {
 		with (cls h = rel_composite(g, f)) {
-			Ui[(cls x) => {
-				$fQ = Ue(?, x)[@h1];
+			(cls x) => {
+				$fQ = @h1 > Ue(?, x);
 
-				Ui2[(cls z1, cls z2) => cp2[in(pair(x, z1), h), in(pair(x, z2), h) |- {
-					$y1X = setbuilder_pair_e[@h3]
-					[as X((cls y1) => A(in(pair(x, y1), f), in(pair(y1, z1), g)))];
+				(cls z1, cls z2) => {
+					in(pair(x, z1), h), in(pair(x, z2), h) |- {
+						$y1X = @h3 > setbuilder_pair_e as X((cls y1) => A(in(pair(x, y1), f), in(pair(y1, z1), g)));
 
-					$y1U = Ui[(cls y1) => cp2[in(pair(x, y1), f), in(pair(y1, z1), g) |- {
-						$y2X = setbuilder_pair_e[@h4]
-						[as X((cls y2) => A(in(pair(x, y2), f), in(pair(y2, z2), g)))];
+						$y1U = (cls y1) => {
+							in(pair(x, y1), f), in(pair(y1, z1), g) |- {
+								$y2X = @h4 > setbuilder_pair_e as X((cls y2) => A(in(pair(x, y2), f), in(pair(y2, z2), g)));
 
-						$y2U = Ui[(cls y2) => cp2[in(pair(x, y2), f), in(pair(y2, z2), g) |- {
-							mp[
-								Ai[
-									@h6;
-									in_eq_left_2[
-										@h8;
-										pair_eq_i[
-											mp[Ai[@h5; @h7]; Ue2(?, y1, y2)[$fQ]];
-											eq_reflexive(z2)
-										]
-									]
-								];
-								Ue2(?, z1, z2)[Ue(?, y1)[@h2]]
-							]
-						}]];
+								$y2U = (cls y2) => {
+									in(pair(x, y2), f), in(pair(y2, z2), g) |- {
+										[
+											[
+												@h6;
+												[
+													@h8;
+													[
+														[
+															[@h5; @h7] > Ai;
+															$fQ > Ue2(?, y1, y2)
+														] > mp;
+														eq_reflexive(z2)
+													] > pair_eq_i
+												] > in_eq_left_2
+											] > Ai;
+											@h2 > Ue(?, y1) > Ue2(?, z1, z2)
+										] > mp
+									} > cp2
+								} > Ui;
 
-						mpX_Xe_p(?, eq(z1, z2))[$y2X; $y2U]
-					}]];
+								[$y2X; $y2U] > mpX_Xe_p(?, eq(z1, z2))
+							} > cp2
+						} > Ui;
 
-					mpX_Xe_p(?, eq(z1, z2))[$y1X; $y1U]
-				}]][as Q((cls z) => in(pair(x, z), h))]
-			}]
+						[$y1X; $y1U] > mpX_Xe_p(?, eq(z1, z2))
+					} > cp2
+				} > Ui2 as Q((cls z) => in(pair(x, z), h))
+			} > Ui
 		}
 	}
 }
@@ -216,66 +242,87 @@ theorem fun_composite_is_fun_2(cls f, cls g) {
 theorem fun_composite_is_fun(cls f: @11, cls g: @21, $A$ cls a: @12, $B$ cls b: @13, $C$ cls c: @23) {
 	is_fun(f, a, b), is_fun(g, b, c) |- {
 		with (cls h = rel_composite(g, f)) {
-			$h_is_rel = setbuilder_pair_is_rel[][as is_rel(h)];
+			$h_is_rel = [] > setbuilder_pair_is_rel as is_rel(h);
 
-			$c1 = rel_U(is_in(cartesian(a, c)), ?)[
+			$c1 = [
 				$h_is_rel;
-				Ui2[(cls x, cls z) => cp[in(pair(x, z), h) |- {
-					$X = setbuilder_pair_e[@h3]
-					[as X((cls y) => A(in(pair(x, y), f), in(pair(y, z), g)))];
+				(cls x, cls z) => {
+					in(pair(x, z), h) |- {
+						$X = @h3 > setbuilder_pair_e as X((cls y) => A(in(pair(x, y), f), in(pair(y, z), g)));
 
-					$U = Ui[(cls y) => cp2[in(pair(x, y), f), in(pair(y, z), g) |- {
-						$x_in_a = cartesian_in_e1[in_subseteq[@h4; Ae1[@h1]]];
-						$z_in_c = cartesian_in_e2[in_subseteq[@h5; Ae1[@h2]]];
+						$U = (cls y) => {
+							in(pair(x, y), f), in(pair(y, z), g) |- {
+								$x_in_a = [
+									@h4;
+									@h1 > Ae1
+								] > in_subseteq > cartesian_in_e1;
 
-						cartesian_in_i[$x_in_a; $z_in_c]
-					}]];
+								$z_in_c = [
+									@h5;
+									@h2 > Ae1
+								] > in_subseteq > cartesian_in_e2;
 
-					mpX_Xe_p(?, in(pair(x, z), cartesian(a, c)))[$X; $U]
-				}]]
-			][as subseteq(rel_composite(g, f), cartesian(a, c))];
+								[$x_in_a; $z_in_c] > cartesian_in_i
+							} > cp2
+						} > Ui;
 
-			$c23 = Ui[(cls x) => cp[in(x, a) |- {
-				$c2 = mp[@h3; Ue(?, x)[
-					fun_composite_is_fun_1(f, g, a, b, c)[fun_im_X[@h1]; fun_im_X[@h2]]
-				]];
+						[$X; $U] > mpX_Xe_p(?, in(pair(x, z), cartesian(a, c)))
+					} > cp
+				} > Ui2
+			] > rel_U(is_in(cartesian(a, c)), ?) as subseteq(rel_composite(g, f), cartesian(a, c));
 
-				$c3 = mp[@h3; Ue(?, x)[
-					U_to_Uin(a, ?)[fun_composite_is_fun_2(f, g)[fun_im_Q_alt[@h1]; fun_im_Q_alt[@h2]]]
-				]];
-				
-				Ai[$c2; $c3]
-			}]];
+			$c23 = (cls x) => {
+				in(x, a) |- {
+					$c2 = [
+						@h3;
+						[
+							@h1 > fun_im_X;
+							@h2 > fun_im_X
+						] > fun_composite_is_fun_1(f, g, a, b, c) > Ue(?, x)
+					] > mp;
 
-			Ai[$c1; $c23]
-			[as is_fun(h, a, c)]
+					$c3 = [
+						@h3;
+						[
+							@h1 > fun_im_Q_alt;
+							@h2 > fun_im_Q_alt
+						] > fun_composite_is_fun_2(f, g) > U_to_Uin(a, ?) > Ue(?, x)
+					] > mp;
+
+					[$c2; $c3] > Ai
+				} > cp
+			} > Ui;
+
+			[$c1; $c23] > Ai as is_fun(h, a, c)
 		}
 	}
 }
 
 theorem fun_dom(cls f: @11, $A$ cls a: @12, $B$ cls b: @13) {
 	is_fun(f, a, b) |- {
-		$E = Ui[(cls x) => {
-			$c1 = cp[in(x, rel_dom(f)) |- {
-				mpX_Xe_p(?, in(x, a))[
-					setbuilder_e[@h2];
-					Ui[(cls y) => cp[in(pair(x, y), f) |- {
-						fun_in_e1[@h1; @h3]
-					}]]
-				]
-			}];
+		$E = (cls x) => {
+			$c1 = in(x, rel_dom(f)) |- {
+				[
+					@h2 > setbuilder_e;
+					(cls y) => {
+						in(pair(x, y), f) |- {
+							[@h1; @h3] > fun_in_e1
+						} > cp
+					} > Ui
+				] > mpX_Xe_p(?, in(x, a))
+			} > cp;
 
-			$c2 = cp[in(x, a) |- {
-				setbuilder_i[
-					set_i[@h2];
-					Xin_to_X[fun_im_X_m[@h1; @h2]]
-				][as in(x, rel_dom(f))]
-			}];
+			$c2 = in(x, a) |- {
+				[
+					@h2 > set_i;
+					[@h1; @h2] > fun_im_X_m > Xin_to_X
+				] > setbuilder_i as in(x, rel_dom(f))
+			} > cp;
 
-			Ei[$c1; $c2]
-		}];
-		
-		eq_i(rel_dom(f), a)[$E]
+			[$c1; $c2] > Ei
+		} > Ui;
+
+		$E > eq_i(rel_dom(f), a)
 	}
 }
 
@@ -287,192 +334,250 @@ sealed cls funcall(cls f, cls x) {
 
 theorem funcall_Xq(cls f: @11, $A$ cls a: @12, $B$ cls b: @13, cls x: @21) {
 	is_fun(f, a, b), in(x, a) |- {
-		$foo = fun_im_Xq_m[@h1; @h2];
-		
-		Ai[Xin_to_X[Ae1[$foo]]; Ae2[$foo]]
-		[as Xq((cls y) => in(pair(x, y), f))]
+		$foo = [@h1; @h2] > fun_im_Xq_m;
+
+		[
+			$foo > Ae1 > Xin_to_X;
+			$foo > Ae2
+		] > Ai as Xq((cls y) => in(pair(x, y), f))
 	}
 }
 
 theorem funcall_def(cls f: @11, $A$ cls a: @12, $B$ cls b: @13, cls x: @21) using funcall {
 	is_fun(f, a, b), in(x, a) |- {
-		instantiate_def[funcall_Xq[@h1; @h2]]
-		[as in(pair(x, funcall(f, x)), f)]
+		[@h1; @h2] > funcall_Xq > instantiate_def as in(pair(x, funcall(f, x)), f)
 	}
 }
 
 theorem funcall_i(cls f: @11, $A$ cls a: @12, $B$ cls b: @13, cls x: @211, cls y: @212) {
 	is_fun(f, a, b), in(pair(x, y), f) |- {
-		$x_in_a = cartesian_in_e1[in_subseteq[@h2; fun_subseteq_cartesian[@h1]]];
-		
-		fun_im_Q_m[
-			@h1;
-			$x_in_a;
+		$x_in_a = [
 			@h2;
-			funcall_def[@h1; $x_in_a]
-		]
+			@h1 > fun_subseteq_cartesian
+		] > in_subseteq > cartesian_in_e1;
+
+		[
+			@h1; $x_in_a; @h2;
+			[@h1; $x_in_a] > funcall_def
+		] > fun_im_Q_m
 	}
 }
 
 theorem funcall_e(cls f: @11, $A$ cls a: @12, $B$ cls b: @13, cls x: @21, cls y: @31) {
 	is_fun(f, a, b), in(x, a), eq(y, funcall(f, x)) |- {
-		in_eq_left_2[
-			funcall_def[@h1; @h2];
-			pair_eq_i[
-				eq_reflexive(x);
-				@h3
-			]
-		]
+		[
+			[@h1; @h2] > funcall_def;
+			[eq_reflexive(x); @h3] > pair_eq_i
+		] > in_eq_left_2
 	}
 }
 
 theorem fun_eq_i(cls f: @11, cls g: @21, $A$ cls a: @12, $B$ cls b: @13) {
 	$bar = (cls f, cls g, $A$ cls a, $B$ cls b) => {
-		is_fun(f, a, b), is_fun(g, a, b), Uin(a, (cls x) => eq(funcall(f, x), funcall(g, x))) |- {
-			$foo = Ui2[(cls x, cls y) => {
-				cp[in(pair(x, y), f) |- {
-					$x_in_a = fun_in_e1[@h1; @h4];
-					funcall_e[@h2; $x_in_a; eq_transitive[funcall_i[@h1; @h4]; mp[$x_in_a; Ue(?, x)[@h3]]]]
-				}]
-			}];
+		is_fun(f, a, b), is_fun(g, a, b),
+		Uin(a, (cls x) => eq(funcall(f, x), funcall(g, x))) |- {
+			$foo = (cls x, cls y) => {
+				in(pair(x, y), f) |- {
+					$x_in_a = [@h1; @h4] > fun_in_e1;
 
-			rel_U(is_in(g), ?)[fun_is_rel[@h1]; $foo]
-			[as subseteq(f, g)]
+					[
+						@h2; $x_in_a;
+						[
+							[@h1; @h4] > funcall_i;
+							[
+								$x_in_a;
+								@h3 > Ue(?, x)
+							] > mp
+						] > eq_transitive
+					] > funcall_e
+				} > cp
+			} > Ui2;
+
+			[
+				@h1 > fun_is_rel;
+				$foo
+			] > rel_U(is_in(g), ?) as subseteq(f, g)
 		}
 	};
-	
-	is_fun(f, a, b), is_fun(g, a, b), Uin(a, (cls x) => eq(funcall(f, x), funcall(g, x))) |- {
-		subseteq_to_eq[
-			$bar(f, g, a, b)[@h1; @h2; @h3];
-			$bar(g, f, a, b)[@h2; @h1; Ui[(cls x) => cp[in(x, a) |- eq_symmetric[mp[@h4; Ue(?, x)[@h3]]]]]]
-		]
+
+	is_fun(f, a, b), is_fun(g, a, b),
+	Uin(a, (cls x) => eq(funcall(f, x), funcall(g, x))) |- {
+		[
+			[@h1; @h2; @h3] > $bar(f, g, a, b);
+			[
+				@h2; @h1;
+				(cls x) => {
+					in(x, a) |- {
+						[
+							@h4;
+							@h3 > Ue(?, x)
+						] > mp > eq_symmetric
+					} > cp
+				} > Ui
+			] > $bar(g, f, a, b)
+		] > subseteq_to_eq
 	}
 }
 
 theorem funcall_eq_i(cls f, cls x1: @11, cls x2: @12) {
 	eq(x1, x2) |- {
-		call_eq_i((cls x) => funcall(f, x), ?, ?)[@h1]
+		@h1 > call_eq_i((cls x) => funcall(f, x), ?, ?)
 	}
 }
 
 theorem funcall_in_codomain(cls f: @11, $A$ cls a: @12, $B$ cls b: @13, cls x: @21) {
 	is_fun(f, a, b), in(x, a) |- {
-		mpX_Xe_p(?, in(funcall(f, x), b))[
-			fun_im_X_m[@h1; @h2];
-			Ui[(cls y) => cp[A(in(y, b), in(pair(x, y), f)) |- {
-				in_eq_left_1[Ae1[@h3]; fun_im_Q_m[@h1; @h2; Ae2[@h3]; funcall_def(f, a, b, x)[@h1; @h2]]]
-			}]]
-		]
+		[
+			[@h1; @h2] > fun_im_X_m;
+			(cls y) => {
+				A(in(y, b), in(pair(x, y), f)) |- {
+					[
+						@h3 > Ae1;
+						[
+							@h1; @h2;
+							@h3 > Ae2;
+							[@h1; @h2] > funcall_def(f, a, b, x)
+						] > fun_im_Q_m
+					] > in_eq_left_1
+				} > cp
+			} > Ui
+		] > mpX_Xe_p(?, in(funcall(f, x), b))
 	}
 }
 
 theorem fun_im_in_codomain(cls f: @11, $A$ cls a: @12, $B$ cls b: @13) {
 	is_fun(f, a, b) |- {
-		Ui[(cls y) => cp[in(y, rel_im(f)) |- {
-			$Xx_xy_in_f = setbuilder_e[@h2];
-			
-			mpX_Xe_p(?, in(y, b))[
-				$Xx_xy_in_f;
-				Ui[(cls x) => cp[in(pair(x, y), f) |- {
-					cartesian_in_e2[in_subseteq[@h3; Ae1[@h1]]]
-				}]]
-			]
-		}]][as subseteq(rel_im(f), b)]
+		(cls y) => {
+			in(y, rel_im(f)) |- {
+				$Xx_xy_in_f = @h2 > setbuilder_e;
+
+				[
+					$Xx_xy_in_f;
+					(cls x) => {
+						in(pair(x, y), f) |- {
+							[
+								@h3;
+								@h1 > Ae1
+							] > in_subseteq > cartesian_in_e2
+						} > cp
+					} > Ui
+				] > mpX_Xe_p(?, in(y, b))
+			} > cp
+		} > Ui as subseteq(rel_im(f), b)
 	}
 }
 
 "매개변수가 하나인 메타함수로 함수를 만든다. 함수를 [$x\mapsto x^2]처럼 표현하는 것과 비슷한 방식이다."
 $\left[#1\right]_{<<\in>>#2}$
 cls map(fun f, $A$ cls a) {
-	setbuilder2(
-		(cls z) => {
-			pair(z, f(z))
-		},
-		(cls z) => {
-			in(z, a)
-		}
-	)
+	setbuilder2((cls z) => pair(z, f(z)), (cls z) => in(z, a))
 }
 
 theorem map_in_i(fun f: @r21, $A$ cls a: @32, cls z: @11) {
 	set(z), set(f(z)), in(z, a) |- {
-		setbuilder2_i(?, ?, z)[
-			pair_set_i[@h1; @h2]; @h3
-		][as in(pair(z, f(z)), map(f, a))]
+		[
+			[@h1; @h2] > pair_set_i;
+			@h3
+		] > setbuilder2_i(?, ?, z) as in(pair(z, f(z)), map(f, a))
 	}
 }
 
 theorem map_is_fun(fun f: @r11, $A$ cls a: @r2, $B$ cls b: @r3) {
-	Uin(a, (cls x) => {
-		in(f(x), b)
-	}) |- {
-		$c1 = Ui[(cls w) => cp[in(w, map(f, a)) |- {
-			mpX_Xe_p(?, in(w, cartesian(a, b)))[
-				setbuilder_e[@h2];
-				Ui[(cls z) => cp2[eq(w, pair(z, f(z))), in(z, a) |- {
-					in_eq_left_2[cartesian_in_i[@h4; mp[@h4; Ue(?, z)[@h1]]]; @h3]
-				}]]
-			]
-		}]][as subseteq(map(f, a), cartesian(a, b))];
-		
-		$c23 = Ui[(cls x) => cp[in(x, a) |- {
-			$fx_in_b = mp[@h2; Ue(?, x)[@h1]];
-			$c2 = Xi((cls y) => {
-				A(in(y, b), in(pair(x, y), map(f, a)))
-			}, f(x))[
-				Ai[
-					$fx_in_b;
-					setbuilder2_i(?, ?, x)[pair_set_i[set_i[@h2]; set_i[$fx_in_b]]; @h2]
-					[as in(pair(x, f(x)), map(f, a))]
-				]
-			];
-			
-			$c3 = Qim((cls y) => in(pair(x, y), map(f, a)), f(x))[
-				Ui[(cls y) => cp[in(pair(x, y), map(f, a)) |- {
-					mpX_Xe_p(?, eq(y, f(x)))[
-						setbuilder_e[@h3];
-						Ui[(cls z) => cp[A(eq(pair(x, y), pair(z, f(z))), in(z, a)) |- {
-							$pair_eq = Ae1[@h4];
+	Uin(a, (cls x) => in(f(x), b)) |- {
+		$c1 = (cls w) => {
+			in(w, map(f, a)) |- {
+				[
+					@h2 > setbuilder_e;
+					(cls z) => {
+						eq(w, pair(z, f(z))), in(z, a) |- {
+							[
+								[
+									@h4;
+									[
+										@h4;
+										@h1 > Ue(?, z)
+									] > mp
+								] > cartesian_in_i;
+								@h3
+							] > in_eq_left_2
+						} > cp2
+					} > Ui
+				] > mpX_Xe_p(?, in(w, cartesian(a, b)))
+			} > cp
+		} > Ui as subseteq(map(f, a), cartesian(a, b));
 
-							ax_indiscernible_m2((cls z) => eq(y, f(z)), ?, ?)[
-								pair_eq_e1_v1[set_i[@h3]; $pair_eq];
-								pair_eq_e2_v1[set_i[@h3]; $pair_eq]
-							]
-						}]]
-					]
-				}]]
-			];
-			
-			Ai[$c2; $c3]
-		}]];
-		
-		Ai[$c1; $c23][as is_fun(map(f, a), a, b)]
+		$c23 = (cls x) => {
+			in(x, a) |- {
+				$fx_in_b = [
+					@h2;
+					@h1 > Ue(?, x)
+				] > mp;
+
+				$c2 = [
+					$fx_in_b;
+					[
+						[
+							@h2 > set_i;
+							$fx_in_b > set_i
+						] > pair_set_i;
+						@h2
+					] > setbuilder2_i(?, ?, x) as in(pair(x, f(x)), map(f, a))
+				] > Ai > Xi((cls y) => A(in(y, b), in(pair(x, y), map(f, a))), f(x));
+
+				$c3 = (cls y) => {
+					in(pair(x, y), map(f, a)) |- {
+						[
+							@h3 > setbuilder_e;
+							(cls z) => {
+								A(eq(pair(x, y), pair(z, f(z))), in(z, a)) |- {
+									$pair_eq = @h4 > Ae1;
+
+									[
+										[
+											@h3 > set_i;
+											$pair_eq
+										] > pair_eq_e1_v1;
+										[
+											@h3 > set_i;
+											$pair_eq
+										] > pair_eq_e2_v1
+									] > ax_indiscernible_m2((cls z) => eq(y, f(z)), ?, ?)
+								} > cp
+							} > Ui
+						] > mpX_Xe_p(?, eq(y, f(x)))
+					} > cp
+				} > Ui > Qim((cls y) => in(pair(x, y), map(f, a)), f(x));
+
+				[$c2; $c3] > Ai
+			} > cp
+		} > Ui;
+
+		[$c1; $c23] > Ai as is_fun(map(f, a), a, b)
 	}
 }
 
 theorem map_funcall(fun f: @r111, $A$ cls a: @22, $B$ cls b, cls x: @21) {
 	Uin(a, (cls x) => in(f(x), b)), in(x, a) |- {
-		eq_symmetric[funcall_i[
-			map_is_fun(f, a, b)[@h1];
-			setbuilder2_i(?, ?, x)[
-				pair_set_i[set_i[@h2]; set_i[mp[@h2; Ue(?, x)[@h1]]]];
+		[
+			@h1 > map_is_fun(f, a, b);
+			[
+				[
+					@h2 > set_i;
+					[
+						@h2;
+						@h1 > Ue(?, x)
+					] > mp > set_i
+				] > pair_set_i;
 				@h2
-			][as in(pair(x, f(x)), map(f, a))]
-		]]
+			] > setbuilder2_i(?, ?, x) as in(pair(x, f(x)), map(f, a))
+		] > funcall_i > eq_symmetric
 	}
 }
 
 "매개변수가 두 개인 메타함수로 함수를 만든다. 함수를 [$.(x, y)\mapsto x^2 + y^2]처럼 표현하는 것과 비슷한 방식이다."
 $\left[#1\right]_{<<\in>>#2 \times #3}$
 cls map2(fun2 f, $A$ cls a, $B$ cls b) {
-	setbuilder2_pair(
-		(cls x, cls y) => {
-			pair(pair(x, y), f(x, y))
-		},
-		(cls x, cls y) => {
-			A(in(x, a), in(y, b))
-		}
-	)
+	setbuilder2_pair((cls x, cls y) => pair(pair(x, y), f(x, y)), (cls x, cls y) => A(in(x, a), in(y, b)))
 }
 
 "집합 [$A] 상에서의 항등함수(identity function)."
@@ -482,72 +587,75 @@ cls fun_id($A$ cls a) {
 }
 
 theorem fun_id_is_fun($A$ cls a) {
-	map_is_fun(
-		(cls x) => x,
-		a, a
-	)[Ui[(cls x) => Ipp(in(x, a))]]
-	[as is_fun(fun_id(a), a, a)]
+	(cls x) => Ipp(in(x, a)) > Ui > map_is_fun((cls x) => x, a, a) as is_fun(fun_id(a), a, a)
 }
 
 theorem fun_id_funcall($A$ cls a: @12, cls x: @11) {
 	in(x, a) |- {
-		map_funcall((cls x) => x, a, a, x)[
-			Ui[(cls x) => Ipp(in(x, a))];
+		[
+			(cls x) => Ipp(in(x, a)) > Ui;
 			@h1
-		][as eq(funcall(fun_id(a), x), x)]
+		] > map_funcall((cls x) => x, a, a, x) as eq(funcall(fun_id(a), x), x)
 	}
 }
 
 theorem fun_id_im_set($A$ cls a: @12, $B$ cls b: @11) {
 	subseteq(b, a) |- {
 		with (cls f = fun_id(a)) {
-			$E = Ui[(cls y) => {
-				$c1 = cp[in(y, rel_im_set(f, b)) |- {
-					mpXin_Xe_p(?, ?, in(y, b))[
-						setbuilder_e[@h2];
-						Ui[(cls x) => cp[in(x, b) |- {
-							cp[in(pair(x, y), fun_id(a)) |- {
-								mpX_Xe_p(?, in(y, b))[
-									setbuilder_e[@h4];
-									Ui[(cls z) => cp2[eq(pair(x, y), pair(z, z)), in(z, a) |- {
-										$x_is_z = pair_eq_e1_v1[
-											set_i[@h4];
-											@h5
-										];
+			$E = (cls y) => {
+				$c1 = in(y, rel_im_set(f, b)) |- {
+					[
+						@h2 > setbuilder_e;
+						(cls x) => {
+							in(x, b) |- {
+								in(pair(x, y), fun_id(a)) |- {
+									[
+										@h4 > setbuilder_e;
+										(cls z) => {
+											eq(pair(x, y), pair(z, z)), in(z, a) |- {
+												$x_is_z = [
+													@h4 > set_i;
+													@h5
+												] > pair_eq_e1_v1;
 
-										$y_is_z = pair_eq_e2_v1[
-											set_i[@h4];
-											@h5
-										];
+												$y_is_z = [
+													@h4 > set_i;
+													@h5
+												] > pair_eq_e2_v1;
 
-										in_eq_left_1[
-											@h3;
-											eq_transitive[$x_is_z; eq_symmetric[$y_is_z]]
-										]
-									}]]
-								]
-							}]
-						}]]
-					]
-				}];
+												[
+													@h3;
+													[
+														$x_is_z;
+														$y_is_z > eq_symmetric
+													] > eq_transitive
+												] > in_eq_left_1
+											} > cp2
+										} > Ui
+									] > mpX_Xe_p(?, in(y, b))
+								} > cp
+							} > cp
+						} > Ui
+					] > mpXin_Xe_p(?, ?, in(y, b))
+				} > cp;
 
-				$c2 = cp[in(y, b) |- {
-					$y_in_a = in_subseteq[@h2; @h1];
-					$set_y = set_i[@h2];
+				$c2 = in(y, b) |- {
+					$y_in_a = [@h2; @h1] > in_subseteq;
 
-					$yy_in_id = map_in_i((cls x) => x, a, y)[$set_y; $set_y; $y_in_a]
-					[as in(pair(y, y), f)];
+					$set_y = @h2 > set_i;
 
-					setbuilder_i[
+					$yy_in_id = [$set_y; $set_y; $y_in_a] > map_in_i((cls x) => x, a, y) as in(pair(y, y), f);
+
+					[
 						$set_y;
-						Xi((cls x) => A(in(x, b), in(pair(x, y), f)), y)[Ai[@h2; $yy_in_id]]
-					][as in(y, rel_im_set(f, b))]
-				}];
+						[@h2; $yy_in_id] > Ai > Xi((cls x) => A(in(x, b), in(pair(x, y), f)), y)
+					] > setbuilder_i as in(y, rel_im_set(f, b))
+				} > cp;
 
-				Ei[$c1; $c2]
-			}];
-			
-			eq_i(rel_im_set(f, b), b)[$E]
+				[$c1; $c2] > Ei
+			} > Ui;
+
+			$E > eq_i(rel_im_set(f, b), b)
 		}
 	}
 }
@@ -555,71 +663,83 @@ theorem fun_id_im_set($A$ cls a: @12, $B$ cls b: @11) {
 "전사함수(surjective function). onto라고도 한다."
 $<<\mathop\mathrm{surjection}>>\left(#1: #2 \to #3\right)$
 st is_surjection(cls f, $A$ cls a, $B$ cls b) {
-	A(
-		is_fun(f, a, b),
-		Uin(b, (cls y) => {
-			Xin(a, (cls x) => {
-				in(pair(x, y), f)
-			})
-		})
-	)
+	A(is_fun(f, a, b), Uin(b, (cls y) => Xin(a, (cls x) => in(pair(x, y), f))))
 }
 
 theorem fun_to_surjection(cls f: @11, $A$ cls a: @12, $B$ cls b: @13) {
 	is_fun(f, a, b) |- {
 		with ($B'$ cls b2 = rel_im(f)) {
-			$c1 = rel_U(is_in(cartesian(a, rel_im(f))), ?)[
-				fun_is_rel[@h1];
-				Ui2[(cls x, cls y) => cp[in(pair(x, y), f) |- {
-					$xy_in_ab = in_subseteq[@h2; Ae1[@h1]];
-					$x_in_a = cartesian_in_e1[$xy_in_ab];
-					$y_in_b = cartesian_in_e2[$xy_in_ab];
+			$c1 = [
+				@h1 > fun_is_rel;
+				(cls x, cls y) => {
+					in(pair(x, y), f) |- {
+						$xy_in_ab = [
+							@h2;
+							@h1 > Ae1
+						] > in_subseteq;
 
-					$y_in_im = setbuilder_i[
-						set_i[$y_in_b];
-						Xi((cls x) => in(pair(x, y), f), x)[@h2]
-					][as in(y, rel_im(f))];
+						$x_in_a = $xy_in_ab > cartesian_in_e1;
 
-					cartesian_in_i[$x_in_a; $y_in_im]
-				}]]
-			][as subseteq(f, cartesian(a, rel_im(f)))];
-			
-			$c23 = Ui[(cls x) => cp[in(x, a) |- {
-				$c2 = mpX(?, (cls y) => A(
-					in(y, rel_im(f)),
-					in(pair(x, y), f)
-				))[
-					Ae1[mp[@h2; Ue(?, x)[Ae2[@h1]]]];
-					Ui[(cls y) => cp2[in(y, b), in(pair(x, y), f) |- {
-						Ai[cartesian_in_e2[in_subseteq[@h4; $c1]]; @h4]
-					}]]
-				][as Xin(rel_im(f), (cls y) => in(pair(x, y), f))];
-				
-				$c3 = Ae2[mp[@h2; Ue(?, x)[Ae2[@h1]]]];
-				
-				Ai[$c2; $c3]
-			}]];
-			
-			$is_fun = Ai[$c1; $c23]
-			[as is_fun(f, a, rel_im(f))];
-			
-			$surjective = Ui[(cls y) => cp[in(y, rel_im(f)) |- {
-				mpX(?, (cls x) => A(
-					in(x, a),
-					in(pair(x, y), f)
-				))[
-					setbuilder_e[@h2];
-					Ui[(cls x) => cp[in(pair(x, y), f) |- {
-						Ai[
-							cartesian_in_e1[in_subseteq[@h3; Ae1[@h1]]];
-							@h3
-						]
-					}]]
-				][as Xin(a, (cls x) => in(pair(x, y), f))]
-			}]];
-			
-			Ai[$is_fun; $surjective]
-			[as is_surjection(f, a, rel_im(f))]
+						$y_in_b = $xy_in_ab > cartesian_in_e2;
+
+						$y_in_im = [
+							$y_in_b > set_i;
+							@h2 > Xi((cls x) => in(pair(x, y), f), x)
+						] > setbuilder_i as in(y, rel_im(f));
+
+						[$x_in_a; $y_in_im] > cartesian_in_i
+					} > cp
+				} > Ui2
+			] > rel_U(is_in(cartesian(a, rel_im(f))), ?) as subseteq(f, cartesian(a, rel_im(f)));
+
+			$c23 = (cls x) => {
+				in(x, a) |- {
+					$c2 = [
+						[
+							@h2;
+							@h1 > Ae2 > Ue(?, x)
+						] > mp > Ae1;
+						(cls y) => {
+							in(y, b), in(pair(x, y), f) |- {
+								[
+									[@h4; $c1] > in_subseteq > cartesian_in_e2;
+									@h4
+								] > Ai
+							} > cp2
+						} > Ui
+					] > mpX(?, (cls y) => A(in(y, rel_im(f)), in(pair(x, y), f))) as Xin(rel_im(f), (cls y) => in(pair(x, y), f));
+
+					$c3 = [
+						@h2;
+						@h1 > Ae2 > Ue(?, x)
+					] > mp > Ae2;
+
+					[$c2; $c3] > Ai
+				} > cp
+			} > Ui;
+
+			$is_fun = [$c1; $c23] > Ai as is_fun(f, a, rel_im(f));
+
+			$surjective = (cls y) => {
+				in(y, rel_im(f)) |- {
+					[
+						@h2 > setbuilder_e;
+						(cls x) => {
+							in(pair(x, y), f) |- {
+								[
+									[
+										@h3;
+										@h1 > Ae1
+									] > in_subseteq > cartesian_in_e1;
+									@h3
+								] > Ai
+							} > cp
+						} > Ui
+					] > mpX(?, (cls x) => A(in(x, a), in(pair(x, y), f))) as Xin(a, (cls x) => in(pair(x, y), f))
+				} > cp
+			} > Ui;
+
+			[$is_fun; $surjective] > Ai as is_surjection(f, a, rel_im(f))
 		}
 	}
 }
@@ -627,224 +747,252 @@ theorem fun_to_surjection(cls f: @11, $A$ cls a: @12, $B$ cls b: @13) {
 "단사함수(injective function). 일대일함수(one-to-one function)라고도 한다."
 $<<\mathop\mathrm{injection}>>\left(#1: #2 \to #3\right)$
 st is_injection(cls f, $A$ cls a, $B$ cls b) {
-	A(
-		is_fun(f, a, b),
-		Uin(b, (cls y) => {
-			Q((cls x) => {
-				in(pair(x, y), f)
-			})
-		})
-	)
+	A(is_fun(f, a, b), Uin(b, (cls y) => Q((cls x) => in(pair(x, y), f))))
 }
 
 theorem injection_dom_Q_m(cls f: @11, $A$ cls a: @12, $B$ cls b: @13, cls x1: @311, cls x2: @411, cls y: @21) {
 	is_injection(f, a, b), in(y, b), in(pair(x1, y), f), in(pair(x2, y), f) |- {
-		mp[
-			Ai[@h3; @h4];
-			Ue2(?, x1, x2)[mp[@h2; Ue(?, y)[Ae2[@h1]]]]
-		]
+		[
+			[@h3; @h4] > Ai;
+			[
+				@h2;
+				@h1 > Ae2 > Ue(?, y)
+			] > mp > Ue2(?, x1, x2)
+		] > mp
 	}
 }
 
 "전단사함수(bijective function). [~(href=#def-is_fun)is_fun]의 정의와의 유사성에 주목하라."
 $<<\mathop\mathrm{bijection}>>\left(#1: #2 \to #3\right)$
 st is_bijection(cls f, $A$ cls a, $B$ cls b) {
-	A(
-		is_fun(f, a, b),
-		Uin(b, (cls y) => {
-			A(
-				Xin(a, (cls x) => {
-					in(pair(x, y), f)
-				}),
-				Q((cls x) => {
-					in(pair(x, y), f)
-				})
-			)
-		})
-	)
+	A(is_fun(f, a, b), Uin(b, (cls y) => A(Xin(a, (cls x) => in(pair(x, y), f)), Q((cls x) => in(pair(x, y), f)))))
 }
 
 theorem bijection_i(cls f: @11, $A$ cls a: @12, $B$ cls b: @13) {
 	is_surjection(f, a, b), is_injection(f, a, b) |- {
-		$is_fun = Ae1[@h1];
-		
-		Ai[
+		$is_fun = @h1 > Ae1;
+
+		[
 			$is_fun;
-			Ui[(cls y) => cp[in(y, b) |- {
-				Ai[
-					mp[@h3; Ue(?, y)[Ae2[@h1]]];
-					mp[@h3; Ue(?, y)[Ae2[@h2]]]
-				]
-			}]]
-		][as is_bijection(f, a, b)]
+			(cls y) => {
+				in(y, b) |- {
+					[
+						[
+							@h3;
+							@h1 > Ae2 > Ue(?, y)
+						] > mp;
+						[
+							@h3;
+							@h2 > Ae2 > Ue(?, y)
+						] > mp
+					] > Ai
+				} > cp
+			} > Ui
+		] > Ai as is_bijection(f, a, b)
 	}
 }
 
 theorem bijection_is_surjection(cls f: @11, $A$ cls a: @12, $B$ cls b: @13) {
 	is_bijection(f, a, b) |- {
-		$is_fun = Ae1[@h1];
-		
-		Ai[
+		$is_fun = @h1 > Ae1;
+
+		[
 			$is_fun;
-			Ui[(cls y) => cp[in(y, b) |- {
-				Ae1[mp[@h2; Ue(?, y)[Ae2[@h1]]]]
-			}]]
-		][as is_surjection(f, a, b)]
+			(cls y) => {
+				in(y, b) |- {
+					[
+						@h2;
+						@h1 > Ae2 > Ue(?, y)
+					] > mp > Ae1
+				} > cp
+			} > Ui
+		] > Ai as is_surjection(f, a, b)
 	}
 }
 
 theorem bijection_is_injection(cls f: @11, $A$ cls a: @12, $B$ cls b: @13) {
 	is_bijection(f, a, b) |- {
-		$is_fun = Ae1[@h1];
-		
-		Ai[
+		$is_fun = @h1 > Ae1;
+
+		[
 			$is_fun;
-			Ui[(cls y) => cp[in(y, b) |- {
-				Ae2[mp[@h2; Ue(?, y)[Ae2[@h1]]]]
-			}]]
-		][as is_injection(f, a, b)]
+			(cls y) => {
+				in(y, b) |- {
+					[
+						@h2;
+						@h1 > Ae2 > Ue(?, y)
+					] > mp > Ae2
+				} > cp
+			} > Ui
+		] > Ai as is_injection(f, a, b)
 	}
 }
 
 theorem injection_to_bijection(cls f: @11, $A$ cls a: @12, $B$ cls b: @13) {
 	is_injection(f, a, b) |- {
-		$f_is_fun = Ae1[@h1];
-		$surjection = fun_to_surjection[$f_is_fun];
-		$fun = Ae1[$surjection];
-		$f_is_inj = Ae2[@h1];
-		
-		$inj = Uin_subset[fun_im_in_codomain[$f_is_fun]; $f_is_inj];
-		
-		$injection = Ai[$fun; $inj]
-		[as is_injection(f, a, rel_im(f))];
-		
-		bijection_i[$surjection; $injection]
+		$f_is_fun = @h1 > Ae1;
+
+		$surjection = $f_is_fun > fun_to_surjection;
+
+		$fun = $surjection > Ae1;
+
+		$f_is_inj = @h1 > Ae2;
+
+		$inj = [
+			$f_is_fun > fun_im_in_codomain;
+			$f_is_inj
+		] > Uin_subset;
+
+		$injection = [$fun; $inj] > Ai as is_injection(f, a, rel_im(f));
+
+		[$surjection; $injection] > bijection_i
 	}
 }
 
 $<<\mathop\mathrm{invertible\ fun.}>>\left(#1: #2 \to #3\right)$
 st is_invertible_fun(cls f, $A$ cls a, $B$ cls b) {
-	A(
-		is_fun(f, a, b),
-		is_fun(rel_inverse(f), b, a)
-	)
+	A(is_fun(f, a, b), is_fun(rel_inverse(f), b, a))
 }
 
 theorem bijection_inverse_is_bijection(cls f: @11, $A$ cls a: @12, $B$ cls b: @13) {
 	is_bijection(f, a, b) |- {
-		$f_is_fun = Ae1[@h1];
-		$f_is_rel = fun_is_rel[$f_is_fun];
-		$f_in_ab = Ae1[$f_is_fun];
-		$fXq1 = Ae2[$f_is_fun];
-		$fXq2 = Ae2[@h1];
-		
-		$f_inv_in_ba = subseteq_eq[
-			rel_inverse_subseteq[$f_is_rel; $f_in_ab];
+		$f_is_fun = @h1 > Ae1;
+
+		$f_is_rel = $f_is_fun > fun_is_rel;
+
+		$f_in_ab = $f_is_fun > Ae1;
+
+		$fXq1 = $f_is_fun > Ae2;
+
+		$fXq2 = @h1 > Ae2;
+
+		$f_inv_in_ba = [
+			[$f_is_rel; $f_in_ab] > rel_inverse_subseteq;
 			cartesian_inverse(a, b)
-		];
-		
-		$f_inv_Xq1 = Ui[(cls y) => cp[in(y, b) |- {
-			$Xq = mp[@h2; Ue(?, y)[$fXq2]];
-			$X = Ae1[$Xq];
-			$Q = Ae2[$Xq];
-			
-			$X_inv = mpXin(?, ?, (cls x) => in(pair(y, x), rel_inverse(f)))[
-				$X;
-				Ui[(cls x) => cp[in(x, a) |- {
-					cp[in(pair(x, y), f) |- {
-						rel_inverse_in_i[@h4]
-					}]
-				}]]
-			];
-			
-			$Q_inv = QU[
-				$Q;
-				Ui[(cls x) => cp[in(pair(y, x), rel_inverse(f)) |- {
-					rel_inverse_in_e[@h3]
-				}]]
-			][as Q((cls x) => in(pair(y, x), rel_inverse(f)))];
-			
-			Ai[$X_inv; $Q_inv]
-		}]];
-		
-		$f_inv_is_fun = Ai[$f_inv_in_ba; $f_inv_Xq1]
-		[as is_fun(rel_inverse(f), b, a)];
-		
-		$f_inv_Xq2 = Ui[(cls x) => cp[in(x, a) |- {
-			$Xq = mp[@h2; Ue(?, x)[$fXq1]];
-			$X = Ae1[$Xq];
-			$Q = Ae2[$Xq];
-			
-			$X_inv = mpXin(?, ?, (cls y) => in(pair(y, x), rel_inverse(f)))[
-				$X;
-				Ui[(cls y) => cp[in(y, b) |- {
-					cp[in(pair(x, y), f) |- {
-						rel_inverse_in_i[@h4]
-					}]
-				}]]
-			];
-			
-			$Q_inv = QU[
-				$Q;
-				Ui[(cls y) => cp[in(pair(y, x), rel_inverse(f)) |- {
-					rel_inverse_in_e[@h3]
-				}]]
-			][as Q((cls y) => in(pair(y, x), rel_inverse(f)))];
-			
-			Ai[$X_inv; $Q_inv]
-		}]];
-		
-		Ai[$f_inv_is_fun; $f_inv_Xq2]
-		[as is_bijection(rel_inverse(f), b, a)]
+		] > subseteq_eq;
+
+		$f_inv_Xq1 = (cls y) => {
+			in(y, b) |- {
+				$Xq = [
+					@h2;
+					$fXq2 > Ue(?, y)
+				] > mp;
+
+				$X = $Xq > Ae1;
+
+				$Q = $Xq > Ae2;
+
+				$X_inv = [
+					$X;
+					(cls x) => {
+						in(x, a) |- {
+							in(pair(x, y), f) |- {
+								@h4 > rel_inverse_in_i
+							} > cp
+						} > cp
+					} > Ui
+				] > mpXin(?, ?, (cls x) => in(pair(y, x), rel_inverse(f)));
+
+				$Q_inv = [
+					$Q;
+					(cls x) => {
+						in(pair(y, x), rel_inverse(f)) |- {
+							@h3 > rel_inverse_in_e
+						} > cp
+					} > Ui
+				] > QU as Q((cls x) => in(pair(y, x), rel_inverse(f)));
+
+				[$X_inv; $Q_inv] > Ai
+			} > cp
+		} > Ui;
+
+		$f_inv_is_fun = [$f_inv_in_ba; $f_inv_Xq1] > Ai as is_fun(rel_inverse(f), b, a);
+
+		$f_inv_Xq2 = (cls x) => {
+			in(x, a) |- {
+				$Xq = [
+					@h2;
+					$fXq1 > Ue(?, x)
+				] > mp;
+
+				$X = $Xq > Ae1;
+
+				$Q = $Xq > Ae2;
+
+				$X_inv = [
+					$X;
+					(cls y) => {
+						in(y, b) |- {
+							in(pair(x, y), f) |- {
+								@h4 > rel_inverse_in_i
+							} > cp
+						} > cp
+					} > Ui
+				] > mpXin(?, ?, (cls y) => in(pair(y, x), rel_inverse(f)));
+
+				$Q_inv = [
+					$Q;
+					(cls y) => {
+						in(pair(y, x), rel_inverse(f)) |- {
+							@h3 > rel_inverse_in_e
+						} > cp
+					} > Ui
+				] > QU as Q((cls y) => in(pair(y, x), rel_inverse(f)));
+
+				[$X_inv; $Q_inv] > Ai
+			} > cp
+		} > Ui;
+
+		[$f_inv_is_fun; $f_inv_Xq2] > Ai as is_bijection(rel_inverse(f), b, a)
 	}
 }
 
 theorem bijection_is_invertible(cls f: @11, $A$ cls a: @12, $B$ cls b: @13) {
 	is_bijection(f, a, b) |- {
-		Ai[
-			Ae1[@h1];
-			Ae1[bijection_inverse_is_bijection[@h1]]
-		][as is_invertible_fun(f, a, b)]
+		[
+			@h1 > Ae1;
+			@h1 > bijection_inverse_is_bijection > Ae1
+		] > Ai as is_invertible_fun(f, a, b)
 	}
 }
 
 "칸토어의 정리(Cantor's theorem). [~(href=https://www.cs.ru.nl/~freek/100/)[*Formalizing 100 Theorems]]의 정리 #63이다."
 theorem cantor($A$ cls a: @11, cls f: @r11) {
 	set(a) |- {
-		Ni_alt[is_surjection(f, a, power(a)) |- {
+		is_surjection(f, a, power(a)) |- {
 			with ($B$ cls b = subsetbuilder(a, (cls x) => Nin(x, funcall(f, x)))) {
-				$f_is_fun = Ae1[@h2];
-				
-				$b_subseteq_a = id(subseteq(b, a))[
-					subsetbuilder_is_subset(a, (cls x) => Nin(x, funcall(f, x)))
-				];
-				
-				$b_in_power_a = power_in_i[@h1; $b_subseteq_a];
-				
-				$X = mp[$b_in_power_a; Ue(?, b)[Ae2[@h2]]];
-				
-				$U = Ui[($\xi$ cls xi) => cp2[in(xi, a), in(pair(xi, b), f) |- {
-					$b_is_f_xi = funcall_i[$f_is_fun; @h4];
-					
-					$xi_Nin_f_xi = Ni_alt[in(xi, funcall(f, xi)) |- {
-						Fi[
-							@h5;
-							subsetbuilder_e[in_eq_right_2[@h5; $b_is_f_xi]]
-						]
-					}][as Nin(xi, funcall(f, xi))];
-					
-					$xi_in_b = subsetbuilder_i[
-						@h3;
-						$xi_Nin_f_xi
-					][as in(xi, b)];
-					
-					$xi_in_f_xi = in_eq_right_1[$xi_in_b; $b_is_f_xi];
-					
-					Fi[$xi_in_f_xi; $xi_Nin_f_xi]
-				}]];
-				
-				mpX_Xe_p(?, F)[$X; $U]
+				$f_is_fun = @h2 > Ae1;
+
+				$b_subseteq_a = subsetbuilder_is_subset(a, (cls x) => Nin(x, funcall(f, x))) > id(subseteq(b, a));
+
+				$b_in_power_a = [@h1; $b_subseteq_a] > power_in_i;
+
+				$X = [
+					$b_in_power_a;
+					@h2 > Ae2 > Ue(?, b)
+				] > mp;
+
+				$U = ($\xi$ cls xi) => {
+					in(xi, a), in(pair(xi, b), f) |- {
+						$b_is_f_xi = [$f_is_fun; @h4] > funcall_i;
+
+						$xi_Nin_f_xi = in(xi, funcall(f, xi)) |- {
+							[
+								@h5;
+								[@h5; $b_is_f_xi] > in_eq_right_2 > subsetbuilder_e
+							] > Fi
+						} > Ni_alt as Nin(xi, funcall(f, xi));
+
+						$xi_in_b = [@h3; $xi_Nin_f_xi] > subsetbuilder_i as in(xi, b);
+
+						$xi_in_f_xi = [$xi_in_b; $b_is_f_xi] > in_eq_right_1;
+
+						[$xi_in_f_xi; $xi_Nin_f_xi] > Fi
+					} > cp2
+				} > Ui;
+
+				[$X; $U] > mpX_Xe_p(?, F)
 			}
-		}]
+		} > Ni_alt
 	}
 }

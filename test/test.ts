@@ -12,6 +12,33 @@ var grammar = fs.readFileSync(path.join(__dirname, '../src/grammar.pegjs'), 'utf
 var parser = pegjs.generate(grammar, {cache: true});
 var evalParser = pegjs.generate(grammar, {cache: true, allowedStartRules: ['evaluable']});
 
+import unparse from '../src/Unparser';
+
+function removeLocationify(obj) {
+	return JSON.stringify(obj, (k, v) => {
+		if (k == 'location') return undefined;
+		return v;
+	}, 2);
+}
+
+describe('Unparser', function () {
+	var program = new Program(parser);
+
+	[
+		'propositional', 'predicate', 'set',
+		'relation', 'function', 'natural',
+		'algebra', 'integer'
+	].forEach(name => {
+		it(`can unparse ${name}.math`, async function () {
+            var o = fs.readFileSync(path.join(__dirname, '../math/' + name + '.math'), 'utf-8');
+			var parsed = parser.parse(o);
+			var parsed_unparsed_parsed = parser.parse(unparse(parsed));
+			
+			expect(removeLocationify(parsed) == removeLocationify(parsed_unparsed_parsed)).to.be.true;
+		});
+	});
+});
+
 describe('Program', function () {
 	var program = new Program(parser);
 
@@ -22,6 +49,7 @@ describe('Program', function () {
 	].forEach(name => {
 		it(`can load ${name}.math`, async function () {
 			await program.loadModule(name, (filename: string) => ({
+                fileUri: filename + '.math',
 				code: fs.readFileSync(path.join(__dirname, '../math/' + filename + '.math'), 'utf-8')
 			}));
 		});
@@ -105,7 +133,9 @@ schema foo(st p) using N2 {
 }
 
 schema bar(st p) ${i == 0 ? '' : 'using N2'} {
-	N(p) |- foo(p)[@h1]
+	N(p) |- {
+        @h1 > foo(p)
+    }
 }
 `
 			}))).to.be[i == 0 ? 'rejected' : 'fulfilled'];

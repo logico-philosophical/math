@@ -21,16 +21,7 @@ st bin_op_associative($\ast$ cls f, $A$ cls a) {
 	Uin(a, (cls x) => {
 		Uin(a, (cls y) => {
 			Uin(a, (cls z) => {
-				eq(
-					bin_op_call(f,
-						bin_op_call(f, x, y),
-						z
-					),
-					bin_op_call(f,
-						x,
-						bin_op_call(f, y, z)
-					)
-				)
+				eq(bin_op_call(f, bin_op_call(f, x, y), z), bin_op_call(f, x, bin_op_call(f, y, z)))
 			})
 		})
 	})
@@ -38,13 +29,7 @@ st bin_op_associative($\ast$ cls f, $A$ cls a) {
 
 $\left({#1}\ <<\text{is commutative on}>>\ {#2}\right)$
 st bin_op_commutative($\ast$ cls f, $A$ cls a) {
-	Uin(a, (cls x) => {
-		Uin(a, (cls y) => {
-			eq(
-				bin_op_call(f, x, y), bin_op_call(f, y, x)
-			)
-		})
-	})
+	Uin(a, (cls x) => Uin(a, (cls y) => eq(bin_op_call(f, x, y), bin_op_call(f, y, x))))
 }
 
 $\left({#1}\ <<\text{is left distributive over}>>\ {#2}\ \text{on}\ {#3}\right)$
@@ -52,10 +37,7 @@ st bin_op_left_distributive($\cdot$ cls f, $+$ cls g, $A$ cls a) {
 	Uin(a, (cls x) => {
 		Uin(a, (cls y) => {
 			Uin(a, (cls z) => {
-				eq(
-					bin_op_call(f, x, bin_op_call(g, y, z)),
-					bin_op_call(g, bin_op_call(f, x, y), bin_op_call(f, x, z))
-				)
+				eq(bin_op_call(f, x, bin_op_call(g, y, z)), bin_op_call(g, bin_op_call(f, x, y), bin_op_call(f, x, z)))
 			})
 		})
 	})
@@ -66,10 +48,7 @@ st bin_op_right_distributive($\cdot$ cls f, $+$ cls g, $A$ cls a) {
 	Uin(a, (cls x) => {
 		Uin(a, (cls y) => {
 			Uin(a, (cls z) => {
-				eq(
-					bin_op_call(f, bin_op_call(g, x, y), z),
-					bin_op_call(g, bin_op_call(f, x, z), bin_op_call(f, y, z))
-				)
+				eq(bin_op_call(f, bin_op_call(g, x, y), z), bin_op_call(g, bin_op_call(f, x, z), bin_op_call(f, y, z)))
 			})
 		})
 	})
@@ -77,10 +56,7 @@ st bin_op_right_distributive($\cdot$ cls f, $+$ cls g, $A$ cls a) {
 
 $\left({#1}\ <<\text{is distributive over}>>\ {#2}\ \text{on}\ {#3}\right)$
 st bin_op_distributive($\cdot$ cls f, $+$ cls g, $A$ cls a) {
-	A(
-		bin_op_left_distributive(f, g, a),
-		bin_op_right_distributive(f, g, a)
-	)
+	A(bin_op_left_distributive(f, g, a), bin_op_right_distributive(f, g, a))
 }
 
 "대수학에서의 마그마(magma)."
@@ -92,175 +68,129 @@ st is_magma($M$ cls m, $\ast$ cls f) {
 "반군(semigroup)."
 $\left(<<\operatorname{semigroup}>>\left(#1,#2\right)\right)$
 st is_semigroup($S$ cls s, $\ast$ cls f) {
-	A(
-		is_magma(s, f),
-		bin_op_associative(f, s)
-	)
+	A(is_magma(s, f), bin_op_associative(f, s))
 }
 
 "[$e]가 [$.(S, \ast)]의 항등원이다."
 $\left({#1}\ <<\text{is identity of}>>\ {\left(#2,#3\right)}\right)$
 st is_identity_element(cls e, $S$ cls s, $\ast$ cls f) {
-	A(
-		in(e, s),
-		Uin(s, (cls a) => {
-			A(
-				eq(bin_op_call(f, e, a), a),
-				eq(bin_op_call(f, a, e), a)
-			)
-		})
-	)
+	A(in(e, s), Uin(s, (cls a) => A(eq(bin_op_call(f, e, a), a), eq(bin_op_call(f, a, e), a))))
 }
 
 "항등원은 여러 개 있지 않다."
 theorem identity_element_Q($S$ cls s, $\ast$ cls f) {
-	Ui2[(cls e1, cls e2) => {
-		cp2[is_identity_element(e1, s, f), is_identity_element(e2, s, f) |- {
-			$e1_in_s = Ae1[@h1];
-			$e2_in_s = Ae1[@h2];
-			
-			eq_transitive[
-				eq_symmetric[Ae2[mp[$e1_in_s; Ue(?, e1)[Ae2[@h2]]]]];
-				Ae1[mp[$e2_in_s; Ue(?, e2)[Ae2[@h1]]]]
-			]
-		}]
-	}][as Q((cls e) => is_identity_element(e, s, f))]
+	(cls e1, cls e2) => {
+		is_identity_element(e1, s, f), is_identity_element(e2, s, f) |- {
+			$e1_in_s = @h1 > Ae1;
+
+			$e2_in_s = @h2 > Ae1;
+
+			[
+				[
+					$e1_in_s;
+					@h2 > Ae2 > Ue(?, e1)
+				] > mp > Ae2 > eq_symmetric;
+				[
+					$e2_in_s;
+					@h1 > Ae2 > Ue(?, e2)
+				] > mp > Ae1
+			] > eq_transitive
+		} > cp2
+	} > Ui2 as Q((cls e) => is_identity_element(e, s, f))
 }
 
 "[$.(S, \ast)]의 항등원(존재한다면)."
 ${<<\text{identity}>>}_{\left(#1,#2\right)}$
 cls identity_element($S$ cls s, $\ast$ cls f) {
-	instantiate((cls e) => {
-		is_identity_element(e, s, f)
-	})
+	instantiate((cls e) => is_identity_element(e, s, f))
 }
 
 theorem identity_element_def($S$ cls s, $\ast$ cls f) {
 	X((cls e) => is_identity_element(e, s, f)) |- {
-		instantiate_def[XQ_to_Xq[@h1; identity_element_Q(s, f)]]
-		[as is_identity_element(identity_element(s, f), s, f)]
+		[@h1; identity_element_Q(s, f)] > XQ_to_Xq > instantiate_def as is_identity_element(identity_element(s, f), s, f)
 	}
 }
 
 theorem identity_element_in($S$ cls s, $\ast$ cls f) {
 	X((cls e) => is_identity_element(e, s, f)) |- {
-		Ae1[identity_element_def(s, f)[@h1]]
+		@h1 > identity_element_def(s, f) > Ae1
 	}
 }
 
 theorem identity_element_eq_1(cls a, $S$ cls s, $\ast$ cls f) {
 	in(a, s), X((cls e) => is_identity_element(e, s, f)) |- {
-		Ae1[mp[@h1; Ue(?, a)[Ae2[identity_element_def(s, f)[@h2]]]]]
+		[
+			@h1;
+			@h2 > identity_element_def(s, f) > Ae2 > Ue(?, a)
+		] > mp > Ae1
 	}
 }
 
 theorem identity_element_eq_2(cls a, $S$ cls s, $\ast$ cls f) {
 	in(a, s), X((cls e) => is_identity_element(e, s, f)) |- {
-		Ae2[mp[@h1; Ue(?, a)[Ae2[identity_element_def(s, f)[@h2]]]]]
+		[
+			@h1;
+			@h2 > identity_element_def(s, f) > Ae2 > Ue(?, a)
+		] > mp > Ae2
 	}
 }
 
 "대수학에서의 모노이드(monoid)."
 $\left(<<\operatorname{monoid}>>\left(#1,#2\right)\right)$
 st is_monoid($M$ cls m, $\ast$ cls f) {
-	A(
-		is_semigroup(m, f),
-		X((cls e) => {
-			is_identity_element(e, m, f)
-		})
-	)
+	A(is_semigroup(m, f), X((cls e) => is_identity_element(e, m, f)))
 }
 
 "대수학에서의 가환 모노이드(commutative monoid)."
 $\left(<<\operatorname{commutative\ monoid}>>\left(#1,#2\right)\right)$
 st is_commutative_monoid($M$ cls m, $\ast$ cls f) {
-	A(
-		is_monoid(m, f),
-		bin_op_commutative(f, m)
-	)
+	A(is_monoid(m, f), bin_op_commutative(f, m))
 }
 
 "[$b]가 [$.(S, \ast)]에서 [$a]의 역원이다."
 $\left({#1}\ <<\text{is inverse of}>>\ {#2}\ \text{in}\ {\left(#3,#4\right)}\right)$
 st is_inverse_element(cls b, cls a, $S$ cls s, $\ast$ cls f) {
-	A(
-		in(b, s),
-		A(
-			eq(bin_op_call(f, a, b), identity_element(s, f)),
-			eq(bin_op_call(f, b, a), identity_element(s, f))
-		)
-	)
+	A(in(b, s), A(eq(bin_op_call(f, a, b), identity_element(s, f)), eq(bin_op_call(f, b, a), identity_element(s, f))))
 }
 
 "[$.(S, \ast)]에서 [$a]의 역원(존재한다면)."
 $\left(<<\operatorname{inverse}>>#1\right)_{\left(#2,#3\right)}$
 cls inverse_element(cls a, $S$ cls s, $\ast$ cls f) {
-	instantiate((cls b) => {
-		is_inverse_element(b, a, s, f)
-	})
+	instantiate((cls b) => is_inverse_element(b, a, s, f))
 }
 
 "대수학에서의 군(group)."
 $\left(<<\operatorname{group}>>\left(#1,#2\right)\right)$
 st is_group($G$ cls g, $\ast$ cls f) {
-	A(
-		is_monoid(g, f),
-		Uin(g, (cls a) => {
-			X((cls b) => {
-				is_inverse_element(b, a, g, f)
-			})
-		})
-	)
+	A(is_monoid(g, f), Uin(g, (cls a) => X((cls b) => is_inverse_element(b, a, g, f))))
 }
 
 "부분군(subgroup)."
 $\left(#1<<\leq>>_{#3}#2\right)$
 st subgroup(cls H, cls G, $\ast$ cls f) {
-	A(
-		subseteq(H, G),
-		is_group(H, rel_restrict(f, cartesian(H, H)))
-	)
+	A(subseteq(H, G), is_group(H, rel_restrict(f, cartesian(H, H))))
 }
 
 "대수학에서의 아벨 군(abelian group)."
 $\left(<<\operatorname{abelian\ group}>>\left(#1,#2\right)\right)$
 st is_abelian_group($G$ cls g, $\ast$ cls f) {
-	A(
-		is_group(g, f),
-		bin_op_commutative(f, g)
-	)
+	A(is_group(g, f), bin_op_commutative(f, g))
 }
-
 
 "대수학에서의 유사환(rng)."
 $\left(<<\operatorname{rng}>>\left(#1,#2,#3\right)\right)$
 st is_rng($R$ cls r, $+$ cls g, $\cdot$ cls f) {
-	A(
-		is_abelian_group(r, g),
-		A(
-			is_semigroup(r, f),
-			bin_op_distributive(f, g, r)
-		)
-	)
+	A(is_abelian_group(r, g), A(is_semigroup(r, f), bin_op_distributive(f, g, r)))
 }
 
 "대수학에서의 환(ring)."
 $\left(<<\operatorname{ring}>>\left(#1,#2,#3\right)\right)$
 st is_ring($R$ cls r, $+$ cls g, $\cdot$ cls f) {
-	A(
-		is_abelian_group(r, g),
-		A(
-			is_monoid(r, f),
-			bin_op_distributive(f, g, r)
-		)
-	)
+	A(is_abelian_group(r, g), A(is_monoid(r, f), bin_op_distributive(f, g, r)))
 }
 
 "대수학에서의 가환환(commutative ring)."
 $\left(<<\operatorname{commutative\ ring}>>\left(#1,#2,#3\right)\right)$
 st is_commutative_ring($R$ cls r, $+$ cls g, $\cdot$ cls f) {
-	A(
-		is_ring(r, g, f),
-		bin_op_commutative(f, r)
-	)
+	A(is_ring(r, g, f), bin_op_commutative(f, r))
 }

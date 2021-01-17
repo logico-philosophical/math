@@ -8,15 +8,7 @@ import natural;
 "정수 집합의 정의를 위해 사용되는 이항관계."
 ${\sim}_{\omega\times\omega}$
 cls rel_omega_pair = setbuilder_pair((cls x, cls y) => {
-	Xin4(omega, omega, omega, omega, (cls a, cls b, cls c, cls d) => {
-		A(
-			A(
-				eq(x, pair(a, b)),
-				eq(y, pair(c, d))
-			),
-			eq(omega_add(a, d), omega_add(b, c))
-		)
-	})
+	Xin4(omega, omega, omega, omega, (cls a, cls b, cls c, cls d) => A(A(eq(x, pair(a, b)), eq(y, pair(c, d))), eq(omega_add(a, d), omega_add(b, c))))
 });
 
 "정수 집합. 자연수 순서쌍의 동치류의 집합으로 정의된다. 이때 자연수 순서쌍의 동치류 [$`[(a, b)]`]가 정수 [$a - b]를 의미한다. 예를 들어 [$`[(3, 5)] = [(5, 7)] = -2`]이다.
@@ -30,13 +22,7 @@ $\left(#1<<+_\Z>>#2\right)$
 cls ints_add(cls m, cls n) {
 	instantiate((cls k) => {
 		Xin4(omega, omega, omega, omega, (cls a, cls b, cls c, cls d) => {
-			A(
-				A(
-					eq(m, equiv_cls(pair(a, b), cartesian(omega, omega), rel_omega_pair)),
-					eq(n, equiv_cls(pair(c, d), cartesian(omega, omega), rel_omega_pair))
-				),
-				eq(k, equiv_cls(pair(omega_add(a, c), omega_add(b, d)), cartesian(omega, omega), rel_omega_pair))
-			)
+			A(A(eq(m, equiv_cls(pair(a, b), cartesian(omega, omega), rel_omega_pair)), eq(n, equiv_cls(pair(c, d), cartesian(omega, omega), rel_omega_pair))), eq(k, equiv_cls(pair(omega_add(a, c), omega_add(b, d)), cartesian(omega, omega), rel_omega_pair)))
 		})
 	})
 }

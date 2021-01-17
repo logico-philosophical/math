@@ -192,62 +192,65 @@ defschema =
 // (metaexpr)[...]
 // schema(?, ...)[...]
 reduction =
-	subject:(
-		schemacall
-		/ var
-		/ "(" _
-		e:metaexpr _
-		")"
-		{return e}
-	) _
-	args:(
-		"(" _
-		a:(
-			head:('?' {return null} / expr0) _
-			tail:("," _ e:('?' {return null} / expr0) _ {return e})*
-			{return [head].concat(tail)}
-		)?
-		")"
-		{return a || []}
-	)?
 	leftargs:(
-		"[" _
-		a:(
+		a:metaexpr_internal_2 {return [a]}
+		/ "[" _
+		b:(
 			head:metaexpr _
 			tail:(";" _ e:metaexpr _ {return e})*
 			{return [head].concat(tail)}
 		)?
 		"]"
-		b:(
-			_ '[' _
-			'as' __
-			m:metaexpr _
-			']'
+		{return b || []}
+	)
+	right:(
+		_ '>' _
+		subject:(
+			schemacall
+			/ var
+			/ "(" _
+			e:metaexpr _
+			")"
+			{return e}
+		)
+		args:(
+			_ "(" _
+			a:(
+				head:('?' {return null} / expr0) _
+				tail:("," _ e:('?' {return null} / expr0) _ {return e})*
+				{return [head].concat(tail)}
+			)?
+			")"
+			{return a || []}
+		)?
+		as_:(
+			__ 'as' __
+			m:metaexpr_internal_2
 			{return m}
 		)?
-		{return {a: a || [], b: b || null}}
+		{return {subject, args, as_: as_ || null};}
 	)+
 	{
 		var ret = {
 			_type: 'reduction',
-			subject,
-			args,
-			leftargs: leftargs[0].a,
-			as: leftargs[0].b,
+			subject: right[0].subject,
+			args: right[0].args,
+			leftargs: leftargs,
+			as: right[0].as_,
 			location: location()
 		};
 
-		for (var i = 1; i < leftargs.length; i++) {
+		for (var i = 1; i < right.length; i++) {
 			ret = {
 				_type: 'reduction',
-				subject: ret,
-				args: null,
-				leftargs: leftargs[i].a,
-				as: leftargs[i].b,
+				subject: right[i].subject,
+				args: right[i].args,
+				leftargs: [ret],
+				as: right[i].as_,
 				location: location()
-			};
+			}
 		}
-
+		
 		return ret;
 	}
 
@@ -377,7 +380,7 @@ tee =
 	)
 	"|-" _
 	foo:(
-		expr:metaexpr_internal_0
+		expr:metaexpr_internal_2
 		{return {defdollars: [], expr}}
 		/ "{" _
 		defdollars: (d:defdollar _ {return d})* _
@@ -427,22 +430,24 @@ with =
 	}
 
 metaexpr =
-	metaexpr_internal_0
+	metaexpr_internal_3
 
-metaexpr_internal_0 =
+metaexpr_internal_3 =
+	reduction
+	/ metaexpr_internal_2
+
+metaexpr_internal_2 =
 	tee
 	/ metaexpr_internal_1
 
 /*
- * 다음이 성립하여야 한다.
+ * The following should hold:
  *
- * - reduction이 schemacall보다 앞이다.
- * - schemacall이 var보다 앞이다.
+ * - `schemacall` should precede `var`.
  *
  */
 metaexpr_internal_1 =
-	reduction
-	/ schemacall
+	schemacall
 	/ var
 	/ schemaexpr
 	/ with
