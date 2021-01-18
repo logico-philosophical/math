@@ -16,12 +16,10 @@
 
 <pre><code>"[$1+1=2]이다."
 <b>theorem</b> one_plus_one_is_two() {
-    omega_add_one(ord_one)[
-        successor_in_omega[zero_in_omega()]
-        [<b>as</b> in(ord_one, omega)]
-    ][<b>as</b> eq(omega_add(ord_one, ord_one), ord_two)]
-}
-</code></pre>
+    zero_in_omega()
+    &gt; successor_in_omega <b>as</b> in(ord_one, omega)
+    &gt; omega_add_one(ord_one) <b>as</b> eq(omega_add(ord_one, ord_one), ord_two)
+}</code></pre>
 
 The above code produces&hellip;
 

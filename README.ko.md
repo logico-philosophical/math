@@ -16,12 +16,10 @@ math-o-matic은 공리계(axiomatic system)를 만들고, 그 공리계 상에�
 
 <pre><code>"[$1+1=2]이다."
 <b>theorem</b> one_plus_one_is_two() {
-    omega_add_one(ord_one)[
-        successor_in_omega[zero_in_omega()]
-        [<b>as</b> in(ord_one, omega)]
-    ][<b>as</b> eq(omega_add(ord_one, ord_one), ord_two)]
-}
-</code></pre>
+    zero_in_omega()
+    &gt; successor_in_omega <b>as</b> in(ord_one, omega)
+    &gt; omega_add_one(ord_one) <b>as</b> eq(omega_add(ord_one, ord_one), ord_two)
+}</code></pre>
 
 위와 같은 코드를 작성하면&hellip;
 
