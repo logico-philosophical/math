@@ -218,8 +218,6 @@ function recurseInternal(
 				: isOneLiner(left)
 					? ['[', ']']
 					: ['[\n\t', '\n]'];
-				
-			var right = ``;
 			
 			return `${brackets[0]}${left}${brackets[1]} > ${recurse(line.subject, Context.CALLEE, 0)}${
 				!line.args
@@ -256,7 +254,7 @@ function recurseInternal(
 	${line.def$s.map(def$ => recurse(def$, Context.NORMAL, 1) + '\n\n\t').join('')}${
 		recurse(line.expr, Context.NORMAL, 1)
 	}
-}`
+}`;
 		case 'var':
 			/* export interface VarObject {
 				_type: 'var';
