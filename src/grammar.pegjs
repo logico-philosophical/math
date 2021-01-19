@@ -580,12 +580,12 @@ dollar_ident =
 
 documentation =
 	'"' b:$(!'"' a:. {return a})* '"' {
-		return b
+		return b.replace(/\r\n|\r/g, '\n');
 	}
 
 tex =
 	'$' b:$(!'$' a:. {return a})* '$' {
-		return b
+		return b.replace(/\r\n|\r/g, '\n');
 	}
 
 comment =
