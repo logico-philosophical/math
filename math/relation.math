@@ -372,6 +372,17 @@ theorem rel_im_set_eq_i($R$ cls r, $A$ cls a: @11, $B$ cls b: @12) {
 	}
 }
 
+theorem rel_im_set_in_i($R$ cls r: @22, $A$ cls a: @12, cls x: @11, cls y: @212) {
+	in(x, a), in(pair(x, y), r) |- {
+		[
+			@h2 > set_i > pair_set_e2;
+			[@h1; @h2] > Ai > Xi((cls x) => {
+				A(in(x, a), in(pair(x, y), r))
+			}, x)
+		] > setbuilder_i as in(y, rel_im_set(r, a))
+	}
+}
+
 "이항관계의 역(inverse)."
 $!<prec=190>{#1}^{<<-1>>}$
 sealed cls rel_inverse(cls x) {
@@ -441,6 +452,60 @@ theorem rel_composite_in_i(cls f: @12, cls g: @22, cls x: @111, cls y: @112, cls
 			[@h1; @h2] > Ai > Xi((cls y) => A(in(pair(x, y), f), in(pair(y, z), g)), y)
 		] > setbuilder_pair_i as in(pair(x, z), rel_composite(g, f))
 	}
+}
+
+theorem rel_composite_im_set($R_1$ cls r1, $R_2$ cls r2, $A$ cls a) {
+	(cls z) => {
+		$c1 = in(z, rel_im_set(rel_composite(r1, r2), a)) |- {
+			$X = @h1 > setbuilder_e;
+
+			$U = (cls x) => {
+				in(x, a), in(pair(x, z), rel_composite(r1, r2)) |- {
+					$X = @h3
+					> setbuilder_pair_e as X((cls y) => A(in(pair(x, y), r2), in(pair(y, z), r1)));
+
+					$U = (cls y) => {
+						in(pair(x, y), r2), in(pair(y, z), r1) |- {
+							[
+								[@h2; @h4] > rel_im_set_in_i;
+								@h5
+							] > rel_im_set_in_i
+						} > cp2
+					} > Ui;
+
+					[$X; $U] > mpX_Xe_p(?, in(z, rel_im_set(r1, rel_im_set(r2, a))))
+				} > cp2 > curry
+			} > Ui;
+
+			[$X; $U] > mpXin_Xe_p(?, ?, in(z, rel_im_set(r1, rel_im_set(r2, a))))
+		} > cp;
+
+		$c2 = in(z, rel_im_set(r1, rel_im_set(r2, a))) |- {
+			$X = @h1 > setbuilder_e;
+
+			$U = (cls y) => {
+				in(y, rel_im_set(r2, a)), in(pair(y, z), r1) |- {
+					$X = @h2 > setbuilder_e;
+
+					$U = (cls x) => {
+						in(x, a), in(pair(x, y), r2) |- {
+							[
+								@h4;
+								[@h5; @h3] > rel_composite_in_i
+							] > rel_im_set_in_i
+						} > cp2 > curry
+					} > Ui;
+
+					[$X; $U] > mpXin_Xe_p(?, ?, in(z, rel_im_set(rel_composite(r1, r2), a)))
+				} > cp2 > curry
+			} > Ui;
+
+			[$X; $U] > mpXin_Xe_p(?, ?, in(z, rel_im_set(rel_composite(r1, r2), a)))
+		} > cp;
+
+		[$c1; $c2] > Ei
+	} > Ui
+	> eq_i(rel_im_set(rel_composite(r1, r2), a), rel_im_set(r1, rel_im_set(r2, a)))
 }
 
 "이항관계의 제한(restriction)."

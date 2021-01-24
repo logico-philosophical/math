@@ -1049,7 +1049,9 @@ sealed cls fun_iterated_call(cls f, cls n, cls x) {
 	funcall(fun_iterated_(f, x), n)
 }
 
-"반복합성함수(iterated function). 자기함수(endofunction) [$f]의 합성을 [$n]번 한 것이다. [$f]가 자기함수일 때만 제대로 정의된다."
+"반복합성함수(iterated function). 자기함수(endofunction) [$f]의 합성을 [$n]번 한 것이다. [$f]가 자기함수일 때만 제대로 정의된다.
+
+반복합성함수를 이와 같이 에둘러 정의하는 것은 [$f]가 고유 클래스(proper class)일 때도 [$f^n]을 정의하고 싶기 때문이다."
 ${#1}^{#2}{}^{\scriptscriptstyle<<\dag>>}$
 cls fun_iterated(cls f, cls n) {
 	map((cls x) => fun_iterated_call(f, n, x), rel_dom(f))
@@ -1077,6 +1079,28 @@ theorem fun_iterated_def(cls f: @11, $A$ cls a: @12, cls n: @21, cls x: @31) usi
 			$dom_to_a;
 			[@h3; $fun_dom] > in_eq_right_2
 		] > map_funcall(?, ?, a, ?) as eq(funcall(fun_iterated(f, n), x), fun_iterated_call(f, n, x))
+	}
+}
+
+theorem fun_iterated_is_fun(cls f: @11, $A$ cls a: @12, cls n: @21) using fun_iterated_call {
+	is_fun(f, a, a), in(n, omega) |- {
+		$fun_dom = @h1 > fun_dom;
+
+		$dom_to_a = (cls x) => {
+			in(x, rel_dom(f)) |- {
+				$x_in_a = [@h3; $fun_dom] > in_eq_right_1;
+
+				[
+					[
+						[@h1; $x_in_a] > fun_iterated_ird > Ae1;
+						@h2
+					] > funcall_in_codomain as in(fun_iterated_call(f, n, x), rel_dom(f));
+					@h1 > fun_dom
+				] > in_eq_right_1
+			} > cp
+		} > Ui > map_is_fun as is_fun(fun_iterated(f, n), rel_dom(f), a);
+
+		[$fun_dom; $dom_to_a] > ax_indiscernible_m1(($B$ cls b) => is_fun(fun_iterated(f, n), b, a), ?, ?)
 	}
 }
 
@@ -1110,25 +1134,27 @@ theorem fun_iterated_step(cls f: @11, $A$ cls a: @12, cls n: @21, cls x: @31) us
 	}
 }
 
-theorem fun_iterated_is_fun(cls f: @11, $A$ cls a: @12, cls n: @21) using fun_iterated_call {
+theorem fun_iterated_step_alt(cls f: @11, $A$ cls a: @12, cls n: @21) {
 	is_fun(f, a, a), in(n, omega) |- {
-		$fun_dom = @h1 > fun_dom;
+		$fn_is_fun = [@h1; @h2] > fun_iterated_is_fun;
+		$fn1_is_fun = [@h1; @h2 > successor_in_omega] > fun_iterated_is_fun;
+		$f_fn_is_fun = [$fn_is_fun; @h1] > fun_composite_is_fun;
+		
+		$eq = (cls x) => {
+			in(x, a) |- {
+				$foo = [@h1; @h2; @h3] > fun_iterated_step;
 
-		$dom_to_a = (cls x) => {
-			in(x, rel_dom(f)) |- {
-				$x_in_a = [@h3; $fun_dom] > in_eq_right_1;
+				$bar = [
+					$fn_is_fun;
+					@h1;
+					@h3
+				] > fun_composite_funcall > eq_symmetric;
 
-				[
-					[
-						[@h1; $x_in_a] > fun_iterated_ird > Ae1;
-						@h2
-					] > funcall_in_codomain as in(fun_iterated_call(f, n, x), rel_dom(f));
-					@h1 > fun_dom
-				] > in_eq_right_1
+				[$foo; $bar] > eq_transitive
 			} > cp
-		} > Ui > map_is_fun as is_fun(fun_iterated(f, n), rel_dom(f), a);
-
-		[$fun_dom; $dom_to_a] > ax_indiscernible_m1(($B$ cls b) => is_fun(fun_iterated(f, n), b, a), ?, ?)
+		} > Ui;
+		
+		[$fn1_is_fun; $f_fn_is_fun; $eq] > fun_eq_i
 	}
 }
 
@@ -1180,6 +1206,35 @@ theorem fun_iterated_im_base(cls f: @11, $A$ cls a: @12, $B$ cls b: @21) {
 		} > Ui;
 
 		$foo > eq_i(rel_im_set(fun_iterated(f, ord_zero), b), b)
+	}
+}
+
+theorem fun_iterated_im_step(cls f: @11, $A$ cls a: @12, $B$ cls b: @31, cls n: @21) {
+	is_fun(f, a, a), in(n, omega), subseteq(b, a) |- {
+		(cls z) => {
+			$fn1_is_f_fn = [@h1; @h2] > fun_iterated_step_alt;
+
+			$c1 = in(z, rel_im_set(fun_iterated(f, successor(n)), b)) |- {
+				$in = [$fn1_is_f_fn; @h4] > ax_indiscernible_m1((cls f) => in(z, rel_im_set(f, b)), ?, ?);
+				$eq = rel_composite_im_set(f, fun_iterated(f, n), b);
+
+				[$in; $eq] > in_eq_right_1
+			} > cp;
+
+			$c2 = in(z, rel_im_set(f, rel_im_set(fun_iterated(f, n), b))) |- {
+				$in = [
+					@h4;
+					rel_composite_im_set(f, fun_iterated(f, n), b)
+				] > in_eq_right_2;
+
+				[$fn1_is_f_fn; $in] > ax_indiscernible_m2((cls f) => in(z, rel_im_set(f, b)), ?, ?)
+			} > cp;
+
+			[$c1; $c2] > Ei
+		} > Ui > eq_i(
+			rel_im_set(fun_iterated(f, successor(n)), b),
+			rel_im_set(f, rel_im_set(fun_iterated(f, n), b))
+		)
 	}
 }
 

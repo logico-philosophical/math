@@ -673,6 +673,20 @@ theorem fun_composite_is_fun(cls f: @11, cls g: @21, $A$ cls a: @12, $B$ cls b: 
 	}
 }
 
+theorem fun_composite_funcall(cls f: @11, cls g: @21, $A$ cls a: @12, $B$ cls b: @13, $C$ cls c: @23, cls x: @31) {
+	is_fun(f, a, b), is_fun(g, b, c), in(x, a) |- {
+		with (cls h = rel_composite(g, f)) {
+			$in = [
+				[@h1; @h3] > funcall_def;
+				[@h2; [@h1; @h3] > funcall_in_codomain] > funcall_def
+			] > rel_composite_in_i;
+			$fun = [@h1; @h2] > fun_composite_is_fun;
+			
+			[$fun; $in] > funcall_i > eq_symmetric
+		}
+	}
+}
+
 "전사함수(surjective function). onto라고도 한다."
 $<<\mathop\mathrm{surjection}>>\left(#1: #2 \to #3\right)$
 st is_surjection(cls f, $A$ cls a, $B$ cls b) {
