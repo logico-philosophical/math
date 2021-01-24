@@ -152,152 +152,6 @@ theorem fun_is_rel(cls f: @11, $A$ cls a: @12, $B$ cls b: @13) {
 	}
 }
 
-theorem fun_composite_is_fun_1(cls f, cls g, $A$ cls a, $B$ cls b, $C$ cls c) {
-	Uin(a, (cls x) => Xin(b, (cls y) => in(pair(x, y), f))),
-	Uin(b, (cls y) => Xin(c, (cls z) => in(pair(y, z), g))) |- {
-		with (cls h = rel_composite(g, f)) {
-			(cls x) => {
-				in(x, a) |- {
-					$fX = [
-						@h3;
-						@h1 > Ue(?, x)
-					] > mp;
-
-					[
-						$fX;
-						(cls y) => {
-							in(y, b), in(pair(x, y), f) |- {
-								$gX = [
-									@h4;
-									@h2 > Ue(?, y)
-								] > mp;
-
-								[
-									$gX;
-									(cls z) => {
-										in(z, c) |- {
-											in(pair(y, z), g) |- {
-												[@h5; @h7] > rel_composite_in_i
-											} > cp
-										} > cp
-									} > Ui
-								] > mpXin(?, ?, (cls z) => in(pair(x, z), rel_composite(g, f)))
-							} > cp2
-						} > Ui
-					] > mpX_Xe_p(?, Xin(c, (cls z) => in(pair(x, z), rel_composite(g, f))))
-				} > cp
-			} > Ui as Uin(a, (cls x) => Xin(c, (cls z) => in(pair(x, z), h)))
-		}
-	}
-}
-
-theorem fun_composite_is_fun_2(cls f, cls g) {
-	U((cls x) => Q((cls y) => in(pair(x, y), f))),
-	U((cls y) => Q((cls z) => in(pair(y, z), g))) |- {
-		with (cls h = rel_composite(g, f)) {
-			(cls x) => {
-				$fQ = @h1 > Ue(?, x);
-
-				(cls z1, cls z2) => {
-					in(pair(x, z1), h), in(pair(x, z2), h) |- {
-						$y1X = @h3 > setbuilder_pair_e as X((cls y1) => A(in(pair(x, y1), f), in(pair(y1, z1), g)));
-
-						$y1U = (cls y1) => {
-							in(pair(x, y1), f), in(pair(y1, z1), g) |- {
-								$y2X = @h4 > setbuilder_pair_e as X((cls y2) => A(in(pair(x, y2), f), in(pair(y2, z2), g)));
-
-								$y2U = (cls y2) => {
-									in(pair(x, y2), f), in(pair(y2, z2), g) |- {
-										[
-											[
-												@h6;
-												[
-													@h8;
-													[
-														[
-															[@h5; @h7] > Ai;
-															$fQ > Ue2(?, y1, y2)
-														] > mp;
-														eq_reflexive(z2)
-													] > pair_eq_i
-												] > in_eq_left_2
-											] > Ai;
-											@h2 > Ue(?, y1) > Ue2(?, z1, z2)
-										] > mp
-									} > cp2
-								} > Ui;
-
-								[$y2X; $y2U] > mpX_Xe_p(?, eq(z1, z2))
-							} > cp2
-						} > Ui;
-
-						[$y1X; $y1U] > mpX_Xe_p(?, eq(z1, z2))
-					} > cp2
-				} > Ui2 as Q((cls z) => in(pair(x, z), h))
-			} > Ui
-		}
-	}
-}
-
-theorem fun_composite_is_fun(cls f: @11, cls g: @21, $A$ cls a: @12, $B$ cls b: @13, $C$ cls c: @23) {
-	is_fun(f, a, b), is_fun(g, b, c) |- {
-		with (cls h = rel_composite(g, f)) {
-			$h_is_rel = [] > setbuilder_pair_is_rel as is_rel(h);
-
-			$c1 = [
-				$h_is_rel;
-				(cls x, cls z) => {
-					in(pair(x, z), h) |- {
-						$X = @h3 > setbuilder_pair_e as X((cls y) => A(in(pair(x, y), f), in(pair(y, z), g)));
-
-						$U = (cls y) => {
-							in(pair(x, y), f), in(pair(y, z), g) |- {
-								$x_in_a = [
-									@h4;
-									@h1 > Ae1
-								] > in_subseteq > cartesian_in_e1;
-
-								$z_in_c = [
-									@h5;
-									@h2 > Ae1
-								] > in_subseteq > cartesian_in_e2;
-
-								[$x_in_a; $z_in_c] > cartesian_in_i
-							} > cp2
-						} > Ui;
-
-						[$X; $U] > mpX_Xe_p(?, in(pair(x, z), cartesian(a, c)))
-					} > cp
-				} > Ui2
-			] > rel_U(is_in(cartesian(a, c)), ?) as subseteq(rel_composite(g, f), cartesian(a, c));
-
-			$c23 = (cls x) => {
-				in(x, a) |- {
-					$c2 = [
-						@h3;
-						[
-							@h1 > fun_im_X;
-							@h2 > fun_im_X
-						] > fun_composite_is_fun_1(f, g, a, b, c) > Ue(?, x)
-					] > mp;
-
-					$c3 = [
-						@h3;
-						[
-							@h1 > fun_im_Q_alt;
-							@h2 > fun_im_Q_alt
-						] > fun_composite_is_fun_2(f, g) > U_to_Uin(a, ?) > Ue(?, x)
-					] > mp;
-
-					[$c2; $c3] > Ai
-				} > cp
-			} > Ui;
-
-			[$c1; $c23] > Ai as is_fun(h, a, c)
-		}
-	}
-}
-
 theorem fun_dom(cls f: @11, $A$ cls a: @12, $B$ cls b: @13) {
 	is_fun(f, a, b) |- {
 		$E = (cls x) => {
@@ -669,6 +523,152 @@ theorem fun_id_im_set($A$ cls a: @12, $B$ cls b: @11) {
 			} > Ui;
 
 			$E > eq_i(rel_im_set(f, b), b)
+		}
+	}
+}
+
+theorem fun_composite_is_fun_1(cls f, cls g, $A$ cls a, $B$ cls b, $C$ cls c) {
+	Uin(a, (cls x) => Xin(b, (cls y) => in(pair(x, y), f))),
+	Uin(b, (cls y) => Xin(c, (cls z) => in(pair(y, z), g))) |- {
+		with (cls h = rel_composite(g, f)) {
+			(cls x) => {
+				in(x, a) |- {
+					$fX = [
+						@h3;
+						@h1 > Ue(?, x)
+					] > mp;
+
+					[
+						$fX;
+						(cls y) => {
+							in(y, b), in(pair(x, y), f) |- {
+								$gX = [
+									@h4;
+									@h2 > Ue(?, y)
+								] > mp;
+
+								[
+									$gX;
+									(cls z) => {
+										in(z, c) |- {
+											in(pair(y, z), g) |- {
+												[@h5; @h7] > rel_composite_in_i
+											} > cp
+										} > cp
+									} > Ui
+								] > mpXin(?, ?, (cls z) => in(pair(x, z), rel_composite(g, f)))
+							} > cp2
+						} > Ui
+					] > mpX_Xe_p(?, Xin(c, (cls z) => in(pair(x, z), rel_composite(g, f))))
+				} > cp
+			} > Ui as Uin(a, (cls x) => Xin(c, (cls z) => in(pair(x, z), h)))
+		}
+	}
+}
+
+theorem fun_composite_is_fun_2(cls f, cls g) {
+	U((cls x) => Q((cls y) => in(pair(x, y), f))),
+	U((cls y) => Q((cls z) => in(pair(y, z), g))) |- {
+		with (cls h = rel_composite(g, f)) {
+			(cls x) => {
+				$fQ = @h1 > Ue(?, x);
+
+				(cls z1, cls z2) => {
+					in(pair(x, z1), h), in(pair(x, z2), h) |- {
+						$y1X = @h3 > setbuilder_pair_e as X((cls y1) => A(in(pair(x, y1), f), in(pair(y1, z1), g)));
+
+						$y1U = (cls y1) => {
+							in(pair(x, y1), f), in(pair(y1, z1), g) |- {
+								$y2X = @h4 > setbuilder_pair_e as X((cls y2) => A(in(pair(x, y2), f), in(pair(y2, z2), g)));
+
+								$y2U = (cls y2) => {
+									in(pair(x, y2), f), in(pair(y2, z2), g) |- {
+										[
+											[
+												@h6;
+												[
+													@h8;
+													[
+														[
+															[@h5; @h7] > Ai;
+															$fQ > Ue2(?, y1, y2)
+														] > mp;
+														eq_reflexive(z2)
+													] > pair_eq_i
+												] > in_eq_left_2
+											] > Ai;
+											@h2 > Ue(?, y1) > Ue2(?, z1, z2)
+										] > mp
+									} > cp2
+								} > Ui;
+
+								[$y2X; $y2U] > mpX_Xe_p(?, eq(z1, z2))
+							} > cp2
+						} > Ui;
+
+						[$y1X; $y1U] > mpX_Xe_p(?, eq(z1, z2))
+					} > cp2
+				} > Ui2 as Q((cls z) => in(pair(x, z), h))
+			} > Ui
+		}
+	}
+}
+
+theorem fun_composite_is_fun(cls f: @11, cls g: @21, $A$ cls a: @12, $B$ cls b: @13, $C$ cls c: @23) {
+	is_fun(f, a, b), is_fun(g, b, c) |- {
+		with (cls h = rel_composite(g, f)) {
+			$h_is_rel = [] > setbuilder_pair_is_rel as is_rel(h);
+
+			$c1 = [
+				$h_is_rel;
+				(cls x, cls z) => {
+					in(pair(x, z), h) |- {
+						$X = @h3 > setbuilder_pair_e as X((cls y) => A(in(pair(x, y), f), in(pair(y, z), g)));
+
+						$U = (cls y) => {
+							in(pair(x, y), f), in(pair(y, z), g) |- {
+								$x_in_a = [
+									@h4;
+									@h1 > Ae1
+								] > in_subseteq > cartesian_in_e1;
+
+								$z_in_c = [
+									@h5;
+									@h2 > Ae1
+								] > in_subseteq > cartesian_in_e2;
+
+								[$x_in_a; $z_in_c] > cartesian_in_i
+							} > cp2
+						} > Ui;
+
+						[$X; $U] > mpX_Xe_p(?, in(pair(x, z), cartesian(a, c)))
+					} > cp
+				} > Ui2
+			] > rel_U(is_in(cartesian(a, c)), ?) as subseteq(rel_composite(g, f), cartesian(a, c));
+
+			$c23 = (cls x) => {
+				in(x, a) |- {
+					$c2 = [
+						@h3;
+						[
+							@h1 > fun_im_X;
+							@h2 > fun_im_X
+						] > fun_composite_is_fun_1(f, g, a, b, c) > Ue(?, x)
+					] > mp;
+
+					$c3 = [
+						@h3;
+						[
+							@h1 > fun_im_Q_alt;
+							@h2 > fun_im_Q_alt
+						] > fun_composite_is_fun_2(f, g) > U_to_Uin(a, ?) > Ue(?, x)
+					] > mp;
+
+					[$c2; $c3] > Ai
+				} > cp
+			} > Ui;
+
+			[$c1; $c23] > Ai as is_fun(h, a, c)
 		}
 	}
 }
