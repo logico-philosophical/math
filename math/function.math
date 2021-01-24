@@ -467,6 +467,19 @@ theorem fun_im_in_codomain(cls f: @11, $A$ cls a: @12, $B$ cls b: @13) {
 	}
 }
 
+theorem fun_im_in_i(cls f: @11, $A$ cls a: @12, $B$ cls b: @13, cls x: @21) {
+	is_fun(f, a, b), in(x, a) |- {
+		$fx_is_set = [@h1; @h2] > funcall_in_codomain > set_i;
+		
+		$X = [@h1; @h2] > funcall_def
+		> Xi((cls z) => {
+			in(pair(z, funcall(f, x)), f)
+		}, x);
+		
+		[$fx_is_set; $X] > setbuilder_i as in(funcall(f, x), rel_im(f))
+	}
+}
+
 "매개변수가 하나인 메타함수로 함수를 만든다. 함수를 [$x\mapsto x^2]처럼 표현하는 것과 비슷한 방식이다."
 $\left[#1\right]_{<<\in>>#2}$
 cls map(fun f, $A$ cls a) {

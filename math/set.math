@@ -1183,7 +1183,7 @@ cls bigcup($A$ cls a) {
 "일반적으로 [$\bigcup_{x\in A} f(x)]라 쓰는 것. bigcup보다 일반적이다."
 $\left(<<\bigcup>>_{\in #1}#2\right)$
 cls bigcup2($A$ cls a, fun f) {
-	setbuilder((cls z) => Xin(a, (cls x) => in(z, f(x))))
+	setbuilder((cls w) => Xin(a, (cls z) => in(w, f(z))))
 }
 
 "일반적으로 [$\bigcup_{fx} g(x)]라 쓰는 것. bigcup2보다 일반적이다. bigcup2와 달리 고유 클래스(proper class)들의 합집합을 만들 수 있다는 장점이 있다."

@@ -1089,6 +1089,27 @@ theorem fun_iterated_base(cls f: @11, cls x: @21, $A$ cls a: @12) using fun_iter
 	}
 }
 
+theorem fun_iterated_step(cls f: @11, $A$ cls a: @12, cls n: @21, cls x: @31) using fun_iterated_call {
+	is_fun(f, a, a), in(n, omega), in(x, a) |- {
+		$foo = [
+			@h2;
+			[@h1; @h3] > fun_iterated_ird
+			> Ae2 > Ae2 > Ue(?, n) as I(
+				in(n, omega),
+				eq(
+					fun_iterated_call(f, successor(n), x),
+					funcall(f, fun_iterated_call(f, n, x))
+				)
+			)
+		] > mp;
+		
+		$eq1 = [@h1; @h2 > successor_in_omega; @h3] > fun_iterated_def;
+		$eq2 = [@h1; @h2; @h3] > fun_iterated_def > funcall_eq_i(f, ?, ?);
+		
+		[[$eq1; $foo] > eq_transitive; $eq2 > eq_symmetric] > eq_transitive
+	}
+}
+
 theorem fun_iterated_is_fun(cls f: @11, $A$ cls a: @12, cls n: @21) using fun_iterated_call {
 	is_fun(f, a, a), in(n, omega) |- {
 		$fun_dom = @h1 > fun_dom;
@@ -1223,6 +1244,58 @@ theorem schroeder_bernstein_1($A$ cls a: @12, $B$ cls b: @13, cls f: @11, cls g:
 					} > Ui;
 
 					$y_in_b > map_is_fun as is_fun(h, a, b)
+				}
+			}
+		}
+	}
+}
+
+theorem schroeder_bernstein__1($A$ cls a: @12, $B$ cls b: @13, cls f: @11, cls g: @21) {
+	is_injection(f, a, b), is_injection(g, b, a) |- {
+		with ($A^\ast$ cls aa = bigcup2(omega, (cls n) => rel_im_set(fun_iterated(rel_composite(g, f), n), setminus(a, rel_im(g))))) {
+			with ($\mathfrak h$ fun hh = (cls x) => if(in(x, aa), funcall(g, funcall(f, x)), x)) {
+				with (cls h = map(hh, a)) {
+					$f_is_fun = @h1 > Ae1;
+					$g_is_fun = @h2 > Ae1;
+					$gf_is_fun = [$f_is_fun; $g_is_fun] > fun_composite_is_fun;
+					$gf0_is_fun = [$gf_is_fun; zero_in_omega()] > fun_iterated_is_fun;
+					
+					$h_is_fun = (cls x) => {
+						in(x, a) /* @h3 */ |- {
+							$x_in_aa_or_not = lxm(in(x, aa));
+
+							$c1 = in(x, aa) /* @h4 */ |- {
+								$hx_eq_gfx = @h4 > if_def_1 as eq(hh(x), funcall(g, funcall(f, x)));
+
+								$fx_in_b = [$f_is_fun; @h3] > funcall_in_codomain;
+
+								$gfx_in_im_g = [$g_is_fun; $fx_in_b] > fun_im_in_i;
+
+								[$gfx_in_im_g; $hx_eq_gfx] > in_eq_left_2
+							} > cp;
+
+							$c2 = Nin(x, aa) /* @h4 */ |- {
+								$hx_eq_x = @h4 > if_def_2 as eq(hh(x), x);
+								$x_in_im_g = Nin(x, rel_im(g)) |- {
+									$x_in_aa = [
+										zero_in_omega();
+										[
+											[@h3; @h5] > setminus_i;
+											[$gf_is_fun; setminus_is_smaller(a, rel_im(g))] > fun_iterated_im_base
+										] > in_eq_right_2
+									] > bigcup2_i as in(x, aa);
+
+									[$x_in_aa; @h4] > Fi
+								} > Ni_alt > NNe;
+
+								[$x_in_im_g; $hx_eq_x] > in_eq_left_2
+							} > cp;
+
+							[$x_in_aa_or_not; $c1; $c2] > Oe
+						} > cp
+					} > Ui > map_is_fun as is_fun(h, a, rel_im(g));
+					
+					$h_is_fun
 				}
 			}
 		}
