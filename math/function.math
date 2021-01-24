@@ -13,11 +13,11 @@ st is_fun(cls f, $A$ cls a, $B$ cls b) {
 
 "함수공간(function space)."
 $\left\{#1<<\to>>#2\right\}$
-cls fun_set($A$ cls a, $B$ cls b) {
+cls fun_space($A$ cls a, $B$ cls b) {
 	setbuilder((cls f) => is_fun(f, a, b))
 }
 
-theorem fun_set_in_i(cls f: @31, $A$ cls a: @11, $B$ cls b: @21) {
+theorem fun_space_in_i(cls f: @31, $A$ cls a: @11, $B$ cls b: @21) {
 	set(a), set(b), is_fun(f, a, b) |- {
 		[
 			[
@@ -25,19 +25,19 @@ theorem fun_set_in_i(cls f: @31, $A$ cls a: @11, $B$ cls b: @21) {
 				@h3 > Ae1
 			] > subset_is_set;
 			@h3
-		] > setbuilder_i as in(f, fun_set(a, b))
+		] > setbuilder_i as in(f, fun_space(a, b))
 	}
 }
 
-theorem fun_set_subseteq_cartesian($A$ cls a, $B$ cls b) {
+theorem fun_space_subseteq_cartesian($A$ cls a, $B$ cls b) {
 	(cls f) => {
-		in(f, fun_set(a, b)) |- {
+		in(f, fun_space(a, b)) |- {
 			[
 				@h1 > set_i;
 				@h1 > setbuilder_e > Ae1
 			] > setbuilder_i as in(f, power(cartesian(a, b)))
 		} > cp
-	} > Ui as subseteq(fun_set(a, b), power(cartesian(a, b)))
+	} > Ui as subseteq(fun_space(a, b), power(cartesian(a, b)))
 }
 
 theorem fun_subseteq_cartesian(cls f: @11, $A$ cls a: @12, $B$ cls b: @13) {
