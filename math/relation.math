@@ -372,6 +372,22 @@ theorem rel_im_set_eq_i($R$ cls r, $A$ cls a: @11, $B$ cls b: @12) {
 	}
 }
 
+theorem rel_im_set_subseteq_i($R$ cls r, $A$ cls a: @11, $B$ cls b: @12) {
+	subseteq(a, b) |- {
+		(cls y) => {
+			in(y, rel_im_set(r, a)) |- {
+				[
+					@h2 > set_i;
+					[
+						@h1;
+						@h2 > setbuilder_e
+					] > Xin_supset
+				] > setbuilder_i as in(y, rel_im_set(r, b))
+			} > cp
+		} > Ui as subseteq(rel_im_set(r, a), rel_im_set(r, b))
+	}
+}
+
 theorem rel_im_set_in_i($R$ cls r: @22, $A$ cls a: @12, cls x: @11, cls y: @212) {
 	in(x, a), in(pair(x, y), r) |- {
 		[

@@ -314,6 +314,19 @@ theorem subseteq_eq(cls x: @11, cls y: @12, cls z: @22) {
 	}
 }
 
+theorem in_subseteq(cls x: @12, cls y: @22, cls z: @11) {
+	in(z, x), subseteq(x, y) |- {
+		[
+			@h1;
+			@h2 > Ue(?, z)
+		] > mp
+	}
+}
+
+theorem self_subseteq_self(cls x) {
+	(cls z) => { in(z, x) |- @h1 > cp } > Ui as subseteq(x, x)
+}
+
 theorem call_eq_i(fun f, cls x: @11, cls y: @12) {
 	eq(x, y) |- {
 		[@h1; eq_reflexive(f(x))] > ax_indiscernible_m1((cls y) => eq(f(x), f(y)), x, y)
@@ -412,6 +425,24 @@ st Xin4($A$ cls a, $B$ cls b, $C$ cls c, $D$ cls d, pr4 f) {
 	Xin(a, (cls x) => Xin(b, (cls y) => Xin(c, (cls z) => Xin(d, (cls w) => f(x, y, z, w)))))
 }
 
+theorem Xin_supset($A$ cls a: @11, $B$ cls b: @12, pr f: @22) {
+	subseteq(a, b), Xin(a, f) |- {
+		$U = (cls x) => {
+			in(x, a), f(x) |- {
+				[
+					[@h3; @h1] > in_subseteq;
+					@h4
+				] > Ai
+			} > cp2
+		} > Ui;
+		
+		[@h2; $U] > mpX(
+			(cls x) => A(in(x, a), f(x)),
+			(cls x) => A(in(x, b), f(x))
+		) as Xin(b, f)
+	}
+}
+
 theorem Xin_to_X($A$ cls a: @11, pr f: @12) {
 	Xin(a, f) |- {
 		@h1 > XAe2(is_in(a), f)
@@ -440,7 +471,7 @@ theorem Xin_eq($A$ cls a: @11, $B$ cls b: @12, pr f) {
 }
 
 "Xin을 위한 mp."
-theorem mpXin($A$ cls a: @11, pr f: @12, pr g: @222) {
+theorem mpXin($A$ cls a: @11, pr f: @12, pr g: @r2) {
 	Xin(a, f), Uin(a, If(f, g)) |- {
 		[
 			@h1;
@@ -464,7 +495,7 @@ theorem mpXin($A$ cls a: @11, pr f: @12, pr g: @222) {
 
 theorem mpXin_Xe_p($A$ cls a: @11, pr f: @12, st p) {
 	Xin(a, f), Uin(a, If(f, (cls z) => p)) |- {
-		[@h1; @h2] > mpXin > XAe2(is_in(a), (cls z) => p) > Xe_p(p)
+		[@h1; @h2] > mpXin as Xin(a, (cls z) => p) > XAe2(is_in(a), (cls z) => p) > Xe_p(p)
 	}
 }
 
@@ -495,19 +526,6 @@ theorem set_i_O(cls x, cls y, cls z) {
 			set_i(z, y) > cp
 		] > Oe
 	}
-}
-
-theorem in_subseteq(cls x: @12, cls y: @22, cls z: @11) {
-	in(z, x), subseteq(x, y) |- {
-		[
-			@h1;
-			@h2 > Ue(?, z)
-		] > mp
-	}
-}
-
-theorem self_subseteq_self(cls x) {
-	(cls z) => { in(z, x) |- @h1 > cp } > Ui as subseteq(x, x)
 }
 
 "[$f]를 만족하는 것들이 서로 같다."

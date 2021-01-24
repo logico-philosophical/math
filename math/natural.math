@@ -94,6 +94,11 @@ theorem successor_in_omega(cls z: @11) {
 	}
 }
 
+theorem one_in_omega() {
+	zero_in_omega()
+	> successor_in_omega as in(ord_one, omega)
+}
+
 "[$\omega]는 successor set이다."
 theorem omega_is_successor_set() {
 	[
@@ -1000,8 +1005,7 @@ theorem omega_add_one(cls n: @11) {
 
 "[$1+1=2]이다."
 theorem one_plus_one_is_two() {
-	zero_in_omega()
-	> successor_in_omega as in(ord_one, omega)
+	one_in_omega()
 	> omega_add_one(ord_one) as eq(omega_add(ord_one, ord_one), ord_two)
 }
 
@@ -1158,6 +1162,40 @@ theorem fun_iterated_step_alt(cls f: @11, $A$ cls a: @12, cls n: @21) {
 	}
 }
 
+theorem fun_iterated_one(cls f: @11, $A$ cls a: @12, cls x: @21) {
+	is_fun(f, a, a), in(x, a) |- {
+		$zero = [@h1; @h2] > fun_iterated_base > funcall_eq_i(f, ?, ?);
+		$one = [@h1; zero_in_omega(); @h2] > fun_iterated_step;
+		
+		[$one; $zero] > eq_transitive as eq(
+			funcall(fun_iterated(f, ord_one), x),
+			funcall(f, x)
+		)
+	}
+}
+
+theorem fun_iterated_one_alt(cls f: @11, $A$ cls a: @12) {
+	is_fun(f, a, a) |- {
+		$eq = (cls x) => {
+			in(x, a) |- {
+				$zero = [@h1; @h2] > fun_iterated_base > funcall_eq_i(f, ?, ?);
+				$one = [@h1; zero_in_omega(); @h2] > fun_iterated_step;
+
+				[$one; $zero] > eq_transitive as eq(
+					funcall(fun_iterated(f, ord_one), x),
+					funcall(f, x)
+				)
+			} > cp
+		} > Ui;
+		
+		[
+			[@h1; one_in_omega()] > fun_iterated_is_fun;
+			@h1;
+			$eq
+		] > fun_eq_i
+	}
+}
+
 theorem fun_iterated_im_base(cls f: @11, $A$ cls a: @12, $B$ cls b: @21) {
 	is_fun(f, a, a), subseteq(b, a) |- {
 		$f0_is_fun = [@h1; zero_in_omega()] > fun_iterated_is_fun;
@@ -1235,6 +1273,13 @@ theorem fun_iterated_im_step(cls f: @11, $A$ cls a: @12, $B$ cls b: @31, cls n: 
 			rel_im_set(fun_iterated(f, successor(n)), b),
 			rel_im_set(f, rel_im_set(fun_iterated(f, n), b))
 		)
+	}
+}
+
+theorem fun_iterated_im_one(cls f: @11, $A$ cls a: @12, $B$ cls b) {
+	is_fun(f, a, a) |- {
+		@h1 > fun_iterated_one_alt
+		> call_eq_i((cls f) => rel_im_set(f, b), ?, ?)
 	}
 }
 
@@ -1350,7 +1395,177 @@ theorem schroeder_bernstein__1($A$ cls a: @12, $B$ cls b: @13, cls f: @11, cls g
 						} > cp
 					} > Ui > map_is_fun as is_fun(h, a, rel_im(g));
 					
-					$h_is_fun
+					$x_in_aa_iff_hx_in_aa = (cls x) => {
+						in(x, a) /* @h3 */ |- {
+							$c1 = in(x, aa) |- {
+								$hx_eq_gfx = @h4 > if_def_1 as eq(hh(x), funcall(g, funcall(f, x)));
+
+								$X = @h4
+								> setbuilder_e as Xin(omega, (cls n) => {
+									in(x, rel_im_set(
+										fun_iterated(rel_composite(g, f), n),
+										setminus(a, rel_im(g))
+									))
+								});
+
+								$U = (cls n) => {
+									in(n, omega), in(x, rel_im_set(
+										fun_iterated(rel_composite(g, f), n),
+										setminus(a, rel_im(g))
+									)) |- {
+										$eq1 = [$f_is_fun; $g_is_fun; @h3] > fun_composite_funcall;
+										$in = [$gf_is_fun; @h3; @h6] > fun_im_set_in_i;
+										$eq2 = [$gf_is_fun; @h5; setminus_is_smaller(a, rel_im(g))] > fun_iterated_im_step;
+
+										$in2 = [[$in; $eq2] > in_eq_right_2; $eq1] > in_eq_left_1;
+
+										[@h5 > successor_in_omega; $in2]
+										> bigcup2_i as in(
+											funcall(g, funcall(f, x)),
+											aa
+										)
+									} > cp2 > curry
+								} > Ui;
+
+								$gfx_in_aa = [$X; $U] > mpXin_Xe_p(?, ?, in(
+									funcall(g, funcall(f, x)),
+									aa
+								));
+
+								[$gfx_in_aa; $hx_eq_gfx] > in_eq_left_2
+							} > cp;
+
+							$c2 = Nin(x, aa) /* @h4 */ |- {
+								in(hh(x), aa) |- {
+									$hx_eq_x = @h4 > if_def_2 as eq(hh(x), x);
+									[[@h5; $hx_eq_x] > in_eq_left_1; @h4] > Fi
+								} > Ni_alt as Nin(hh(x), aa)
+							} > cp;
+
+							[$c1; $c2 > luk3] > Ei
+						} > cp
+					} > Ui;
+					
+					$im_g_cap_aa_subseteq_gfa = (cls x) => {
+						in(x, cap(rel_im(g), aa)) /* @h3 */ |- {
+							$A = @h3 > cap_e;
+							$x_in_im_g = $A > Ae1;
+							$x_in_aa = $A > Ae2;
+
+							$X = $x_in_aa > setbuilder_e as Xin(omega, (cls n) => {
+								in(x, rel_im_set(
+									fun_iterated(rel_composite(g, f), n),
+									setminus(a, rel_im(g))
+								))
+							});
+
+							$U = (cls n) => {
+								in(n, omega) /* @h4 */ |- {
+									in(x, rel_im_set(
+										fun_iterated(rel_composite(g, f), n),
+										setminus(a, rel_im(g))
+									)) |- {
+										$n_nz = eq(n, ord_zero) |- {
+											$in = [@h6; @h5] > ax_indiscernible_m1((cls n) => in(x, rel_im_set(
+												fun_iterated(rel_composite(g, f), n),
+												setminus(a, rel_im(g))
+											)), ?, ?);
+
+											$eq = [$gf_is_fun; setminus_is_smaller(a, rel_im(g))] > fun_iterated_im_base;
+
+											[$x_in_im_g; [$in; $eq] > in_eq_right_1 > setminus_e2] > Fi
+										} > Ni_alt as Neq(n, ord_zero);
+
+										with (pr predicate = (cls n) => O(
+											eq(n, ord_zero),
+											subseteq(
+												rel_im_set(
+													fun_iterated(rel_composite(g, f), n),
+													setminus(a, rel_im(g))
+												),
+												rel_im_set(rel_composite(g, f), a)
+											)
+										)) {
+											$base = eq_reflexive(ord_zero) > Oi1 as predicate(ord_zero);
+
+											$step = (cls n) => {
+												in(n, omega) /* @h6 */ |- {
+													predicate(n) /* @h7 */ |- {
+														$c1 = eq(n, ord_zero) |- {
+															$subseteq = setminus_is_smaller(a, rel_im(g))
+															> rel_im_set_subseteq_i(rel_composite(g, f), ?, ?);
+
+															$eq = $gf_is_fun > fun_iterated_im_one(?, ?, setminus(a, rel_im(g)));
+
+															$subseteq2 = [$eq; $subseteq] > eq_subseteq;
+
+															$eq2 = @h8 > successor_eq_i as eq(successor(n), ord_one)
+															> call_eq_i((cls m) => rel_im_set(
+																fun_iterated(rel_composite(g, f), m),
+																setminus(a, rel_im(g))
+															), ?, ?);
+
+															[$eq2; $subseteq2] > eq_subseteq > Oi2 as predicate(successor(n))
+														} > cp;
+
+														$c2 = subseteq(
+															rel_im_set(
+																fun_iterated(rel_composite(g, f), n),
+																setminus(a, rel_im(g))
+															),
+															rel_im_set(rel_composite(g, f), a)
+														) /* @h8 */ |- {
+															$subseteq = @h8 > rel_im_set_subseteq_i(rel_composite(g, f), ?, ?);
+															$subseteq2 = $gf_is_fun > fun_im_set_subseteq_codomain(?, ?, ?, a)
+															> rel_im_set_subseteq_i(rel_composite(g, f), ?, ?);
+
+															$eq = rel_composite_im_set(
+																rel_composite(g, f),
+																fun_iterated(rel_composite(g, f), n),
+																setminus(a, rel_im(g))
+															);
+
+															$subseteq3 = [$subseteq; $subseteq2] > subseteq_subseteq;
+
+															$subseteq4 = [$eq; $subseteq3] > eq_subseteq;
+
+															$eq2 = [$gf_is_fun; @h6] > fun_iterated_step_alt
+															> call_eq_i((cls f) => {
+																rel_im_set(f, setminus(a, rel_im(g)))
+															}, ?, ?);
+
+															[$eq2; $subseteq4] > eq_subseteq > Oi2 as predicate(successor(n))
+														} > cp;
+
+														[@h7; $c1; $c2] > Oe
+													} > cp
+												} > cp
+											} > Ui;
+
+											[
+												@h5;
+												[
+													[
+														@h4;
+														[$base; $step] > induce(predicate)
+														> Ue(?, n)
+													] > mp;
+													$n_nz
+												] > Oe1
+											] > in_subseteq
+										}
+									} > cp
+								} > cp
+							} > Ui;
+
+							[$X; $U] > mpXin_Xe_p(?, ?, in(x, rel_im_set(rel_composite(g, f), a)))
+						} > cp
+					} > Ui as subseteq(
+						cap(rel_im(g), aa),
+						rel_im_set(rel_composite(g, f), a)
+					);
+					
+					$im_g_cap_aa_subseteq_gfa
 				}
 			}
 		}

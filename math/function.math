@@ -299,7 +299,7 @@ theorem funcall_in_codomain(cls f: @11, $A$ cls a: @12, $B$ cls b: @13, cls x: @
 	}
 }
 
-theorem fun_im_in_codomain(cls f: @11, $A$ cls a: @12, $B$ cls b: @13) {
+theorem fun_im_subseteq_codomain(cls f: @11, $A$ cls a: @12, $B$ cls b: @13) {
 	is_fun(f, a, b) |- {
 		(cls y) => {
 			in(y, rel_im(f)) |- {
@@ -331,6 +331,34 @@ theorem fun_im_in_i(cls f: @11, $A$ cls a: @12, $B$ cls b: @13, cls x: @21) {
 		}, x);
 		
 		[$fx_is_set; $X] > setbuilder_i as in(funcall(f, x), rel_im(f))
+	}
+}
+
+theorem fun_im_set_in_i(cls f: @11, $A$ cls a: @12, $B$ cls b: @13, $C$ cls c: @32, cls x: @21) {
+	is_fun(f, a, b), in(x, a), in(x, c) |- {
+		[@h3; [@h1; @h2] > funcall_def] > rel_im_set_in_i
+	}
+}
+
+theorem fun_im_set_subseteq_im(cls f: @11, $A$ cls a: @12, $B$ cls b: @13, $C$ cls c) {
+	is_fun(f, a, b) |- {
+		(cls y) => {
+			in(y, rel_im_set(f, c)) |- {
+				[
+					@h2 > set_i;
+					@h2 > setbuilder_e > Xin_to_X
+				] > setbuilder_i as in(y, rel_im(f))
+			} > cp
+		} > Ui as subseteq(rel_im_set(f, c), rel_im(f))
+	}
+}
+
+theorem fun_im_set_subseteq_codomain(cls f: @11, $A$ cls a: @12, $B$ cls b: @13, $C$ cls c) {
+	is_fun(f, a, b) |- {
+		[
+			@h1 > fun_im_set_subseteq_im(f, a, b, c);
+			@h1 > fun_im_subseteq_codomain
+		] > subseteq_subseteq
 	}
 }
 
@@ -866,7 +894,7 @@ theorem injection_to_bijection(cls f: @11, $A$ cls a: @12, $B$ cls b: @13) {
 		$f_is_inj = @h1 > Ae2;
 
 		$inj = [
-			$f_is_fun > fun_im_in_codomain;
+			$f_is_fun > fun_im_subseteq_codomain;
 			$f_is_inj
 		] > Uin_subset;
 

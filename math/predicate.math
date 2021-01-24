@@ -395,7 +395,7 @@ theorem Xi2(pr2 f, cls x, cls y) {
 }
 
 "X를 위한 mp."
-theorem mpX(pr f: @11, pr g: @212) {
+theorem mpX(pr f: @11, pr g: @r1) {
 	X(f), U(If(f, g)) |- {
 		N(X(g)) |- {
 			[
@@ -455,7 +455,7 @@ theorem mpXE1(pr f, pr g) {
 		[
 			@h1;
 			@h2 > Ee1U
-		] > mpX
+		] > mpX as X(g)
 	}
 }
 
@@ -464,7 +464,7 @@ theorem mpXE2(pr f, pr g) {
 		[
 			@h1;
 			@h2 > Ee2U
-		] > mpX
+		] > mpX as X(f)
 	}
 }
 
@@ -488,7 +488,7 @@ theorem X2e_p(st p) {
 
 theorem mpX_Xe_p(pr f: @11, st p) {
 	X(f), U(If(f, (cls z) => p)) |- {
-		[@h1; @h2] > mpX > Xe_p(p)
+		[@h1; @h2] > mpX as X((cls z) => p) > Xe_p(p)
 	}
 }
 

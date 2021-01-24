@@ -184,7 +184,7 @@ theorem mt(st p: @11, st q: @21) {
 }
 
 "선언 도입(disjunction introduction) 1."
-theorem Oi1(st p: @1, st q) using O {
+theorem Oi1(st p: @1, st q: @r2) using O {
 	p |- {
 		N(p) |- {
 			[@h1; @h2] > Ne(?, q)
@@ -193,7 +193,7 @@ theorem Oi1(st p: @1, st q) using O {
 }
 
 "선언 도입(disjunction introduction) 2."
-theorem Oi2(st p, st q: @1) using O {
+theorem Oi2(st p: @r1, st q: @1) using O {
 	q |- {
 		N(p) |- @h1 > cp as O(p, q)
 	}
