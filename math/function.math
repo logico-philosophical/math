@@ -55,6 +55,15 @@ theorem fun_in_e1(cls f: @11, $A$ cls a: @12, $B$ cls b: @13, cls x: @211, cls y
 	}
 }
 
+theorem fun_in_e2(cls f: @11, $A$ cls a: @12, $B$ cls b: @13, cls x: @211, cls y: @212) {
+	is_fun(f, a, b), in(pair(x, y), f) |- {
+		[
+			@h2;
+			@h1 > fun_subseteq_cartesian
+		] > in_subseteq > cartesian_in_e2
+	}
+}
+
 theorem fun_im_Xq(cls f: @11, $A$ cls a: @12, $B$ cls b: @13) {
 	is_fun(f, a, b) |- {
 		@h1 > Ae2
@@ -594,6 +603,7 @@ theorem fun_composite_is_fun_1(cls f, cls g, $A$ cls a, $B$ cls b, $C$ cls c) {
 	}
 }
 
+"[$\forall_{\in A}]의 [${\in}A]는 일부러 뗀 것이다."
 theorem fun_composite_is_fun_2(cls f, cls g) {
 	U((cls x) => Q((cls y) => in(pair(x, y), f))),
 	U((cls y) => Q((cls z) => in(pair(y, z), g))) |- {
@@ -637,6 +647,51 @@ theorem fun_composite_is_fun_2(cls f, cls g) {
 						[$y1X; $y1U] > mpX_Xe_p(?, eq(z1, z2))
 					} > cp2
 				} > Ui2 as Q((cls z) => in(pair(x, z), h))
+			} > Ui
+		}
+	}
+}
+
+theorem fun_composite_is_fun_4(cls f, cls g) {
+	U((cls y) => Q((cls x) => in(pair(x, y), f))),
+	U((cls z) => Q((cls y) => in(pair(y, z), g))) |- {
+		with (cls h = rel_composite(g, f)) {
+			(cls z) => {
+				$Q = @h2 > Ue(?, z);
+				
+				(cls x1, cls x2) => {
+					in(pair(x1, z), h) /* @h3 */, in(pair(x2, z), h) |- {
+						$X1 = @h3 > setbuilder_pair_e as X((cls y1) => A(in(pair(x1, y1), f), in(pair(y1, z), g)));
+						$X2 = @h4 > setbuilder_pair_e as X((cls y2) => A(in(pair(x2, y2), f), in(pair(y2, z), g)));
+
+						$U1 = (cls y1) => {
+							in(pair(x1, y1), f) /* @h5 */, in(pair(y1, z), g) |- {
+								$U2 = (cls y2) => {
+									in(pair(x2, y2), f) /* @h7 */, in(pair(y2, z), g) |- {
+										$y1_is_y2 = [[@h6; @h8] > Ai; $Q > Ue2(?, y1, y2)] > mp;
+
+										$A = [
+											@h5;
+											[
+												@h7;
+												[eq_reflexive(x2); $y1_is_y2] > pair_eq_i
+											] > in_eq_left_2
+										] > Ai;
+
+										[
+											$A;
+											@h1 > Ue(?, y1) > Ue2(?, x1, x2)
+										] > mp
+									} > cp2
+								} > Ui;
+
+								[$X2; $U2] > mpX_Xe_p(?, eq(x1, x2))
+							} > cp2
+						} > Ui;
+
+						[$X1; $U1] > mpX_Xe_p(?, eq(x1, x2))
+					} > cp2
+				} > Ui2 as Q((cls x) => in(pair(x, z), h))
 			} > Ui
 		}
 	}
@@ -805,6 +860,30 @@ st is_injection(cls f, $A$ cls a, $B$ cls b) {
 	A(is_fun(f, a, b), Uin(b, (cls y) => Q((cls x) => in(pair(x, y), f))))
 }
 
+theorem injection_dom_Q_alt(cls f: @11, $A$ cls a: @12, $B$ cls b: @13) {
+	is_injection(f, a, b) |- {
+		(cls y) => {
+			$f_fun = @h1 > Ae1;
+			$O = lxm(in(y, b));
+
+			$c1 = in(y, b) |- {
+				[@h2; @h1 > Ae2 > Ue(?, y)] > mp
+			} > cp;
+
+			$c2 = Nin(y, b) /* @h2 */ |- {
+				(cls x) => {
+					in(pair(x, y), f) |- {
+						[[$f_fun; @h3] > fun_in_e2; @h2] > Fi
+					} > Ni_alt
+				} > Ui > UN_to_NX((cls x) => in(pair(x, y), f))
+				> NX_to_Q
+			} > cp;
+
+			[$O; $c1; $c2] > Oe
+		} > Ui
+	}
+}
+
 theorem injection_dom_Q_m(cls f: @11, $A$ cls a: @12, $B$ cls b: @13, cls x1: @311, cls x2: @411, cls y: @21) {
 	is_injection(f, a, b), in(y, b), in(pair(x1, y), f), in(pair(x2, y), f) |- {
 		[
@@ -814,6 +893,21 @@ theorem injection_dom_Q_m(cls f: @11, $A$ cls a: @12, $B$ cls b: @13, cls x1: @3
 				@h1 > Ae2 > Ue(?, y)
 			] > mp > Ue2(?, x1, x2)
 		] > mp
+	}
+}
+
+theorem injection_composite_is_injection(cls f: @11, cls g: @21, $A$ cls a: @12, $B$ cls b: @13, $C$ cls c: @23) {
+	is_injection(f, a, b), is_injection(g, b, c) |- {
+		$f_is_fun = @h1 > Ae1;
+		$g_is_fun = @h2 > Ae1;
+		$gf_is_fun = [$f_is_fun; $g_is_fun] > fun_composite_is_fun;
+		$f_inj = @h1 > injection_dom_Q_alt;
+		$g_inj = @h2 > injection_dom_Q_alt;
+		
+		$gf_inj = [$f_inj; $g_inj] > fun_composite_is_fun_4(f, g)
+		> U_to_Uin(c, ?);
+		
+		[$gf_is_fun; $gf_inj] > Ai as is_injection(rel_composite(g, f), a, c)
 	}
 }
 

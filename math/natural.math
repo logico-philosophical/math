@@ -1358,9 +1358,10 @@ theorem schroeder_bernstein__1($A$ cls a: @12, $B$ cls b: @13, cls f: @11, cls g
 					$f_is_fun = @h1 > Ae1;
 					$g_is_fun = @h2 > Ae1;
 					$gf_is_fun = [$f_is_fun; $g_is_fun] > fun_composite_is_fun;
+					$gf_is_injection = [@h1; @h2] > injection_composite_is_injection;
 					$gf0_is_fun = [$gf_is_fun; zero_in_omega()] > fun_iterated_is_fun;
 					
-					$h_is_fun = (cls x) => {
+					$hx_in_im_g = (cls x) => {
 						in(x, a) /* @h3 */ |- {
 							$x_in_aa_or_not = lxm(in(x, aa));
 
@@ -1393,7 +1394,9 @@ theorem schroeder_bernstein__1($A$ cls a: @12, $B$ cls b: @13, cls f: @11, cls g
 
 							[$x_in_aa_or_not; $c1; $c2] > Oe
 						} > cp
-					} > Ui > map_is_fun as is_fun(h, a, rel_im(g));
+					} > Ui;
+					
+					$h_is_fun = $hx_in_im_g > map_is_fun as is_fun(h, a, rel_im(g));
 					
 					$x_in_aa_iff_hx_in_aa = (cls x) => {
 						in(x, a) /* @h3 */ |- {
@@ -1565,7 +1568,87 @@ theorem schroeder_bernstein__1($A$ cls a: @12, $B$ cls b: @13, cls f: @11, cls g
 						rel_im_set(rel_composite(g, f), a)
 					);
 					
-					$im_g_cap_aa_subseteq_gfa
+					$h_inj = (cls y) => {
+						in(y, rel_im(g)) /* @h3 */ |- {
+							$y_in_aa_or_not = lxm(in(y, aa));
+
+							(cls x1, cls x2) => {
+								in(pair(x1, y), h) /* @h4 */, in(pair(x2, y), h) |- {
+									$O = lxm(in(y, aa));
+
+									$x1_in_a = [$h_is_fun; @h4] > fun_in_e1;
+									$y_is_hx1 = [
+										[$h_is_fun; @h4] > funcall_i;
+										[$hx_in_im_g; $x1_in_a] > map_funcall(hh, a, rel_im(g), x1)
+									] > eq_transitive;
+									$x2_in_a = [$h_is_fun; @h5] > fun_in_e1;
+									$y_is_hx2 = [
+										[$h_is_fun; @h5] > funcall_i;
+										[$hx_in_im_g; $x2_in_a] > map_funcall(hh, a, rel_im(g), x2)
+									] > eq_transitive;
+
+									$E1 = [$x1_in_a; $x_in_aa_iff_hx_in_aa > Ue(?, x1)] > mp;
+									$E2 = [$x2_in_a; $x_in_aa_iff_hx_in_aa > Ue(?, x2)] > mp;
+
+									$c1 = in(y, aa) /* @h6 */ |- {
+										$hx1_in_aa = [@h6; $y_is_hx1] > in_eq_left_1;
+										$hx2_in_aa = [@h6; $y_is_hx2] > in_eq_left_1;
+
+										$x1_in_aa = [$hx1_in_aa; $E1] > mpE2;
+										$x2_in_aa = [$hx2_in_aa; $E2] > mpE2;
+
+										$hx1_eq_gfx1 = $x1_in_aa > if_def_1 as eq(hh(x1), funcall(g, funcall(f, x1)));
+										$hx2_eq_gfx2 = $x2_in_aa > if_def_1 as eq(hh(x2), funcall(g, funcall(f, x2)));
+
+										$y_is_gfx1 = [
+											[$y_is_hx1; $hx1_eq_gfx1] > eq_transitive;
+											[$f_is_fun; $g_is_fun; $x1_in_a] > fun_composite_funcall > eq_symmetric
+										] > eq_transitive;
+										$y_is_gfx2 = [
+											[$y_is_hx2; $hx2_eq_gfx2] > eq_transitive;
+											[$f_is_fun; $g_is_fun; $x2_in_a] > fun_composite_funcall > eq_symmetric
+										] > eq_transitive;
+
+										[
+											[
+												[$gf_is_fun; $x1_in_a; $y_is_gfx1] > funcall_e;
+												[$gf_is_fun; $x2_in_a; $y_is_gfx2] > funcall_e
+											] > Ai;
+											$gf_is_injection > injection_dom_Q_alt > Ue(?, y) > Ue2(?, x1, x2)
+										] > mp
+									} > cp;
+
+									$c2 = Nin(y, aa) /* @h6 */ |- {
+										$hx1_Nin_aa = in(hh(x1), aa) |- {
+											[[@h7; $y_is_hx1] > in_eq_left_2; @h6] > Fi
+										} > Ni_alt as Nin(hh(x1), aa);
+
+										$hx2_Nin_aa = in(hh(x2), aa) |- {
+											[[@h7; $y_is_hx2] > in_eq_left_2; @h6] > Fi
+										} > Ni_alt as Nin(hh(x2), aa);
+
+										$x1_Nin_aa = [$hx1_Nin_aa; $E1 > Ee1 > contrapose]
+										> mp as Nin(x1, aa);
+
+										$x2_Nin_aa = [$hx2_Nin_aa; $E2 > Ee1 > contrapose]
+										> mp as Nin(x2, aa);
+
+										$hx1_is_x1 = $x1_Nin_aa > if_def_2 as eq(hh(x1), x1);
+										$hx2_is_x2 = $x2_Nin_aa > if_def_2 as eq(hh(x2), x2);
+
+										$y_is_x1 = [$y_is_hx1; $hx1_is_x1] > eq_transitive;
+										$y_is_x2 = [$y_is_hx2; $hx2_is_x2] > eq_transitive;
+
+										[$y_is_x1 > eq_symmetric; $y_is_x2] > eq_transitive
+									} > cp;
+
+									[$O; $c1; $c2] > Oe
+								} > cp2
+							} > Ui2 as Q((cls x) => in(pair(x, y), h))
+						} > cp
+					} > Ui;
+					
+					[$h_is_fun; $h_inj] > Ai as is_injection(h, a, rel_im(g))
 				}
 			}
 		}
