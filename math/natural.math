@@ -1283,74 +1283,8 @@ theorem fun_iterated_im_one(cls f: @11, $A$ cls a: @12, $B$ cls b) {
 	}
 }
 
+"[$A]에서 [$B]로의 단사함수 및 [$B]에서 [$A]로의 단사함수를 사용하여 [$A]에서 [$\operatorname{im}g]로의 전단사함수를 만든다."
 theorem schroeder_bernstein_1($A$ cls a: @12, $B$ cls b: @13, cls f: @11, cls g: @21) {
-	is_injection(f, a, b), is_injection(g, b, a) |- {
-		with ($A^\ast$ cls aa = bigcup2(omega, (cls n) => rel_im_set(fun_iterated(rel_composite(g, f), n), setminus(a, rel_im(g))))) {
-			with ($\mathfrak h$ fun hh = (cls x) => if(in(x, aa), funcall(f, x), funcall(rel_inverse(g), x))) {
-				with (cls h = map(hh, a)) {
-					$f_is_fun = @h1 > Ae1;
-
-					$g_is_fun = @h2 > Ae1;
-
-					$y_in_b = (cls x) => {
-						in(x, a) |- {
-							$b = lxm(in(x, aa));
-
-							$c1 = in(x, aa) |- {
-								$y_is_fx = @h4 > if_def_1(?, funcall(f, x), funcall(rel_inverse(g), x));
-
-								[
-									[$f_is_fun; @h3] > funcall_in_codomain;
-									$y_is_fx
-								] > in_eq_left_2
-							} > cp;
-
-							$c2 = Nin(x, aa) |- {
-								$x_in_a_minus_aa = [@h3; @h4] > setminus_i;
-
-								$y_is_g_inv_x = @h4 > if_def_2(?, funcall(f, x), funcall(rel_inverse(g), x));
-
-								$g_inv_is_bijection = @h2 > injection_to_bijection > bijection_inverse_is_bijection;
-
-								$g_inv_is_function = $g_inv_is_bijection > Ae1;
-
-								$gf_is_fun = [$f_is_fun; $g_is_fun] > fun_composite_is_fun;
-
-								$f0_is_fun = [$gf_is_fun; zero_in_omega()] > fun_iterated_is_fun;
-
-								$0 = [$gf_is_fun; setminus_is_smaller(a, rel_im(g))] > fun_iterated_im_base;
-
-								$x_in_im_g = Nin(x, rel_im(g)) |- {
-									[
-										[
-											zero_in_omega();
-											[
-												[@h3; @h5] > setminus_i;
-												$0
-											] > in_eq_right_2
-										] > bigcup2_i as in(x, aa);
-										@h4
-									] > Fi
-								} > Ni_alt > NNe;
-
-								[
-									[$g_inv_is_function; $x_in_im_g] > funcall_in_codomain;
-									$y_is_g_inv_x
-								] > in_eq_left_2
-							} > cp;
-
-							[$b; $c1; $c2] > Oe
-						} > cp
-					} > Ui;
-
-					$y_in_b > map_is_fun as is_fun(h, a, b)
-				}
-			}
-		}
-	}
-}
-
-theorem schroeder_bernstein__1($A$ cls a: @12, $B$ cls b: @13, cls f: @11, cls g: @21) {
 	is_injection(f, a, b), is_injection(g, b, a) |- {
 		with ($A^\ast$ cls aa = bigcup2(omega, (cls n) => rel_im_set(fun_iterated(rel_composite(g, f), n), setminus(a, rel_im(g))))) {
 			with ($\mathfrak h$ fun hh = (cls x) => if(in(x, aa), funcall(g, funcall(f, x)), x)) {
@@ -1764,16 +1698,6 @@ theorem schroeder_bernstein__1($A$ cls a: @12, $B$ cls b: @13, cls f: @11, cls g
 					
 					[$surjection; $injection] > bijection_i
 				}
-			}
-		}
-	}
-}
-
-schema schroeder_bernstein_2($A$ cls a, $B$ cls b, cls f, cls g) {
-	is_injection(f, a, b), is_injection(g, b, a) |- {
-		with ($A^\ast$ cls aa = bigcup2(omega, (cls n) => rel_im_set(fun_iterated(rel_composite(g, f), n), setminus(a, rel_im(g))))) {
-			with (cls h = map((cls x) => if(in(x, aa), funcall(f, x), funcall(rel_inverse(g), x)), a)) {
-				is_bijection(h, a, b)
 			}
 		}
 	}
