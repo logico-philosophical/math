@@ -36,7 +36,7 @@
 			});
 			end = new Date();
 			console.log('--- PARSER GENERATION END ---');
-			console.log(`Parser generation ended in ${end - start} ms`);
+			console.log(`Parser generation took ${end - start} ms`);
 		</script>
 		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Roboto+Mono">
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
@@ -457,7 +457,7 @@
 
 				end = new Date();
 				console.log('--- HTML GENERATION END ---');
-				console.log(`HTML generation ended in ${end - start} ms`);
+				console.log(`HTML generation took ${end - start} ms`);
 				console.log('--- HTML RENDER START ---');
 				start = new Date();
 
@@ -517,7 +517,7 @@
 
 				end = new Date();
 				console.log('--- HTML RENDER END ---');
-				console.log(`HTML render ended in ${end - start} ms`);
+				console.log(`HTML render took ${end - start} ms`);
 			}
 
 			hotkeys('r', (evt, handler) => {
@@ -611,7 +611,7 @@
 					var end = new Date();
 					console.log(program);
 					console.log('--- PROGRAM END ---');
-					console.log(`Program ended in ${end - start} ms`);
+					console.log(`Program took ${end - start} ms`);
 
 					generateHtml();
 				} finally {
