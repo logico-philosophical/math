@@ -62,13 +62,11 @@
 		이 페이지는 math-o-matic으로 만들고 있는 공리계를 보여 줍니다. 페이지 하단에 있는 버튼 중 하나를 눌러서 공리계를 로드하세요. 장치의 계산 성능에 따라 수 초 가량의 시간이 걸릴 수 있습니다.
 		<h2>핫키</h2>
 		<ul>
-			<li><kbd>X</kbd>: 증명 전부 펼치기
 			<li><kbd>R</kbd>, <kbd>F7</kbd>: 다시 로드
 			<li><kbd>C</kbd>: 콘솔 여닫기
 		</ul>
 		<h2>우상단 컨트롤에 관하여</h2>
 		<ul>
-			<li>expand all 버튼은 <kbd>X</kbd> 키를 눌러 클릭할 수 있으며 증명탐색을 전부 활성화합니다. 성능에 부정적 영향이 있을 수 있습니다.
 			<li>reload 버튼은 <kbd>R</kbd> 키를 눌러 클릭할 수 있으며 파일을 다시 불러와서 목록을 재작성합니다. 단 그 과정에서 에러가 발생하였을 경우 이전 목록이 보존되므로 새로운 코드를 작성할 때 유용하게 사용할 수 있습니다.
 			<li>콘솔은 <kbd>C</kbd> 키를 눌러 열 수 있으며 REPL 기능을 제공합니다. <kbd>Ctrl</kbd> + <kbd>L</kbd>을 누르면 콘솔 내용이 지워집니다.
 		</ul>
@@ -82,10 +80,149 @@
 		<div id="list"></div>
 		<div id="summary"></div>
 		<div id="all"></div>
-		<div id="search-background" style="position:fixed;top:0;bottom:0;left:0;right:0;z-index:5000;display:none;"></div>
+		<div id="search-background" style="position:fixed;top:0;bottom:0;left:0;right:0;z-index:20000;display:none;"></div>
+		<div style="position:fixed;top:5px;left:5px;z-index:20001;">
+			<input id="search-input" type="text" placeholder="Search..." style="padding: .3em;">
+			<div id="search-dropdown" style="display: none;">
+				<ul></ul>
+			</div>
+		</div>
+		<script>
+			(() => {
+
+			var nmax = 10;
+
+			function getList(keyword, list) {
+				keyword = keyword.toLowerCase().trim();
+
+				if (!keyword) return [];
+
+				return list
+					.map(name => {
+						var lowername = name.toLowerCase();
+
+						var pname = 0;
+						var matchptrs = [];
+
+						for (var pval = 0; pval < keyword.length; pval++) {
+							if (pname >= name.length) return false;
+							
+							while (lowername[pname] != keyword[pval]) {
+								pname++;
+								if (pname >= name.length) return false;
+							}
+
+							matchptrs.push(pname);
+							pname++;
+						}
+
+						return {
+							name,
+							match: matchptrs
+						};
+					})
+					.filter(e => e)
+					.sort((a, b) => {
+						for (var i = 0; i < a.match.length; i++) {
+							if (a.match[i] != b.match[i])
+								return a.match[i] - b.match[i];
+						}
+
+						return a.name.localeCompare(b.name);
+					})
+					.slice(0, nmax);
+			}
+
+			function show() {
+				$background.style.display = 'block';
+				$dropdown.style.display = 'block';
+			}
+
+			function dismiss() {
+				$background.style.display = 'none';
+				$dropdown.style.display = 'none';
+			}
+
+			function destroy() {
+				dismiss();
+				$input.value = '';
+				selected = false;
+				$('ul', $dropdown).innerHTML = '';
+			}
+
+			var $input = $('#search-input'),
+				$background = $('#search-background'),
+				$dropdown = $('#search-dropdown');
+			
+			var selected = false,
+				list = [];
+
+			$input.addEventListener('focus', evt => {
+				show();
+			});
+
+			$background.addEventListener('click', evt => {
+				dismiss();
+			});
+			
+			$input.addEventListener('input', evt => {
+				var v = $input.value;
+				var $el = $('ul', $dropdown);
+				var html = '';
+
+				list = [];
+
+				getList(v, searchDatabase).forEach(({name, match}, i) => {
+					if (i == 0) selected = 0;
+
+					html += `<li${i == 0 ? ' class="selected"' : ''}><a href="#def-${name}">`
+						+ name.split('').map((e, i) => {
+						return match.includes(i) ? `<b>${e}</b>` : e;
+					}).join('') + '</a></li>';
+
+					list.push(name);
+				});
+
+				$el.innerHTML = html;
+
+				[].forEach.call($$('a', $el), $ => {
+					$.addEventListener('click', evt => { destroy() });
+				});
+			});
+
+			$input.addEventListener('keydown', evt => {
+				if (evt.key == 'Enter') {
+					evt.preventDefault();
+
+					location.href = '#def-' + list[selected];
+					destroy();
+				}
+
+				if (['ArrowDown', 'ArrowUp', 'Tab'].includes(evt.key)) {
+					var direction = evt.key == 'Tab'
+						? evt.shiftKey ? -1 : 1
+						: evt.key == 'ArrowUp' ? -1 : 1;
+
+					evt.preventDefault();
+
+					var len = $$('li', $dropdown).length;
+					if (len <= 0) {
+						selected = false;
+						return;
+					}
+
+					selected = (selected + direction + len) % len;
+
+					[].map.call($$('li', $dropdown), ($, i) => {
+						$.classList[i == selected ? 'add' : 'remove']('selected');
+					});
+				}
+			});
+			
+			})();
+		</script>
 		<div style="position:fixed;top:5px;right:5px;z-index:10000;">
 			<div>
-				<input id="button-expand-all" type="button" class="colored" value="expand all" style="text-transform: uppercase;">
 				<input id="reload" type="button" class="colored" value="reload" style="text-transform: uppercase;">
 				<input id="button-show-console" type="button" class="colored" value="console" style="text-transform: uppercase;">
 			</div>
@@ -94,13 +231,10 @@
 			<div class="console-wrap">
 				<div id="console-display-wrap">
 					<table id="console-display" style="margin: 0"></table>
-					<div id="search-dropdown" style="display: none;">
-						<ul></ul>
-					</div>
 				</div>
-				<script src="./console.js"></script>
 			</div>
 		</div>
+		<script src="./console.js"></script>
 		<script>
 			var program = null;
 			
@@ -110,7 +244,7 @@
 							&& context.protocol == '_relative')
 						return true;
 					
-					if (context.command == '\\htmlId')
+					if (['\\htmlId', '\\htmlData'].includes(context.command))
 						return true;
 					
 					return false;
@@ -259,7 +393,7 @@
 
 					for (var [k, v] of scope.schemaMap) {
 						arr[v._id] = `<div class="block">`
-							+ `<p class="label"><a id="schema-${v.isProved() ? 'p' : 'np'}-${k}" href="#schema-${v.isProved() ? 'p' : 'np'}-${k}">${
+							+ `<p class="label"><a id="def-${k}" href="#def-${k}">${
 								v.annotations.map(a => `<b class="red">${a}</b> `).join('')
 							}<b>${v.schemaType}</b> ${k}</a>(${v.params.map(p => p.toSimpleString()).join(', ')})${
 								v.context.usingList.length
@@ -355,10 +489,10 @@
 					<li><p><b>스키마</b>(${axiomSchemaList.length + notProvedList.length + provedList.length})</p>
 					<ul>
 						<li><b>공리</b>(${axiomSchemaList.length}): ${
-							axiomSchemaList.map(n => `<a href="#schema-p-${n}">${n}</a>`).join(', ')
+							axiomSchemaList.map(n => `<a href="#def-${n}">${n}</a>`).join(', ')
 						}
 						<li><b>증명되지 않음</b>(${notProvedList.length}): ${
-							notProvedList.map(n => `<a href="#schema-np-${n}">${n}</a>`).join(', ')
+							notProvedList.map(n => `<a href="#def-${n}">${n}</a>`).join(', ')
 						}
 						<li><b>정리</b>(${provedList.length})
 					</ul>
@@ -375,11 +509,6 @@
 			hotkeys('r,f7', (evt, handler) => {
 				evt.preventDefault();
 				reload();
-			});
-
-			hotkeys('x', (evt, handler) => {
-				evt.preventDefault();
-				expandAll();
 			});
 
 			document.body.addEventListener('click', evt => {
@@ -413,21 +542,8 @@
 				}
 			});
 
-			function expandAll() {
-				$('#button-expand-all').value = 'expanding...';
-
-				setTimeout(() => {
-					$$('.button-expand-proof').forEach($ => {
-						$.click();
-					});
-
-					$('#button-expand-all').value = 'expand all';
-				}, 0);
-			}
-
-			$('#button-expand-all').addEventListener('click', expandAll);
-
 			var reloading = false;
+			var searchDatabase = [];
 
 			async function reload() {
 				if (!filename) return;

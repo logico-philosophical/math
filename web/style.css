@@ -11,6 +11,7 @@ body {
 	line-height: 1.5;
 	word-break: normal;
 	overflow-wrap: break-word;
+	padding-top:30px;
 }
 
 h1, h2, h3, h4, h5, h6, a, b, strong, input, textarea, th, .katex {
@@ -104,6 +105,10 @@ blockquote {
 	font-family: 'Roboto Mono', monospace, monospace;
 }
 
+.label a {
+	scroll-margin: 70px;
+}
+
 .math {
 	font-size: 1.2em;
 	margin: 1em 0;
@@ -124,12 +129,12 @@ blockquote {
 	color: #303F9F;
 }
 
-.katex a[href^="#schema-np-"] > :not(.mspace) {
+.katex [data-proved="np"] > :not(.mspace) {
 	background-color: #FFEBEE;
 	color: #B71C1C;
 }
 
-.katex a[href^="#schema-p-"] > :not(.mspace) {
+.katex [data-proved="p"] > :not(.mspace) {
 	background-color: #E8F5E9;
 	color: #006064;
 }
@@ -239,9 +244,6 @@ table.explorer td.bbb {
 
 #search-dropdown {
 	background-color: white;
-	position: fixed;
-	bottom: 5px;
-	left: 5px;
 }
 
 #search-dropdown ul {
@@ -253,14 +255,13 @@ table.explorer td.bbb {
 
 #search-dropdown ul li {
 	list-style: none;
-	padding: .1em .3em;
 }
 
 #search-dropdown ul li:hover {
 	background-color: #eee;
 }
 
-#search-dropdown ul li.selected::before {
+#search-dropdown ul li.selected a::before {
 	content: '> ';
 	display: inline;
 	font-weight: bold;
@@ -268,7 +269,7 @@ table.explorer td.bbb {
 
 #search-dropdown ul li a {
 	display: block;
-	padding: .3em;
+	padding: .1em .3em;
 	color: #5f6368;
 	text-decoration: none;
 }

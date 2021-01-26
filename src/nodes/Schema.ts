@@ -118,12 +118,13 @@ export default class Schema extends Fun {
 			].join('');
 		}
 		
-		var id = `schema-${this.isProved() ? 'p' : 'np'}-${this.name}`;
+		var id = 'def-' + this.name,
+			proved = this.isProved() ? 'p' : 'np';
 	
 		if (!root)
-			return `\\href{#${id}}\\mathsf{${Node.escapeTeX(this.name)}}`;
+			return `\\href{#${id}}{\\htmlData{proved=${proved}}{\\mathsf{${Node.escapeTeX(this.name)}}}}`;
 	
-		return `\\href{#${id}}{\\mathsf{${Node.escapeTeX(this.name)}}}\\mathord{\\left(${this.params.map(e => e.toTeXStringWithId(Node.PREC_COMMA) + (e.selector ? `: \\texttt{@${e.selector}}` : '')).join(', ')}\\right)}:\\\\\\quad`
+		return `\\href{#${id}}{\\htmlData{proved=${proved}}{\\mathsf{${Node.escapeTeX(this.name)}}}}\\mathord{\\left(${this.params.map(e => e.toTeXStringWithId(Node.PREC_COMMA) + (e.selector ? `: \\texttt{@${e.selector}}` : '')).join(', ')}\\right)}:\\\\\\quad`
 				+ this.expr.expandMeta(true).toTeXString(true);
 	}
 }
