@@ -1283,7 +1283,9 @@ theorem fun_iterated_im_one(cls f: @11, $A$ cls a: @12, $B$ cls b) {
 	}
 }
 
-"[$A]에서 [$B]로의 단사함수 및 [$B]에서 [$A]로의 단사함수를 사용하여 [$A]에서 [$B]로의 전단사함수를 만든다."
+"[$A]에서 [$B]로의 단사함수 및 [$B]에서 [$A]로의 단사함수를 사용하여 [$A]에서 [$B]로의 전단사함수를 만든다.
+
+증명의 골자는 [~(href=https://github.com/logico-philosophical/math-o-matic/issues/86#issuecomment-765631917)이슈 #86]에서 확인할 수 있다."
 theorem schroeder_bernstein_1($A$ cls a: @12, $B$ cls b: @13, cls f: @11, cls g: @21) {
 	is_injection(f, a, b), is_injection(g, b, a) |- {
 		with ($A^\ast$ cls aa = bigcup2(omega, (cls n) => rel_im_set(fun_iterated(rel_composite(g, f), n), setminus(a, rel_im(g))))) {
