@@ -284,7 +284,7 @@ export default class Funcall extends Expr0 {
 		if (this.fun instanceof Schema) {
 			return (
 				this.fun.name
-					? `\\href{#schema-${this.fun.isProved() ? 'p' : 'np'}-${this.fun.name}}{\\textsf{${Node.escapeTeX(this.fun.name)}}}`
+					? `\\href{#def-${this.fun.name}}{\\htmlData{proved=${this.fun.isProved() ? 'p' : 'np'}}{\\textsf{${Node.escapeTeX(this.fun.name)}}}}`
 					: this.fun.toTeXString(false)
 			) + `\\mathord{\\left(${this.args.map(arg => {
 				return arg.toTeXString(Node.PREC_COMMA);
