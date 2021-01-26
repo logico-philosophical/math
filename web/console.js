@@ -25,13 +25,14 @@ function hint() {
 
 		const cursor = codemirror.getCursor();
 		var str = codemirror.getRange({line:0,ch:0}, cursor);
-		var keyword = str.match(/[a-z0-9_]*$/i);
-		if (!keyword) return;
-		keyword = keyword[0];
+		var keywordMatch = str.match(/\$?[a-z0-9_]*$/i);
+		if (!keywordMatch) return;
+		var keyword = keywordMatch[0];
+		var inputBefore = str.substring(0, str.length - keyword.length);
 
 		if (hintWorker) hintWorker.terminate();
 		hintWorker = new Worker('hintWorker.js');
-		hintWorker.postMessage([keyword, searchDatabase]);
+		hintWorker.postMessage([keyword, inputBefore, searchDatabase]);
 		hintWorker.onmessage = e => {
 			resolve({
 				list: e.data.map(({name, match}) => ({

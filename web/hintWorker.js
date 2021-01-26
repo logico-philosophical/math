@@ -1,21 +1,21 @@
 var nmax = 10;
 
-function getList(value, names) {
-	value = value.toLowerCase().trim();
+function getList(keyword, inputBefore, list) {
+	keyword = keyword.toLowerCase().trim();
 
-	if (!value) return [];
+	if (!keyword || keyword == '$') return [];
 
-	return names
+	return (keyword.startsWith('$') ? inputBefore.match(/\$?[a-z0-9_]*/gi) || [] : list)
 		.map(name => {
 			var lowername = name.toLowerCase();
 
 			var pname = 0;
 			var matchptrs = [];
 
-			for (var pval = 0; pval < value.length; pval++) {
+			for (var pval = 0; pval < keyword.length; pval++) {
 				if (pname >= name.length) return false;
 				
-				while (lowername[pname] != value[pval]) {
+				while (lowername[pname] != keyword[pval]) {
 					pname++;
 					if (pname >= name.length) return false;
 				}
