@@ -1283,7 +1283,7 @@ theorem fun_iterated_im_one(cls f: @11, $A$ cls a: @12, $B$ cls b) {
 	}
 }
 
-"[$A]에서 [$B]로의 단사함수 및 [$B]에서 [$A]로의 단사함수를 사용하여 [$A]에서 [$\operatorname{im}g]로의 전단사함수를 만든다."
+"[$A]에서 [$B]로의 단사함수 및 [$B]에서 [$A]로의 단사함수를 사용하여 [$A]에서 [$B]로의 전단사함수를 만든다."
 theorem schroeder_bernstein_1($A$ cls a: @12, $B$ cls b: @13, cls f: @11, cls g: @21) {
 	is_injection(f, a, b), is_injection(g, b, a) |- {
 		with ($A^\ast$ cls aa = bigcup2(omega, (cls n) => rel_im_set(fun_iterated(rel_composite(g, f), n), setminus(a, rel_im(g))))) {
@@ -1696,7 +1696,12 @@ theorem schroeder_bernstein_1($A$ cls a: @12, $B$ cls b: @13, cls f: @11, cls g:
 					$injection = [$h_is_fun; $h_inj] > Ai as is_injection(h, a, rel_im(g));
 					$surjection = [$h_is_fun; $h_surj] > Ai as is_surjection(h, a, rel_im(g));
 					
-					[$surjection; $injection] > bijection_i
+					$bijection = [$surjection; $injection] > bijection_i;
+					
+					[
+						$bijection;
+						@h2 > injection_to_bijection > bijection_inverse_is_bijection
+					] > bijection_composite_is_bijection
 				}
 			}
 		}
@@ -1704,6 +1709,26 @@ theorem schroeder_bernstein_1($A$ cls a: @12, $B$ cls b: @13, cls f: @11, cls g:
 }
 
 "Schr[&ouml]der[&ndash]Bernstein 정리."
-schema schroeder_bernstein($A$ cls a, $B$ cls b) {
-	X((cls f) => is_injection(f, a, b)), X((cls g) => is_injection(g, b, a)) |- X((cls h) => is_bijection(h, a, b))
+theorem schroeder_bernstein($A$ cls a, $B$ cls b) {
+	X((cls f) => is_injection(f, a, b)), X((cls g) => is_injection(g, b, a)) |- {
+		$U = (cls f) => {
+			is_injection(f, a, b) /* @h3 */ |- {
+				$U = (cls g) => {
+					is_injection(g, b, a) |- {
+						with ($A^\ast$ cls aa = bigcup2(omega, (cls n) => rel_im_set(fun_iterated(rel_composite(g, f), n), setminus(a, rel_im(g))))) {
+							with ($\mathfrak h$ fun hh = (cls x) => if(in(x, aa), funcall(g, funcall(f, x)), x)) {
+								with (cls h = map(hh, a)) {
+									[@h3; @h4] > schroeder_bernstein_1 > Xi(?, rel_composite(rel_inverse(g), h)) as X((cls h) => is_bijection(h, a, b))
+								}
+							}
+						}
+					} > cp
+				} > Ui;
+
+				[@h2; $U] > mpX_Xe_p as X((cls h) => is_bijection(h, a, b))
+			} > cp
+		} > Ui;
+		
+		[@h1; $U] > mpX_Xe_p as X((cls h) => is_bijection(h, a, b))
+	}
 }

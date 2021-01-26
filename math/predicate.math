@@ -486,7 +486,7 @@ theorem X2e_p(st p) {
 	}
 }
 
-theorem mpX_Xe_p(pr f: @11, st p) {
+theorem mpX_Xe_p(pr f: @11, st p: @r) {
 	X(f), U(If(f, (cls z) => p)) |- {
 		[@h1; @h2] > mpX as X((cls z) => p) > Xe_p(p)
 	}
