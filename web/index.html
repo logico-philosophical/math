@@ -62,13 +62,14 @@
 		이 페이지는 math-o-matic으로 만들고 있는 공리계를 보여 줍니다. 페이지 하단에 있는 버튼 중 하나를 눌러서 공리계를 로드하세요. 장치의 계산 성능에 따라 수 초 가량의 시간이 걸릴 수 있습니다.
 		<h2>핫키</h2>
 		<ul>
-			<li><kbd>R</kbd>, <kbd>F7</kbd>: 다시 로드
-			<li><kbd>C</kbd>: 콘솔 여닫기
+			<li><kbd>S</kbd>: 검색</li>
+			<li><kbd>R</kbd>: 다시 로드
+			<li><kbd>C</kbd>: 콘솔 열기
 		</ul>
-		<h2>우상단 컨트롤에 관하여</h2>
+		<h2>우상단 컨트롤</h2>
 		<ul>
-			<li>reload 버튼은 <kbd>R</kbd> 키를 눌러 클릭할 수 있으며 파일을 다시 불러와서 목록을 재작성합니다. 단 그 과정에서 에러가 발생하였을 경우 이전 목록이 보존되므로 새로운 코드를 작성할 때 유용하게 사용할 수 있습니다.
-			<li>콘솔은 <kbd>C</kbd> 키를 눌러 열 수 있으며 REPL 기능을 제공합니다. <kbd>Ctrl</kbd> + <kbd>L</kbd>을 누르면 콘솔 내용이 지워집니다.
+			<li>reload 버튼은 파일을 다시 불러와서 목록을 재작성합니다. 단 그 과정에서 에러가 발생하였을 경우 이전 목록을 보존합니다.
+			<li>콘솔은 REPL 기능을 제공합니다. <kbd>Ctrl</kbd> + <kbd>L</kbd>을 누르면 콘솔 내용이 지워집니다.
 		</ul>
 		<h2>참조</h2>
 		<ul>
@@ -80,7 +81,7 @@
 		<div id="list"></div>
 		<div id="summary"></div>
 		<div id="all"></div>
-		<div id="search-background" style="position:fixed;top:0;bottom:0;left:0;right:0;z-index:20000;display:none;"></div>
+		<div id="search-background" style="position:fixed;top:0;bottom:0;left:0;right:0;z-index:20000;display:none;background-color:rgba(0,0,0,.3)"></div>
 		<div style="position:fixed;top:5px;left:5px;z-index:20001;">
 			<input id="search-input" type="text" placeholder="Search..." style="padding: .3em;">
 			<div id="search-dropdown" style="display: none;">
@@ -141,14 +142,21 @@
 			function dismiss() {
 				$background.style.display = 'none';
 				$dropdown.style.display = 'none';
+				$input.blur();
 			}
 
 			function destroy() {
 				dismiss();
 				$input.value = '';
 				selected = false;
+				list = [];
 				$('ul', $dropdown).innerHTML = '';
 			}
+
+			hotkeys('s', (evt, handler) => {
+				evt.preventDefault();
+				$input.focus();
+			});
 
 			var $input = $('#search-input'),
 				$background = $('#search-background'),
@@ -193,8 +201,14 @@
 			$input.addEventListener('keydown', evt => {
 				if (evt.key == 'Enter') {
 					evt.preventDefault();
+					if (!list[selected]) return;
 
 					location.href = '#def-' + list[selected];
+					destroy();
+				}
+
+				if (evt.key == 'Escape') {
+					evt.preventDefault();
 					destroy();
 				}
 
@@ -205,7 +219,7 @@
 
 					evt.preventDefault();
 
-					var len = $$('li', $dropdown).length;
+					var len = list.length;
 					if (len <= 0) {
 						selected = false;
 						return;
@@ -506,7 +520,7 @@
 				console.log(`HTML render ended in ${end - start} ms`);
 			}
 
-			hotkeys('r,f7', (evt, handler) => {
+			hotkeys('r', (evt, handler) => {
 				evt.preventDefault();
 				reload();
 			});
