@@ -68,9 +68,9 @@ export default abstract class Metaexpr extends Node {
 		// return ret;
 	}
 
-	protected abstract getEqualsPriority(context: ExecutionContext): EqualsPriority;
-
 	protected abstract equalsInternal(obj: Metaexpr, context: ExecutionContext): boolean;
+
+	protected abstract getEqualsPriority(context: ExecutionContext): EqualsPriority;
 
 	public isProved(hypotheses?: Metaexpr[]): boolean {
 		hypotheses = hypotheses || [];
