@@ -142,7 +142,7 @@ export default class ProofExplorer {
 							line.ctr,
 							left,
 							exprToHtml(line.reduced, true),
-							[DOWN, `${exprToHtml(line.subject)}${line.args ? ' (' + line.args.map(a => exprToHtml(a)).join(', ') + ')' : ''} [${line.leftargs.map(a => exprToHtml(a)).join(', ')}]`]
+							[DOWN, `${exprToHtml(line.subject)}${line.args ? ' (' + line.args.map(a => exprToHtml(a)).join(', ') + ')' : ''} [${line.antecedents.map(a => exprToHtml(a)).join(', ')}]`]
 						);
 					case 'NP':
 						return getHtmlLine(

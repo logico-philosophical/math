@@ -471,7 +471,7 @@ export default class PI {
 				return g && PI.expr0(g, scope);
 			});
 
-		var leftargs = obj.leftargs.map(obj => {
+		var antecedents = obj.antecedents.map(obj => {
 			return PI.metaexpr(obj, scope, context);
 		});
 
@@ -480,7 +480,7 @@ export default class PI {
 		return new Reduction({
 			subject,
 			args,
-			leftargs,
+			antecedents,
 			as
 		}, context, scope.trace);
 	}

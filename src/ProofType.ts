@@ -72,7 +72,7 @@ interface E {
 	ctr: number;
 	subject: number | [number, number] | Metaexpr;
 	args: Expr0[];
-	leftargs: (number | [number, number])[];
+	antecedents: (number | [number, number])[];
 	reduced: Metaexpr;
 }
 

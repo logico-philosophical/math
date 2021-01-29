@@ -192,16 +192,16 @@ function recurseInternal(
 				_type: 'reduction';
 				subject: MetaexprObject;
 				args: Array<Expr0Object | null>;
-				leftargs: MetaexprObject[];
+				antecedents: MetaexprObject[];
 				as: MetaexprObject;
 				location: LocationObject;
 			} */
 			if (context <= Context.REDUCTIONRIGHT)
 				return '(' + recurse(line, Context.NORMAL, 0) + ')';
 			
-			var left = !line.leftargs.length
+			var left = !line.antecedents.length
 				? ''
-				: line.leftargs.map(left => recurse(left, Context.REDUCTIONLEFT, line.leftargs.length == 1 ? 0 : 1))
+				: line.antecedents.map(left => recurse(left, Context.REDUCTIONLEFT, line.antecedents.length == 1 ? 0 : 1))
 					.reduce((l, r) => {
 						if (!isOneLiner(r) || (l + r).indexOf(' > ') >= 0) return l + ';\n\t' + r;
 
@@ -213,7 +213,7 @@ function recurseInternal(
 
 						return l + ';\n\t' + r;
 					});
-			var brackets = line.leftargs.length == 1
+			var brackets = line.antecedents.length == 1
 				? ['', '']
 				: isOneLiner(left)
 					? ['[', ']']

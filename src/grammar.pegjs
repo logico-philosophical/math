@@ -192,7 +192,7 @@ defschema =
 // (metaexpr)[...]
 // schema(?, ...)[...]
 reduction =
-	leftargs:(
+	antecedents:(
 		a:metaexpr_internal_2 {return [a]}
 		/ "[" _
 		b:(
@@ -235,7 +235,7 @@ reduction =
 			_type: 'reduction',
 			subject: right[0].subject,
 			args: right[0].args,
-			leftargs: leftargs,
+			antecedents,
 			as: right[0].as_,
 			location: location()
 		};
@@ -245,7 +245,7 @@ reduction =
 				_type: 'reduction',
 				subject: right[i].subject,
 				args: right[i].args,
-				leftargs: [ret],
+				antecedents: [ret],
 				as: right[i].as_,
 				location: location()
 			}

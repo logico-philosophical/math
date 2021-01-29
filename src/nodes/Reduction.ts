@@ -14,20 +14,20 @@ import Tee from './Tee';
 import Variable from './Variable';
 
 interface ReductionArgumentType {
+	antecedents: Metaexpr[];
 	subject: Metaexpr;
 	args: (Expr0 | null)[];
-	leftargs: Metaexpr[];
 	as: Metaexpr;
 }
 
 export default class Reduction extends Metaexpr {
 	
+	public readonly antecedents: Metaexpr[];
 	public readonly subject: Metaexpr;
 	public readonly args: (Expr0 | null)[];
-	public readonly leftargs: Metaexpr[];
 	public readonly reduced: Metaexpr;
 
-	constructor ({subject, args, leftargs, as}: ReductionArgumentType, context: ExecutionContext, trace: StackTrace) {
+	constructor ({antecedents, subject, args, as}: ReductionArgumentType, context: ExecutionContext, trace: StackTrace) {
 		if (args) {
 			let resolvedType = subject.type.resolve() as ObjectType | MetaType,
 				paramTypes = resolvedType.from,
@@ -57,7 +57,7 @@ export default class Reduction extends Metaexpr {
 	
 				return Reduction.guess(
 					p.selector,
-					tee.left, leftargs,
+					tee.left, antecedents,
 					tee.right, as,
 					context, trace
 				);
@@ -74,25 +74,25 @@ export default class Reduction extends Metaexpr {
 		if (!(subject.type instanceof MetaType && subject.type.isSimple))
 			throw Node.error('Subject is not reducible', trace);
 	
-		if (!(leftargs instanceof Array)
-				|| leftargs.map(e => e instanceof Node).some(e => !e))
+		if (!(antecedents instanceof Array)
+				|| antecedents.map(e => e instanceof Node).some(e => !e))
 			throw Node.error('Assertion failed', trace);
 
 		var paramTypes = subject.type.left,
-			leftargTypes = leftargs.map(e => e.type);
+			antecedentTypes = antecedents.map(e => e.type);
 
-		if (paramTypes.length != leftargTypes.length)
-			throw Node.error(`Invalid number of arguments (expected ${paramTypes.length}): ${leftargTypes.length}`, trace);
+		if (paramTypes.length != antecedentTypes.length)
+			throw Node.error(`Invalid number of arguments (expected ${paramTypes.length}): ${antecedentTypes.length}`, trace);
 
 		for (let i = 0; i < paramTypes.length; i++) {
-			if (!paramTypes[i].equals(leftargTypes[i]))
-				throw Node.error(`Illegal argument type (expected ${paramTypes[i]}): ${leftargTypes[i]}`, trace);
+			if (!paramTypes[i].equals(antecedentTypes[i]))
+				throw Node.error(`Illegal argument type (expected ${paramTypes[i]}): ${antecedentTypes[i]}`, trace);
 		}
 
 		super(trace, null, null, subject.type.right);
 
 		this.subject = subject;
-		this.leftargs = leftargs;
+		this.antecedents = antecedents;
 
 		var tee = subject.expandMeta(true);
 
@@ -100,12 +100,12 @@ export default class Reduction extends Metaexpr {
 			throw Node.error('Assertion failed', trace);
 		}
 
-		var leftargsExpanded = leftargs.map(arg => {
+		var antecedentsExpanded = antecedents.map(arg => {
 			return arg.expandMeta(true);
 		});
 
 		for (let i = 0; i < tee.left.length; i++) {
-			if (!tee.left[i].equals(leftargsExpanded[i], context)) {
+			if (!tee.left[i].equals(antecedentsExpanded[i], context)) {
 				throw Node.error(`LHS #${i + 1} failed to match:
 
 --- EXPECTED ---
@@ -113,7 +113,7 @@ ${tee.left[i].expandMeta(true)}
 ----------------
 
 --- RECEIVED ---
-${leftargs[i].expandMeta(true)}
+${antecedents[i].expandMeta(true)}
 ----------------`, trace);
 			}
 		}
@@ -139,7 +139,7 @@ ${as.expandMeta(true)}
 
 	protected isProvedInternal(hypotheses: Metaexpr[]): boolean {
 		return this.subject.isProved(hypotheses)
-			&& this.leftargs.every(l => l.isProved(hypotheses));
+			&& this.antecedents.every(l => l.isProved(hypotheses));
 	}
 
 	public substitute(map: Map<Variable, Expr0>): Metaexpr {
@@ -163,13 +163,13 @@ ${as.expandMeta(true)}
 			$Map: Map<Metaexpr, number | [number, number]>,
 			ctr: Counter): ProofType[] {
 		
-		var leftarglines: ProofType[] = [];
-		var leftargnums: (number | [number, number])[] = this.leftargs.map(l => {
+		var antecedentLines: ProofType[] = [];
+		var antecedentNums: (number | [number, number])[] = this.antecedents.map(l => {
 			if (hypnumMap.has(l)) return hypnumMap.get(l);
 			if ($Map.has(l)) return $Map.get(l);
 
 			var lines = l.getProof(hypnumMap, $Map, ctr);
-			leftarglines = leftarglines.concat(lines);
+			antecedentLines = antecedentLines.concat(lines);
 			return lines[lines.length - 1].ctr;
 		});
 		
@@ -186,14 +186,14 @@ ${as.expandMeta(true)}
 				: (subjectlines = this.subject.getProof(hypnumMap, $Map, ctr))[subjectlines.length-1].ctr);
 
 		return [
-			...leftarglines,
+			...antecedentLines,
 			...subjectlines,
 			{
 				_type: 'E',
 				ctr: ctr.next(),
 				subject: subjectnum,
 				args,
-				leftargs: leftargnums,
+				antecedents: antecedentNums,
 				reduced: this.reduced
 			}
 		];
@@ -201,7 +201,7 @@ ${as.expandMeta(true)}
 
 	public static guess(
 			selector: string,
-			left: Metaexpr[], leftargs: Metaexpr[],
+			left: Metaexpr[], antecedents: Metaexpr[],
 			right: Metaexpr, as: Metaexpr,
 			context: ExecutionContext, trace: StackTrace): Metaexpr {
 		
@@ -219,11 +219,11 @@ ${as.expandMeta(true)}
 		} else {
 			var n = Number(selector[0]);
 
-			if (!(1 <= n && n <= leftargs.length))
+			if (!(1 <= n && n <= antecedents.length))
 				throw Node.error(`Cannot dereference @${selector}: antecedent index out of range`, trace);
 
 			parameter = left[n - 1];
-			argument = leftargs[n - 1];
+			argument = antecedents[n - 1];
 		}
 
 		return (function recurse(
@@ -286,35 +286,31 @@ ${as.expandMeta(true)}
 	}
 
 	public toIndentedString(indent: number, root?: boolean): string {
-		var leftargs: any = this.leftargs.map(arg => {
+		var antecedents = this.antecedents.map(arg => {
 			return arg.toIndentedString(indent + 1);
 		});
 	
-		if (leftargs.join('').length <= 50) {
-			leftargs = this.leftargs.map(arg => {
+		if (antecedents.join('').length <= 50) {
+			antecedents = this.antecedents.map(arg => {
 				return arg.toIndentedString(indent);
 			});
 	
-			leftargs = leftargs.join(', ');
-	
 			return [
 				`${this.subject.toIndentedString(indent)}[`,
-				leftargs,
+				antecedents.join(', '),
 				']'
 			].join('');
 		}
-		else {
-			leftargs = leftargs.join(',\n' + '\t'.repeat(indent + 1));
-	
-			return [
-				`${this.subject.toIndentedString(indent)}[`,
-				'\t' + leftargs,
-				']'
-			].join('\n' + '\t'.repeat(indent));
-		}
+
+		return [
+			`${this.subject.toIndentedString(indent)}[`,
+			'\t' + antecedents.join(',\n' + '\t'.repeat(indent + 1)),
+			']'
+		].join('\n' + '\t'.repeat(indent));
+		
 	}
 
 	public toTeXString(prec?: Precedence, root?: boolean): string {
-		return `${this.subject.toTeXString(false)}[${this.leftargs.map(e => e.toTeXString(Node.PREC_COMMA)).join(', ')}]`;
+		return `${this.subject.toTeXString(false)}[${this.antecedents.map(e => e.toTeXString(Node.PREC_COMMA)).join(', ')}]`;
 	}
 }

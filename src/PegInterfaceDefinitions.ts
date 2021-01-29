@@ -73,7 +73,7 @@ export interface ReductionObject {
 	_type: 'reduction';
 	subject: MetaexprObject;
 	args: Array<Expr0Object | null>;
-	leftargs: MetaexprObject[];
+	antecedents: MetaexprObject[];
 	as: MetaexprObject;
 	location: LocationObject;
 }
