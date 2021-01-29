@@ -4,8 +4,10 @@ import { ProofType } from "../ProofType";
 import StackTrace from "../StackTrace";
 import $Variable from "./$Variable";
 import Expr0 from "./Expr0";
+import Fun from "./Fun";
 import Metaexpr, { EqualsPriority } from "./Metaexpr";
 import { Precedence } from "./Node";
+import ObjectFun from "./ObjectFun";
 import Variable from "./Variable";
 
 interface WithArgumentType {
@@ -48,7 +50,7 @@ export default class With extends Metaexpr {
 		throw new Error("Method not implemented.");
 	}
 
-	protected equalsInternal(obj: Metaexpr, context: ExecutionContext): boolean {
+	protected equalsInternal(obj: Metaexpr, context: ExecutionContext): (Fun | Variable)[] | false {
 		throw new Error("Method not implemented.");
 	}
 

@@ -62,7 +62,7 @@ export default abstract class Fun extends Expr0 implements Nameable {
 		return EqualsPriority.ONE;
 	}
 	
-	protected equalsInternal(obj: Metaexpr, context: ExecutionContext): boolean {
+	protected equalsInternal(obj: Metaexpr, context: ExecutionContext): (Fun | Variable)[] | false {
 		if (!(this.expr && !this.sealed)
 				&& !(obj instanceof Fun && obj.expr && !obj.sealed)) {
 			return false;
@@ -79,21 +79,24 @@ export default abstract class Fun extends Expr0 implements Nameable {
 			}, this.trace));
 		}
 
+		var usedMacrosList = [];
+
 		var thisCall = this.expr && !this.sealed
-			? this.call(placeholders)
+			? (this.name && usedMacrosList.push(this), this.call(placeholders))
 			: new Funcall({
 				fun: this,
 				args: placeholders
 			}, this.trace);
 
 		var objCall = obj instanceof Fun && obj.expr && !obj.sealed
-			? obj.call(placeholders)
+			? (obj.name && usedMacrosList.push(obj), obj.call(placeholders))
 			: new Funcall({
 				fun: obj,
 				args: placeholders
 			}, this.trace);
 		
-		return thisCall.equals(objCall, context);
+		var ret = thisCall.equals(objCall, context);
+		return ret && ret.concat(usedMacrosList);
 	}
 
 	public abstract isCallable(context: ExecutionContext): boolean;
@@ -177,6 +180,7 @@ import Counter from '../Counter';
 import { ProofType } from '../ProofType';
 import Schema from './Schema';
 import Parameter from './Parameter';
+import ObjectFun from './ObjectFun';
 
 interface FunArgumentType {
 	doc: string;

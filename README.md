@@ -16,14 +16,13 @@
 
 <pre><code>"[$1+1=2]이다."
 <b>theorem</b> one_plus_one_is_two() {
-    zero_in_omega()
-    &gt; successor_in_omega <b>as</b> in(ord_one, omega)
+    one_in_omega()
     &gt; omega_add_one(ord_one) <b>as</b> eq(omega_add(ord_one, ord_one), ord_two)
 }</code></pre>
 
 The above code produces&hellip;
 
-<p align="center"><img src="https://i.imgur.com/nZm8nRL.png" width="500px"><br>
+<p align="center"><img src="https://i.imgur.com/r468tLi.png" width="500px"><br>
 <i>A proof of</i> <code>1 + 1 = 2</code></p>
 
 &hellip;a proof of the equation `1 + 1 = 2`. The proof is verified by the math-o-matic program, and the name of the theorem is colored green if the proof is valid. The **proof explorer** also shows the individual steps of the proof in a human-readable format. The names in green refer to theorems that are already proved, and the symbols in blue are predefined notions.

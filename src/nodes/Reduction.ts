@@ -9,6 +9,7 @@ import Metaexpr, { EqualsPriority } from './Metaexpr';
 import MetaType from './MetaType';
 import { isNameable } from './Nameable';
 import Node, { Precedence } from './Node';
+import ObjectFun from './ObjectFun';
 import ObjectType from './ObjectType';
 import Tee from './Tee';
 import Variable from './Variable';
@@ -23,9 +24,13 @@ interface ReductionArgumentType {
 export default class Reduction extends Metaexpr {
 	
 	public readonly antecedents: Metaexpr[];
+	public readonly requiredAntecedents: Metaexpr[];
 	public readonly subject: Metaexpr;
 	public readonly args: (Expr0 | null)[];
-	public readonly reduced: Metaexpr;
+	public readonly preFormatConsequent: Metaexpr;
+	public readonly consequent: Metaexpr;
+	private readonly antecedentEqualsResults: (Fun | Variable)[][];
+	private readonly rightEqualsResult: (Fun | Variable)[];
 
 	constructor ({antecedents, subject, args, as}: ReductionArgumentType, context: ExecutionContext, trace: StackTrace) {
 		if (args) {
@@ -53,7 +58,9 @@ export default class Reduction extends Metaexpr {
 			var derefs = subject.params.map((p, i) => {
 				if (args && args[i]) return args[i];
 
-				var tee = (subject as Fun).expr.expandMeta(false) as Tee;
+				var tee = (subject as Fun).expr.expandMeta(false);
+
+				if (!(tee instanceof Tee)) throw Error('wut');
 	
 				return Reduction.guess(
 					p.selector,
@@ -100,12 +107,16 @@ export default class Reduction extends Metaexpr {
 			throw Node.error('Assertion failed', trace);
 		}
 
+		this.requiredAntecedents = tee.left;
+		this.antecedentEqualsResults = Array(tee.left.length).fill(0).map(() => []);
+
 		var antecedentsExpanded = antecedents.map(arg => {
 			return arg.expandMeta(true);
 		});
 
 		for (let i = 0; i < tee.left.length; i++) {
-			if (!tee.left[i].equals(antecedentsExpanded[i], context)) {
+			var tmp = tee.left[i].equals(antecedentsExpanded[i], context);
+			if (!tmp) {
 				throw Node.error(`LHS #${i + 1} failed to match:
 
 --- EXPECTED ---
@@ -116,10 +127,15 @@ ${tee.left[i].expandMeta(true)}
 ${antecedents[i].expandMeta(true)}
 ----------------`, trace);
 			}
+
+			this.antecedentEqualsResults[i] = tmp;
 		}
 
+		this.preFormatConsequent = tee.right;
+
 		if (as) {
-			if (!tee.right.equals(as, context)) {
+			var tmp = tee.right.equals(as, context);
+			if (!tmp) {
 				throw Node.error(`RHS failed to match:
 
 --- EXPECTED ---
@@ -131,9 +147,10 @@ ${as.expandMeta(true)}
 ----------------`, trace);
 			}
 
-			this.reduced = as;
+			this.rightEqualsResult = tmp;
+			this.consequent = as;
 		} else {
-			this.reduced = tee.right;
+			this.consequent = tee.right;
 		}
 	}
 
@@ -143,19 +160,19 @@ ${as.expandMeta(true)}
 	}
 
 	public substitute(map: Map<Variable, Expr0>): Metaexpr {
-		return this.reduced.substitute(map);
+		return this.consequent.substitute(map);
 	}
 
 	protected expandMetaInternal(andFuncalls: boolean): Metaexpr {
-		return this.reduced.expandMeta(andFuncalls);
+		return this.consequent.expandMeta(andFuncalls);
 	}
 
 	protected getEqualsPriority(): EqualsPriority {
 		return EqualsPriority.FIVE;
 	}
 
-	protected equalsInternal(obj: Metaexpr, context: ExecutionContext): boolean {
-		return this.reduced.equals(obj, context);
+	protected equalsInternal(obj: Metaexpr, context: ExecutionContext): (Fun | Variable)[] | false {
+		return this.consequent.equals(obj, context);
 	}
 
 	protected getProofInternal(
@@ -163,30 +180,56 @@ ${as.expandMeta(true)}
 			$Map: Map<Metaexpr, number | [number, number]>,
 			ctr: Counter): ProofType[] {
 		
-		var antecedentLines: ProofType[] = [];
-		var antecedentNums: (number | [number, number])[] = this.antecedents.map(l => {
-			if (hypnumMap.has(l)) return hypnumMap.get(l);
-			if ($Map.has(l)) return $Map.get(l);
+		var antecedentLinesList: ProofType[][] = [];
+		var antecedentNums: (number | [number, number])[] = this.antecedents.map((l, i) => {
+			if (!this.antecedentEqualsResults[i].length) {
+				if (hypnumMap.has(l)) return hypnumMap.get(l);
+				if ($Map.has(l)) return $Map.get(l);
+			}
 
-			var lines = l.getProof(hypnumMap, $Map, ctr);
-			antecedentLines = antecedentLines.concat(lines);
-			return lines[lines.length - 1].ctr;
+			var ref = hypnumMap.has(l)
+				? hypnumMap.get(l)
+				: $Map.has(l)
+					? $Map.get(l)
+					: null;
+			var lines = ref ? [] : l.getProof(hypnumMap, $Map, ctr);
+
+			if (this.antecedentEqualsResults[i].length) {
+				lines.push({
+					_type: 'bydef',
+					ctr: ctr.next(),
+					ref: ref || lines[lines.length - 1].ctr,
+					expr: this.requiredAntecedents[i],
+					of: this.antecedentEqualsResults[i]
+				});
+			}
+
+			antecedentLinesList.push(lines);
+			return this.antecedentEqualsResults[i].length
+				? ctr.peek()
+				: lines[lines.length - 1].ctr;
 		});
 		
 		var args: Expr0[] = null;
 		var subjectlines: ProofType[] = [];
 		var subjectnum = hypnumMap.get(this.subject)
 			|| $Map.get(this.subject)
-			|| (this.subject instanceof Funcall && $Map.has(this.subject.fun)
-				? (args = this.subject.args, $Map.get(this.subject.fun))
-				: false)
-			|| ((s => s instanceof Fun && s.name
-					|| s instanceof Funcall && isNameable(s.fun) && s.fun.name)(this.subject)
-				? this.subject
-				: (subjectlines = this.subject.getProof(hypnumMap, $Map, ctr))[subjectlines.length-1].ctr);
+			|| (
+				this.subject instanceof Funcall && $Map.has(this.subject.fun)
+					? (args = this.subject.args, $Map.get(this.subject.fun))
+					: false
+			)
+			|| (
+				(s => {
+					return s instanceof Fun && s.name
+						|| s instanceof Funcall && isNameable(s.fun) && s.fun.name;
+				})(this.subject)
+					? this.subject
+					: (subjectlines = this.subject.getProof(hypnumMap, $Map, ctr))[subjectlines.length-1].ctr
+			);
 
-		return [
-			...antecedentLines,
+		var ret: ProofType[] = [
+			...antecedentLinesList.flat(),
 			...subjectlines,
 			{
 				_type: 'E',
@@ -194,9 +237,21 @@ ${as.expandMeta(true)}
 				subject: subjectnum,
 				args,
 				antecedents: antecedentNums,
-				reduced: this.reduced
+				reduced: this.preFormatConsequent
 			}
 		];
+
+		if (this.rightEqualsResult && this.rightEqualsResult.length) {
+			ret.push({
+				_type: 'bydef',
+				ref: ctr.peek(),
+				ctr: ctr.next(),
+				expr: this.consequent,
+				of: this.rightEqualsResult
+			});
+		}
+		
+		return ret;
 	}
 
 	public static guess(
@@ -266,7 +321,7 @@ ${as.expandMeta(true)}
 						throw Node.error(`Cannot dereference @${selector}`, trace);
 					}
 
-					argument = argument.expandOnce(context);
+					argument = argument.expandOnce(context).expanded;
 				}
 
 				if (!(1 <= n && n <= argument.args.length))

@@ -87,7 +87,7 @@ cls y;
 		var foo = program.evaluate(evalParser.parse(`(f(x))(y)`)) as Metaexpr,
 			baz = program.evaluate(evalParser.parse(`(f(x))(y)`)) as Metaexpr;
 		
-		expect(foo.equals(baz, null)).to.be.true;
+		expect(!!foo.equals(baz, null)).to.be.true;
 	});
 });
 

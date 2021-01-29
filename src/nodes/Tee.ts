@@ -4,9 +4,11 @@ import { ProofType } from '../ProofType';
 import StackTrace from '../StackTrace';
 import $Variable from './$Variable';
 import Expr0 from './Expr0';
+import Fun from './Fun';
 import Metaexpr, { EqualsPriority } from './Metaexpr';
 import MetaType from './MetaType';
 import Node, { Precedence } from './Node';
+import ObjectFun from './ObjectFun';
 import ObjectType from './ObjectType';
 import Variable from './Variable';
 
@@ -82,7 +84,7 @@ export default class Tee extends Metaexpr {
 		return EqualsPriority.TWO;
 	}
 
-	protected equalsInternal(obj: Metaexpr, context: ExecutionContext): boolean {
+	protected equalsInternal(obj: Metaexpr, context: ExecutionContext): (Fun | Variable)[] | false {
 		if (!(obj instanceof Tee)) {
 			throw Error('Assertion failed');
 		}

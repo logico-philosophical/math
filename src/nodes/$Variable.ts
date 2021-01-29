@@ -3,9 +3,11 @@ import ExecutionContext from "../ExecutionContext";
 import { ProofType } from "../ProofType";
 import StackTrace from "../StackTrace";
 import Expr0 from "./Expr0";
+import Fun from "./Fun";
 import Metaexpr, { EqualsPriority } from "./Metaexpr";
 import Nameable from "./Nameable";
 import Node, { Precedence } from "./Node";
+import ObjectFun from "./ObjectFun";
 import Variable from "./Variable";
 
 interface $VariableArgumentType {
@@ -45,7 +47,7 @@ export default class $Variable extends Metaexpr implements Nameable {
 		return EqualsPriority.FIVE;
 	}
 
-	protected equalsInternal(obj: Metaexpr, context: ExecutionContext): boolean {
+	protected equalsInternal(obj: Metaexpr, context: ExecutionContext): (Fun | Variable)[] | false {
 		return this.expr.equals(obj, context);
 	}
 

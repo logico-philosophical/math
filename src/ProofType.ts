@@ -1,8 +1,10 @@
 import Expr0 from "./nodes/Expr0";
+import Fun from "./nodes/Fun";
 import Metaexpr from "./nodes/Metaexpr";
+import ObjectFun from "./nodes/ObjectFun";
 import Variable from "./nodes/Variable";
 
-export type ProofType = R | RC | RCX | RS | H | NP | Wut | T | V | E | Def;
+export type ProofType = R | RC | RCX | RS | H | NP | Wut | T | V | E | Def | ByDef;
 
 /** repeat */
 interface R {
@@ -80,4 +82,12 @@ interface Def {
 	_type: 'def';
 	ctr: number;
 	var: Variable;
+}
+
+interface ByDef {
+	_type: 'bydef';
+	ctr: number;
+	ref: number | [number, number];
+	expr: Metaexpr;
+	of: (Fun | Variable)[];
 }

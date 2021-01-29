@@ -3,7 +3,9 @@ import ExecutionContext from "../ExecutionContext";
 import { ProofType } from "../ProofType";
 import StackTrace from "../StackTrace";
 import Expr0 from "./Expr0";
+import Fun from "./Fun";
 import Node from "./Node";
+import ObjectFun from "./ObjectFun";
 import Type from "./Type";
 import Variable from "./Variable";
 
@@ -51,11 +53,15 @@ export default abstract class Metaexpr extends Node {
 
 	protected abstract expandMetaInternal(andFuncalls: boolean): Metaexpr;
 
-	public equals(obj: Metaexpr, context: ExecutionContext): boolean {
+	/**
+	 * 
+	 * @return 같지 않으면 `false`. 같으면 같음을 보이는 데 사용한 매크로들의 목록.
+	 */
+	public equals(obj: Metaexpr, context: ExecutionContext): (Fun | Variable)[] | false {
 		// console.log(`${this}\n\n${obj}`);
 		// var ret = (() => {
 		
-		if (this === obj) return true;
+		if (this === obj) return [];
 		if (!this.type.equals(obj.type)) return false;
 
 		if (obj.getEqualsPriority(context) > this.getEqualsPriority(context))
@@ -64,11 +70,15 @@ export default abstract class Metaexpr extends Node {
 		return this.equalsInternal(obj, context);
 
 		// })();
-		// console.log(`${this}\n\n${obj}\n\n${ret}`);
+		// console.log(`${this}\n\n${obj}\n\nresult:`, ret);
 		// return ret;
 	}
 
-	protected abstract equalsInternal(obj: Metaexpr, context: ExecutionContext): boolean;
+	/**
+	 * 
+	 * @return 같지 않으면 `false`. 같으면 같음을 보이는 데 사용한 매크로들의 목록.
+	 */
+	protected abstract equalsInternal(obj: Metaexpr, context: ExecutionContext): (Fun | Variable)[] | false;
 
 	protected abstract getEqualsPriority(context: ExecutionContext): EqualsPriority;
 

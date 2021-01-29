@@ -3,9 +3,11 @@ import ExecutionContext from '../ExecutionContext';
 import { ProofType } from '../ProofType';
 import StackTrace from '../StackTrace';
 import Expr0 from './Expr0';
+import Fun from './Fun';
 import Metaexpr, { EqualsPriority } from './Metaexpr';
 import Nameable from './Nameable';
 import Node, { Precedence } from './Node';
+import ObjectFun from './ObjectFun';
 import ObjectType from './ObjectType';
 
 interface VariableArgumentType {
@@ -22,7 +24,7 @@ export default class Variable extends Expr0 implements Nameable {
 	public readonly sealed: boolean;
 	public readonly type: ObjectType;
 	public readonly name: string;
-	public readonly expr: Expr0;
+	public readonly expr: Expr0 | null;
 
 	constructor ({doc, tex, sealed, type, name, expr}: VariableArgumentType, trace: StackTrace) {
 		super(trace, doc, tex, type);
@@ -65,11 +67,13 @@ export default class Variable extends Expr0 implements Nameable {
 			: EqualsPriority.ZERO;
 	}
 
-	protected equalsInternal(obj: Metaexpr, context: ExecutionContext): boolean {
+	protected equalsInternal(obj: Metaexpr, context: ExecutionContext): (Fun | Variable)[] | false {
 		if (!this.expr) return false;
 
 		if (!this.sealed || context.canUse(this)) {
-			return this.expr.equals(obj, context);
+			var tmp = this.expr.equals(obj, context);
+			if (!tmp) return tmp;
+			return tmp.push(this), tmp;
 		}
 
 		return false;

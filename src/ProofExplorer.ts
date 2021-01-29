@@ -158,6 +158,15 @@ export default class ProofExplorer {
 							exprToHtml(line.var),
 							'definition'
 						);
+					case 'bydef':
+						return getHtmlLine(
+							line.ctr,
+							left,
+							exprToHtml(line.expr),
+							`by definition of ${line.of.map(v => {
+								return exprToHtml(v);
+							}).join(', ')} [${exprToHtml(line.ref)}]`
+						);
 					default:
 						throw Error(`Unknown type ${(line as any)._type}`);
 				}
