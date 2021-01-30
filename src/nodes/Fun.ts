@@ -180,7 +180,6 @@ import Counter from '../Counter';
 import { ProofType } from '../ProofType';
 import Schema from './Schema';
 import Parameter from './Parameter';
-import ObjectFun from './ObjectFun';
 
 interface FunArgumentType {
 	doc: string;

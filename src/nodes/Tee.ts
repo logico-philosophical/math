@@ -8,7 +8,6 @@ import Fun from './Fun';
 import Metaexpr, { EqualsPriority } from './Metaexpr';
 import MetaType from './MetaType';
 import Node, { Precedence } from './Node';
-import ObjectFun from './ObjectFun';
 import ObjectType from './ObjectType';
 import Variable from './Variable';
 

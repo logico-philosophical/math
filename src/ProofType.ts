@@ -1,7 +1,6 @@
 import Expr0 from "./nodes/Expr0";
 import Fun from "./nodes/Fun";
 import Metaexpr from "./nodes/Metaexpr";
-import ObjectFun from "./nodes/ObjectFun";
 import Variable from "./nodes/Variable";
 
 export type ProofType = R | RC | RCX | RS | H | NP | Wut | T | V | E | Def | ByDef;

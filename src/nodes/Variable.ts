@@ -7,7 +7,6 @@ import Fun from './Fun';
 import Metaexpr, { EqualsPriority } from './Metaexpr';
 import Nameable from './Nameable';
 import Node, { Precedence } from './Node';
-import ObjectFun from './ObjectFun';
 import ObjectType from './ObjectType';
 
 interface VariableArgumentType {

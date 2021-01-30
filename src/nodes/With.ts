@@ -7,7 +7,6 @@ import Expr0 from "./Expr0";
 import Fun from "./Fun";
 import Metaexpr, { EqualsPriority } from "./Metaexpr";
 import { Precedence } from "./Node";
-import ObjectFun from "./ObjectFun";
 import Variable from "./Variable";
 
 interface WithArgumentType {

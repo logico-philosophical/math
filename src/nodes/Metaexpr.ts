@@ -5,7 +5,6 @@ import StackTrace from "../StackTrace";
 import Expr0 from "./Expr0";
 import Fun from "./Fun";
 import Node from "./Node";
-import ObjectFun from "./ObjectFun";
 import Type from "./Type";
 import Variable from "./Variable";
 
