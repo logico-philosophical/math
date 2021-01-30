@@ -15,11 +15,11 @@ cls rel_omega_pair = setbuilder_pair((cls x, cls y) => {
 
 @see [~https://en.wikipedia.org/wiki/Integer#Construction]"
 $\Z$
-cls ints = quotient_set(cartesian(omega, omega), rel_omega_pair);
+cls int = quotient_set(cartesian(omega, omega), rel_omega_pair);
 
 "정수 덧셈."
 $\left(#1<<+_\Z>>#2\right)$
-cls ints_add(cls m, cls n) {
+cls int_add(cls m, cls n) {
 	instantiate((cls k) => {
 		Xin4(omega, omega, omega, omega, (cls a, cls b, cls c, cls d) => {
 			A(A(eq(m, equiv_cls(pair(a, b), cartesian(omega, omega), rel_omega_pair)), eq(n, equiv_cls(pair(c, d), cartesian(omega, omega), rel_omega_pair))), eq(k, equiv_cls(pair(omega_add(a, c), omega_add(b, d)), cartesian(omega, omega), rel_omega_pair)))
