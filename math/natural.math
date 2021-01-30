@@ -20,7 +20,7 @@ theorem successor_eq_i(cls x: @11, cls y: @12) {
 }
 
 theorem self_in_successor(cls x: @11) {
-	set(x) |- {
+	is_set(x) |- {
 		@h1 > self_in_singleton(x) > cup_i2(x, ?, ?) as in(x, successor(x))
 	}
 }
@@ -39,11 +39,11 @@ cls ord_two = successor(ord_one);
 
 "따름 순서수는 집합이다."
 theorem successor_is_set(cls x: @11) {
-	set(x) |- {
+	is_set(x) |- {
 		[
 			@h1;
 			@h1 > singleton_set_i
-		] > cup_is_set as set(successor(x))
+		] > cup_is_set as is_set(successor(x))
 	}
 }
 
@@ -55,7 +55,7 @@ st is_successor_set(cls x) {
 
 "무한 공리(axiom of infinity). 즉 successor set 중에는 집합인 것이 있다."
 axiom ax_infinity() {
-	X((cls x) => A(set(x), is_successor_set(x)))
+	X((cls x) => A(is_set(x), is_successor_set(x)))
 }
 
 "자연수 집합. 즉 모든 successor set을 교집합한 것이다."
@@ -112,14 +112,14 @@ theorem omega_is_set() {
 	[
 		ax_infinity();
 		(cls x) => {
-			A(set(x), is_successor_set(x)) |- {
+			A(is_set(x), is_successor_set(x)) |- {
 				[
 					@h1 > Ae1;
 					@h1 > setbuilder_ia((cls z) => is_successor_set(z), ?) > bigcap_is_smaller
-				] > subset_is_set as set(omega)
+				] > subset_is_set as is_set(omega)
 			} > cp
 		} > Ui
-	] > mpX_Xe_p(?, set(omega))
+	] > mpX_Xe_p(?, is_set(omega))
 }
 
 "`[Pinter]` 정리 6.3."
@@ -214,7 +214,7 @@ theorem successor_is_not_zero(cls n: @11) {
 		eq(successor(n), ord_zero) |- {
 			[
 				[
-					@h1 > set_i > self_in_successor;
+					@h1 > is_set_i > self_in_successor;
 					@h2
 				] > in_eq;
 				emptyset_def(n) > id(Nin(n, ord_zero))
@@ -254,7 +254,7 @@ theorem omega_in_to_subseteq(cls n: @11, cls m: @21) {
 							in(m, singleton(n)) |- {
 								[
 									[
-										@h1 > set_i;
+										@h1 > is_set_i;
 										@h4
 									] > singleton_e;
 									$n_subseteq_successor_n
@@ -282,25 +282,25 @@ theorem omega_in_to_subseteq(cls n: @11, cls m: @21) {
 theorem successor_eq_e(cls n: @11, cls m: @21) {
 	in(n, omega), in(m, omega), eq(successor(n), successor(m)) |- {
 		$base = [
-			@h1 > set_i > self_in_successor;
+			@h1 > is_set_i > self_in_successor;
 			@h3
 		] > in_eq > setbuilder_e;
 
 		$base_dual = [
-			@h2 > set_i > self_in_successor;
+			@h2 > is_set_i > self_in_successor;
 			@h3
 		] > in_eq_flip > setbuilder_e;
 
 		$c1 = in(n, singleton(m)) |- {
 			[
-				@h2 > set_i;
+				@h2 > is_set_i;
 				@h4
 			] > singleton_e
 		};
 
 		$c1_dual = in(m, singleton(n)) |- {
 			[
-				@h1 > set_i;
+				@h1 > is_set_i;
 				@h4
 			] > singleton_e
 		};
@@ -417,8 +417,8 @@ theorem recursion_theorem_1($A$ cls a: @12, cls c: @11, cls f: @21) using define
 theorem recursion_theorem_2($A$ cls a: @12, cls c: @11, cls f) using define_recursively {
 	in(c, a) |- {
 		$set_0c = [
-			zero_in_omega() > set_i;
-			@h1 > set_i
+			zero_in_omega() > is_set_i;
+			@h1 > is_set_i
 		] > pair_set_i;
 
 		[
@@ -443,8 +443,8 @@ theorem recursion_theorem_3($A$ cls a: @12, cls c, cls f: @11) using define_recu
 							in(pair(n, x), g) |- {
 								[
 									[
-										@h2 > set_i > successor_is_set;
-										[@h1; @h3] > funcall_in_codomain > set_i
+										@h2 > is_set_i > successor_is_set;
+										[@h1; @h3] > funcall_in_codomain > is_set_i
 									] > pair_set_i;
 									[
 										@h4 > setbuilder_e;
@@ -535,11 +535,11 @@ theorem recursion_theorem_5_base($A$ cls a: @12, cls c: @11, cls f: @21) using d
 								[
 									[
 										ax_emptyset();
-										@h1 > set_i;
+										@h1 > is_set_i;
 										ax_emptyset();
-										@h3 > set_i > pair_set_e2;
+										@h3 > is_set_i > pair_set_e2;
 										[
-											@h3 > set_i;
+											@h3 > is_set_i;
 											@h5
 										] > singleton_e
 									] > pair_eq_e2 > eq_symmetric;
@@ -569,9 +569,9 @@ theorem recursion_theorem_5_base($A$ cls a: @12, cls c: @11, cls f: @21) using d
 												in(pair(successor(n), funcall(f, x)), singleton(pair(ord_zero, d))) |- {
 													[
 														[
-															@h3 > set_i;
+															@h3 > is_set_i;
 															[
-																@h3 > set_i;
+																@h3 > is_set_i;
 																@h8
 															] > singleton_e
 														] > pair_eq_e1_v2;
@@ -591,7 +591,7 @@ theorem recursion_theorem_5_base($A$ cls a: @12, cls c: @11, cls f: @21) using d
 						] > Ai as is_recursive_supset(setminus(define_recursively(a, c, f), singleton(pair(ord_zero, d))), a, c, f) > bigcap3_is_smaller(?, ?, setminus(define_recursively(a, c, f), singleton(pair(ord_zero, d)))) as subseteq(define_recursively(a, c, f), setminus(define_recursively(a, c, f), singleton(pair(ord_zero, d))));
 
 						[
-							@h3 > set_i > self_in_singleton;
+							@h3 > is_set_i > self_in_singleton;
 							[@h3; $gamma_is_smaller] > in_subseteq > setminus_e2
 						] > Fi
 					} > Ni_alt > NNe
@@ -629,9 +629,9 @@ theorem recursion_theorem_5_step($A$ cls a: @12, cls c: @11, cls f: @21) using d
 														in(pair(ord_zero, c), singleton(pair(successor(n), u))) |- {
 															[
 																[
-																	@h7 > set_i;
+																	@h7 > is_set_i;
 																	[
-																		@h7 > set_i;
+																		@h7 > is_set_i;
 																		@h9
 																	] > singleton_e
 																] > pair_eq_e1_v2 > eq_symmetric;
@@ -666,9 +666,9 @@ theorem recursion_theorem_5_step($A$ cls a: @12, cls c: @11, cls f: @21) using d
 																				in(pair(successor(m), funcall(f, v)), singleton(pair(successor(n), u))) |- {
 																					[
 																						[
-																							@h7 > set_i;
+																							@h7 > is_set_i;
 																							[
-																								@h7 > set_i;
+																								@h7 > is_set_i;
 																								@h13
 																							] > singleton_e
 																						] > pair_eq_e1_v2;
@@ -712,9 +712,9 @@ theorem recursion_theorem_5_step($A$ cls a: @12, cls c: @11, cls f: @21) using d
 																					in(pair(successor(n), funcall(f, x)), singleton(pair(successor(n), u))) |- {
 																						[
 																							[
-																								@h13 > set_i;
+																								@h13 > is_set_i;
 																								[
-																									@h7 > set_i;
+																									@h7 > is_set_i;
 																									@h13
 																								] > singleton_e
 																							] > pair_eq_e2_v1 > eq_symmetric;
@@ -738,7 +738,7 @@ theorem recursion_theorem_5_step($A$ cls a: @12, cls c: @11, cls f: @21) using d
 													] > Ai as is_recursive_supset(setminus(define_recursively(a, c, f), singleton(pair(successor(n), u))), a, c, f) > bigcap3_is_smaller(?, ?, setminus(define_recursively(a, c, f), singleton(pair(successor(n), u)))) as subseteq(define_recursively(a, c, f), setminus(define_recursively(a, c, f), singleton(pair(successor(n), u))));
 
 													[
-														@h7 > set_i > self_in_singleton;
+														@h7 > is_set_i > self_in_singleton;
 														[@h7; $gamma_is_smaller] > in_subseteq > setminus_e2
 													] > Fi
 												} > Ni_alt > NNe
@@ -1235,7 +1235,7 @@ theorem fun_iterated_im_base(cls f: @11, $A$ cls a: @12, $B$ cls b: @21) {
 				] > eq_in_flip;
 
 				[
-					@h3 > set_i;
+					@h3 > is_set_i;
 					[@h3; $yy_in_f0] > Ai > Xi((cls x) => A(in(x, b), in(pair(x, y), fun_iterated(f, ord_zero))), y)
 				] > setbuilder_i as in(y, rel_im_set(fun_iterated(f, ord_zero), b))
 			} > cp;

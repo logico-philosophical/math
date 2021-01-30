@@ -18,7 +18,7 @@ cls fun_space($A$ cls a, $B$ cls b) {
 }
 
 theorem fun_space_in_i(cls f: @31, $A$ cls a: @11, $B$ cls b: @21) {
-	set(a), set(b), is_fun(f, a, b) |- {
+	is_set(a), is_set(b), is_fun(f, a, b) |- {
 		[
 			[
 				[@h1; @h2] > cartesian_is_set;
@@ -33,7 +33,7 @@ theorem fun_space_subseteq_cartesian($A$ cls a, $B$ cls b) {
 	(cls f) => {
 		in(f, fun_space(a, b)) |- {
 			[
-				@h1 > set_i;
+				@h1 > is_set_i;
 				@h1 > setbuilder_e > Ae1
 			] > setbuilder_i as in(f, power(cartesian(a, b)))
 		} > cp
@@ -177,7 +177,7 @@ theorem fun_dom(cls f: @11, $A$ cls a: @12, $B$ cls b: @13) {
 
 			$c2 = in(x, a) |- {
 				[
-					@h2 > set_i;
+					@h2 > is_set_i;
 					[@h1; @h2] > fun_im_X_m > Xin_to_X
 				] > setbuilder_i as in(x, rel_dom(f))
 			} > cp;
@@ -332,7 +332,7 @@ theorem fun_im_subseteq_codomain(cls f: @11, $A$ cls a: @12, $B$ cls b: @13) {
 
 theorem fun_im_in_i(cls f: @11, $A$ cls a: @12, $B$ cls b: @13, cls x: @21) {
 	is_fun(f, a, b), in(x, a) |- {
-		$fx_is_set = [@h1; @h2] > funcall_in_codomain > set_i;
+		$fx_is_set = [@h1; @h2] > funcall_in_codomain > is_set_i;
 		
 		$X = [@h1; @h2] > funcall_def
 		> Xi((cls z) => {
@@ -354,7 +354,7 @@ theorem fun_im_set_subseteq_im(cls f: @11, $A$ cls a: @12, $B$ cls b: @13, $C$ c
 		(cls y) => {
 			in(y, rel_im_set(f, c)) |- {
 				[
-					@h2 > set_i;
+					@h2 > is_set_i;
 					@h2 > setbuilder_e > Xin_to_X
 				] > setbuilder_i as in(y, rel_im(f))
 			} > cp
@@ -378,7 +378,7 @@ cls map(fun f, $A$ cls a) {
 }
 
 theorem map_in_i(fun f: @r21, $A$ cls a: @32, cls z: @11) {
-	set(z), set(f(z)), in(z, a) |- {
+	is_set(z), is_set(f(z)), in(z, a) |- {
 		[
 			[@h1; @h2] > pair_set_i;
 			@h3
@@ -421,8 +421,8 @@ theorem map_is_fun(fun f: @r11, $A$ cls a: @r2, $B$ cls b: @r3) {
 					$fx_in_b;
 					[
 						[
-							@h2 > set_i;
-							$fx_in_b > set_i
+							@h2 > is_set_i;
+							$fx_in_b > is_set_i
 						] > pair_set_i;
 						@h2
 					] > setbuilder2_i(?, ?, x) as in(pair(x, f(x)), map(f, a))
@@ -438,11 +438,11 @@ theorem map_is_fun(fun f: @r11, $A$ cls a: @r2, $B$ cls b: @r3) {
 
 									[
 										[
-											@h3 > set_i;
+											@h3 > is_set_i;
 											$pair_eq
 										] > pair_eq_e1_v1;
 										[
-											@h3 > set_i;
+											@h3 > is_set_i;
 											$pair_eq
 										] > pair_eq_e2_v1
 									] > ax_indiscernible_m2((cls z) => eq(y, f(z)), ?, ?)
@@ -466,11 +466,11 @@ theorem map_funcall(fun f: @r111, $A$ cls a: @22, $B$ cls b, cls x: @21) {
 			@h1 > map_is_fun(f, a, b);
 			[
 				[
-					@h2 > set_i;
+					@h2 > is_set_i;
 					[
 						@h2;
 						@h1 > Ue(?, x)
-					] > mp > set_i
+					] > mp > is_set_i
 				] > pair_set_i;
 				@h2
 			] > setbuilder2_i(?, ?, x) as in(pair(x, f(x)), map(f, a))
@@ -518,12 +518,12 @@ theorem fun_id_im_set($A$ cls a: @12, $B$ cls b: @11) {
 										(cls z) => {
 											eq(pair(x, y), pair(z, z)), in(z, a) |- {
 												$x_is_z = [
-													@h4 > set_i;
+													@h4 > is_set_i;
 													@h5
 												] > pair_eq_e1_v1;
 
 												$y_is_z = [
-													@h4 > set_i;
+													@h4 > is_set_i;
 													@h5
 												] > pair_eq_e2_v1;
 
@@ -546,7 +546,7 @@ theorem fun_id_im_set($A$ cls a: @12, $B$ cls b: @11) {
 				$c2 = in(y, b) |- {
 					$y_in_a = [@h2; @h1] > in_subseteq;
 
-					$set_y = @h2 > set_i;
+					$set_y = @h2 > is_set_i;
 
 					$yy_in_id = [$set_y; $set_y; $y_in_a] > map_in_i((cls x) => x, a, y) as in(pair(y, y), f);
 
@@ -822,7 +822,7 @@ theorem fun_to_surjection(cls f: @11, $A$ cls a: @12, $B$ cls b: @13) {
 						$y_in_b = $xy_in_ab > cartesian_in_e2;
 
 						$y_in_im = [
-							$y_in_b > set_i;
+							$y_in_b > is_set_i;
 							@h2 > Xi((cls x) => in(pair(x, y), f), x)
 						] > setbuilder_i as in(y, rel_im(f));
 
@@ -1164,7 +1164,7 @@ theorem bijection_composite_is_bijection(cls f: @11, cls g: @21, $A$ cls a: @12,
 
 "칸토어의 정리(Cantor's theorem). [~(href=https://www.cs.ru.nl/~freek/100/)[*Formalizing 100 Theorems]]의 정리 #63이다."
 theorem cantor($A$ cls a: @11, cls f: @r11) {
-	set(a) |- {
+	is_set(a) |- {
 		is_surjection(f, a, power(a)) |- {
 			with ($B$ cls b = subsetbuilder(a, (cls x) => Nin(x, funcall(f, x)))) {
 				$f_is_fun = @h2 > Ae1;
