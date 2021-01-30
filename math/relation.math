@@ -92,7 +92,7 @@ theorem pair_eq_e(cls x: @11, cls y: @21, cls u: @31, cls v: @41) using pair {
 						[
 							[@h3; @h4] > doubleton_in_1(u, v);
 							@h6 > Ae1
-						] > in_eq_right_2
+						] > in_eq_flip
 					] > singleton_e > eq_symmetric;
 					[
 						[
@@ -101,14 +101,14 @@ theorem pair_eq_e(cls x: @11, cls y: @21, cls u: @31, cls v: @41) using pair {
 								[
 									[@h3; @h4] > doubleton_in_1(u, v);
 									@h6 > Ae1
-								] > in_eq_right_2
+								] > in_eq_flip
 							] > singleton_e;
 							[
 								@h1;
 								[
 									[@h3; @h4] > doubleton_in_2(u, v);
 									@h6 > Ae1
-								] > in_eq_right_2
+								] > in_eq_flip
 							] > singleton_e > eq_symmetric
 						] > eq_transitive > eq_symmetric;
 						[
@@ -116,7 +116,7 @@ theorem pair_eq_e(cls x: @11, cls y: @21, cls u: @31, cls v: @41) using pair {
 							[
 								[@h1; @h2] > doubleton_in_2(x, y);
 								@h6 > Ae2
-							] > in_eq_right_1
+							] > in_eq
 						] > singleton_e > eq_symmetric
 					] > eq_transitive > eq_symmetric
 				] > Ai
@@ -288,13 +288,13 @@ theorem cartesian_in_e($A$ cls a: @121, $B$ cls b: @122, cls x: @111, cls y: @11
 
 					[
 						[
-							$u_in_a;
-							[$set_x; $set_y; $u_is_set; $v_is_set; $Ae1h4] > pair_eq_e1
-						] > in_eq_left_2;
+							[$set_x; $set_y; $u_is_set; $v_is_set; $Ae1h4] > pair_eq_e1;
+							$u_in_a
+						] > eq_in;
 						[
-							$v_in_b;
-							[$set_x; $set_y; $u_is_set; $v_is_set; $Ae1h4] > pair_eq_e2
-						] > in_eq_left_2
+							[$set_x; $set_y; $u_is_set; $v_is_set; $Ae1h4] > pair_eq_e2;
+							$v_in_b
+						] > eq_in
 					] > Ai
 				} > cp
 			} > Ui2
@@ -438,12 +438,12 @@ theorem rel_inverse_is_rel($R$ cls r: @11, $A$ cls a: @12, $B$ cls b: @13) using
 							$foo = [@h4; @h1] > in_subseteq > cartesian_in_e;
 
 							[
+								@h3;
 								[
 									$foo > Ae2;
 									$foo > Ae1
-								] > cartesian_in_i;
-								@h3
-							] > in_eq_left_2
+								] > cartesian_in_i
+							] > eq_in
 						} > cp2
 					} > Ui2
 				] > mpX2_X2e_p(?, in(z, cartesian(b, a)))
@@ -620,16 +620,16 @@ theorem setbuilder_pair_is_rel(pr2 f: @r11) {
 						@h1 > setbuilder_e;
 						(cls a, cls b) => {
 							eq(z, pair(a, b)), f(a, b) |- {
-								$set_ab = [@h1; @h2] > in_eq_left_1 > set_i;
+								$set_ab = [@h2; @h1] > eq_in_flip > set_i;
 
 								$a_in_V = $set_ab > pair_set_e1 > universe_in_i;
 
 								$b_in_V = $set_ab > pair_set_e2 > universe_in_i;
 
 								[
-									[$a_in_V; $b_in_V] > cartesian_in_i;
-									@h2
-								] > in_eq_left_2
+									@h2;
+									[$a_in_V; $b_in_V] > cartesian_in_i
+								] > eq_in
 							} > cp2
 						} > Ui2
 					] > mpX2_X2e_p(?, in(z, cartesian(universe, universe)))
@@ -653,7 +653,7 @@ theorem rel_U(pr f: @r2, $R$ cls r: @11) {
 							[
 								@h4;
 								[
-									[@h3; @h4] > in_eq_left_1;
+									[@h4; @h3] > eq_in_flip;
 									@h2 > Ue2(?, x, y)
 								] > mp
 							] > ax_indiscernible_m2(f, ?, ?)
@@ -756,9 +756,9 @@ theorem cartesian_is_set($A$ cls a: @11, $B$ cls b: @21) using pair {
 						(cls z) => {
 							in(z, singleton(x)) |- {
 								[
-									$x_in_cup_ab;
-									[$set_x; @h4] > singleton_e
-								] > in_eq_left_2
+									[$set_x; @h4] > singleton_e;
+									$x_in_cup_ab
+								] > eq_in
 							} > cp
 						} > Ui as subseteq(singleton(x), cup(a, b))
 					] > setbuilder_i as in(singleton(x), power(cup(a, b)));
@@ -770,10 +770,10 @@ theorem cartesian_is_set($A$ cls a: @11, $B$ cls b: @21) using pair {
 								[
 									[$set_x; $set_y; @h4] > doubleton_e;
 									eq(z, x) |- {
-										[$x_in_cup_ab; @h5] > in_eq_left_2
+										[@h5; $x_in_cup_ab] > eq_in
 									};
 									eq(z, y) |- {
-										[$y_in_cup_ab; @h5] > in_eq_left_2
+										[@h5; $y_in_cup_ab] > eq_in
 									}
 								] > Oe_alt
 							} > cp
@@ -791,10 +791,10 @@ theorem cartesian_is_set($A$ cls a: @11, $B$ cls b: @21) using pair {
 										@h4
 									] > doubleton_e;
 									eq(z, singleton(x)) |- {
-										[$1; @h5] > in_eq_left_2
+										[@h5; $1] > eq_in
 									};
 									eq(z, doubleton(x, y)) |- {
-										[$2; @h5] > in_eq_left_2
+										[@h5; $2] > eq_in
 									}
 								] > Oe_alt
 							} > cp

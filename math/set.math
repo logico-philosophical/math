@@ -167,25 +167,25 @@ theorem eq_Ae2_Ue_Ee2(cls x, cls y, cls z) {
 	}
 }
 
-theorem in_eq_left_1(cls x: @11, cls y: @22, cls z: @12) {
-	in(x, z), eq(x, y) |- {
+theorem eq_in(cls x: @11, cls y: @12, cls z: @22) {
+	eq(x, y), in(y, z) |- {
 		[
-			@h1;
-			@h2 > eq_Ae2_Ue_Ee1(x, y, z)
+			@h2;
+			@h1 > eq_Ae2_Ue_Ee2(x, y, z)
 		] > mp
 	}
 }
 
-theorem in_eq_left_2(cls x: @21, cls y: @22, cls z: @12) {
-	in(y, z), eq(x, y) |- {
+theorem eq_in_flip(cls x: @21, cls y: @12, cls z: @22) {
+	eq(x, y), in(x, z) |- {
 		[
-			@h1;
-			@h2 > eq_Ae2_Ue_Ee2(x, y, z)
+			@h2;
+			@h1 > eq_Ae2_Ue_Ee1(x, y, z)
 		] > mp
 	}
 }
 
-theorem in_eq_right_1(cls x: @12, cls y: @22, cls z: @11) {
+theorem in_eq(cls x: @12, cls y: @22, cls z: @11) {
 	in(z, x), eq(x, y) |- {
 		[
 			@h1;
@@ -194,7 +194,7 @@ theorem in_eq_right_1(cls x: @12, cls y: @22, cls z: @11) {
 	}
 }
 
-theorem in_eq_right_2(cls x: @21, cls y: @22, cls z: @11) {
+theorem in_eq_flip(cls x: @21, cls y: @22, cls z: @11) {
 	in(z, y), eq(x, y) |- {
 		[
 			@h1;
@@ -1069,10 +1069,10 @@ theorem cup_eq_i(cls x: @11, cls y: @12, cls u: @21, cls v: @22) {
 					[
 						@h3 > setbuilder_e;
 						in(z, x) |- {
-							[@h4; @h1] > in_eq_right_1 > Oi1(?, in(z, v))
+							[@h4; @h1] > in_eq > Oi1(?, in(z, v))
 						};
 						in(z, u) |- {
-							[@h4; @h2] > in_eq_right_1 > Oi2(in(z, y), ?)
+							[@h4; @h2] > in_eq > Oi2(in(z, y), ?)
 						}
 					] > Oe_alt
 				] > setbuilder_i as in(z, cup(y, v))
@@ -1359,7 +1359,7 @@ theorem instantiate_eq_i(pr f: @11, cls x) using instantiate {
 							[
 								@h5;
 								[@h1; @h2; @h4] > Qe(f, x, y)
-							] > in_eq_right_2
+							] > in_eq_flip
 						} > cp2
 					} > Ui
 				] > mpX_Xe_p(?, in(z, x))
@@ -1613,7 +1613,7 @@ theorem singleton_eq_e(cls x: @11, cls y: @21) {
 			[
 				@h1 > self_in_singleton;
 				@h3
-			] > in_eq_right_1
+			] > in_eq
 		] > singleton_e
 	}
 }
@@ -1689,7 +1689,7 @@ theorem doubleton_eq_e1(cls x: @11, cls y: @21, cls u: @31, cls v: @41) {
 			[
 				[@h1; @h2] > doubleton_in_1(x, y);
 				@h5
-			] > in_eq_right_1(doubleton(x, y), doubleton(u, v), x)
+			] > in_eq(doubleton(x, y), doubleton(u, v), x)
 		] > doubleton_e
 	}
 }
@@ -1701,7 +1701,7 @@ theorem doubleton_eq_e2(cls x: @11, cls y: @21, cls u: @31, cls v: @41) {
 			[
 				[@h1; @h2] > doubleton_in_2(x, y);
 				@h5
-			] > in_eq_right_1(doubleton(x, y), doubleton(u, v), y)
+			] > in_eq(doubleton(x, y), doubleton(u, v), y)
 		] > doubleton_e
 	}
 }
@@ -1803,10 +1803,10 @@ theorem doubleton_to_cup(cls x: @11, cls y: @21, cls z: @31, cls w: @41) {
 		[
 			[@h1; @h2; @h3] > doubleton_e;
 			eq(z, x) |- {
-				[@h4; @h5] > in_eq_right_1 > cup_i1(?, y, ?)
+				[@h4; @h5] > in_eq > cup_i1(?, y, ?)
 			} > cp;
 			eq(z, y) |- {
-				[@h4; @h5] > in_eq_right_1 > cup_i2(x, ?, ?)
+				[@h4; @h5] > in_eq > cup_i2(x, ?, ?)
 			} > cp
 		] > Oe
 	}
@@ -1827,7 +1827,7 @@ theorem bigcup_singleton_to_element($A$ cls a: @11, cls x: @21, cls z: @31) {
 							] > Ai;
 							@h1 > Ae2 > Ue2(?, x, w)
 						] > mp
-					] > in_eq_right_2
+					] > in_eq_flip
 				} > cp
 			} > Ui
 		] > mpX_Xe_p(?, in(z, x))
@@ -1861,7 +1861,7 @@ theorem bigcup_singleton_to_self(cls x: @11, cls z: @21) {
 							@h1;
 							@h3 > Ae1
 						] > singleton_e
-					] > in_eq_right_1
+					] > in_eq
 				} > cp
 			} > Ui
 		] > mpX_Xe_p(?, in(z, x))
@@ -1921,13 +1921,13 @@ theorem cup_to_bigcup_doubleton(cls x: @11, cls y: @21, cls w: @31) {
 				in(w, x) |- {
 					[
 						[@h1; @h2] > doubleton_in_1(x, y);
-						[@h4; eq_reflexive(x)] > in_eq_right_1
+						[@h4; eq_reflexive(x)] > in_eq
 					] > Ai > Xi((cls z) => A(in(z, doubleton(x, y)), in(w, z)), x)
 				} > cp;
 				in(w, y) |- {
 					[
 						[@h1; @h2] > doubleton_in_2(x, y);
-						[@h4; eq_reflexive(y)] > in_eq_right_1
+						[@h4; eq_reflexive(y)] > in_eq
 					] > Ai > Xi((cls z) => A(in(z, doubleton(x, y)), in(w, z)), y)
 				} > cp
 			] > Oe

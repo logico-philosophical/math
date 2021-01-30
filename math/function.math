@@ -229,9 +229,9 @@ theorem funcall_i(cls f: @11, $A$ cls a: @12, $B$ cls b: @13, cls x: @211, cls y
 theorem funcall_e(cls f: @11, $A$ cls a: @12, $B$ cls b: @13, cls x: @21, cls y: @31) {
 	is_fun(f, a, b), in(x, a), eq(y, funcall(f, x)) |- {
 		[
-			[@h1; @h2] > funcall_def;
-			[eq_reflexive(x); @h3] > pair_eq_i
-		] > in_eq_left_2
+			[eq_reflexive(x); @h3] > pair_eq_i;
+			[@h1; @h2] > funcall_def
+		] > eq_in
 	}
 }
 
@@ -295,13 +295,13 @@ theorem funcall_in_codomain(cls f: @11, $A$ cls a: @12, $B$ cls b: @13, cls x: @
 			(cls y) => {
 				A(in(y, b), in(pair(x, y), f)) |- {
 					[
-						@h3 > Ae1;
 						[
 							@h1; @h2;
 							@h3 > Ae2;
 							[@h1; @h2] > funcall_def(f, a, b, x)
-						] > fun_im_Q_m
-					] > in_eq_left_1
+						] > fun_im_Q_m;
+						@h3 > Ae1
+					] > eq_in_flip
 				} > cp
 			} > Ui
 		] > mpX_Xe_p(?, in(funcall(f, x), b))
@@ -395,15 +395,15 @@ theorem map_is_fun(fun f: @r11, $A$ cls a: @r2, $B$ cls b: @r3) {
 					(cls z) => {
 						eq(w, pair(z, f(z))), in(z, a) |- {
 							[
+								@h3;
 								[
 									@h4;
 									[
 										@h4;
 										@h1 > Ue(?, z)
 									] > mp
-								] > cartesian_in_i;
-								@h3
-							] > in_eq_left_2
+								] > cartesian_in_i
+							] > eq_in
 						} > cp2
 					} > Ui
 				] > mpX_Xe_p(?, in(w, cartesian(a, b)))
@@ -528,12 +528,12 @@ theorem fun_id_im_set($A$ cls a: @12, $B$ cls b: @11) {
 												] > pair_eq_e2_v1;
 
 												[
-													@h3;
 													[
 														$x_is_z;
 														$y_is_z > eq_symmetric
-													] > eq_transitive
-												] > in_eq_left_1
+													] > eq_transitive;
+													@h3
+												] > eq_in_flip
 											} > cp2
 										} > Ui
 									] > mpX_Xe_p(?, in(y, b))
@@ -625,15 +625,15 @@ theorem fun_composite_is_fun_2(cls f, cls g) {
 											[
 												@h6;
 												[
-													@h8;
 													[
 														[
 															[@h5; @h7] > Ai;
 															$fQ > Ue2(?, y1, y2)
 														] > mp;
 														eq_reflexive(z2)
-													] > pair_eq_i
-												] > in_eq_left_2
+													] > pair_eq_i;
+													@h8
+												] > eq_in
 											] > Ai;
 											@h2 > Ue(?, y1) > Ue2(?, z1, z2)
 										] > mp
@@ -702,9 +702,9 @@ theorem fun_composite_is_fun_4(cls f, cls g) {
 										$A = [
 											@h5;
 											[
-												@h7;
-												[eq_reflexive(x2); $y1_is_y2] > pair_eq_i
-											] > in_eq_left_2
+												[eq_reflexive(x2); $y1_is_y2] > pair_eq_i;
+												@h7
+											] > eq_in
 										] > Ai;
 
 										[
@@ -1185,13 +1185,13 @@ theorem cantor($A$ cls a: @11, cls f: @r11) {
 						$xi_Nin_f_xi = in(xi, funcall(f, xi)) |- {
 							[
 								@h5;
-								[@h5; $b_is_f_xi] > in_eq_right_2 > subsetbuilder_e
+								[@h5; $b_is_f_xi] > in_eq_flip > subsetbuilder_e
 							] > Fi
 						} > Ni_alt as Nin(xi, funcall(f, xi));
 
 						$xi_in_b = [@h3; $xi_Nin_f_xi] > subsetbuilder_i as in(xi, b);
 
-						$xi_in_f_xi = [$xi_in_b; $b_is_f_xi] > in_eq_right_1;
+						$xi_in_f_xi = [$xi_in_b; $b_is_f_xi] > in_eq;
 
 						[$xi_in_f_xi; $xi_Nin_f_xi] > Fi
 					} > cp2

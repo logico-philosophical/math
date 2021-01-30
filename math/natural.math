@@ -195,7 +195,7 @@ theorem induce(pr f) {
 				[
 					@h3;
 					[$c1; $c2; $c3] > induce_set
-				] > in_eq_right_2 > subsetbuilder_e
+				] > in_eq_flip > subsetbuilder_e
 			} > cp
 		} > Ui as Uin(omega, f)
 	}
@@ -216,7 +216,7 @@ theorem successor_is_not_zero(cls n: @11) {
 				[
 					@h1 > set_i > self_in_successor;
 					@h2
-				] > in_eq_right_1;
+				] > in_eq;
 				emptyset_def(n) > id(Nin(n, ord_zero))
 			] > Fi
 		} > Ni_alt as Neq(successor(n), ord_zero)
@@ -284,12 +284,12 @@ theorem successor_eq_e(cls n: @11, cls m: @21) {
 		$base = [
 			@h1 > set_i > self_in_successor;
 			@h3
-		] > in_eq_right_1 > setbuilder_e;
+		] > in_eq > setbuilder_e;
 
 		$base_dual = [
 			@h2 > set_i > self_in_successor;
 			@h3
-		] > in_eq_right_2 > setbuilder_e;
+		] > in_eq_flip > setbuilder_e;
 
 		$c1 = in(n, singleton(m)) |- {
 			[
@@ -681,6 +681,22 @@ theorem recursion_theorem_5_step($A$ cls a: @12, cls c: @11, cls f: @21) using d
 																		$c3_c2 = eq(successor(m), successor(n)) |- {
 																			[
 																				[
+																					@h12;
+																					[
+																						[
+																							[
+																								[
+																									[@h9; @h3; @h12] > successor_eq_e;
+																									eq_reflexive(v)
+																								] > pair_eq_i;
+																								$bar
+																							] > eq_in_flip;
+																							@h6
+																						] > Ai;
+																						@h4 > Ue2(?, v, x)
+																					] > mp > funcall_eq_i(f, ?, ?)
+																				] > pair_eq_i;
+																				[
 																					[
 																						@h6;
 																						[
@@ -705,24 +721,8 @@ theorem recursion_theorem_5_step($A$ cls a: @12, cls c: @11, cls f: @21) using d
 																							@h8
 																						] > Fi
 																					} > Ni_alt
-																				] > setminus_i;
-																				[
-																					@h12;
-																					[
-																						[
-																							[
-																								$bar;
-																								[
-																									[@h9; @h3; @h12] > successor_eq_e;
-																									eq_reflexive(v)
-																								] > pair_eq_i
-																							] > in_eq_left_1;
-																							@h6
-																						] > Ai;
-																						@h4 > Ue2(?, v, x)
-																					] > mp > funcall_eq_i(f, ?, ?)
-																				] > pair_eq_i
-																			] > in_eq_left_2
+																				] > setminus_i
+																			] > eq_in
 																		};
 
 																		[lxm(eq(successor(m), successor(n))); $c3_c2; $c3_c1] > Oe_alt
@@ -1033,15 +1033,15 @@ theorem fun_iterated_ird(cls f: @11, cls x: @21, $A$ cls a: @12) {
 		$dom_f_is_a = @h1 > fun_dom;
 
 		[
-			[@h2; $dom_f_is_a] > in_eq_right_2;
+			[@h2; $dom_f_is_a] > in_eq_flip;
 			(cls z) => {
 				in(z, rel_dom(f)) |- {
-					$z_in_a = [@h3; $dom_f_is_a] > in_eq_right_1;
+					$z_in_a = [@h3; $dom_f_is_a] > in_eq;
 
 					[
 						[@h1; $z_in_a] > funcall_in_codomain;
 						$dom_f_is_a
-					] > in_eq_right_2
+					] > in_eq_flip
 				} > cp
 			} > Ui
 		] > recursion_theorem_7m as is_recursively_defined_m(fun_iterated_(f, x), rel_dom(f), x, ($\gamma$ cls g) => funcall(f, g))
@@ -1067,7 +1067,7 @@ theorem fun_iterated_def(cls f: @11, $A$ cls a: @12, cls n: @21, cls x: @31) usi
 
 		$dom_to_a = (cls x) => {
 			in(x, rel_dom(f)) |- {
-				$x_in_a = [@h4; $fun_dom] > in_eq_right_1;
+				$x_in_a = [@h4; $fun_dom] > in_eq;
 
 				[
 					[
@@ -1075,13 +1075,13 @@ theorem fun_iterated_def(cls f: @11, $A$ cls a: @12, cls n: @21, cls x: @31) usi
 						@h2
 					] > funcall_in_codomain as in(fun_iterated_call(f, n, x), rel_dom(f));
 					@h1 > fun_dom
-				] > in_eq_right_1
+				] > in_eq
 			} > cp
 		} > Ui;
 
 		[
 			$dom_to_a;
-			[@h3; $fun_dom] > in_eq_right_2
+			[@h3; $fun_dom] > in_eq_flip
 		] > map_funcall(?, ?, a, ?) as eq(funcall(fun_iterated(f, n), x), fun_iterated_call(f, n, x))
 	}
 }
@@ -1092,7 +1092,7 @@ theorem fun_iterated_is_fun(cls f: @11, $A$ cls a: @12, cls n: @21) using fun_it
 
 		$dom_to_a = (cls x) => {
 			in(x, rel_dom(f)) |- {
-				$x_in_a = [@h3; $fun_dom] > in_eq_right_1;
+				$x_in_a = [@h3; $fun_dom] > in_eq;
 
 				[
 					[
@@ -1100,7 +1100,7 @@ theorem fun_iterated_is_fun(cls f: @11, $A$ cls a: @12, cls n: @21) using fun_it
 						@h2
 					] > funcall_in_codomain as in(fun_iterated_call(f, n, x), rel_dom(f));
 					@h1 > fun_dom
-				] > in_eq_right_1
+				] > in_eq
 			} > cp
 		} > Ui > map_is_fun as is_fun(fun_iterated(f, n), rel_dom(f), a);
 
@@ -1216,7 +1216,7 @@ theorem fun_iterated_im_base(cls f: @11, $A$ cls a: @12, $B$ cls b: @21) {
 							] > fun_iterated_base
 						] > eq_transitive;
 
-						[@h4; $y_is_x] > in_eq_left_2
+						[$y_is_x; @h4] > eq_in
 					} > cp2
 				} > Ui;
 
@@ -1227,12 +1227,12 @@ theorem fun_iterated_im_base(cls f: @11, $A$ cls a: @12, $B$ cls b: @21) {
 				$y_in_a = [@h3; @h2] > in_subseteq;
 
 				$yy_in_f0 = [
-					[$f0_is_fun; $y_in_a] > funcall_def;
 					[
 						eq_reflexive(y);
 						[@h1; $y_in_a] > fun_iterated_base
-					] > pair_eq_i
-				] > in_eq_left_1;
+					] > pair_eq_i;
+					[$f0_is_fun; $y_in_a] > funcall_def
+				] > eq_in_flip;
 
 				[
 					@h3 > set_i;
@@ -1256,14 +1256,14 @@ theorem fun_iterated_im_step(cls f: @11, $A$ cls a: @12, $B$ cls b: @31, cls n: 
 				$in = [$fn1_is_f_fn; @h4] > ax_indiscernible_m1((cls f) => in(z, rel_im_set(f, b)), ?, ?);
 				$eq = rel_composite_im_set(f, fun_iterated(f, n), b);
 
-				[$in; $eq] > in_eq_right_1
+				[$in; $eq] > in_eq
 			} > cp;
 
 			$c2 = in(z, rel_im_set(f, rel_im_set(fun_iterated(f, n), b))) |- {
 				$in = [
 					@h4;
 					rel_composite_im_set(f, fun_iterated(f, n), b)
-				] > in_eq_right_2;
+				] > in_eq_flip;
 
 				[$fn1_is_f_fn; $in] > ax_indiscernible_m2((cls f) => in(z, rel_im_set(f, b)), ?, ?)
 			} > cp;
@@ -1308,7 +1308,7 @@ theorem schroeder_bernstein_1($A$ cls a: @12, $B$ cls b: @13, cls f: @11, cls g:
 
 								$gfx_in_im_g = [$g_is_fun; $fx_in_b] > fun_im_in_i;
 
-								[$gfx_in_im_g; $hx_eq_gfx] > in_eq_left_2
+								[$hx_eq_gfx; $gfx_in_im_g] > eq_in
 							} > cp;
 
 							$c2 = Nin(x, aa) /* @h4 */ |- {
@@ -1319,13 +1319,13 @@ theorem schroeder_bernstein_1($A$ cls a: @12, $B$ cls b: @13, cls f: @11, cls g:
 										[
 											[@h3; @h5] > setminus_i;
 											[$gf_is_fun; setminus_is_smaller(a, rel_im(g))] > fun_iterated_im_base
-										] > in_eq_right_2
+										] > in_eq_flip
 									] > bigcup2_i as in(x, aa);
 
 									[$x_in_aa; @h4] > Fi
 								} > Ni_alt > NNe;
 
-								[$x_in_im_g; $hx_eq_x] > in_eq_left_2
+								[$hx_eq_x; $x_in_im_g] > eq_in
 							} > cp;
 
 							[$x_in_aa_or_not; $c1; $c2] > Oe
@@ -1354,7 +1354,7 @@ theorem schroeder_bernstein_1($A$ cls a: @12, $B$ cls b: @13, cls f: @11, cls g:
 										$in = [$gf_is_fun; @h3; @h6] > fun_im_set_in_i;
 										$eq2 = [$gf_is_fun; @h5; setminus_is_smaller(a, rel_im(g))] > fun_iterated_im_step;
 
-										$in2 = [[$in; $eq2] > in_eq_right_2; $eq1] > in_eq_left_1;
+										$in2 = [$eq1; [$in; $eq2] > in_eq_flip] > eq_in_flip;
 
 										[@h5 > successor_in_omega; $in2]
 										> bigcup2_i as in(
@@ -1385,13 +1385,13 @@ theorem schroeder_bernstein_1($A$ cls a: @12, $B$ cls b: @13, cls f: @11, cls g:
 									] > mp
 								] > mp;
 
-								[$gfx_in_aa; $hx_eq_gfx] > in_eq_left_2
+								[$hx_eq_gfx; $gfx_in_aa] > eq_in
 							} > cp;
 
 							$c2 = Nin(x, aa) /* @h4 */ |- {
 								in(hh(x), aa) |- {
 									$hx_eq_x = @h4 > if_def_2 as eq(hh(x), x);
-									[[@h5; $hx_eq_x] > in_eq_left_1; @h4] > Fi
+									[[$hx_eq_x; @h5] > eq_in_flip; @h4] > Fi
 								} > Ni_alt as Nin(hh(x), aa)
 							} > cp;
 
@@ -1422,8 +1422,8 @@ theorem schroeder_bernstein_1($A$ cls a: @12, $B$ cls b: @13, cls f: @11, cls g:
 									$E2 = [$x2_in_a; $x_in_aa_iff_hx_in_aa > Ue(?, x2)] > mp;
 
 									$c1 = in(y, aa) /* @h6 */ |- {
-										$hx1_in_aa = [@h6; $y_is_hx1] > in_eq_left_1;
-										$hx2_in_aa = [@h6; $y_is_hx2] > in_eq_left_1;
+										$hx1_in_aa = [$y_is_hx1; @h6] > eq_in_flip;
+										$hx2_in_aa = [$y_is_hx2; @h6] > eq_in_flip;
 
 										$x1_in_aa = [$hx1_in_aa; $E1] > mpE2;
 										$x2_in_aa = [$hx2_in_aa; $E2] > mpE2;
@@ -1451,11 +1451,11 @@ theorem schroeder_bernstein_1($A$ cls a: @12, $B$ cls b: @13, cls f: @11, cls g:
 
 									$c2 = Nin(y, aa) /* @h6 */ |- {
 										$hx1_Nin_aa = in(hh(x1), aa) |- {
-											[[@h7; $y_is_hx1] > in_eq_left_2; @h6] > Fi
+											[[$y_is_hx1; @h7] > eq_in; @h6] > Fi
 										} > Ni_alt as Nin(hh(x1), aa);
 
 										$hx2_Nin_aa = in(hh(x2), aa) |- {
-											[[@h7; $y_is_hx2] > in_eq_left_2; @h6] > Fi
+											[[$y_is_hx2; @h7] > eq_in; @h6] > Fi
 										} > Ni_alt as Nin(hh(x2), aa);
 
 										$x1_Nin_aa = [$hx1_Nin_aa; $E1 > Ee1 > contrapose]
@@ -1506,7 +1506,7 @@ theorem schroeder_bernstein_1($A$ cls a: @12, $B$ cls b: @13, cls f: @11, cls g:
 
 											$eq = [$gf_is_fun; setminus_is_smaller(a, rel_im(g))] > fun_iterated_im_base;
 
-											[$x_in_im_g; [$in; $eq] > in_eq_right_1 > setminus_e2] > Fi
+											[$x_in_im_g; [$in; $eq] > in_eq > setminus_e2] > Fi
 										} > Ni_alt as Neq(n, ord_zero);
 
 										with (pr predicate = (cls m) => O(
@@ -1530,7 +1530,7 @@ theorem schroeder_bernstein_1($A$ cls a: @12, $B$ cls b: @13, cls f: @11, cls g:
 																	$eq = [$gf_is_fun; setminus_is_smaller(a, rel_im(g))] > fun_iterated_im_base;
 																	[
 																		zero_in_omega();
-																		[@h9; $eq > eq_symmetric] > in_eq_right_1
+																		[@h9; $eq > eq_symmetric] > in_eq
 																	] > bigcup2_i as in(x, aa)
 																} > cp
 															} > Ui as subseteq(setminus(a, rel_im(g)), aa)
@@ -1576,7 +1576,7 @@ theorem schroeder_bernstein_1($A$ cls a: @12, $B$ cls b: @13, cls f: @11, cls g:
 																				[$f_is_fun; $g_is_fun; $x_in_a] > fun_composite_funcall
 																			] > eq_transitive;
 
-																			[$gfx_in_aa; $y_is_gfx] > in_eq_left_2
+																			[$y_is_gfx; $gfx_in_aa] > eq_in
 																		} > cp2
 																	} > Ui;
 
