@@ -316,9 +316,11 @@
 					notProvedList = [],
 					provedList = [];
 				
-				var arr = {};
+				var ret = '';
 
 				function foo(scope) {
+					var map = {};
+
 					for (var [k, v] of scope.defMap) {
 						var prec = v.precedence;
 						if (prec) {
@@ -369,7 +371,7 @@
 					);
 
 					for (var [k, v] of scope.typedefMap) {
-						arr[v._id] = `<div class="block">`
+						map[v._id] = `<div class="block">`
 							+ `<p class="label"><a id="type-${k}" href="#type-${k}"><b>${
 								(v.isBaseType ? 'base ' : '')
 							}type</b> ${k}</a></p>`
@@ -386,7 +388,7 @@
 					}
 
 					for (var [k, v] of scope.defMap) {
-						arr[v._id] = `<div class="block">`
+						map[v._id] = `<div class="block">`
 							+ `<p class="label"><a id="def-${k}" href="#def-${k}"><b>${
 								v.sealed ? 'sealed ' : ''
 							}definition</b> ${k}</a>${v.type.isSimple
@@ -407,7 +409,7 @@
 					}
 
 					for (var [k, v] of scope.schemaMap) {
-						arr[v._id] = `<div class="block">`
+						map[v._id] = `<div class="block">`
 							+ `<p class="label"><a id="def-${k}" href="#def-${k}">${
 								v.annotations.map(a => `<b class="red">${a}</b> `).join('')
 							}<b>${v.schemaType}</b> ${k}</a>(${v.params.map(p => p.toSimpleString()).join(', ')})${
@@ -439,6 +441,10 @@
 
 							+ `</div>`;
 					}
+
+					ret += `<h3 class="label">${scope.fileUri}</h3><div class="block-file">`
+						+ Object.keys(map).sort((l, r) => l._id - r._id).map(k => map[k]).join('')
+						+ '</div>';
 				}
 
 				var printedImports = [filename];
@@ -513,8 +519,7 @@
 					</ul>
 				</ul>`;
 
-				$('#all').innerHTML =
-					Object.keys(arr).sort((l, r) => l._id - r._id).map(k => arr[k]).join('');
+				$('#all').innerHTML = ret;
 
 				end = new Date();
 				console.log('--- HTML RENDER END ---');
@@ -572,7 +577,7 @@
 					$('#reload').value = 'reloading...';
 					program = new math.Program(parser);
 					await program.loadModule(filename, async filename => ({
-						fileUri: `../math/${filename}.math`,
+						fileUri: `/${filename}.math`,
 						code: await new Promise((resolve, reject) => {
 							var xhr = new XMLHttpRequest();
 							xhr.addEventListener('load', () => {
