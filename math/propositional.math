@@ -274,6 +274,15 @@ theorem cp2(st p: @11, st q: @12, st r: @1r) {
 	}
 }
 
+theorem cp3(st p: @11, st q: @12, st r: @13, st s: @1r) {
+	(p, q, r |- s) |- {
+		A(A(p, q), r) |- {
+			$Apq = @h2 > Ae1;
+			[$Apq > Ae1; $Apq > Ae2; @h2 > Ae2] > @h1
+		} > cp
+	}
+}
+
 theorem A_flip(st p: @11, st q: @12) {
 	A(p, q) |- {
 		[

@@ -354,6 +354,24 @@ st Uin4($A$ cls a, $B$ cls b, $C$ cls c, $D$ cls d, pr4 f) {
 	Uin(a, (cls x) => Uin(b, (cls y) => Uin(c, (cls z) => Uin(d, (cls w) => f(x, y, z, w)))))
 }
 
+theorem Uin_e($A$ cls a: @11, pr f: @12, cls x: @21) {
+	Uin(a, f), in(x, a) |- {
+		[@h2; @h1 > Ue(?, x)] > mp
+	}
+}
+
+theorem Uin2_e($A$ cls a: @11, $B$ cls b: @12, pr2 f: @13, cls x: @21, cls y: @31) {
+	Uin2(a, b, f), in(x, a), in(y, b) |- {
+		[@h3; [@h2; @h1 > Ue(?, x)] > mp > Ue(?, y)] > mp
+	}
+}
+
+theorem Uin3_e($A$ cls a: @11, $B$ cls b: @12, $C$ cls c: @13, pr3 f: @14, cls x: @21, cls y: @31, cls z: @41) {
+	Uin3(a, b, c, f), in(x, a), in(y, b), in(z, c) |- {
+		[@h4; [@h3; [@h2; @h1 > Ue(?, x)] > mp > Ue(?, y)] > mp > Ue(?, z)] > mp
+	}
+}
+
 theorem UinA_i(pr f: @12, pr g: @22, $A$ cls a: @11) {
 	Uin(a, f), Uin(a, g) |- {
 		(cls z) => {

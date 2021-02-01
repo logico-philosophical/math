@@ -315,13 +315,13 @@ theorem cartesian_in_e2($A$ cls a: @121, $B$ cls b: @122, cls x: @111, cls y: @1
 }
 
 "[$A] 및 [$B] 상에서의 이항관계. [$A\times B]의 부분집합이다. heterogeneous relation이라고도 한다."
-$\left(<<\operatorname{relation}>>#1\text{ over }#2\text{ and } #3\right)$
+$\left(<<\operatorname{relation}>>{#1}\text{ over }{#2}\text{ and }{#3}\right)$
 st is_rel_over_sets($R$ cls r, $A$ cls a, $B$ cls b) {
 	subseteq(r, cartesian(a, b))
 }
 
 "[$A] 상에서의 이항관계. [$A\times A]의 부분집합이다. homogeneous relation 또는 endorelation이라고도 한다."
-$\left(<<\operatorname{relation}>>#1\text{ over }#2\right)$
+$\left(<<\operatorname{relation}>>{#1}\text{ over }{#2}\right)$
 st is_rel_over_set($R$ cls r, $A$ cls a) {
 	is_rel_over_sets(r, a, a)
 }
@@ -531,56 +531,78 @@ cls rel_restrict($R$ cls r, $A$ cls a) {
 }
 
 "이항관계의 반사성(reflexivity)."
-st rel_reflexive($R$ cls r, $A$ cls a) {
-	Uin(a, (cls x) => in(pair(x, x), r))
+st rel_reflexive($\sim$ cls r, $A$ cls a) {
+	Uin(a, (cls x) => rel_call(r, x, x))
 }
 
 "이항관계의 비반사성(irreflexivity)."
-st rel_irreflexive($R$ cls r, $A$ cls a) {
-	Uin(a, (cls x) => Nin(pair(x, x), r))
+st rel_irreflexive($\sim$ cls r, $A$ cls a) {
+	Uin(a, (cls x) => N(rel_call(r, x, x)))
 }
 
 "이항관계의 대칭성(symmetry)."
-st rel_symmetric($R$ cls r, $A$ cls a) {
-	Uin(a, (cls x) => Uin(a, (cls y) => I(in(pair(x, y), r), in(pair(y, x), r))))
+st rel_symmetric($\sim$ cls r, $A$ cls a) {
+	Uin2(a, a, (cls x, cls y) => I(rel_call(r, x, y), rel_call(r, y, x)))
+}
+
+theorem rel_symmetric_m($\sim$ cls r: @11, $A$ cls a: @12, cls x: @21, cls y: @31) {
+	rel_symmetric(r, a), in(x, a), in(y, a), rel_call(r, x, y) |- {
+		[@h4; [@h1; @h2; @h3] > Uin2_e] > mp
+	}
 }
 
 "이항관계의 반대칭성(antisymmetry)."
-st rel_antisymmetric($R$ cls r, $A$ cls a) {
-	Uin(a, (cls x) => Uin(a, (cls y) => I(A(in(pair(x, y), r), in(pair(y, x), r)), eq(x, y))))
+st rel_antisymmetric($\sim$ cls r, $A$ cls a) {
+	Uin2(a, a, (cls x, cls y) => I(A(rel_call(r, x, y), rel_call(r, y, x)), eq(x, y)))
 }
 
 "이항관계의 비대칭성(asymmetry)."
-st rel_asymmetric($R$ cls r, $A$ cls a) {
-	Uin(a, (cls x) => Uin(a, (cls y) => I(in(pair(x, y), r), Nin(pair(y, x), r))))
+st rel_asymmetric($\sim$ cls r, $A$ cls a) {
+	Uin2(a, a, (cls x, cls y) => I(rel_call(r, x, y), N(rel_call(r, y, x))))
 }
 
 "이항관계의 추이성(transitivity)."
-st rel_transitive($R$ cls r, $A$ cls a) {
-	Uin(a, (cls x) => {
-		Uin(a, (cls y) => Uin(a, (cls z) => I(A(in(pair(x, y), r), in(pair(y, z), r)), in(pair(x, z), r))))
+st rel_transitive($\sim$ cls r, $A$ cls a) {
+	Uin3(a, a, a, (cls x, cls y, cls z) => {
+		I(A(rel_call(r, x, y), rel_call(r, y, z)), rel_call(r, x, z))
 	})
 }
 
 "이항관계의 반추이성(antitransitivity)."
-st rel_antitransitive($R$ cls r, $A$ cls a) {
-	Uin(a, (cls x) => {
-		Uin(a, (cls y) => {
-			Uin(a, (cls z) => I(A(in(pair(x, y), r), in(pair(y, z), r)), Nin(pair(x, z), r)))
-		})
+st rel_antitransitive($\sim$ cls r, $A$ cls a) {
+	Uin3(a, a, a, (cls x, cls y, cls z) => {
+		I(A(rel_call(r, x, y), rel_call(r, y, z)), N(rel_call(r, x, z)))
 	})
 }
 
 "원순서(preorder). 즉 반사적이고 추이적인 이항관계이다."
-$\left(<<\operatorname{preorder}>> #1\text{ over }#2\right)$
-st is_preorder($R$ cls r, $A$ cls a) {
+$\left(<<\operatorname{preorder}>> {#1}\text{ over }{#2}\right)$
+st is_preorder($\lesssim$ cls r, $A$ cls a) {
 	A(is_rel_over_set(r, a), A(rel_reflexive(r, a), rel_transitive(r, a)))
 }
 
 "동치관계(equivalence relation). 즉 대칭적인 원순서이다."
-$\left(<<\operatorname{equiv.\ rel.}>> #1\text{ over }#2\right)$
-st is_equiv_rel($R$ cls r, $A$ cls a) {
+$\left(<<\operatorname{equiv.\ rel.}>> {#1}\text{ over }{#2}\right)$
+st is_equiv_rel($\sim$ cls r, $A$ cls a) {
 	A(is_preorder(r, a), rel_symmetric(r, a))
+}
+
+theorem equiv_rel_is_reflexive($\sim$ cls r: @11, $A$ cls a: @12) {
+	is_equiv_rel(r, a) |- {
+		@h1 > Ae1 > Ae2 > Ae1
+	}
+}
+
+theorem equiv_rel_is_symmetric($\sim$ cls r: @11, $A$ cls a: @12) {
+	is_equiv_rel(r, a) |- {
+		@h1 > Ae2
+	}
+}
+
+theorem equiv_rel_is_transitive($\sim$ cls r: @11, $A$ cls a: @12) {
+	is_equiv_rel(r, a) |- {
+		@h1 > Ae1 > Ae2 > Ae2
+	}
 }
 
 "동치류(equivalence class). [$\sim]이 클래스 [$A] 상에서의 동치관계일 때, [$A]의 원소 [$x]에 대해 정의된다.
@@ -589,6 +611,58 @@ st is_equiv_rel($R$ cls r, $A$ cls a) {
 $\left[#1\right]_{#2,#3}^{\scriptscriptstyle<<\dag>>}$
 cls equiv_cls(cls x, $A$ cls a, ${\sim}$ cls r) {
 	subsetbuilder(a, (cls z) => rel_call(r, z, x))
+}
+
+theorem equiv_cls_in_i(cls x: @23, $A$ cls a: @12, $\sim$ cls r: @21, cls z: @11) {
+	in(z, a), rel_call(r, z, x) |- {
+		[@h1; @h2] > subsetbuilder_i as in(z, equiv_cls(x, a, r))
+	}
+}
+
+theorem equiv_cls_in_i2(cls x: @21, $A$ cls a: @12, $\sim$ cls r: @11) {
+	is_equiv_rel(r, a), in(x, a) |- {
+		[
+			@h2;
+			[@h1 > equiv_rel_is_reflexive; @h2] > Uin_e
+		] > equiv_cls_in_i
+	}
+}
+
+theorem equiv_cls_eq_i($\sim$ cls r: @11, $A$ cls a: @12, cls x: @21, cls y: @31) {
+	$foo = (cls x, cls y, $A$ cls a, $\sim$ cls r, cls z) => {
+		is_equiv_rel(r, a), in(x, a), in(y, a), rel_call(r, x, y) |- {
+			in(z, equiv_cls(x, a, r)) |- {
+				$foo = @h5 > setbuilder_e;
+				$z_in_a = $foo > Ae1;
+				$z_sim_x = $foo > Ae2;
+
+				$transitive = [
+					@h1 > equiv_rel_is_transitive;
+					$z_in_a; @h2; @h3
+				] > Uin3_e;
+
+				[
+					$z_in_a;
+					[[$z_sim_x; @h4] > Ai; $transitive] > mp
+				] > equiv_cls_in_i
+			} > cp
+		}
+	};
+	
+	is_equiv_rel(r, a), in(x, a), in(y, a), rel_call(r, x, y) |- {
+		(cls z) => {
+			$1 = [@h1; @h2; @h3; @h4] > $foo(x, y, a, r, z);
+			$2 = [@h1; @h3; @h2; [@h1 > equiv_rel_is_symmetric; @h2; @h3; @h4] > rel_symmetric_m] > $foo(y, x, a, r, z);
+
+			[$1; $2] > Ei
+		} > Ui > eq_i(equiv_cls(x, a, r), equiv_cls(y, a, r))
+	}
+}
+
+theorem equiv_cls_eq_e($\sim$ cls r: @11, $A$ cls a: @12, cls x: @21, cls y: @31) {
+	is_equiv_rel(r, a), in(x, a), in(y, a), eq(equiv_cls(x, a, r), equiv_cls(y, a, r)) |- {
+		[[@h1; @h2] > equiv_cls_in_i2; @h4] > in_eq > subsetbuilder_e
+	}
 }
 
 "몫집합(quotient set).
@@ -600,13 +674,13 @@ cls quotient_set($A$ cls a, ${\sim}$ cls r) {
 }
 
 "부분 순서(partial order). strict partial order와 구분하여 non-strict partial order라고도 한다. 즉 반대칭적인 원순서이다. 보통 [$\leq] 등으로 표기한다."
-$\left(<<\operatorname{partial\ ord.}>> #1\text{ over }#2\right)$
+$\left(<<\operatorname{partial\ ord.}>> {#1}\text{ over }{#2}\right)$
 st is_partial_order($R$ cls r, $A$ cls a) {
 	A(is_preorder(r, a), rel_antisymmetric(r, a))
 }
 
 "비반사적 부분 순서(strict partial order). 보통 [$<] 등으로 표기하는 이항관계이다. 이때 비대칭성이 비반사성을 함의함에 주목하라."
-$\left(<<\operatorname{strict\ partial\ ord.}>> #1\text{ over }#2\right)$
+$\left(<<\operatorname{strict\ partial\ ord.}>> {#1}\text{ over }{#2}\right)$
 st is_strict_order($R$ cls r, $A$ cls a) {
 	A(is_rel_over_set(r, a), A(rel_asymmetric(r, a), rel_transitive(r, a)))
 }
