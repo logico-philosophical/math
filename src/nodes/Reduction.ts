@@ -229,24 +229,35 @@ ${as.expandMeta(true)}
 
 		var ret: ProofType[] = [
 			...antecedentLinesList.flat(),
-			...subjectlines,
-			{
+			...subjectlines
+		];
+
+		if (this.rightEqualsResult && this.rightEqualsResult.length) {
+			ret.push(
+				{
+					_type: 'E',
+					ctr: ctr.next(),
+					subject: subjectnum,
+					args,
+					antecedents: antecedentNums,
+					reduced: this.preFormatConsequent
+				},
+				{
+					_type: 'bydef',
+					ref: ctr.peek(),
+					ctr: ctr.next(),
+					expr: this.consequent,
+					of: this.rightEqualsResult
+				}
+			);
+		} else {
+			ret.push({
 				_type: 'E',
 				ctr: ctr.next(),
 				subject: subjectnum,
 				args,
 				antecedents: antecedentNums,
-				reduced: this.preFormatConsequent
-			}
-		];
-
-		if (this.rightEqualsResult && this.rightEqualsResult.length) {
-			ret.push({
-				_type: 'bydef',
-				ref: ctr.peek(),
-				ctr: ctr.next(),
-				expr: this.consequent,
-				of: this.rightEqualsResult
+				reduced: this.consequent
 			});
 		}
 		
