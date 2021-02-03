@@ -468,8 +468,8 @@ theorem mpXE2(pr f, pr g) {
 	}
 }
 
-"st 타입을 위한 존재 양화 소거(existential elimination)."
-theorem Xe_p(st p) {
+"문장 타입을 위한 존재 양화 소거(existential elimination). 존재 양화 소거는 일반적으로 [$.(\exists x)(\varphi(x))\vdash \varphi(c)]를 뜻하나 이는 새로운 상수 기호 [$c]의 도입을 필요로 하며 math-o-matic 문법은 이를 지원하지 않는다. 또 완전히 새로운 기호 [$c]에 관하여 [$\varphi(c)]임을 주장하는 것은 이상한 일이다. 그러므로 math-o-matic에서는 일반적 존재 양화 소거를 지원하지 않는데, mpX 및 Xe 등을 사용하여 비슷한 효과를 낼 수 있디."
+theorem Xe(st p) {
 	X((cls z) => p) |- {
 		N(p) |- {
 			[
@@ -480,21 +480,21 @@ theorem Xe_p(st p) {
 	}
 }
 
-theorem X2e_p(st p) {
+theorem X2e(st p) {
 	X2((cls x, cls y) => p) |- {
-		@h1 > Xe_p(X((cls y) => p)) > Xe_p(p)
+		@h1 > Xe(X((cls y) => p)) > Xe(p)
 	}
 }
 
-theorem mpX_Xe_p(pr f: @11, st p: @r) {
+theorem mpX_Xe(pr f: @11, st p: @r) {
 	X(f), U(If(f, (cls z) => p)) |- {
-		[@h1; @h2] > mpX as X((cls z) => p) > Xe_p(p)
+		[@h1; @h2] > mpX as X((cls z) => p) > Xe(p)
 	}
 }
 
-theorem mpX2_X2e_p(pr2 f: @11, st p) {
+theorem mpX2_X2e(pr2 f: @11, st p) {
 	X2(f), U2(If2(f, (cls x, cls y) => p)) |- {
-		[@h1; @h2] > mpX2 > X2e_p(p)
+		[@h1; @h2] > mpX2 > X2e(p)
 	}
 }
 

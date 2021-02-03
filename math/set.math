@@ -511,9 +511,9 @@ theorem mpXin($A$ cls a: @11, pr f: @12, pr g: @r2) {
 	}
 }
 
-theorem mpXin_Xe_p($A$ cls a: @11, pr f: @12, st p) {
+theorem mpXin_Xe($A$ cls a: @11, pr f: @12, st p) {
 	Xin(a, f), Uin(a, If(f, (cls z) => p)) |- {
-		[@h1; @h2] > mpXin as Xin(a, (cls z) => p) > XAe2(is_in(a), (cls z) => p) > Xe_p(p)
+		[@h1; @h2] > mpXin as Xin(a, (cls z) => p) > XAe2(is_in(a), (cls z) => p) > Xe(p)
 	}
 }
 
@@ -584,7 +584,7 @@ theorem Qi(pr f) {
 							] > eq_transitive
 						} > cp
 					} > Ui
-				] > mpX_Xe_p(?, eq(x, y))
+				] > mpX_Xe(?, eq(x, y))
 			} > cp2
 		} > Ui2 as Q(f)
 	}
@@ -649,7 +649,7 @@ theorem Xqi(pr f) {
 					] > Ai as Xq(f)
 				} > cp
 			} > Ui
-		] > mpX_Xe_p(?, Xq(f))
+		] > mpX_Xe(?, Xq(f))
 	}
 }
 
@@ -1295,7 +1295,7 @@ theorem bigcup_is_set($\mathscr A$ cls aa: @11) {
 			} > cp2
 		} > Ui;
 
-		[$X; $U] > mpX_Xe_p(?, is_set(bigcup(aa)))
+		[$X; $U] > mpX_Xe(?, is_set(bigcup(aa)))
 	}
 }
 
@@ -1380,7 +1380,7 @@ theorem instantiate_eq_i(pr f: @11, cls x) using instantiate {
 							] > in_eq_flip
 						} > cp2
 					} > Ui
-				] > mpX_Xe_p(?, in(z, x))
+				] > mpX_Xe(?, in(z, x))
 			} > cp;
 
 			[$c1; $c2] > Ei
@@ -1434,7 +1434,7 @@ theorem instantiate_def(pr f: @11) {
 					] > ax_indiscernible_m1(f, ?, ?)
 				} > cp
 			} > Ui
-		] > mpX_Xe_p(?, f(instantiate(f)))
+		] > mpX_Xe(?, f(instantiate(f)))
 	}
 }
 
@@ -1812,7 +1812,7 @@ theorem doubleton_set_i(cls x: @11, cls y: @21) {
 					} > cp
 				} > cp
 			} > Ui
-		] > mpXin_Xe_p(?, ?, is_set(doubleton(x, y)))
+		] > mpXin_Xe(?, ?, is_set(doubleton(x, y)))
 	}
 }
 
@@ -1848,7 +1848,7 @@ theorem bigcup_singleton_to_element($A$ cls a: @11, cls x: @21, cls z: @31) {
 					] > in_eq_flip
 				} > cp
 			} > Ui
-		] > mpX_Xe_p(?, in(z, x))
+		] > mpX_Xe(?, in(z, x))
 	}
 }
 
@@ -1882,7 +1882,7 @@ theorem bigcup_singleton_to_self(cls x: @11, cls z: @21) {
 					] > in_eq
 				} > cp
 			} > Ui
-		] > mpX_Xe_p(?, in(z, x))
+		] > mpX_Xe(?, in(z, x))
 	}
 }
 
@@ -1926,7 +1926,7 @@ theorem bigcup_doubleton_to_cup(cls x: @11, cls y: @21, cls w: @31) {
 					] > doubleton_to_cup
 				} > cp
 			} > Ui
-		] > mpX_Xe_p((cls z) => A(in(z, doubleton(x, y)), in(w, z)), in(w, cup(x, y)))
+		] > mpX_Xe((cls z) => A(in(z, doubleton(x, y)), in(w, z)), in(w, cup(x, y)))
 	}
 }
 
@@ -2065,7 +2065,7 @@ theorem power_is_set(cls x: @11) {
 					] > subset_is_set
 				} > cp
 			} > Ui
-		] > mpX(?, (cls y) => is_set(power(x))) > Xe_p(is_set(power(x)))
+		] > mpX(?, (cls y) => is_set(power(x))) > Xe(is_set(power(x)))
 	}
 }
 

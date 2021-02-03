@@ -119,7 +119,7 @@ theorem omega_is_set() {
 				] > subset_is_set as is_set(omega)
 			} > cp
 		} > Ui
-	] > mpX_Xe_p(?, is_set(omega))
+	] > mpX_Xe(?, is_set(omega))
 }
 
 "`[Pinter]` 정리 6.3."
@@ -507,7 +507,7 @@ theorem recursion_theorem_4($A$ cls a: @12, cls c: @11, cls f: @21) {
 									} > cp
 								} > cp
 							} > Ui
-						] > mpXin_Xe_p(?, ?, Xin(a, (cls x) => in(pair(successor(n), x), g)))
+						] > mpXin_Xe(?, ?, Xin(a, (cls x) => in(pair(successor(n), x), g)))
 					} > cp
 				} > cp
 			} > Ui;
@@ -747,7 +747,7 @@ theorem recursion_theorem_5_step($A$ cls a: @12, cls c: @11, cls f: @21) using d
 									} > cp
 								} > cp
 							} > Ui
-						] > mpXin_Xe_p(?, ?, Q((cls x) => in(pair(successor(n), x), g)))
+						] > mpXin_Xe(?, ?, Q((cls x) => in(pair(successor(n), x), g)))
 					} > cp
 				} > cp
 			} > Ui as Uin(omega, (cls n) => I(Q((cls x) => in(pair(n, x), g)), Q((cls x) => in(pair(successor(n), x), g))))
@@ -820,7 +820,7 @@ theorem recursion_theorem_7($A$ cls a: @12, cls c: @11, cls f: @21) {
 								} > cp
 							} > cp
 						} > Ui
-					] > mpXin_Xe_p(?, ?, eq(funcall(g, successor(n)), funcall(f, funcall(g, n))))
+					] > mpXin_Xe(?, ?, eq(funcall(g, successor(n)), funcall(f, funcall(g, n))))
 				} > cp
 			} > Ui;
 
@@ -1220,7 +1220,7 @@ theorem fun_iterated_im_base(cls f: @11, $A$ cls a: @12, $B$ cls b: @21) {
 					} > cp2
 				} > Ui;
 
-				[$xy_in_f0; $U] > mpX_Xe_p(?, in(y, b))
+				[$xy_in_f0; $U] > mpX_Xe(?, in(y, b))
 			} > cp;
 
 			$c2 = in(y, b) |- {
@@ -1364,7 +1364,7 @@ theorem schroeder_bernstein_1($A$ cls a: @12, $B$ cls b: @13, cls f: @11, cls g:
 									} > cp2 > curry
 								} > Ui;
 
-								[$X; $U] > mpXin_Xe_p(?, ?, in(
+								[$X; $U] > mpXin_Xe(?, ?, in(
 									funcall(g, funcall(f, x)),
 									aa
 								))
@@ -1580,7 +1580,7 @@ theorem schroeder_bernstein_1($A$ cls a: @12, $B$ cls b: @13, cls f: @11, cls g:
 																		} > cp2
 																	} > Ui;
 
-																	[$X; $U] > mpX_Xe_p(?, in(y, aa))
+																	[$X; $U] > mpX_Xe(?, in(y, aa))
 																} > cp
 															} > Ui as subseteq(
 																rel_im_set(rel_composite(g, f), aa),
@@ -1626,7 +1626,7 @@ theorem schroeder_bernstein_1($A$ cls a: @12, $B$ cls b: @13, cls f: @11, cls g:
 								} > cp
 							} > Ui;
 
-							[$X; $U] > mpXin_Xe_p(?, ?, in(x, rel_im_set(rel_composite(g, f), aa)))
+							[$X; $U] > mpXin_Xe(?, ?, in(x, rel_im_set(rel_composite(g, f), aa)))
 						} > cp
 					} > Ui as subseteq(
 						cap(rel_im(g), aa),
@@ -1727,10 +1727,10 @@ theorem schroeder_bernstein($A$ cls a, $B$ cls b) {
 					} > cp
 				} > Ui;
 
-				[@h2; $U] > mpX_Xe_p as X((cls h) => is_bijection(h, a, b))
+				[@h2; $U] > mpX_Xe as X((cls h) => is_bijection(h, a, b))
 			} > cp
 		} > Ui;
 		
-		[@h1; $U] > mpX_Xe_p as X((cls h) => is_bijection(h, a, b))
+		[@h1; $U] > mpX_Xe as X((cls h) => is_bijection(h, a, b))
 	}
 }
