@@ -229,7 +229,7 @@ theorem omega_in_to_subseteq(cls n: @11, cls m: @21) {
 		in(m, ord_zero) |- {
 			N(subseteq(m, ord_zero)) |- {
 				[@h1; emptyset_def(m)] > Fi
-			} > Nim > NNe
+			} > Nim_alt
 		} > cp
 	} > Ui;
 
@@ -336,7 +336,7 @@ theorem successor_eq_e(cls n: @11, cls m: @21) {
 				[$c2; $c2_dual] > subseteq_to_eq;
 				@h4
 			] > Fi
-		} > Nim > NNe
+		} > Nim_alt
 	}
 }
 
@@ -594,7 +594,7 @@ theorem recursion_theorem_5_base($A$ cls a: @12, cls c: @11, cls f: @21) using d
 							@h3 > is_set_i > self_in_singleton;
 							[@h3; $gamma_is_smaller] > in_subseteq > setminus_e2
 						] > Fi
-					} > Nim > NNe
+					} > Nim_alt
 				} > cp
 			} > Ui > Qim((cls x) => in(pair(ord_zero, x), g), c)
 		}
@@ -741,7 +741,7 @@ theorem recursion_theorem_5_step($A$ cls a: @12, cls c: @11, cls f: @21) using d
 														@h7 > is_set_i > self_in_singleton;
 														[@h7; $gamma_is_smaller] > in_subseteq > setminus_e2
 													] > Fi
-												} > Nim > NNe
+												} > Nim_alt
 											} > cp
 										} > Ui > Qim((cls x) => in(pair(successor(n), x), g), funcall(f, x))
 									} > cp
@@ -1323,7 +1323,7 @@ theorem schroeder_bernstein_1($A$ cls a: @12, $B$ cls b: @13, cls f: @11, cls g:
 									] > bigcup2_i as in(x, aa);
 
 									[$x_in_aa; @h4] > Fi
-								} > Nim > NNe;
+								} > Nim_alt;
 
 								[$hx_eq_x; $x_in_im_g] > eq_in
 							} > cp;

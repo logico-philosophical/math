@@ -1002,7 +1002,7 @@ theorem russell_set_is_not_set() {
 				[@h1; @h2] > setbuilder_i as in(russell_set, russell_set);
 				@h2
 			] > Fi
-		} > Nim > NNe;
+		} > Nim_alt;
 
 		[
 			$russell_in_russell;
@@ -1460,7 +1460,7 @@ theorem instantiate_set_e(pr f: @111) {
 				@h1;
 				@h2 > instantiate_not_set_i
 			] > Fi
-		} > Nim > NNe
+		} > Nim_alt
 	}
 }
 

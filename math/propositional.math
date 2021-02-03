@@ -127,6 +127,12 @@ theorem Nim(st p: @11) {
 	}
 }
 
+theorem Nim_alt(st p: @111) {
+	(N(p) |- F) |- {
+		@h1 > Nim > NNe
+	}
+}
+
 theorem Nec1(st p: @11, st q) {
 	N(p) |- {
 		@h1 > weaken(?, N(q)) > luk3
@@ -167,7 +173,7 @@ theorem Fi_c(st p: @11) {
 "[$\bot]을 소거한다. falsum elimination이라 불러도 좋을 것이다. Ne와 마찬가지로 폭발률을 나타낸다 할 수 있다."
 theorem Fe(st p) {
 	F |- {
-		N(p) |- @h1 > Nim > NNe
+		N(p) |- @h1 > Nim_alt
 	}
 }
 
@@ -218,7 +224,7 @@ theorem Oe(st p: @11, st q: @12, st r: @22) using O {
 				] > mp;
 				@h4
 			] > Fi
-		} > Nim > NNe
+		} > Nim_alt
 	}
 }
 
@@ -433,7 +439,7 @@ theorem NA_to_ON(st p: @111, st q: @112) {
 				] > Ai;
 				@h1
 			] > Fi
-		} > Nim > NNe
+		} > Nim_alt
 	}
 }
 
@@ -479,7 +485,7 @@ theorem lxm(st p) {
 			] > Ai;
 			lnc(p)
 		] > Fi
-	} > Nim > NNe
+	} > Nim_alt
 }
 
 theorem swap(st p: @11, st q: @121, st r: @122) {
@@ -587,7 +593,7 @@ theorem Oe1(st p: @11, st q: @12) {
 				@h1;
 				[@h2; @h3] > Ai > AN_to_NO
 			] > Fi
-		} > Nim > NNe
+		} > Nim_alt
 	}
 }
 
@@ -598,7 +604,7 @@ theorem Oe2(st p: @11, st q: @12) {
 				@h1;
 				[@h3; @h2] > Ai > AN_to_NO
 			] > Fi
-		} > Nim > NNe
+		} > Nim_alt
 	}
 }
 

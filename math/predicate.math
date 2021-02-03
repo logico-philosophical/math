@@ -437,7 +437,7 @@ theorem mpX(pr f: @11, pr g: @r1) {
 				} > Ui(Nf(f));
 				@h1
 			] > Fi
-		} > Nim > NNe
+		} > Nim_alt
 	}
 }
 
@@ -526,7 +526,7 @@ theorem Xe(st p) {
 				@h1;
 				@h2 > Ui_p > NNi as N(X((cls x) => p))
 			] > Fi
-		} > Nim > NNe
+		} > Nim_alt
 	}
 }
 
@@ -562,7 +562,7 @@ theorem XOm1(pr f: @111, pr g: @112) {
 				@h1;
 				(cls x) => { $foo > Ue(?, x) as A(N(f(x)), N(g(x))) > AN_to_NO } > Ui > NNi as N(X(Of(f, g)))
 			] > Fi
-		} > Nim > NNe
+		} > Nim_alt
 	}
 }
 
@@ -580,7 +580,7 @@ theorem XOm2(pr f: @111, pr g: @121) {
 					$1 > Ae2 > UN_to_NX
 				] > Ai > AN_to_NO
 			] > Fi
-		} > Nim > NNe
+		} > Nim_alt
 	}
 }
 
