@@ -220,7 +220,7 @@ theorem Neq_symmetric(cls x: @11, cls y: @12) {
 				@h2 > eq_symmetric;
 				@h1
 			] > Fi
-		} > Ni_alt as Neq(y, x)
+		} > Nim as Neq(y, x)
 	}
 }
 
@@ -953,7 +953,7 @@ theorem supset_is_not_set(cls x: @111, cls y: @22) {
 				[@h3; @h2] > subset_is_set;
 				@h1
 			] > Fi
-		} > Ni_alt
+		} > Nim
 	}
 }
 
@@ -970,7 +970,7 @@ axiom ax_emptyset() {
 theorem emptyset_def(cls z) {
 	in(z, emptyset) |- {
 		@h1 > setbuilder_e
-	} > Ni_alt as Nin(z, emptyset)
+	} > Nim as Nin(z, emptyset)
 }
 
 "universal class."
@@ -1002,13 +1002,13 @@ theorem russell_set_is_not_set() {
 				[@h1; @h2] > setbuilder_i as in(russell_set, russell_set);
 				@h2
 			] > Fi
-		} > Ni_alt > NNe;
+		} > Nim > NNe;
 
 		[
 			$russell_in_russell;
 			$russell_in_russell > setbuilder_e
 		] > Fi
-	} > Ni_alt
+	} > Nim
 }
 
 "전체집합은 집합이 아니다."
@@ -1460,7 +1460,7 @@ theorem instantiate_set_e(pr f: @111) {
 				@h1;
 				@h2 > instantiate_not_set_i
 			] > Fi
-		} > Ni_alt > NNe
+		} > Nim > NNe
 	}
 }
 

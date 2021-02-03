@@ -131,7 +131,7 @@ theorem fun_im_Q_alt(cls f: @11, $A$ cls a: @12, $B$ cls b: @13) {
 							] > in_subseteq > cartesian_in_e1;
 							@h2
 						] > Fi
-					} > Ni_alt
+					} > Nim
 				} > Ui > UN_to_NX((cls y) => in(pair(x, y), f)) > NX_to_Q
 			} > cp;
 
@@ -903,7 +903,7 @@ theorem injection_dom_Q_alt(cls f: @11, $A$ cls a: @12, $B$ cls b: @13) {
 				(cls x) => {
 					in(pair(x, y), f) |- {
 						[[$f_fun; @h3] > fun_in_e2; @h2] > Fi
-					} > Ni_alt
+					} > Nim
 				} > Ui > UN_to_NX((cls x) => in(pair(x, y), f))
 				> NX_to_Q
 			} > cp;
@@ -1187,7 +1187,7 @@ theorem cantor($A$ cls a: @11, cls f: @r11) {
 								@h5;
 								[@h5; $b_is_f_xi] > in_eq_flip > subsetbuilder_e
 							] > Fi
-						} > Ni_alt as Nin(xi, funcall(f, xi));
+						} > Nim as Nin(xi, funcall(f, xi));
 
 						$xi_in_b = [@h3; $xi_Nin_f_xi] > subsetbuilder_i as in(xi, b);
 
@@ -1199,6 +1199,6 @@ theorem cantor($A$ cls a: @11, cls f: @r11) {
 
 				[$X; $U] > mpX_alt(?, F)
 			}
-		} > Ni_alt
+		} > Nim
 	}
 }

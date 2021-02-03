@@ -121,7 +121,7 @@ theorem Ni(st p: @11) using F {
 	}
 }
 
-theorem Ni_alt(st p: @11) {
+theorem Nim(st p: @11) {
 	(p |- F) |- {
 		@h1 > cp > Ni
 	}
@@ -167,7 +167,7 @@ theorem Fi_c(st p: @11) {
 "[$\bot]을 소거한다. falsum elimination이라 불러도 좋을 것이다. Ne와 마찬가지로 폭발률을 나타낸다 할 수 있다."
 theorem Fe(st p) {
 	F |- {
-		N(p) |- @h1 > Ni_alt > NNe
+		N(p) |- @h1 > Nim > NNe
 	}
 }
 
@@ -179,7 +179,7 @@ theorem mt(st p: @11, st q: @21) {
 				[@h3; @h1] > mp;
 				@h2
 			] > Fi
-		} > Ni_alt
+		} > Nim
 	}
 }
 
@@ -211,14 +211,14 @@ theorem Oe(st p: @11, st q: @12, st r: @22) using O {
 								[@h5; @h2] > mp;
 								@h4
 							] > Fi
-						} > Ni_alt;
+						} > Nim;
 						@h1
 					] > mp;
 					@h3
 				] > mp;
 				@h4
 			] > Fi
-		} > Ni_alt > NNe
+		} > Nim > NNe
 	}
 }
 
@@ -400,13 +400,13 @@ theorem NO_to_AN(st p: @111, st q: @112) {
 					@h2 > Oi1(?, q);
 					@h1
 				] > Fi
-			} > Ni_alt;
+			} > Nim;
 			q |- {
 				[
 					@h2 > Oi2(p, ?);
 					@h1
 				] > Fi
-			} > Ni_alt
+			} > Nim
 		] > Ai
 	}
 }
@@ -419,7 +419,7 @@ theorem AN_to_NO(st p: @111, st q: @121) {
 				@h1 > Ae1 > Fi_c;
 				@h1 > Ae2 > Fi_c
 			] > Oe
-		} > Ni_alt
+		} > Nim
 	}
 }
 
@@ -433,7 +433,7 @@ theorem NA_to_ON(st p: @111, st q: @112) {
 				] > Ai;
 				@h1
 			] > Fi
-		} > Ni_alt > NNe
+		} > Nim > NNe
 	}
 }
 
@@ -455,7 +455,7 @@ theorem ON_to_NA(st p: @111, st q: @112) {
 					] > Fi
 				}
 			] > Oe_alt
-		} > Ni_alt
+		} > Nim
 	}
 }
 
@@ -466,7 +466,7 @@ theorem lnc(st p) {
 			@h1 > Ae1;
 			@h1 > Ae2
 		] > Fi
-	} > Ni_alt
+	} > Nim
 }
 
 "배중률(law of excluded middle)."
@@ -479,7 +479,7 @@ theorem lxm(st p) {
 			] > Ai;
 			lnc(p)
 		] > Fi
-	} > Ni_alt > NNe
+	} > Nim > NNe
 }
 
 theorem swap(st p: @11, st q: @121, st r: @122) {
@@ -587,7 +587,7 @@ theorem Oe1(st p: @11, st q: @12) {
 				@h1;
 				[@h2; @h3] > Ai > AN_to_NO
 			] > Fi
-		} > Ni_alt > NNe
+		} > Nim > NNe
 	}
 }
 
@@ -598,7 +598,7 @@ theorem Oe2(st p: @11, st q: @12) {
 				@h1;
 				[@h3; @h2] > Ai > AN_to_NO
 			] > Fi
-		} > Ni_alt > NNe
+		} > Nim > NNe
 	}
 }
 

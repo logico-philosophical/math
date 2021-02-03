@@ -219,7 +219,7 @@ theorem successor_is_not_zero(cls n: @11) {
 				] > in_eq;
 				emptyset_def(n) > id(Nin(n, ord_zero))
 			] > Fi
-		} > Ni_alt as Neq(successor(n), ord_zero)
+		} > Nim as Neq(successor(n), ord_zero)
 	}
 }
 
@@ -229,7 +229,7 @@ theorem omega_in_to_subseteq(cls n: @11, cls m: @21) {
 		in(m, ord_zero) |- {
 			N(subseteq(m, ord_zero)) |- {
 				[@h1; emptyset_def(m)] > Fi
-			} > Ni_alt > NNe
+			} > Nim > NNe
 		} > cp
 	} > Ui;
 
@@ -315,7 +315,7 @@ theorem successor_eq_e(cls n: @11, cls m: @21) {
 							@h5 > $c1;
 							@h4
 						] > Fi
-					} > Ni_alt
+					} > Nim
 				] > Oe2
 			] > omega_in_to_subseteq;
 
@@ -328,7 +328,7 @@ theorem successor_eq_e(cls n: @11, cls m: @21) {
 							@h5 > $c1_dual;
 							@h4 > Neq_symmetric
 						] > Fi
-					} > Ni_alt
+					} > Nim
 				] > Oe2
 			] > omega_in_to_subseteq;
 
@@ -336,7 +336,7 @@ theorem successor_eq_e(cls n: @11, cls m: @21) {
 				[$c2; $c2_dual] > subseteq_to_eq;
 				@h4
 			] > Fi
-		} > Ni_alt > NNe
+		} > Nim > NNe
 	}
 }
 
@@ -545,7 +545,7 @@ theorem recursion_theorem_5_base($A$ cls a: @12, cls c: @11, cls f: @21) using d
 									] > pair_eq_e2 > eq_symmetric;
 									@h4
 								] > Fi
-							} > Ni_alt
+							} > Nim
 						] > setminus_i;
 
 						$c3 = (cls n) => {
@@ -577,7 +577,7 @@ theorem recursion_theorem_5_base($A$ cls a: @12, cls c: @11, cls f: @21) using d
 														] > pair_eq_e1_v2;
 														@h5 > successor_is_not_zero
 													] > Fi
-												} > Ni_alt
+												} > Nim
 											] > setminus_i
 										} > cp
 									} > cp
@@ -594,7 +594,7 @@ theorem recursion_theorem_5_base($A$ cls a: @12, cls c: @11, cls f: @21) using d
 							@h3 > is_set_i > self_in_singleton;
 							[@h3; $gamma_is_smaller] > in_subseteq > setminus_e2
 						] > Fi
-					} > Ni_alt > NNe
+					} > Nim > NNe
 				} > cp
 			} > Ui > Qim((cls x) => in(pair(ord_zero, x), g), c)
 		}
@@ -637,7 +637,7 @@ theorem recursion_theorem_5_step($A$ cls a: @12, cls c: @11, cls f: @21) using d
 																] > pair_eq_e1_v2 > eq_symmetric;
 																@h3 > successor_is_not_zero
 															] > Fi
-														} > Ni_alt
+														} > Nim
 													] > setminus_i;
 
 													$c3 = (cls m) => {
@@ -674,7 +674,7 @@ theorem recursion_theorem_5_step($A$ cls a: @12, cls c: @11, cls f: @21) using d
 																						] > pair_eq_e1_v2;
 																						@h12
 																					] > Fi
-																				} > Ni_alt
+																				} > Nim
 																			] > setminus_i
 																		};
 
@@ -720,7 +720,7 @@ theorem recursion_theorem_5_step($A$ cls a: @12, cls c: @11, cls f: @21) using d
 																							] > pair_eq_e2_v1 > eq_symmetric;
 																							@h8
 																						] > Fi
-																					} > Ni_alt
+																					} > Nim
 																				] > setminus_i
 																			] > eq_in
 																		};
@@ -741,7 +741,7 @@ theorem recursion_theorem_5_step($A$ cls a: @12, cls c: @11, cls f: @21) using d
 														@h7 > is_set_i > self_in_singleton;
 														[@h7; $gamma_is_smaller] > in_subseteq > setminus_e2
 													] > Fi
-												} > Ni_alt > NNe
+												} > Nim > NNe
 											} > cp
 										} > Ui > Qim((cls x) => in(pair(successor(n), x), g), funcall(f, x))
 									} > cp
@@ -1323,7 +1323,7 @@ theorem schroeder_bernstein_1($A$ cls a: @12, $B$ cls b: @13, cls f: @11, cls g:
 									] > bigcup2_i as in(x, aa);
 
 									[$x_in_aa; @h4] > Fi
-								} > Ni_alt > NNe;
+								} > Nim > NNe;
 
 								[$hx_eq_x; $x_in_im_g] > eq_in
 							} > cp;
@@ -1392,7 +1392,7 @@ theorem schroeder_bernstein_1($A$ cls a: @12, $B$ cls b: @13, cls f: @11, cls g:
 								in(hh(x), aa) |- {
 									$hx_eq_x = @h4 > if_def_2 as eq(hh(x), x);
 									[[$hx_eq_x; @h5] > eq_in_flip; @h4] > Fi
-								} > Ni_alt as Nin(hh(x), aa)
+								} > Nim as Nin(hh(x), aa)
 							} > cp;
 
 							[$c1; $c2 > luk3] > Ei
@@ -1452,11 +1452,11 @@ theorem schroeder_bernstein_1($A$ cls a: @12, $B$ cls b: @13, cls f: @11, cls g:
 									$c2 = Nin(y, aa) /* @h6 */ |- {
 										$hx1_Nin_aa = in(hh(x1), aa) |- {
 											[[$y_is_hx1; @h7] > eq_in; @h6] > Fi
-										} > Ni_alt as Nin(hh(x1), aa);
+										} > Nim as Nin(hh(x1), aa);
 
 										$hx2_Nin_aa = in(hh(x2), aa) |- {
 											[[$y_is_hx2; @h7] > eq_in; @h6] > Fi
-										} > Ni_alt as Nin(hh(x2), aa);
+										} > Nim as Nin(hh(x2), aa);
 
 										$x1_Nin_aa = [$hx1_Nin_aa; $E1 > Ee1 > contrapose]
 										> mp as Nin(x1, aa);
@@ -1507,7 +1507,7 @@ theorem schroeder_bernstein_1($A$ cls a: @12, $B$ cls b: @13, cls f: @11, cls g:
 											$eq = [$gf_is_fun; setminus_is_smaller(a, rel_im(g))] > fun_iterated_im_base;
 
 											[$x_in_im_g; [$in; $eq] > in_eq > setminus_e2] > Fi
-										} > Ni_alt as Neq(n, ord_zero);
+										} > Nim as Neq(n, ord_zero);
 
 										with (pr predicate = (cls m) => O(
 											eq(m, ord_zero),
