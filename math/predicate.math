@@ -69,6 +69,18 @@ pr2 If2(pr2 f, pr2 g) {
 	(cls x, cls y) => I(f(x, y), g(x, y))
 }
 
+"pr3 타입을 위한 I."
+$\left(#1<<\to>>#2\right)$
+pr3 If3(pr3 f, pr3 g) {
+	(cls x, cls y, cls z) => I(f(x, y, z), g(x, y, z))
+}
+
+"pr4 타입을 위한 I."
+$\left(#1<<\to>>#2\right)$
+pr4 If4(pr4 f, pr4 g) {
+	(cls x, cls y, cls z, cls w) => I(f(x, y, z, w), g(x, y, z, w))
+}
+
 "pr2 타입을 위한 E."
 $\left(#1<<\leftrightarrow>>#2\right)$
 pr2 Ef2(pr2 f, pr2 g) {
@@ -97,6 +109,12 @@ st U3(pr3 f) {
 	U((cls x) => U((cls y) => U((cls z) => f(x, y, z))))
 }
 
+"pr4를 위한 보편 양화."
+$!<prec=249><<\forall^4>>#1$
+st U4(pr4 f) {
+	U((cls x) => U((cls y) => U((cls z) => U((cls w) => f(x, y, z, w)))))
+}
+
 "존재 양화(existential quantification). 일반적인 표기법과는 다르게 pr을 입력으로 받으며 U에 의존한다. 또한 [*domain of discourse는 공집합일 수도 있다]."
 $!<prec=249><<\exists>>#1$
 st X(pr f) {
@@ -112,6 +130,18 @@ st NX(pr f) {
 $!<prec=249><<\exists^2>>#1$
 st X2(pr2 f) {
 	X((cls x) => X((cls y) => f(x, y)))
+}
+
+"pr3를 위한 존재 양화."
+$!<prec=249><<\exists^3>>#1$
+st X3(pr3 f) {
+	X((cls x) => X((cls y) => X((cls z) => f(x, y, z))))
+}
+
+"pr4를 위한 존재 양화."
+$!<prec=249><<\exists^4>>#1$
+st X4(pr4 f) {
+	X((cls x) => X((cls y) => X((cls z) => X((cls w) => f(x, y, z, w)))))
 }
 
 theorem NX_to_UN(pr f: @111) {
@@ -424,6 +454,32 @@ theorem mpX2(pr2 f: @11, pr2 g: @r1) {
 	}
 }
 
+"X3을 위한 mp."
+theorem mpX3(pr3 f: @11, pr3 g: @r1) {
+	X3(f), U3(If3(f, g)) |- {
+		$U = (cls x) => {
+			X2((cls y, cls z) => f(x, y, z)) |- {
+				[@h3; @h2 > Ue(?, x)] > mpX2 as X2((cls y, cls z) => g(x, y, z))
+			} > cp
+		} > Ui;
+		
+		[@h1; $U] > mpX as X3(g)
+	}
+}
+
+"X4를 위한 mp."
+theorem mpX4(pr4 f: @11, pr4 g: @r1) {
+	X4(f), U4(If4(f, g)) |- {
+		$U = (cls x) => {
+			X3((cls y, cls z, cls w) => f(x, y, z, w)) |- {
+				[@h3; @h2 > Ue(?, x)] > mpX3 as X3((cls y, cls z, cls w) => g(x, y, z, w))
+			} > cp
+		} > Ui;
+		
+		[@h1; $U] > mpX as X4(g)
+	}
+}
+
 "mpX의 더 강력한 버전."
 theorem mpX_strong(pr f: @11, pr g: @212) {
 	X(f), U(If(f, g)) |- {
@@ -464,11 +520,11 @@ theorem mpXE2(pr f, pr g) {
 
 "문장 타입을 위한 존재 양화 소거(existential elimination). 존재 양화 소거는 일반적으로 [$.(\exists x)(\varphi(x))\vdash \varphi(c)]를 뜻하나 이는 새로운 상수 기호 [$c]의 도입을 필요로 하며 math-o-matic 문법은 이를 지원하지 않는다. 또 완전히 새로운 기호 [$c]에 관하여 [$\varphi(c)]임을 주장하는 것은 이상한 일이다. 그러므로 math-o-matic에서는 일반적 존재 양화 소거를 지원하지 않는데, mpX 및 Xe 등을 사용하여 비슷한 효과를 낼 수 있디."
 theorem Xe(st p) {
-	X((cls z) => p) |- {
+	X((cls x) => p) |- {
 		N(p) |- {
 			[
 				@h1;
-				@h2 > Ui_p > NNi as N(X((cls z) => p))
+				@h2 > Ui_p > NNi as N(X((cls x) => p))
 			] > Fi
 		} > Ni_alt > NNe
 	}

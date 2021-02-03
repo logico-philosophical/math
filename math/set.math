@@ -339,17 +339,17 @@ st Uin($A$ cls a, pr f) {
 	U((cls z) => I(in(z, a), f(z)))
 }
 
-$!<prec=249><<\forall>>_{\in #1\times #2}#3$
+$!<prec=249><<\forall^2>>_{\in #1\times #2}#3$
 st Uin2($A$ cls a, $B$ cls b, pr2 f) {
 	Uin(a, (cls x) => Uin(b, (cls y) => f(x, y)))
 }
 
-$!<prec=249><<\forall>>_{\in #1\times #2\times #3}#4$
+$!<prec=249><<\forall^3>>_{\in #1\times #2\times #3}#4$
 st Uin3($A$ cls a, $B$ cls b, $C$ cls c, pr3 f) {
 	Uin(a, (cls x) => Uin(b, (cls y) => Uin(c, (cls z) => f(x, y, z))))
 }
 
-$!<prec=249><<\forall>>_{\in #1\times #2\times #3\times #4}#5$
+$!<prec=249><<\forall^4>>_{\in #1\times #2\times #3\times #4}#5$
 st Uin4($A$ cls a, $B$ cls b, $C$ cls c, $D$ cls d, pr4 f) {
 	Uin(a, (cls x) => Uin(b, (cls y) => Uin(c, (cls z) => Uin(d, (cls w) => f(x, y, z, w)))))
 }
@@ -428,17 +428,17 @@ st Xin($A$ cls a, pr f) {
 	X((cls z) => A(in(z, a), f(z)))
 }
 
-$!<prec=249><<\exists>>_{\in #1\times #2}#3$
+$!<prec=249><<\exists^2>>_{\in #1\times #2}#3$
 st Xin2($A$ cls a, $B$ cls b, pr2 f) {
 	Xin(a, (cls x) => Xin(b, (cls y) => f(x, y)))
 }
 
-$!<prec=249><<\exists>>_{\in #1\times #2\times #3}#4$
+$!<prec=249><<\exists^3>>_{\in #1\times #2\times #3}#4$
 st Xin3($A$ cls a, $B$ cls b, $C$ cls c, pr3 f) {
 	Xin(a, (cls x) => Xin(b, (cls y) => Xin(c, (cls z) => f(x, y, z))))
 }
 
-$!<prec=249><<\exists>>_{\in #1\times #2\times #3\times #4}#5$
+$!<prec=249><<\exists^4>>_{\in #1\times #2\times #3\times #4}#5$
 st Xin4($A$ cls a, $B$ cls b, $C$ cls c, $D$ cls d, pr4 f) {
 	Xin(a, (cls x) => Xin(b, (cls y) => Xin(c, (cls z) => Xin(d, (cls w) => f(x, y, z, w)))))
 }
@@ -508,6 +508,51 @@ theorem mpXin($A$ cls a: @11, pr f: @12, pr g: @r2) {
 				} > cp
 			} > Ui
 		] > mpX(Af(is_in(a), f), Af(is_in(a), g)) as Xin(a, g)
+	}
+}
+
+"Xin2를 위한 mp."
+theorem mpXin2($A$ cls a: @11, $B$ cls b: @12, pr2 f: @13, pr2 g: @r3) {
+	Xin2(a, b, f), Uin2(a, b, If2(f, g)) |- {
+		$U = (cls x) => {
+			in(x, a) |- {
+				Xin(b, (cls y) => f(x, y)) |- {
+					[@h4; [@h3; @h2 > Ue(?, x)] > mp] > mpXin as Xin(b, (cls y) => g(x, y))
+				} > cp
+			} > cp
+		} > Ui;
+		
+		[@h1; $U] > mpXin as Xin2(a, b, g)
+	}
+}
+
+"Xin3을 위한 mp."
+theorem mpXin3($A$ cls a: @11, $B$ cls b: @12, $C$ cls c: @13, pr3 f: @14, pr3 g: @r4) {
+	Xin3(a, b, c, f), Uin3(a, b, c, If3(f, g)) |- {
+		$U = (cls x) => {
+			in(x, a) |- {
+				Xin2(b, c, (cls y, cls z) => f(x, y, z)) |- {
+					[@h4; [@h3; @h2 > Ue(?, x)] > mp] > mpXin2 as Xin2(b, c, (cls y, cls z) => g(x, y, z))
+				} > cp
+			} > cp
+		} > Ui;
+		
+		[@h1; $U] > mpXin as Xin3(a, b, c, g)
+	}
+}
+
+"Xin4를 위한 mp."
+theorem mpXin4($A$ cls a: @11, $B$ cls b: @12, $C$ cls c: @13, $D$ cls d: @14, pr4 f: @15, pr4 g: @r5) {
+	Xin4(a, b, c, d, f), Uin4(a, b, c, d, If4(f, g)) |- {
+		$U = (cls x) => {
+			in(x, a) |- {
+				Xin3(b, c, d, (cls y, cls z, cls w) => f(x, y, z, w)) |- {
+					[@h4; [@h3; @h2 > Ue(?, x)] > mp] > mpXin3 as Xin3(b, c, d, (cls y, cls z, cls w) => g(x, y, z, w))
+				} > cp
+			} > cp
+		} > Ui;
+		
+		[@h1; $U] > mpXin as Xin4(a, b, c, d, g)
 	}
 }
 
