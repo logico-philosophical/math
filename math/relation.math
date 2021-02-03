@@ -231,7 +231,7 @@ theorem setbuilder_pair_e(pr2 f: @121, cls a: @111, cls b: @112) {
 					] > ax_indiscernible2_m2(f, ?, ?, ?, ?)
 				} > cp2
 			} > Ui2
-		] > mpX2_X2e(?, f(a, b))
+		] > mpX2_alt(?, f(a, b))
 	}
 }
 
@@ -298,7 +298,7 @@ theorem cartesian_in_e($A$ cls a: @121, $B$ cls b: @122, cls x: @111, cls y: @11
 					] > Ai
 				} > cp
 			} > Ui2
-		] > mpX2_X2e(?, A(in(x, a), in(y, b)))
+		] > mpX2_alt(?, A(in(x, a), in(y, b)))
 	}
 }
 
@@ -446,7 +446,7 @@ theorem rel_inverse_is_rel($R$ cls r: @11, $A$ cls a: @12, $B$ cls b: @13) using
 							] > eq_in
 						} > cp2
 					} > Ui2
-				] > mpX2_X2e(?, in(z, cartesian(b, a)))
+				] > mpX2_alt(?, in(z, cartesian(b, a)))
 			} > cp
 		} > Ui as is_rel_over_sets(rel_inverse(r), b, a)
 	}
@@ -489,11 +489,11 @@ theorem rel_composite_im_set($R_1$ cls r1, $R_2$ cls r2, $A$ cls a) {
 						} > cp2
 					} > Ui;
 
-					[$X; $U] > mpX_Xe(?, in(z, rel_im_set(r1, rel_im_set(r2, a))))
+					[$X; $U] > mpX_alt(?, in(z, rel_im_set(r1, rel_im_set(r2, a))))
 				} > cp2 > curry
 			} > Ui;
 
-			[$X; $U] > mpXin_Xe(?, ?, in(z, rel_im_set(r1, rel_im_set(r2, a))))
+			[$X; $U] > mpXin_alt(?, ?, in(z, rel_im_set(r1, rel_im_set(r2, a))))
 		} > cp;
 
 		$c2 = in(z, rel_im_set(r1, rel_im_set(r2, a))) |- {
@@ -512,11 +512,11 @@ theorem rel_composite_im_set($R_1$ cls r1, $R_2$ cls r2, $A$ cls a) {
 						} > cp2 > curry
 					} > Ui;
 
-					[$X; $U] > mpXin_Xe(?, ?, in(z, rel_im_set(rel_composite(r1, r2), a)))
+					[$X; $U] > mpXin_alt(?, ?, in(z, rel_im_set(rel_composite(r1, r2), a)))
 				} > cp2 > curry
 			} > Ui;
 
-			[$X; $U] > mpXin_Xe(?, ?, in(z, rel_im_set(rel_composite(r1, r2), a)))
+			[$X; $U] > mpXin_alt(?, ?, in(z, rel_im_set(rel_composite(r1, r2), a)))
 		} > cp;
 
 		[$c1; $c2] > Ei
@@ -706,7 +706,7 @@ theorem setbuilder_pair_is_rel(pr2 f: @r11) {
 								] > eq_in
 							} > cp2
 						} > Ui2
-					] > mpX2_X2e(?, in(z, cartesian(universe, universe)))
+					] > mpX2_alt(?, in(z, cartesian(universe, universe)))
 				} > cp
 			} > Ui as is_rel(aa)
 		}
@@ -733,7 +733,7 @@ theorem rel_U(pr f: @r2, $R$ cls r: @11) {
 							] > ax_indiscernible_m2(f, ?, ?)
 						} > cp
 					} > Ui2
-				] > mpX2_X2e(?, f(z))
+				] > mpX2_alt(?, f(z))
 			} > cp
 		} > Ui as Uin(r, f)
 	}

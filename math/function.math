@@ -172,7 +172,7 @@ theorem fun_dom(cls f: @11, $A$ cls a: @12, $B$ cls b: @13) {
 							[@h1; @h3] > fun_in_e1
 						} > cp
 					} > Ui
-				] > mpX_Xe(?, in(x, a))
+				] > mpX_alt(?, in(x, a))
 			} > cp;
 
 			$c2 = in(x, a) |- {
@@ -304,7 +304,7 @@ theorem funcall_in_codomain(cls f: @11, $A$ cls a: @12, $B$ cls b: @13, cls x: @
 					] > eq_in_flip
 				} > cp
 			} > Ui
-		] > mpX_Xe(?, in(funcall(f, x), b))
+		] > mpX_alt(?, in(funcall(f, x), b))
 	}
 }
 
@@ -324,7 +324,7 @@ theorem fun_im_subseteq_codomain(cls f: @11, $A$ cls a: @12, $B$ cls b: @13) {
 							] > in_subseteq > cartesian_in_e2
 						} > cp
 					} > Ui
-				] > mpX_Xe(?, in(y, b))
+				] > mpX_alt(?, in(y, b))
 			} > cp
 		} > Ui as subseteq(rel_im(f), b)
 	}
@@ -406,7 +406,7 @@ theorem map_is_fun(fun f: @r11, $A$ cls a: @r2, $B$ cls b: @r3) {
 							] > eq_in
 						} > cp2
 					} > Ui
-				] > mpX_Xe(?, in(w, cartesian(a, b)))
+				] > mpX_alt(?, in(w, cartesian(a, b)))
 			} > cp
 		} > Ui as subseteq(map(f, a), cartesian(a, b));
 
@@ -448,7 +448,7 @@ theorem map_is_fun(fun f: @r11, $A$ cls a: @r2, $B$ cls b: @r3) {
 									] > ax_indiscernible_m2((cls z) => eq(y, f(z)), ?, ?)
 								} > cp
 							} > Ui
-						] > mpX_Xe(?, eq(y, f(x)))
+						] > mpX_alt(?, eq(y, f(x)))
 					} > cp
 				} > Ui > Qim((cls y) => in(pair(x, y), map(f, a)), f(x));
 
@@ -536,11 +536,11 @@ theorem fun_id_im_set($A$ cls a: @12, $B$ cls b: @11) {
 												] > eq_in_flip
 											} > cp2
 										} > Ui
-									] > mpX_Xe(?, in(y, b))
+									] > mpX_alt(?, in(y, b))
 								} > cp
 							} > cp
 						} > Ui
-					] > mpXin_Xe(?, ?, in(y, b))
+					] > mpXin_alt(?, ?, in(y, b))
 				} > cp;
 
 				$c2 = in(y, b) |- {
@@ -596,7 +596,7 @@ theorem fun_composite_is_fun_1(cls f, cls g, $A$ cls a, $B$ cls b, $C$ cls c) {
 								] > mpXin(?, ?, (cls z) => in(pair(x, z), rel_composite(g, f)))
 							} > cp2
 						} > Ui
-					] > mpX_Xe(?, Xin(c, (cls z) => in(pair(x, z), rel_composite(g, f))))
+					] > mpX_alt(?, Xin(c, (cls z) => in(pair(x, z), rel_composite(g, f))))
 				} > cp
 			} > Ui as Uin(a, (cls x) => Xin(c, (cls z) => in(pair(x, z), h)))
 		}
@@ -640,11 +640,11 @@ theorem fun_composite_is_fun_2(cls f, cls g) {
 									} > cp2
 								} > Ui;
 
-								[$y2X; $y2U] > mpX_Xe(?, eq(z1, z2))
+								[$y2X; $y2U] > mpX_alt(?, eq(z1, z2))
 							} > cp2
 						} > Ui;
 
-						[$y1X; $y1U] > mpX_Xe(?, eq(z1, z2))
+						[$y1X; $y1U] > mpX_alt(?, eq(z1, z2))
 					} > cp2
 				} > Ui2 as Q((cls z) => in(pair(x, z), h))
 			} > Ui
@@ -674,7 +674,7 @@ theorem fun_composite_is_fun_3(cls f, cls g, $A$ cls a, $B$ cls b, $C$ cls c) {
 						} > cp2
 					} > Ui;
 
-					[$X; $U] > mpX_Xe as Xin(a, (cls x) => in(pair(x, z), h))
+					[$X; $U] > mpX_alt as Xin(a, (cls x) => in(pair(x, z), h))
 				} > cp
 			} > Ui as Uin(c, (cls z) => Xin(a, (cls x) => in(pair(x, z), h)))
 		}
@@ -714,11 +714,11 @@ theorem fun_composite_is_fun_4(cls f, cls g) {
 									} > cp2
 								} > Ui;
 
-								[$X2; $U2] > mpX_Xe(?, eq(x1, x2))
+								[$X2; $U2] > mpX_alt(?, eq(x1, x2))
 							} > cp2
 						} > Ui;
 
-						[$X1; $U1] > mpX_Xe(?, eq(x1, x2))
+						[$X1; $U1] > mpX_alt(?, eq(x1, x2))
 					} > cp2
 				} > Ui2 as Q((cls x) => in(pair(x, z), h))
 			} > Ui
@@ -753,7 +753,7 @@ theorem fun_composite_is_fun(cls f: @11, cls g: @21, $A$ cls a: @12, $B$ cls b: 
 							} > cp2
 						} > Ui;
 
-						[$X; $U] > mpX_Xe(?, in(pair(x, z), cartesian(a, c)))
+						[$X; $U] > mpX_alt(?, in(pair(x, z), cartesian(a, c)))
 					} > cp
 				} > Ui2
 			] > rel_U(is_in(cartesian(a, c)), ?) as subseteq(rel_composite(g, f), cartesian(a, c));
@@ -1197,7 +1197,7 @@ theorem cantor($A$ cls a: @11, cls f: @r11) {
 					} > cp2
 				} > Ui;
 
-				[$X; $U] > mpX_Xe(?, F)
+				[$X; $U] > mpX_alt(?, F)
 			}
 		} > Ni_alt
 	}

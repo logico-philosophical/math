@@ -536,13 +536,13 @@ theorem X2e(st p) {
 	}
 }
 
-theorem mpX_Xe(pr f: @11, st p: @r) {
+theorem mpX_alt(pr f: @11, st p: @r) {
 	X(f), U(If(f, (cls z) => p)) |- {
 		[@h1; @h2] > mpX as X((cls z) => p) > Xe(p)
 	}
 }
 
-theorem mpX2_X2e(pr2 f: @11, st p) {
+theorem mpX2_alt(pr2 f: @11, st p: @r) {
 	X2(f), U2(If2(f, (cls x, cls y) => p)) |- {
 		[@h1; @h2] > mpX2(f, (cls x, cls y) => p) > X2e(p)
 	}
