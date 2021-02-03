@@ -412,21 +412,15 @@ theorem mpX(pr f: @11, pr g: @r1) {
 }
 
 "X2를 위한 mp."
-theorem mpX2(pr2 f: @11, pr2 g: @212) {
+theorem mpX2(pr2 f: @11, pr2 g: @r1) {
 	X2(f), U2(If2(f, g)) |- {
-		N(X2(g)) |- {
-			[
-				(cls x) => {
-					(cls y) => {
-						[
-							@h2 > id(U2((cls x, cls y) => I(f(x, y), g(x, y)))) > Ue2(?, x, y);
-							@h3 > NNe > Ue(?, x) > NNe(U((cls y) => N(g(x, y)))) > Ue(?, y)
-						] > mt
-					} > Ui > NNi as N(X((cls y) => f(x, y)))
-				} > Ui;
-				@h1
-			] > Fi
-		} > Ni_alt > NNe
+		$U = (cls x) => {
+			X((cls y) => f(x, y)) |- {
+				[@h3; @h2 > Ue(?, x)] > mpX as X((cls y) => g(x, y))
+			} > cp
+		} > Ui;
+		
+		[@h1; $U] > mpX as X2(g)
 	}
 }
 
@@ -494,7 +488,7 @@ theorem mpX_Xe(pr f: @11, st p: @r) {
 
 theorem mpX2_X2e(pr2 f: @11, st p) {
 	X2(f), U2(If2(f, (cls x, cls y) => p)) |- {
-		[@h1; @h2] > mpX2 > X2e(p)
+		[@h1; @h2] > mpX2(f, (cls x, cls y) => p) > X2e(p)
 	}
 }
 
@@ -576,7 +570,7 @@ theorem X2Ae(pr2 f, pr2 g) {
 						@h2 > Ae1
 					} > cp
 				} > Ui2 as U2(If2(Af2(f, g), f))
-			] > mpX2;
+			] > mpX2(Af2(f, g), f);
 			[
 				@h1;
 				(cls x, cls y) => {
@@ -584,7 +578,7 @@ theorem X2Ae(pr2 f, pr2 g) {
 						@h2 > Ae2
 					} > cp
 				} > Ui2 as U2(If2(Af2(f, g), g))
-			] > mpX2
+			] > mpX2(Af2(f, g), g)
 		] > Ai
 	}
 }
