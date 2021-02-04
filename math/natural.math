@@ -58,7 +58,7 @@ axiom ax_infinity() {
 	X((cls x) => A(is_set(x), is_successor_set(x)))
 }
 
-"자연수 집합. 즉 모든 successor set을 교집합한 것이다."
+"최소의 successor set. 즉 모든 successor set을 교집합한 것이다. 이는 서수(ordinal number)의 von Neumann 정의에서 최소의 무한 서수이며, 자연수의 von Neumann 정의에서 0을 포함하는 자연수 집합이 된다."
 $\omega$
 cls omega = bigcap(setbuilder((cls z) => is_successor_set(z)));
 
