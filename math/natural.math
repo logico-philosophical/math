@@ -1733,7 +1733,7 @@ theorem schroeder_bernstein_1($A$ cls a: @12, $B$ cls b: @13, cls f: @11, cls g:
 	}
 }
 
-"Schr[&ouml]der[&ndash]Bernstein 정리."
+"Schr[&ouml]der[&ndash]Bernstein 정리. [~(href=https://www.cs.ru.nl/~freek/100/)[*Formalizing 100 Theorems]]의 정리 #25이다."
 theorem schroeder_bernstein($A$ cls a, $B$ cls b) {
 	X((cls f) => is_injection(f, a, b)), X((cls g) => is_injection(g, b, a)) |- {
 		$U = (cls f) => {
