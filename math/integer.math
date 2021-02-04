@@ -11,58 +11,66 @@ cls rel_omega_pair = setbuilder_pair((cls x, cls y) => {
 	Xin4(omega, omega, omega, omega, (cls a, cls b, cls c, cls d) => A(A(eq(x, pair(a, b)), eq(y, pair(c, d))), eq(omega_add(a, d), omega_add(b, c))))
 });
 
-theorem rel_omega_pair_is_rel(cls z, cls x, cls y) {
-	in(z, rel_omega_pair) |- {
-		$X = @h1 > setbuilder_e as X2((cls x, cls y) => A(
-			eq(z, pair(x, y)),
-			Xin4(omega, omega, omega, omega, (cls a, cls b, cls c, cls d) => {
-				A(
-					A(
-						eq(x, pair(a, b)),
-						eq(y, pair(c, d))
-					),
-					eq(omega_add(a, d), omega_add(b, c))
-				)
-			})
-		));
-		
-		eq(z, pair(x, y)),
-		Xin4(omega, omega, omega, omega, (cls a, cls b, cls c, cls d) => {
-			A(
-				A(
-					eq(x, pair(a, b)),
-					eq(y, pair(c, d))
-				),
-				eq(omega_add(a, d), omega_add(b, c))
-			)
-		}) |- {
-			(cls a) => { in(a, omega) /* @h4 */ |- {
-			(cls b) => { in(b, omega) |- {
-			(cls c) => { in(c, omega) |- {
-			(cls d) => { in(d, omega) |- {
-				eq(x, pair(a, b)) /* @h8 */, eq(y, pair(c, d)), eq(omega_add(a, d), omega_add(b, c)) |- {
-					$x_in_om_om = [@h8; [@h4; @h5] > cartesian_in_i] > eq_in;
-					$y_in_om_om = [@h9; [@h6; @h7] > cartesian_in_i] > eq_in;
-					
-					[@h2; [$x_in_om_om; $y_in_om_om] > cartesian_in_i] > eq_in
-				} > cp3
-			} > cp } > Ui
-			} > cp } > Ui
-			} > cp } > Ui
-			} > cp } > Ui as Uin4(omega, omega, omega, omega, (cls a, cls b, cls c, cls d) => {
-				I(
+theorem rel_omega_pair_is_rel() {
+	(cls z) => {
+		in(z, rel_omega_pair) |- {
+			$X = @h1 > setbuilder_e as X2((cls x, cls y) => A(
+				eq(z, pair(x, y)),
+				Xin4(omega, omega, omega, omega, (cls a, cls b, cls c, cls d) => {
 					A(
 						A(
 							eq(x, pair(a, b)),
 							eq(y, pair(c, d))
 						),
 						eq(omega_add(a, d), omega_add(b, c))
-					),
-					in(z, cartesian(cartesian(omega, omega), cartesian(omega, omega)))
-				)
-			})
-		}
-	}
+					)
+				})
+			));
+
+			$U = (cls x, cls y) => {
+				eq(z, pair(x, y)),
+				Xin4(omega, omega, omega, omega, (cls a, cls b, cls c, cls d) => {
+					A(
+						A(
+							eq(x, pair(a, b)),
+							eq(y, pair(c, d))
+						),
+						eq(omega_add(a, d), omega_add(b, c))
+					)
+				}) |- {
+					$U = (cls a) => { in(a, omega) /* @h4 */ |- {
+					(cls b) => { in(b, omega) |- {
+					(cls c) => { in(c, omega) |- {
+					(cls d) => { in(d, omega) |- {
+						eq(x, pair(a, b)) /* @h8 */, eq(y, pair(c, d)), eq(omega_add(a, d), omega_add(b, c)) |- {
+							$x_in_om_om = [@h8; [@h4; @h5] > cartesian_in_i] > eq_in;
+							$y_in_om_om = [@h9; [@h6; @h7] > cartesian_in_i] > eq_in;
+
+							[@h2; [$x_in_om_om; $y_in_om_om] > cartesian_in_i] > eq_in
+						} > cp3
+					} > cp } > Ui
+					} > cp } > Ui
+					} > cp } > Ui
+					} > cp } > Ui as Uin4(omega, omega, omega, omega, (cls a, cls b, cls c, cls d) => {
+						I(
+							A(
+								A(
+									eq(x, pair(a, b)),
+									eq(y, pair(c, d))
+								),
+								eq(omega_add(a, d), omega_add(b, c))
+							),
+							in(z, cartesian(cartesian(omega, omega), cartesian(omega, omega)))
+						)
+					});
+
+					[@h3; $U] > mpXin4_alt as in(z, cartesian(cartesian(omega, omega), cartesian(omega, omega)))
+				} > cp2
+			} > Ui2;
+
+			[$X; $U] > mpX2_alt as in(z, cartesian(cartesian(omega, omega), cartesian(omega, omega)))
+		} > cp
+	} > Ui as is_rel_over_set(rel_omega_pair, cartesian(omega, omega))
 }
 
 "정수 집합. 자연수 순서쌍의 동치류의 집합으로 정의된다. 이때 자연수 순서쌍의 동치류 [$`[(a, b)]`]가 정수 [$a - b]를 의미한다. 예를 들어 [$`[(3, 5)] = [(5, 7)] = -2`]이다.

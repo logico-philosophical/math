@@ -556,9 +556,75 @@ theorem mpXin4($A$ cls a: @11, $B$ cls b: @12, $C$ cls c: @13, $D$ cls d: @14, p
 	}
 }
 
+theorem Xin_e($A$ cls a: @11, st p: @r) {
+	Xin(a, (cls x) => p) |- {
+		@h1 > XAe2(is_in(a), (cls x) => p) > Xe(p)
+	}
+}
+
 theorem mpXin_alt($A$ cls a: @11, pr f: @12, st p: @r) {
 	Xin(a, f), Uin(a, If(f, (cls z) => p)) |- {
-		[@h1; @h2] > mpXin as Xin(a, (cls z) => p) > XAe2(is_in(a), (cls z) => p) > Xe(p)
+		[@h1; @h2] > mpXin as Xin(a, (cls z) => p) > Xin_e(a, p)
+	}
+}
+
+theorem Xin2e($A$ cls a: @11, $B$ cls b: @12, st p: @r) {
+	Xin2(a, b, (cls x, cls y) => p) |- {
+		$U = (cls x) => {
+			in(x, a) |- {
+				Xin(b, (cls y) => p) |- {
+					@h3 > Xin_e(b, p)
+				} > cp
+			} > cp
+		} > Ui;
+		
+		[@h1; $U] > mpXin_alt as p
+	}
+}
+
+theorem mpXin2_alt($A$ cls a: @11, $B$ cls b: @12, pr2 f: @13, st p: @r) {
+	Xin2(a, b, f), Uin2(a, b, If2(f, (cls x, cls y) => p)) |- {
+		[@h1; @h2] > mpXin2 as Xin2(a, b, (cls x, cls y) => p) > Xin2e(a, b, p)
+	}
+}
+
+theorem Xin3e($A$ cls a: @11, $B$ cls b: @12, $C$ cls c: @13, st p: @r) {
+	Xin3(a, b, c, (cls x, cls y, cls z) => p) |- {
+		$U = (cls x) => {
+			in(x, a) |- {
+				Xin2(b, c, (cls y, cls z) => p) |- {
+					@h3 > Xin2e(b, c, p)
+				} > cp
+			} > cp
+		} > Ui;
+		
+		[@h1; $U] > mpXin_alt as p
+	}
+}
+
+theorem mpXin3_alt($A$ cls a: @11, $B$ cls b: @12, $C$ cls c: @13, pr3 f: @14, st p: @r) {
+	Xin3(a, b, c, f), Uin3(a, b, c, If3(f, (cls x, cls y, cls z) => p)) |- {
+		[@h1; @h2] > mpXin3 as Xin3(a, b, c, (cls x, cls y, cls z) => p) > Xin3e(a, b, c, p)
+	}
+}
+
+theorem Xin4e($A$ cls a: @11, $B$ cls b: @12, $C$ cls c: @13, $D$ cls d: @14, st p: @r) {
+	Xin4(a, b, c, d, (cls x, cls y, cls z, cls w) => p) |- {
+		$U = (cls x) => {
+			in(x, a) |- {
+				Xin3(b, c, d, (cls y, cls z, cls w) => p) |- {
+					@h3 > Xin3e(b, c, d, p)
+				} > cp
+			} > cp
+		} > Ui;
+		
+		[@h1; $U] > mpXin_alt as p
+	}
+}
+
+theorem mpXin4_alt($A$ cls a: @11, $B$ cls b: @12, $C$ cls c: @13, $D$ cls d: @14, pr4 f: @15, st p: @r) {
+	Xin4(a, b, c, d, f), Uin4(a, b, c, d, If4(f, (cls x, cls y, cls z, cls w) => p)) |- {
+		[@h1; @h2] > mpXin4 as Xin4(a, b, c, d, (cls x, cls y, cls z, cls w) => p) > Xin4e(a, b, c, d, p)
 	}
 }
 
