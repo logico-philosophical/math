@@ -994,6 +994,29 @@ theorem omega_add_step(cls n: @11, cls m: @21) {
 	}
 }
 
+theorem omega_add_base_alt(cls n: @11) {
+	in(n, omega) |- {
+		$zio = zero_in_omega();
+		
+		with (pr predicate = (cls m) => eq(omega_add(ord_zero, m), m)) {
+			$base = $zio > omega_add_base(ord_zero) as predicate(ord_zero);
+
+			$step = (cls m) => {
+				in(m, omega) |- {
+					predicate(m) |- {
+						[
+							[$zio; @h2] > omega_add_step;
+							@h3 > successor_eq_i
+						] > eq_transitive as predicate(successor(m))
+					} > cp
+				} > cp
+			} > Ui;
+
+			[[$base; $step] > induce(predicate); @h1] > Uin_e
+		}
+	}
+}
+
 theorem omega_add_one(cls n: @11) {
 	in(n, omega) |- {
 		[
