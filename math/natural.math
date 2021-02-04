@@ -968,6 +968,18 @@ cls omega_add(cls m, cls n) {
 	funcall(omega_add_unary(m), n)
 }
 
+theorem omega_add_eq_i_left(cls m: @r11, cls n: @11, $n'$ cls np: @12) {
+	eq(n, np) |- {
+		@h1 > call_eq_i((cls n) => omega_add(m, n), ?, ?)
+	}
+}
+
+theorem omega_add_eq_i_right(cls m: @11, $m'$ cls mp: @12, cls n: @r12) {
+	eq(m, mp) |- {
+		@h1 > call_eq_i((cls m) => omega_add(m, n), ?, ?)
+	}
+}
+
 theorem omega_add_in_omega(cls m: @11, cls n: @21) {
 	in(m, omega), in(n, omega) |- {
 		[
@@ -1067,6 +1079,41 @@ theorem omega_add_commutative(cls m: @11, cls n: @21) {
 			} > Ui;
 			
 			[[$base; $step] > induce(predicate); @h2] > Uin_e
+		}
+	}
+}
+
+theorem omega_add_associative(cls l: @11, cls m: @21, cls n: @31) {
+	in(l, omega), in(m, omega), in(n, omega) |- {
+		with (pr predicate = (cls k) => eq(
+			omega_add(omega_add(l, m), k),
+			omega_add(l, omega_add(m, k))
+		)) {
+			$l_plus_m_in_omega = [@h1; @h2] > omega_add_in_omega;
+			
+			$base = [
+				$l_plus_m_in_omega > omega_add_base;
+				@h2 > omega_add_base > omega_add_eq_i_left(l, ?, ?) > eq_symmetric
+			] > eq_transitive as predicate(ord_zero);
+			
+			$step = (cls k) => {
+				in(k, omega) |- {
+					predicate(k) |- {
+						[
+							[
+								[
+									[$l_plus_m_in_omega; @h4] > omega_add_step;
+									@h5 > successor_eq_i
+								] > eq_transitive;
+								[@h1; [@h2; @h4] > omega_add_in_omega] > omega_add_step > eq_symmetric
+							] > eq_transitive;
+							[@h2; @h4] > omega_add_step > omega_add_eq_i_left(l, ?, ?) > eq_symmetric
+						] > eq_transitive as predicate(successor(k))
+					} > cp
+				} > cp
+			} > Ui;
+			
+			[[$base; $step] > induce(predicate); @h3] > Uin_e
 		}
 	}
 }
