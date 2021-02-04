@@ -964,16 +964,16 @@ theorem omega_add_unary_ird(cls n) {
 
 "자연수 덧셈."
 $!<prec=300>#1<<+_\omega>>#2$
-cls omega_add(cls n, cls m) {
-	funcall(omega_add_unary(n), m)
+cls omega_add(cls m, cls n) {
+	funcall(omega_add_unary(m), n)
 }
 
-theorem omega_add_in_omega(cls n: @11, cls m: @21) {
-	in(n, omega), in(m, omega) |- {
+theorem omega_add_in_omega(cls m: @11, cls n: @21) {
+	in(m, omega), in(n, omega) |- {
 		[
-			@h1 > omega_add_unary_ird(n) > Ae1;
+			@h1 > omega_add_unary_ird(m) > Ae1;
 			@h2
-		] > funcall_in_codomain as in(omega_add(n, m), omega)
+		] > funcall_in_codomain as in(omega_add(m, n), omega)
 	}
 }
 
@@ -985,12 +985,12 @@ theorem omega_add_base(cls n: @11) {
 }
 
 "`[Pinter]` 6.10의 2."
-theorem omega_add_step(cls n: @11, cls m: @21) {
-	in(n, omega), in(m, omega) |- {
+theorem omega_add_step(cls m: @11, cls n: @21) {
+	in(m, omega), in(n, omega) |- {
 		[
 			@h2;
-			@h1 > omega_add_unary_ird(n) > Ae2 > Ae2 > Ue(?, m)
-		] > mp as eq(omega_add(n, successor(m)), successor(omega_add(n, m)))
+			@h1 > omega_add_unary_ird(m) > Ae2 > Ae2 > Ue(?, n)
+		] > mp as eq(omega_add(m, successor(n)), successor(omega_add(m, n)))
 	}
 }
 
@@ -1042,8 +1042,8 @@ cls omega_mul_unary(cls n) {
 
 "자연수 곱셈."
 $!<prec=299>#1<<\times_\omega>>#2$
-cls omega_mul(cls n, cls m) {
-	funcall(omega_mul_unary(n), m)
+cls omega_mul(cls m, cls n) {
+	funcall(omega_mul_unary(m), n)
 }
 
 $\left(n<<\mapsto>> {#1}^n{\left(#2\right)}\right)$
@@ -1051,7 +1051,7 @@ cls fun_iterated_(cls f, cls x) {
 	define_recursively_m(rel_dom(f), x, ($\gamma$ cls g) => funcall(f, g))
 }
 
-theorem fun_iterated_ird(cls f: @11, cls x: @21, $A$ cls a: @12) {
+theorem fun_iterated_ird(cls f: @11, $A$ cls a: @12, cls x: @21) {
 	is_fun(f, a, a), in(x, a) |- {
 		$dom_f_is_a = @h1 > fun_dom;
 
@@ -1131,11 +1131,11 @@ theorem fun_iterated_is_fun(cls f: @11, $A$ cls a: @12, cls n: @21) using fun_it
 	}
 }
 
-theorem fun_iterated_base(cls f: @11, cls x: @21, $A$ cls a: @12) using fun_iterated_call {
+theorem fun_iterated_base(cls f: @11, $A$ cls a: @12, cls x: @21) using fun_iterated_call {
 	is_fun(f, a, a), in(x, a) |- {
 		[
 			[@h1; zero_in_omega(); @h2] > fun_iterated_def;
-			[@h1; @h2] > fun_iterated_ird(f, x, a) > Ae2 > Ae1 as eq(fun_iterated_call(f, ord_zero, x), x)
+			[@h1; @h2] > fun_iterated_ird(f, a, x) > Ae2 > Ae1 as eq(fun_iterated_call(f, ord_zero, x), x)
 		] > eq_transitive
 	}
 }
@@ -1270,7 +1270,7 @@ theorem fun_iterated_im_base(cls f: @11, $A$ cls a: @12, $B$ cls b: @21) {
 	}
 }
 
-theorem fun_iterated_im_step(cls f: @11, $A$ cls a: @12, $B$ cls b: @31, cls n: @21) {
+theorem fun_iterated_im_step(cls f: @11, $A$ cls a: @12, cls n: @21, $B$ cls b: @31) {
 	is_fun(f, a, a), in(n, omega), subseteq(b, a) |- {
 		(cls z) => {
 			$fn1_is_f_fn = [@h1; @h2] > fun_iterated_step_alt;
