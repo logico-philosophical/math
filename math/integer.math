@@ -73,7 +73,7 @@ theorem rel_omega_pair_is_rel() {
 	} > Ui as is_rel_over_set(rel_omega_pair, cartesian(omega, omega))
 }
 
-"정수 집합. 자연수 순서쌍의 동치류의 집합으로 정의된다. 이때 자연수 순서쌍의 동치류 [$`[(a, b)]`]가 정수 [$a - b]를 의미한다. 예를 들어 [$`[(3, 5)] = [(5, 7)] = -2`]이다.
+"정수 집합. 독일어 [*Zahlen]의 Z이다. 자연수 순서쌍의 동치류의 집합으로 정의된다. 이때 자연수 순서쌍의 동치류 [$`[(a, b)]`]가 정수 [$a - b]를 의미한다. 예를 들어 [$`[(3, 5)] = [(5, 7)] = -2`]이다.
 
 @see [~https://en.wikipedia.org/wiki/Integer#Construction]"
 $\Z$
