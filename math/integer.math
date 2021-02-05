@@ -8,7 +8,7 @@ import natural;
 "정수 집합의 정의를 위해 사용되는 이항관계."
 ${\sim}_{\omega\times\omega}$
 cls rel_omega_pair = setbuilder_pair((cls x, cls y) => {
-	Xin4(omega, omega, omega, omega, (cls a, cls b, cls c, cls d) => A(A(eq(x, pair(a, b)), eq(y, pair(c, d))), eq(omega_add(a, d), omega_add(b, c))))
+	Xin4(omega, omega, omega, omega, (cls a, cls b, $a'$ cls ap, $b'$ cls bp) => A(A(eq(x, pair(a, b)), eq(y, pair(ap, bp))), eq(omega_add(a, bp), omega_add(ap, b))))
 });
 
 theorem rel_omega_pair_is_rel() {
@@ -16,33 +16,33 @@ theorem rel_omega_pair_is_rel() {
 		in(z, rel_omega_pair) |- {
 			$X = @h1 > setbuilder_e as X2((cls x, cls y) => A(
 				eq(z, pair(x, y)),
-				Xin4(omega, omega, omega, omega, (cls a, cls b, cls c, cls d) => {
+				Xin4(omega, omega, omega, omega, (cls a, cls b, $a'$ cls ap, $b'$ cls bp) => {
 					A(
 						A(
 							eq(x, pair(a, b)),
-							eq(y, pair(c, d))
+							eq(y, pair(ap, bp))
 						),
-						eq(omega_add(a, d), omega_add(b, c))
+						eq(omega_add(a, bp), omega_add(ap, b))
 					)
 				})
 			));
 
 			$U = (cls x, cls y) => {
 				eq(z, pair(x, y)),
-				Xin4(omega, omega, omega, omega, (cls a, cls b, cls c, cls d) => {
+				Xin4(omega, omega, omega, omega, (cls a, cls b, $a'$ cls ap, $b'$ cls bp) => {
 					A(
 						A(
 							eq(x, pair(a, b)),
-							eq(y, pair(c, d))
+							eq(y, pair(ap, bp))
 						),
-						eq(omega_add(a, d), omega_add(b, c))
+						eq(omega_add(a, bp), omega_add(ap, b))
 					)
 				}) |- {
 					$U = (cls a) => { in(a, omega) /* @h4 */ |- {
 					(cls b) => { in(b, omega) |- {
-					(cls c) => { in(c, omega) |- {
-					(cls d) => { in(d, omega) |- {
-						eq(x, pair(a, b)) /* @h8 */, eq(y, pair(c, d)), eq(omega_add(a, d), omega_add(b, c)) |- {
+					($a'$ cls ap) => { in(ap, omega) |- {
+					($b'$ cls bp) => { in(bp, omega) |- {
+						eq(x, pair(a, b)) /* @h8 */, eq(y, pair(ap, bp)), eq(omega_add(a, bp), omega_add(ap, b)) |- {
 							$x_in_om_om = [@h8; [@h4; @h5] > cartesian_in_i] > eq_in;
 							$y_in_om_om = [@h9; [@h6; @h7] > cartesian_in_i] > eq_in;
 
@@ -51,14 +51,14 @@ theorem rel_omega_pair_is_rel() {
 					} > cp } > Ui
 					} > cp } > Ui
 					} > cp } > Ui
-					} > cp } > Ui as Uin4(omega, omega, omega, omega, (cls a, cls b, cls c, cls d) => {
+					} > cp } > Ui as Uin4(omega, omega, omega, omega, (cls a, cls b, $a'$ cls ap, $b'$ cls bp) => {
 						I(
 							A(
 								A(
 									eq(x, pair(a, b)),
-									eq(y, pair(c, d))
+									eq(y, pair(ap, bp))
 								),
-								eq(omega_add(a, d), omega_add(b, c))
+								eq(omega_add(a, bp), omega_add(ap, b))
 							),
 							in(z, cartesian(cartesian(omega, omega), cartesian(omega, omega)))
 						)
@@ -73,6 +73,38 @@ theorem rel_omega_pair_is_rel() {
 	} > Ui as is_rel_over_set(rel_omega_pair, cartesian(omega, omega))
 }
 
+theorem rel_omega_pair_is_reflexive() {
+	(cls x) => {
+		in(x, cartesian(omega, omega)) |- {
+			$X = @h1 > setbuilder_e;
+
+			$U = (cls a, cls b) => {
+				eq(x, pair(a, b)), A(in(a, omega), in(b, omega)) |- {
+					$a_in_omega = @h3 > Ae1;
+					$b_in_omega = @h3 > Ae2;
+
+					$set_x = @h1 > is_set_i;
+					$set_xx = [$set_x; $set_x] > pair_set_i;
+
+					$X4 = [
+						$a_in_omega; $b_in_omega; $a_in_omega; $b_in_omega;
+						[[@h2; @h2] > Ai; eq_reflexive(omega_add(a, b))] > Ai
+					] > Xin4i as Xin4(omega, omega, omega, omega, (cls a, cls b, $a'$ cls ap, $b'$ cls bp) => {
+						A(
+							A(eq(x, pair(a, b)), eq(x, pair(ap, bp))),
+							eq(omega_add(a, bp), omega_add(ap, b))
+						)
+					});
+
+					[$set_xx; $X4] > setbuilder_pair_i as rel_call(rel_omega_pair, x, x)
+				} > cp2
+			} > Ui2;
+
+			[$X; $U] > mpX2_alt as rel_call(rel_omega_pair, x, x)
+		} > cp
+	} > Ui as rel_reflexive(rel_omega_pair, cartesian(omega, omega))
+}
+
 "정수 집합. 독일어 [*Zahlen]의 Z이다. 자연수 순서쌍의 동치류의 집합으로 정의된다. 이때 자연수 순서쌍의 동치류 [$`[(a, b)]`]가 정수 [$a - b]를 의미한다. 예를 들어 [$`[(3, 5)] = [(5, 7)] = -2`]이다.
 
 @see [~https://en.wikipedia.org/wiki/Integer#Construction]"
@@ -83,8 +115,8 @@ cls int = quotient_set(cartesian(omega, omega), rel_omega_pair);
 $\left(#1<<+_\Z>>#2\right)$
 cls int_add(cls m, cls n) {
 	instantiate((cls k) => {
-		Xin4(omega, omega, omega, omega, (cls a, cls b, cls c, cls d) => {
-			A(A(eq(m, equiv_cls(pair(a, b), cartesian(omega, omega), rel_omega_pair)), eq(n, equiv_cls(pair(c, d), cartesian(omega, omega), rel_omega_pair))), eq(k, equiv_cls(pair(omega_add(a, c), omega_add(b, d)), cartesian(omega, omega), rel_omega_pair)))
+		Xin4(omega, omega, omega, omega, (cls a1, cls b1, cls a2, cls b2) => {
+			A(A(eq(m, equiv_cls(pair(a1, b1), cartesian(omega, omega), rel_omega_pair)), eq(n, equiv_cls(pair(a2, b2), cartesian(omega, omega), rel_omega_pair))), eq(k, equiv_cls(pair(omega_add(a1, a2), omega_add(b1, b2)), cartesian(omega, omega), rel_omega_pair)))
 		})
 	})
 }

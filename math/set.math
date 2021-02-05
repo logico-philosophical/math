@@ -556,6 +556,39 @@ theorem mpXin4($A$ cls a: @11, $B$ cls b: @12, $C$ cls c: @13, $D$ cls d: @14, p
 	}
 }
 
+theorem Xin_i($A$ cls a: @12, pr f: @r2, cls x: @11) {
+	in(x, a), f(x) |- {
+		[@h1; @h2] > Ai > Xi(?, x) as Xin(a, f)
+	}
+}
+
+theorem Xin2i($A$ cls a: @12, $B$ cls b: @22, pr2 f: @r3, cls x: @11, cls y: @21) {
+	in(x, a), in(y, b), f(x, y) |- {
+		[
+			@h1;
+			[@h2; @h3] > Xin_i as Xin(b, (cls y) => f(x, y))
+		] > Xin_i as Xin2(a, b, f)
+	}
+}
+
+theorem Xin3i($A$ cls a: @12, $B$ cls b: @22, $C$ cls c: @32, pr3 f: @r4, cls x: @11, cls y: @21, cls z: @31) {
+	in(x, a), in(y, b), in(z, c), f(x, y, z) |- {
+		[
+			@h1;
+			[@h2; @h3; @h4] > Xin2i as Xin2(b, c, (cls y, cls z) => f(x, y, z))
+		] > Xin_i as Xin3(a, b, c, f)
+	}
+}
+
+theorem Xin4i($A$ cls a: @12, $B$ cls b: @22, $C$ cls c: @32, $D$ cls d: @42, pr4 f: @r5, cls x: @11, cls y: @21, cls z: @31, cls w: @41) {
+	in(x, a), in(y, b), in(z, c), in(w, d), f(x, y, z, w) |- {
+		[
+			@h1;
+			[@h2; @h3; @h4; @h5] > Xin3i as Xin3(b, c, d, (cls y, cls z, cls w) => f(x, y, z, w))
+		] > Xin_i as Xin4(a, b, c, d, f)
+	}
+}
+
 theorem Xin_e($A$ cls a: @11, st p: @r) {
 	Xin(a, (cls x) => p) |- {
 		@h1 > XAe2(is_in(a), (cls x) => p) > Xe(p)

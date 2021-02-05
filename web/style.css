@@ -101,6 +101,10 @@ blockquote {
 	margin: 1em 0;
 }
 
+.mono {
+	font-family: 'Roboto Mono', monospace, monospace;
+}
+
 .label {
 	font-family: 'Roboto Mono', monospace, monospace;
 }
