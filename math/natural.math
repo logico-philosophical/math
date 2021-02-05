@@ -980,6 +980,15 @@ theorem omega_add_eq_i_right(cls m: @11, $m'$ cls mp: @12, cls n: @r12) {
 	}
 }
 
+theorem omega_add_eq_i(cls m: @11, cls n: @21, $m'$ cls mp: @12, $n'$ cls np: @22) {
+	eq(m, mp), eq(n, np) |- {
+		[
+			@h1 > omega_add_eq_i_right(?, ?, n);
+			@h2 > omega_add_eq_i_left(mp, ?, ?)
+		] > eq_transitive
+	}
+}
+
 theorem omega_add_in_omega(cls m: @11, cls n: @21) {
 	in(m, omega), in(n, omega) |- {
 		[

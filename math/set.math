@@ -233,35 +233,9 @@ theorem eq_transitive(cls x: @11, cls y: @12, cls z: @22) {
 	}
 }
 
-theorem eq_transitive_El(cls x: @11, cls y: @12, cls z) {
-	eq(x, y) |- {
-		[
-			eq(z, x) |- {
-				[@h2; @h1] > eq_transitive
-			};
-			eq(z, y) |- {
-				[
-					@h1;
-					@h2 > eq_symmetric
-				] > eq_transitive > eq_symmetric
-			}
-		] > Ei_alt
-	}
-}
-
-theorem eq_transitive_Er(cls x: @11, cls y: @12, cls z) {
-	eq(x, y) |- {
-		[
-			eq(x, z) |- {
-				[
-					@h1 > eq_symmetric;
-					@h2
-				] > eq_transitive
-			} > cp;
-			eq(y, z) |- {
-				[@h1; @h2] > eq_transitive
-			} > cp
-		] > Ei
+theorem eq_transitive_3(cls x: @11, cls y: @21, cls z: @31, cls w: @32) {
+	eq(x, y), eq(y, z), eq(z, w) |- {
+		[[@h1; @h2] > eq_transitive; @h3] > eq_transitive
 	}
 }
 
@@ -404,6 +378,30 @@ theorem U_to_Uin($A$ cls a: @r1, pr f: @11) {
 				@h1 > Ue(?, z)
 			} > cp
 		} > Ui as Uin(a, f)
+	}
+}
+
+theorem U2_to_Uin2($A$ cls a: @r1, $B$ cls b: @r2, pr2 f: @11) {
+	U2(f) |- {
+		(cls x) => {
+			@h1 > Ue(?, x) > U_to_Uin(b, ?)
+		} > Ui > U_to_Uin(a, ?) as Uin2(a, b, f)
+	}
+}
+
+theorem U3_to_Uin3($A$ cls a: @r1, $B$ cls b: @r2, $C$ cls c: @r3, pr3 f: @11) {
+	U3(f) |- {
+		(cls x) => {
+			@h1 > Ue(?, x) > U2_to_Uin2(b, c, (cls y, cls z) => f(x, y, z))
+		} > Ui > U_to_Uin(a, ?) as Uin3(a, b, c, f)
+	}
+}
+
+theorem U4_to_Uin4($A$ cls a: @r1, $B$ cls b: @r2, $C$ cls c: @r3, $D$ cls d: @r4, pr4 f: @11) {
+	U4(f) |- {
+		(cls x) => {
+			@h1 > Ue(?, x) > U3_to_Uin3(b, c, d, (cls y, cls z, cls w) => f(x, y, z, w))
+		} > Ui > U_to_Uin(a, ?) as Uin4(a, b, c, d, f)
 	}
 }
 

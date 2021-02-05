@@ -167,6 +167,22 @@ theorem Ui2(pr2 f: @1) {
 	}
 }
 
+theorem Ui3(pr3 f: @1) {
+	f |- {
+		(cls x) => {
+			(cls y, cls z) => @h1(x, y, z) > Ui2
+		} > Ui as U3(f)
+	}
+}
+
+theorem Ui4(pr4 f: @1) {
+	f |- {
+		(cls x) => {
+			(cls y, cls z, cls w) => @h1(x, y, z, w) > Ui3
+		} > Ui as U4(f)
+	}
+}
+
 "보편 양화 소거(universal elimination)."
 axiom Ue(pr f: @11, cls x) {
 	U(f) |- f(x)

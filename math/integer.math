@@ -105,11 +105,101 @@ theorem rel_omega_pair_is_reflexive() {
 	} > Ui as rel_reflexive(rel_omega_pair, cartesian(omega, omega))
 }
 
+theorem rel_omega_pair_e(cls a: @11, cls b: @21, $a'$ cls ap: @31, $b'$ cls bp: @41) {
+	in(a, omega), in(b, omega), in(ap, omega), in(bp, omega),
+	rel_call(rel_omega_pair, pair(a, b), pair(ap, bp)) |- {
+		$X = @h5 > setbuilder_pair_e as Xin4(omega, omega, omega, omega, (cls c, cls d, $c'$ cls cp, $d'$ cls dp) => {
+			A(
+				A(
+					eq(pair(a, b), pair(c, d)),
+					eq(pair(ap, bp), pair(cp, dp))
+				),
+				eq(omega_add(c, dp), omega_add(cp, d))
+			)
+		});
+		
+		$U = (cls c, cls d, $c'$ cls cp, $d'$ cls dp) => {
+			A(
+				eq(pair(a, b), pair(c, d)),
+				eq(pair(ap, bp), pair(cp, dp))
+			),
+			eq(omega_add(c, dp), omega_add(cp, d)) |- {
+				$set_a = @h1 > is_set_i; $set_b = @h2 > is_set_i;
+				$set_ap = @h3 > is_set_i; $set_bp = @h4 > is_set_i;
+				$set_ab = [$set_a; $set_b] > pair_set_i;
+				$set_apbp = [$set_ap; $set_bp] > pair_set_i;
+
+				$ab_is_cd = @h6 > Ae1;
+				$apbp_is_cpdp = @h6 > Ae2;
+
+				$a_is_c = [$set_ab; $ab_is_cd] > pair_eq_e1_v1;
+				$b_is_d = [$set_ab; $ab_is_cd] > pair_eq_e2_v1;
+				$ap_is_cp = [$set_apbp; $apbp_is_cpdp] > pair_eq_e1_v1;
+				$bp_is_dp = [$set_apbp; $apbp_is_cpdp] > pair_eq_e2_v1;
+
+				[
+					[$a_is_c; $bp_is_dp] > omega_add_eq_i;
+					@h7;
+					[$ap_is_cp; $b_is_d] > omega_add_eq_i > eq_symmetric
+				] > eq_transitive_3
+			} > cp2
+		} > Ui4 > U4_to_Uin4(omega, omega, omega, omega, ?);
+		
+		[$X; $U] > mpXin4_alt as eq(omega_add(a, bp), omega_add(ap, b))
+	}
+}
+
+theorem int_eq_e(cls a: @11, cls b: @21, $a'$ cls ap: @31, $b'$ cls bp: @41) {
+	in(a, omega), in(b, omega), in(ap, omega), in(bp, omega),
+	eq(
+		equiv_cls(pair(a, b), cartesian(omega, omega), rel_omega_pair),
+		equiv_cls(pair(ap, bp), cartesian(omega, omega), rel_omega_pair)
+	) |- {
+		[
+			rel_omega_pair_is_reflexive();
+			[@h1; @h2] > cartesian_in_i;
+			[@h3; @h4] > cartesian_in_i;
+			@h5
+		] > equiv_cls_eq_e
+	}
+}
+
 "정수 집합. 독일어 [*Zahlen]의 Z이다. 자연수 순서쌍의 동치류의 집합으로 정의된다. 이때 자연수 순서쌍의 동치류 [$`[(a, b)]`]가 정수 [$a - b]를 의미한다. 예를 들어 [$`[(3, 5)] = [(5, 7)] = -2`]이다.
 
 @see [~https://en.wikipedia.org/wiki/Integer#Construction]"
 $\Z$
 cls int = quotient_set(cartesian(omega, omega), rel_omega_pair);
+
+theorem int_in_e(cls n: @11) {
+	in(n, int) |- {
+		$X = @h1 > setbuilder_e;
+		
+		$U = (cls z) => {
+			eq(n, equiv_cls(z, cartesian(omega, omega), rel_omega_pair)), in(z, cartesian(omega, omega)) |- {
+				$X = @h3 > setbuilder_e;
+
+				$U = (cls a, cls b) => {
+					eq(z, pair(a, b)), A(in(a, omega), in(b, omega)) |- {
+						$a_in_omega = @h5 > Ae1;
+						$b_in_omega = @h5 > Ae2;
+
+						[
+							$a_in_omega; $b_in_omega;
+							[
+								@h2;
+								@h4 > call_eq_i((cls z) => equiv_cls(z, cartesian(omega, omega), rel_omega_pair), ?, ?)
+							] > eq_transitive
+						] > Xin2i as Xin2(omega, omega, (cls a, cls b) => eq(n, equiv_cls(pair(a, b), cartesian(omega, omega), rel_omega_pair)))
+					} > cp2
+				} > Ui2;
+
+				[$X; $U] > mpX2_alt as Xin2(omega, omega, (cls a, cls b) => eq(n, equiv_cls(pair(a, b), cartesian(omega, omega), rel_omega_pair)))
+			} > cp2
+		} > Ui;
+		
+		[$X; $U] > mpX_alt as Xin2(omega, omega, (cls a, cls b) => eq(n, equiv_cls(pair(a, b), cartesian(omega, omega), rel_omega_pair)))
+	}
+}
 
 "정수 덧셈."
 $\left(#1<<+_\Z>>#2\right)$

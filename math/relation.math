@@ -620,10 +620,10 @@ theorem equiv_cls_in_i(cls x: @23, $A$ cls a: @12, $\sim$ cls r: @21, cls z: @11
 }
 
 theorem equiv_cls_in_i2(cls x: @21, $A$ cls a: @12, $\sim$ cls r: @11) {
-	is_equiv_rel(r, a), in(x, a) |- {
+	rel_reflexive(r, a), in(x, a) |- {
 		[
 			@h2;
-			[@h1 > equiv_rel_is_reflexive; @h2] > Uin_e
+			[@h1; @h2] > Uin_e
 		] > equiv_cls_in_i
 	}
 }
@@ -660,7 +660,7 @@ theorem equiv_cls_eq_i($\sim$ cls r: @11, $A$ cls a: @12, cls x: @21, cls y: @31
 }
 
 theorem equiv_cls_eq_e($\sim$ cls r: @11, $A$ cls a: @12, cls x: @21, cls y: @31) {
-	is_equiv_rel(r, a), in(x, a), in(y, a), eq(equiv_cls(x, a, r), equiv_cls(y, a, r)) |- {
+	rel_reflexive(r, a), in(x, a), in(y, a), eq(equiv_cls(x, a, r), equiv_cls(y, a, r)) |- {
 		[[@h1; @h2] > equiv_cls_in_i2; @h4] > in_eq > subsetbuilder_e
 	}
 }
