@@ -89,16 +89,18 @@
 			</div>
 		</div>
 		<script>
-			(() => {
-
 			var nmax = 10;
 
-			function getList(keyword, list) {
+			function getList(keyword, inputBefore, list) {
 				keyword = keyword.toLowerCase().trim();
 
-				if (!keyword) return [];
+				if (!keyword || keyword == '$') return [];
 
-				return list
+				return (
+						keyword.startsWith('$')
+							? [...new Set(inputBefore.match(/\$?[a-z0-9_]*/gi))]
+							: list
+					)
 					.map(name => {
 						var lowername = name.toLowerCase();
 
@@ -133,6 +135,8 @@
 					})
 					.slice(0, nmax);
 			}
+			
+			(() => {
 
 			function show() {
 				$background.style.display = 'block';
@@ -181,7 +185,7 @@
 
 				list = [];
 
-				getList(v, searchDatabase).forEach(({name, match}, i) => {
+				getList(v, '', searchDatabase).forEach(({name, match}, i) => {
 					if (i == 0) selected = 0;
 
 					html += `<li${i == 0 ? ' class="selected"' : ''}><a href="#def-${name}">`

@@ -17,39 +17,30 @@ var codemirror = CodeMirror(el => {
 	keyMap: 'sublime'
 });
 
-var hintWorker = null;
-
 function hint() {
-	return new Promise((resolve, _reject) => {
-		if (typeof program == 'undefined') return;
+	if (typeof program == 'undefined') return;
 
-		const cursor = codemirror.getCursor();
-		var str = codemirror.getRange({line:0,ch:0}, cursor);
-		var keywordMatch = str.match(/\$?[a-z0-9_]*$/i);
-		if (!keywordMatch) return;
-		var keyword = keywordMatch[0];
-		var inputBefore = str.substring(0, str.length - keyword.length);
+	const cursor = codemirror.getCursor();
+	var str = codemirror.getRange({line:0,ch:0}, cursor);
+	var keywordMatch = str.match(/\$?[a-z0-9_]*$/i);
+	if (!keywordMatch) return;
+	var keyword = keywordMatch[0];
+	var inputBefore = str.substring(0, str.length - keyword.length);
 
-		if (hintWorker) hintWorker.terminate();
-		hintWorker = new Worker('hintWorker.js');
-		hintWorker.postMessage([keyword, inputBefore, searchDatabase]);
-		hintWorker.onmessage = e => {
-			resolve({
-				list: e.data.map(({name, match}) => ({
-					text: name,
-					render($el, self, data) {
-						var $span = document.createElement('span');
-						$span.innerHTML = name.split('').map((e, i) => {
-							return match.includes(i) ? `<b>${e}</b>` : e;
-						}).join('');
-						$el.appendChild($span);
-					}
-				})),
-				from: codemirror.posFromIndex(codemirror.indexFromPos(cursor) - keyword.length),
-				to: cursor
-			})
-		};
-	});
+	return {
+		list: getList(keyword, inputBefore, searchDatabase).map(({name, match}) => ({
+			text: name,
+			render($el, self, data) {
+				var $span = document.createElement('span');
+				$span.innerHTML = name.split('').map((e, i) => {
+					return match.includes(i) ? `<b>${e}</b>` : e;
+				}).join('');
+				$el.appendChild($span);
+			}
+		})),
+		from: codemirror.posFromIndex(codemirror.indexFromPos(cursor) - keyword.length),
+		to: cursor
+	};
 }
 
 codemirror.on('inputRead', function (editor, event) {
