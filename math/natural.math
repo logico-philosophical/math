@@ -1127,6 +1127,27 @@ theorem omega_add_associative(cls l: @11, cls m: @21, cls n: @31) {
 	}
 }
 
+theorem omega_add_flip_inner(cls a: @11, cls b: @21, cls c: @31, cls d: @41) {
+	in(a, omega), in(b, omega), in(c, omega), in(d, omega) |- {
+		$nat_ab = [@h1; @h2] > omega_add_in_omega;
+		$nat_ac = [@h1; @h3] > omega_add_in_omega;
+		
+		$PPPabcd_PPabPcd = [$nat_ab; @h3; @h4] > omega_add_associative;
+		$PPPabcd_PPaPbcd = [@h1; @h2; @h3] > omega_add_associative > omega_add_eq_i_right(?, ?, d);
+		$PPaPbcd_PPaPcbd = [@h2; @h3] > omega_add_commutative > omega_add_eq_i_left(a, ?, ?) > omega_add_eq_i_right(?, ?, d);
+		$PPPacbd_PPaPcbd = [@h1; @h3; @h2] > omega_add_associative > omega_add_eq_i_right(?, ?, d);
+		$PPPacbd_PPacPbd = [$nat_ac; @h2; @h4] > omega_add_associative;
+		
+		[
+			$PPPabcd_PPabPcd > eq_symmetric;
+			$PPPabcd_PPaPbcd;
+			$PPaPbcd_PPaPcbd;
+			$PPPacbd_PPaPcbd > eq_symmetric;
+			$PPPacbd_PPacPbd
+		] > eq_transitive_5
+	}
+}
+
 theorem omega_add_one(cls n: @11) {
 	in(n, omega) |- {
 		[

@@ -239,6 +239,18 @@ theorem eq_transitive_3(cls x: @11, cls y: @21, cls z: @31, cls w: @32) {
 	}
 }
 
+theorem eq_transitive_4(cls x: @11, cls y: @21, cls z: @31, cls w: @41, cls u: @42) {
+	eq(x, y), eq(y, z), eq(z, w), eq(w, u) |- {
+		[[@h1; @h2; @h3] > eq_transitive_3; @h4] > eq_transitive
+	}
+}
+
+theorem eq_transitive_5(cls x: @11, cls y: @21, cls z: @31, cls w: @41, cls u: @51, cls v: @52) {
+	eq(x, y), eq(y, z), eq(z, w), eq(w, u), eq(u, v) |- {
+		[[@h1; @h2; @h3; @h4] > eq_transitive_4; @h5] > eq_transitive
+	}
+}
+
 theorem eq_simple(cls x, cls y) {
 	[eq_Ae1(x, y); eq_i(x, y)] > Ei_alt
 }
