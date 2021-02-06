@@ -443,7 +443,7 @@
 							+ `</div>`;
 					}
 
-					ret += `<h3 class="label">${scope.fileUri}</h3><div class="block-file">`
+					ret += `<h3 class="label">${scope.fileUri} (${Object.keys(map).length})</h3><div class="block-file">`
 						+ Object.keys(map).sort((l, r) => l._id - r._id).map(k => map[k]).join('')
 						+ '</div>';
 				}
