@@ -11,7 +11,7 @@ body {
 	line-height: 1.5;
 	word-break: normal;
 	overflow-wrap: break-word;
-	padding-top:30px;
+	padding-top:60px;
 }
 
 h1, h2, h3, h4, h5, h6, a, b, strong, input, textarea, th, .katex {
@@ -88,6 +88,31 @@ blockquote {
 	background-color: #f7f7f7;
 }
 
+nav {
+	display: flex;
+	position: fixed;
+	justify-content: space-between;
+	align-items: center;
+	flex-wrap: wrap;
+	top: 0;
+	left: 0;
+	right: 0;
+	z-index: 10000;
+	background-color: white;
+	border-top: 5px #222 solid;
+	box-shadow: 0 0 2px 0 rgba(0,0,0,.16),0 0 0 1px rgba(0,0,0,.08);
+	padding: 0 15px;
+}
+
+#whatever {
+	display: inline-flex;
+	position: relative;
+	justify-content: flex-end;
+	align-items: center;
+	align-content: center;
+	flex-wrap: wrap;
+}
+
 .colored {
 	background-color: #202124!important;
 	color: #eee;
@@ -110,7 +135,7 @@ blockquote {
 }
 
 .label a {
-	scroll-margin: 70px;
+	scroll-margin: 100px;
 }
 
 .math {
@@ -176,16 +201,6 @@ table.explorer td.bbb {
 	 color: #D32F2F;
 }
 
-#search {
-	height: 30px;
-	vertical-align: middle;
-}
-
-#reload {
-	height: 30px;
-	vertical-align: middle;
-}
-
 .console-wrap-wrap {
 	display: flex;
 	flex-direction: column;
@@ -246,19 +261,34 @@ table.explorer td.bbb {
 	border: 1px #ccc solid;
 }
 
+#search-input {
+	padding: .3em;
+	width: 200px;
+}
+
 #search-dropdown {
-	background-color: white;
+	position: absolute;
+	top: 100%;
+	left: 0;
+	right: 0;
 }
 
 #search-dropdown ul {
+	display: inline-block;
+	min-width: 200px;
 	margin: 0;
-	margin-top: .3em;
 	padding: 0;
-	border: 1px #666 solid;
+	background-color: white;
 }
 
 #search-dropdown ul li {
 	list-style: none;
+	border: 1px #ccc solid;
+	padding: .15em;
+}
+
+#search-dropdown ul li + li {
+	border-top: none;
 }
 
 #search-dropdown ul li:hover {
@@ -339,6 +369,10 @@ table.explorer td.bbb {
 	animation: flicker 1s 1 normal!important;
 }
 
+.rotate {
+	animation: rotate 1s linear infinite normal!important;
+}
+
 @keyframes flicker {
 	0%, 100% {
 		background-color: transparent;
@@ -346,5 +380,15 @@ table.explorer td.bbb {
   
 	25% {
 		background-color: #FFFF00;
+	}
+}
+
+@keyframes rotate {
+	0% {
+		transform: rotate(0deg);
+	}
+
+	100% {
+		transform: rotate(360deg);
 	}
 }

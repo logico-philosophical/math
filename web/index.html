@@ -45,6 +45,168 @@
 		<link rel="stylesheet" href="style.css">
 	</head>
 	<body>
+		<nav>
+			<span style="color: #222; font-size: 2em;">𝕸</span>
+			<div id="whatever">
+				<input id="search-input" type="text" placeholder="Search (S)" class="mono">
+				<button id="reload" title="reload (R)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#222" width="24px" height="24px"><path d="M0 0h24v24H0z" fill="none"/><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg></button>
+				<button id="button-show-console" title="console (C)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#222" width="24px" height="24px"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/></svg></button>
+				<div id="search-dropdown" class="mono" style="display: none;">
+					<ul></ul>
+				</div>
+			</div>
+			<script>
+				var nmax = 10;
+	
+				function getList(keyword, inputBefore, list) {
+					keyword = keyword.toLowerCase().trim();
+	
+					if (!keyword || keyword == '$') return [];
+	
+					return (
+							keyword.startsWith('$')
+								? [...new Set(inputBefore.match(/\$?[a-z0-9_]*/gi))]
+								: list
+						)
+						.map(name => {
+							var lowername = name.toLowerCase();
+	
+							var pname = 0;
+							var matchptrs = [];
+	
+							for (var pval = 0; pval < keyword.length; pval++) {
+								if (pname >= name.length) return false;
+								
+								while (lowername[pname] != keyword[pval]) {
+									pname++;
+									if (pname >= name.length) return false;
+								}
+	
+								matchptrs.push(pname);
+								pname++;
+							}
+	
+							return {
+								name,
+								match: matchptrs
+							};
+						})
+						.filter(e => e)
+						.sort((a, b) => {
+							for (var i = 0; i < a.match.length; i++) {
+								if (a.match[i] != b.match[i])
+									return a.match[i] - b.match[i];
+							}
+	
+							return a.name.localeCompare(b.name);
+						})
+						.slice(0, nmax);
+				}
+				
+				(() => {
+	
+				function show() {
+					$dropdown.style.display = 'block';
+					$input.select();
+				}
+	
+				function dismiss() {
+					$dropdown.style.display = 'none';
+					$input.blur();
+				}
+	
+				function destroy() {
+					dismiss();
+					$input.value = '';
+					selected = false;
+					list = [];
+					$('ul', $dropdown).innerHTML = '';
+				}
+	
+				hotkeys('s', (evt, handler) => {
+					evt.preventDefault();
+					$input.focus();
+				});
+	
+				var $input = $('#search-input'),
+					$dropdown = $('#search-dropdown');
+				
+				var selected = false,
+					list = [];
+	
+				$input.addEventListener('focus', evt => {
+					show();
+				});
+	
+				document.addEventListener('click', evt => {
+					if (evt.target == $input || evt.target.closest('#search-dropdown')) return;
+	
+					dismiss();
+				})
+				
+				$input.addEventListener('input', evt => {
+					var v = $input.value;
+					var $el = $('ul', $dropdown);
+					var html = '';
+	
+					list = [];
+	
+					getList(v, '', searchDatabase).forEach(({name, match}, i) => {
+						if (i == 0) selected = 0;
+	
+						html += `<li${i == 0 ? ' class="selected"' : ''}><a href="#def-${name}">`
+							+ name.split('').map((e, i) => {
+							return match.includes(i) ? `<b>${e}</b>` : e;
+						}).join('') + '</a></li>';
+	
+						list.push(name);
+					});
+	
+					$el.innerHTML = html;
+	
+					[].forEach.call($$('a', $el), $ => {
+						$.addEventListener('click', evt => { destroy() });
+					});
+				});
+	
+				$input.addEventListener('keydown', evt => {
+					if (evt.key == 'Enter') {
+						evt.preventDefault();
+						if (!list[selected]) return;
+	
+						location.href = '#def-' + list[selected];
+						destroy();
+					}
+	
+					if (evt.key == 'Escape') {
+						evt.preventDefault();
+						dismiss();
+					}
+	
+					if (['ArrowDown', 'ArrowUp', 'Tab'].includes(evt.key)) {
+						var direction = evt.key == 'Tab'
+							? evt.shiftKey ? -1 : 1
+							: evt.key == 'ArrowUp' ? -1 : 1;
+	
+						evt.preventDefault();
+	
+						var len = list.length;
+						if (len <= 0) {
+							selected = false;
+							return;
+						}
+	
+						selected = (selected + direction + len) % len;
+	
+						[].map.call($$('li', $dropdown), ($, i) => {
+							$.classList[i == selected ? 'add' : 'remove']('selected');
+						});
+					}
+				});
+				
+				})();
+			</script>
+		</nav>
 		<h1>math-o-matic</h1>
 		<a href="https://github.com/logico-philosophical/math-o-matic" style="text-decoration: none;"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDE2IDE2IiB2ZXJzaW9uPSIxLjEiPjxwYXRoIGZpbGwtcnVsZT0iZXZlbm9kZCIgZD0iTTggMEMzLjU4IDAgMCAzLjU4IDAgOGMwIDMuNTQgMi4yOSA2LjUzIDUuNDcgNy41OS40LjA3LjU1LS4xNy41NS0uMzggMC0uMTktLjAxLS44Mi0uMDEtMS40OS0yLjAxLjM3LTIuNTMtLjQ5LTIuNjktLjk0LS4wOS0uMjMtLjQ4LS45NC0uODItMS4xMy0uMjgtLjE1LS42OC0uNTItLjAxLS41My42My0uMDEgMS4wOC41OCAxLjIzLjgyLjcyIDEuMjEgMS44Ny44NyAyLjMzLjY2LjA3LS41Mi4yOC0uODcuNTEtMS4wNy0xLjc4LS4yLTMuNjQtLjg5LTMuNjQtMy45NSAwLS44Ny4zMS0xLjU5LjgyLTIuMTUtLjA4LS4yLS4zNi0xLjAyLjA4LTIuMTIgMCAwIC42Ny0uMjEgMi4yLjgyLjY0LS4xOCAxLjMyLS4yNyAyLS4yNy42OCAwIDEuMzYuMDkgMiAuMjcgMS41My0xLjA0IDIuMi0uODIgMi4yLS44Mi40NCAxLjEuMTYgMS45Mi4wOCAyLjEyLjUxLjU2LjgyIDEuMjcuODIgMi4xNSAwIDMuMDctMS44NyAzLjc1LTMuNjUgMy45NS4yOS4yNS41NC43My41NCAxLjQ4IDAgMS4wNy0uMDEgMS45My0uMDEgMi4yIDAgLjIxLjE1LjQ2LjU1LjM4QTguMDEzIDguMDEzIDAgMDAxNiA4YzAtNC40Mi0zLjU4LTgtOC04eiI+PC9wYXRoPjwvc3ZnPg==" style="vertical-align: middle; margin-right:.5em">GitHub repository</a> &nbsp; <a href="../docs/build/index.html" style="text-decoration: none;"><img style="vertical-align: middle;margin-right:.5em;" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjNjY2Ij48cGF0aCBkPSJNMTQgMkg2Yy0xLjEgMC0xLjk5LjktMS45OSAyTDQgMjBjMCAxLjEuODkgMiAxLjk5IDJIMThjMS4xIDAgMi0uOSAyLTJWOGwtNi02em0yIDE2SDh2LTJoOHYyem0wLTRIOHYtMmg4djJ6bS0zLTVWMy41TDE4LjUgOUgxM3oiLz48L3N2Zz4=">documentation</a>
 		<blockquote id="bq-note-file-scheme" style="display: none;">
@@ -59,17 +221,17 @@
 			</script>
 		</blockquote>
 		<h2>개요</h2>
-		이 페이지는 math-o-matic으로 만들고 있는 공리계를 보여 줍니다. 페이지 하단에 있는 버튼 중 하나를 눌러서 공리계를 로드하세요. 장치의 계산 성능에 따라 수 초 가량의 시간이 걸릴 수 있습니다.
-		<h2>핫키</h2>
-		<ul>
-			<li><kbd>S</kbd>: 검색</li>
-			<li><kbd>R</kbd>: 다시 로드
-			<li><kbd>C</kbd>: 콘솔 열기
-		</ul>
+		이 페이지는 math-o-matic으로 만들고 있는 공리계를 보여 줍니다. 페이지 하단에 있는 버튼 중 하나를 눌러서 공리계를 로드하세요. 장치의 계산 성능에 따라 많은 시간이 걸릴 수 있습니다.
 		<h2>우상단 컨트롤</h2>
 		<ul>
-			<li>reload 버튼은 파일을 다시 불러와서 목록을 재작성합니다. 단 그 과정에서 에러가 발생하였을 경우 이전 목록을 보존합니다.
-			<li>콘솔은 REPL 기능을 제공합니다. <kbd>Ctrl</kbd> + <kbd>L</kbd>을 누르면 콘솔 내용이 지워집니다.
+			<li><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#222" width="24px" height="24px" style="vertical-align: middle;"><path d="M0 0h24v24H0z" fill="none"/><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg> 버튼은 파일을 다시 불러와서 목록을 재작성합니다. 단 그 과정에서 에러가 발생하였을 경우 이전 목록을 보존합니다.
+			<li><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#222" width="24px" height="24px" style="vertical-align: middle;"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/></svg> 버튼은 콘솔을 여닫으며 콘솔은 REPL 기능을 제공합니다.
+			<ul>
+				<li><kbd>Shift</kbd> + <kbd>Enter</kbd>: 제출</li>
+				<li><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Enter</kbd>: 입력을 지우지 않고 제출</li>
+				<li><kbd>Ctrl</kbd> + <kbd>L</kbd>: 콘솔 기록 지우기</li>
+			</ul>
+			이외에도 CodeMirror의 sublime 키맵에서 제공하는 단축키를 사용할 수 있습니다.
 		</ul>
 		<h2>참조</h2>
 		<ul>
@@ -81,169 +243,6 @@
 		<div id="list"></div>
 		<div id="summary"></div>
 		<div id="all"></div>
-		<div id="search-background" style="position:fixed;top:0;bottom:0;left:0;right:0;z-index:10000;display:none;background-color:rgba(0,0,0,.3)"></div>
-		<div style="position:fixed;top:5px;right:5px;z-index:10000;">
-			<div>
-				<input id="search-input" type="text" placeholder="Search..." class="mono" style="padding: .3em;">
-				<input id="reload" type="button" class="colored" value="reload" style="text-transform: uppercase;">
-				<input id="button-show-console" type="button" class="colored" value="console" style="text-transform: uppercase;">
-			</div>
-			<div id="search-dropdown" class="mono" style="display: none;">
-				<ul></ul>
-			</div>
-		</div>
-		<script>
-			var nmax = 10;
-
-			function getList(keyword, inputBefore, list) {
-				keyword = keyword.toLowerCase().trim();
-
-				if (!keyword || keyword == '$') return [];
-
-				return (
-						keyword.startsWith('$')
-							? [...new Set(inputBefore.match(/\$?[a-z0-9_]*/gi))]
-							: list
-					)
-					.map(name => {
-						var lowername = name.toLowerCase();
-
-						var pname = 0;
-						var matchptrs = [];
-
-						for (var pval = 0; pval < keyword.length; pval++) {
-							if (pname >= name.length) return false;
-							
-							while (lowername[pname] != keyword[pval]) {
-								pname++;
-								if (pname >= name.length) return false;
-							}
-
-							matchptrs.push(pname);
-							pname++;
-						}
-
-						return {
-							name,
-							match: matchptrs
-						};
-					})
-					.filter(e => e)
-					.sort((a, b) => {
-						for (var i = 0; i < a.match.length; i++) {
-							if (a.match[i] != b.match[i])
-								return a.match[i] - b.match[i];
-						}
-
-						return a.name.localeCompare(b.name);
-					})
-					.slice(0, nmax);
-			}
-			
-			(() => {
-
-			function show() {
-				$background.style.display = 'block';
-				$dropdown.style.display = 'block';
-				$input.select();
-			}
-
-			function dismiss() {
-				$background.style.display = 'none';
-				$dropdown.style.display = 'none';
-				$input.blur();
-			}
-
-			function destroy() {
-				dismiss();
-				$input.value = '';
-				selected = false;
-				list = [];
-				$('ul', $dropdown).innerHTML = '';
-			}
-
-			hotkeys('s', (evt, handler) => {
-				evt.preventDefault();
-				$input.focus();
-			});
-
-			var $input = $('#search-input'),
-				$background = $('#search-background'),
-				$dropdown = $('#search-dropdown');
-			
-			var selected = false,
-				list = [];
-
-			$input.addEventListener('focus', evt => {
-				show();
-			});
-
-			$background.addEventListener('click', evt => {
-				dismiss();
-			});
-			
-			$input.addEventListener('input', evt => {
-				var v = $input.value;
-				var $el = $('ul', $dropdown);
-				var html = '';
-
-				list = [];
-
-				getList(v, '', searchDatabase).forEach(({name, match}, i) => {
-					if (i == 0) selected = 0;
-
-					html += `<li${i == 0 ? ' class="selected"' : ''}><a href="#def-${name}">`
-						+ name.split('').map((e, i) => {
-						return match.includes(i) ? `<b>${e}</b>` : e;
-					}).join('') + '</a></li>';
-
-					list.push(name);
-				});
-
-				$el.innerHTML = html;
-
-				[].forEach.call($$('a', $el), $ => {
-					$.addEventListener('click', evt => { destroy() });
-				});
-			});
-
-			$input.addEventListener('keydown', evt => {
-				if (evt.key == 'Enter') {
-					evt.preventDefault();
-					if (!list[selected]) return;
-
-					location.href = '#def-' + list[selected];
-					destroy();
-				}
-
-				if (evt.key == 'Escape') {
-					evt.preventDefault();
-					destroy();
-				}
-
-				if (['ArrowDown', 'ArrowUp', 'Tab'].includes(evt.key)) {
-					var direction = evt.key == 'Tab'
-						? evt.shiftKey ? -1 : 1
-						: evt.key == 'ArrowUp' ? -1 : 1;
-
-					evt.preventDefault();
-
-					var len = list.length;
-					if (len <= 0) {
-						selected = false;
-						return;
-					}
-
-					selected = (selected + direction + len) % len;
-
-					[].map.call($$('li', $dropdown), ($, i) => {
-						$.classList[i == selected ? 'add' : 'remove']('selected');
-					});
-				}
-			});
-			
-			})();
-		</script>
 		<div class="console-wrap-wrap" style="display:none">
 			<div class="console-wrap">
 				<div id="console-display-wrap">
@@ -571,12 +570,12 @@
 				if (!filename) return;
 				if (reloading) return;
 				reloading = true;
+				$('#reload').disabled = true;
+				$('#reload svg').classList.add('rotate');
 
 				try {
 					console.log('--- PROGRAM START ---');
 					var start = new Date();
-
-					$('#reload').value = 'reloading...';
 					program = new math.Program(parser);
 					await program.loadModule(filename, async filename => ({
 						fileUri: `/${filename}.math`,
@@ -623,7 +622,8 @@
 
 					generateHtml();
 				} finally {
-					$('#reload').value = 'reload';
+					$('#reload').disabled = false;
+					$('#reload svg').classList.remove('rotate');
 					reloading = false;
 				}
 			}
