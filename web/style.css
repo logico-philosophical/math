@@ -134,7 +134,7 @@ nav {
 	font-family: 'Roboto Mono', monospace, monospace;
 }
 
-.label a {
+#top, .label a {
 	scroll-margin: 100px;
 }
 
