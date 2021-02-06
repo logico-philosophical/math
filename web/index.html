@@ -81,9 +81,13 @@
 		<div id="list"></div>
 		<div id="summary"></div>
 		<div id="all"></div>
-		<div id="search-background" style="position:fixed;top:0;bottom:0;left:0;right:0;z-index:20000;display:none;background-color:rgba(0,0,0,.3)"></div>
-		<div style="position:fixed;top:5px;left:5px;z-index:20001;">
-			<input id="search-input" type="text" placeholder="Search..." class="mono" style="padding: .3em;">
+		<div id="search-background" style="position:fixed;top:0;bottom:0;left:0;right:0;z-index:10000;display:none;background-color:rgba(0,0,0,.3)"></div>
+		<div style="position:fixed;top:5px;right:5px;z-index:10000;">
+			<div>
+				<input id="search-input" type="text" placeholder="Search..." class="mono" style="padding: .3em;">
+				<input id="reload" type="button" class="colored" value="reload" style="text-transform: uppercase;">
+				<input id="button-show-console" type="button" class="colored" value="console" style="text-transform: uppercase;">
+			</div>
 			<div id="search-dropdown" class="mono" style="display: none;">
 				<ul></ul>
 			</div>
@@ -240,12 +244,6 @@
 			
 			})();
 		</script>
-		<div style="position:fixed;top:5px;right:5px;z-index:10000;">
-			<div>
-				<input id="reload" type="button" class="colored" value="reload" style="text-transform: uppercase;">
-				<input id="button-show-console" type="button" class="colored" value="console" style="text-transform: uppercase;">
-			</div>
-		</div>
 		<div class="console-wrap-wrap" style="display:none">
 			<div class="console-wrap">
 				<div id="console-display-wrap">
