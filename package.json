@@ -1,7 +1,7 @@
 {
   "name": "math-o-matic",
   "version": "0.2.0",
-  "description": "Computerized axiomatic system on the web",
+  "description": "Computerized deductive system on the web",
   "keywords": [
     "math"
   ],

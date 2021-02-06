@@ -10,7 +10,7 @@
 
 **English** &middot; [한국어](/README.ko.md)
 
-**math-o-matic** is a computer program that enables you to make an axiomatic system and prove its theorems. Its aim is to make it easy to write and read rigorous mathematical proofs. You can see the current axiomatic system by pressing one of the buttons at the bottom of the [main page](https://logico-philosophical.github.io/math-o-matic/web/index.html).
+**math-o-matic** is a computerized deductive system that enables you to make an axiomatic system and prove its theorems. Its aim is to make it easy to write and read rigorous mathematical proofs. You can see the current axiomatic system by pressing one of the buttons at the bottom of the [main page](https://logico-philosophical.github.io/math-o-matic/web/index.html).
 
 ## Code example
 
