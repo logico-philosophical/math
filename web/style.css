@@ -206,7 +206,7 @@ table.explorer td.bbb {
 	flex-direction: column;
 	position: fixed;
 	z-index: 9000;
-	top: 5px;
+	top: 60px;
 	bottom: 5px;
 	right: 5px;
 	min-width: 300px;
