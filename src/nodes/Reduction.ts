@@ -278,7 +278,7 @@ ${as.expandMeta(true)}
 
 		if (selector[0] == 'r') {
 			if (!as) {
-				throw Node.error(`Cannot dereference @${selector}: expected output is not given`, trace);
+				throw Node.error(`Cannot dereference @${selector} (at 0): expected output is not given`, trace);
 			}
 
 			pattern = right;
@@ -287,7 +287,7 @@ ${as.expandMeta(true)}
 			var n = Number(selector[0]);
 
 			if (!(1 <= n && n <= antecedents.length))
-				throw Node.error(`Cannot dereference @${selector}: antecedent index out of range`, trace);
+				throw Node.error(`Cannot dereference @${selector} (at 0): antecedent index out of range`, trace);
 
 			pattern = requiredAntecedents[n - 1];
 			instance = antecedents[n - 1];
@@ -307,11 +307,11 @@ ${as.expandMeta(true)}
 
 				if (pattern instanceof Tee && instance instanceof Tee) {
 					if (pattern.left.length != instance.left.length) {
-						throw Node.error(`Cannot dereference @${selector}: antecedent length mismatch`, trace);
+						throw Node.error(`Cannot dereference @${selector} (at ${ptr}): antecedent length mismatch`, trace);
 					}
 
 					if (!(1 <= n && n <= instance.left.length)) {
-						throw Node.error(`Cannot dereference @${selector}: antecedent index out of range`, trace);
+						throw Node.error(`Cannot dereference @${selector} (at ${ptr}): antecedent index out of range`, trace);
 					}
 
 					return recurse(ptr + 1, pattern.left[n - 1], instance.left[n - 1], params);
@@ -323,7 +323,7 @@ ${as.expandMeta(true)}
 					}
 
 					if (!(pattern instanceof Funcall && instance instanceof Funcall)) {
-						throw Node.error(`Cannot dereference @${selector}`, trace);
+						throw Node.error(`Cannot dereference @${selector} (at ${ptr})`, trace);
 					}
 
 					if (pattern.fun.equals(instance.fun, context)) {
@@ -331,19 +331,19 @@ ${as.expandMeta(true)}
 					}
 
 					if (!instance.isExpandable(context)) {
-						throw Node.error(`Cannot dereference @${selector}`, trace);
+						throw Node.error(`Cannot dereference @${selector} (at ${ptr}): ${instance}`, trace);
 					}
 
 					instance = instance.expandOnce(context).expanded;
 				}
 
 				if (!(1 <= n && n <= instance.args.length))
-					throw Node.error(`Cannot dereference @${selector}`, trace);
+					throw Node.error(`Cannot dereference @${selector} (at ${ptr})`, trace);
 
 				return recurse(ptr + 1, pattern.args[n - 1], instance.args[n - 1], params);
 			} else if (selector[ptr] == 'r') {
 				if (!(pattern instanceof Tee && instance instanceof Tee)) {
-					throw Node.error(`Cannot dereference @${selector}`, trace);
+					throw Node.error(`Cannot dereference @${selector} (at ${ptr})`, trace);
 				}
 
 				return recurse(ptr + 1, pattern.right, instance.right, params);
@@ -352,21 +352,22 @@ ${as.expandMeta(true)}
 					pattern instanceof Fun && !pattern.name
 					&& instance instanceof Fun && !instance.name
 				)) {
-					throw Node.error(`Cannot dereference @${selector}`, trace);
+					throw Node.error(`Cannot dereference @${selector} (at ${ptr})`, trace);
 				}
 
 				if (pattern.length != instance.length) {
-					throw Node.error(`Cannot dereference @${selector}: parameter length mismatch`, trace);
+					throw Node.error(`Cannot dereference @${selector} (at ${ptr}): parameter length mismatch`, trace);
 				}
 
 				var placeholders = [];
 
 				for (var i = 0; i < pattern.length; i++) {
 					if (!pattern.params[i].type.equals(instance.params[i].type)) {
-						throw Node.error(`Cannot dereference @${selector}: parameter type mismatch`, trace);
+						throw Node.error(`Cannot dereference @${selector} (at ${ptr}): parameter type mismatch`, trace);
 					}
 
 					placeholders.push(new Parameter({
+						tex: instance.params[i].tex,
 						type: pattern.params[i].type,
 						name: instance.params[i].name,
 						selector: null
@@ -376,7 +377,7 @@ ${as.expandMeta(true)}
 				return recurse(ptr + 1, pattern.call(placeholders), instance.call(placeholders), placeholders.concat(params));
 			} else if (selector[ptr] == 'f') {
 				if (ptr != selector.length - 1) {
-					throw Node.error(`Cannot dereference @${selector}: invalid selector`, trace);
+					throw Node.error(`Cannot dereference @${selector} (at ${ptr}): invalid selector`, trace);
 				}
 
 				// (($0, $1) => f($0, $1)) -> f
@@ -399,7 +400,7 @@ ${as.expandMeta(true)}
 				}, trace);
 			}
 
-			throw Node.error(`Cannot dereference @${selector}: invalid selector`, trace);
+			throw Node.error(`Cannot dereference @${selector} (at ${ptr}): invalid selector`, trace);
 		})(1, pattern, instance, []);
 	}
 

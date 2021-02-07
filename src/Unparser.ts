@@ -239,7 +239,11 @@ function recurseInternal(
 				args: Expr0Object[];
 				location: LocationObject;
 			} */
-			return `${recurse(line.schema, Context.CALLEE, 0)}(${
+			var brackets = ['var'].includes(line.schema._type)
+				? ['', '']
+				: ['(', ')'];
+
+			return `${brackets[0]}${recurse(line.schema, Context.CALLEE, 0)}${brackets[1]}(${
 				line.args.map(arg => recurse(arg, Context.NORMAL, 0)).join(', ')
 			})`;
 		case 'with':

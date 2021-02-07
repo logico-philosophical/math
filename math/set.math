@@ -656,8 +656,8 @@ theorem Xin_e($A$ cls a: @11, st p: @r) {
 }
 
 theorem mpXin_alt($A$ cls a: @11, pr f: @12, st p: @r) {
-	Xin(a, f), Uin(a, If(f, (cls z) => p)) |- {
-		[@h1; @h2] > mpXin as Xin(a, (cls z) => p) > Xin_e(a, p)
+	Xin(a, f), Uin(a, (cls x) => I(f(x), p)) |- {
+		[@h1; @h2] > mpXin as Xin(a, (cls x) => p) > Xin_e(a, p)
 	}
 }
 
@@ -676,7 +676,7 @@ theorem Xin2e($A$ cls a: @11, $B$ cls b: @12, st p: @r) {
 }
 
 theorem mpXin2_alt($A$ cls a: @11, $B$ cls b: @12, pr2 f: @13, st p: @r) {
-	Xin2(a, b, f), Uin2(a, b, If2(f, (cls x, cls y) => p)) |- {
+	Xin2(a, b, f), Uin2(a, b, (cls x, cls y) => I(f(x, y), p)) |- {
 		[@h1; @h2] > mpXin2 as Xin2(a, b, (cls x, cls y) => p) > Xin2e(a, b, p)
 	}
 }
@@ -696,7 +696,7 @@ theorem Xin3e($A$ cls a: @11, $B$ cls b: @12, $C$ cls c: @13, st p: @r) {
 }
 
 theorem mpXin3_alt($A$ cls a: @11, $B$ cls b: @12, $C$ cls c: @13, pr3 f: @14, st p: @r) {
-	Xin3(a, b, c, f), Uin3(a, b, c, If3(f, (cls x, cls y, cls z) => p)) |- {
+	Xin3(a, b, c, f), Uin3(a, b, c, (cls x, cls y, cls z) => I(f(x, y, z), p)) |- {
 		[@h1; @h2] > mpXin3 as Xin3(a, b, c, (cls x, cls y, cls z) => p) > Xin3e(a, b, c, p)
 	}
 }
@@ -716,7 +716,7 @@ theorem Xin4e($A$ cls a: @11, $B$ cls b: @12, $C$ cls c: @13, $D$ cls d: @14, st
 }
 
 theorem mpXin4_alt($A$ cls a: @11, $B$ cls b: @12, $C$ cls c: @13, $D$ cls d: @14, pr4 f: @15, st p: @r) {
-	Xin4(a, b, c, d, f), Uin4(a, b, c, d, If4(f, (cls x, cls y, cls z, cls w) => p)) |- {
+	Xin4(a, b, c, d, f), Uin4(a, b, c, d, (cls x, cls y, cls z, cls w) => I(f(x, y, z, w), p)) |- {
 		[@h1; @h2] > mpXin4 as Xin4(a, b, c, d, (cls x, cls y, cls z, cls w) => p) > Xin4e(a, b, c, d, p)
 	}
 }

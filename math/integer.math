@@ -105,6 +105,38 @@ theorem rel_omega_pair_is_reflexive() {
 	} > Ui as rel_reflexive(rel_omega_pair, cartesian(omega, omega))
 }
 
+theorem rel_omega_pair_is_symmetric() {
+	(cls x, cls y) => {
+		in(x, cartesian(omega, omega)), in(y, cartesian(omega, omega)) |- {
+			with ([(cls, cls) -> pr4] predicate = (cls x, cls y) => {
+				(cls a, cls b, $a'$ cls ap, $b'$ cls bp) => A(
+					A(eq(x, pair(a, b)), eq(y, pair(ap, bp))),
+					eq(omega_add(a, bp), omega_add(ap, b))
+				)
+			}) {
+				rel_call(rel_omega_pair, x, y) |- {
+					$X = @h3 > setbuilder_pair_e as Xin4(omega, omega, omega, omega, predicate(x, y));
+
+					$U = (cls a, cls b, $a'$ cls ap, $b'$ cls bp) => {
+						/* @h4 */ in(a, omega), in(b, omega), in(ap, omega), in(bp, omega) |- {
+							/* @h8 */ (predicate(x, y))(a, b, ap, bp) |- {
+								[
+									@h6; @h7; @h4; @h5;
+									[@h8 > Ae1 > A_flip; @h8 > Ae2 > eq_symmetric] > Ai
+								] > Xin4i as Xin4(omega, omega, omega, omega, predicate(y, x))
+							} > cp
+						}
+					} > Uin4i;
+
+					$f = [$X; $U] > mpXin4_alt as Xin4(omega, omega, omega, omega, predicate(y, x));
+
+					[[@h2 > is_set_i; @h1 > is_set_i] > pair_set_i; $f] > setbuilder_pair_i as rel_call(rel_omega_pair, y, x)
+				} > cp
+			}
+		}
+	} > Uin2i as rel_symmetric(rel_omega_pair, cartesian(omega, omega))
+}
+
 theorem rel_omega_pair_e(cls a: @11, cls b: @21, $a'$ cls ap: @31, $b'$ cls bp: @41) {
 	in(a, omega), in(b, omega), in(ap, omega), in(bp, omega),
 	rel_call(rel_omega_pair, pair(a, b), pair(ap, bp)) |- {
