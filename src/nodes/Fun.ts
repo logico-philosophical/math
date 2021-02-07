@@ -54,6 +54,13 @@ export default abstract class Fun extends Expr0 implements Nameable {
 		this.expr = expr;
 	}
 
+	/**
+	 * 매개변수의 개수.
+	 */
+	get length(): number {
+		return this.params.length;
+	}
+
 	protected isProvedInternal(hypotheses: Metaexpr[]): boolean {
 		return this.expr && this.expr.isProved(hypotheses);
 	}

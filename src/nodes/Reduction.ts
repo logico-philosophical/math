@@ -10,6 +10,8 @@ import MetaType from './MetaType';
 import { isNameable } from './Nameable';
 import Node, { Precedence } from './Node';
 import ObjectType from './ObjectType';
+import Parameter from './Parameter';
+import Schema from './Schema';
 import Tee from './Tee';
 import Variable from './Variable';
 
@@ -266,88 +268,139 @@ ${as.expandMeta(true)}
 
 	public static guess(
 			selector: string,
-			left: Metaexpr[], antecedents: Metaexpr[],
+			requiredAntecedents: Metaexpr[], antecedents: Metaexpr[],
 			right: Metaexpr, as: Metaexpr,
 			context: ExecutionContext, trace: StackTrace): Metaexpr {
 		
 		if (selector.length == 0) throw Node.error('wut', trace);
 
-		var parameter: Metaexpr, argument: Metaexpr;
+		var pattern: Metaexpr, instance: Metaexpr;
 
 		if (selector[0] == 'r') {
 			if (!as) {
 				throw Node.error(`Cannot dereference @${selector}: expected output is not given`, trace);
 			}
 
-			parameter = right;
-			argument = as;
+			pattern = right;
+			instance = as;
 		} else {
 			var n = Number(selector[0]);
 
 			if (!(1 <= n && n <= antecedents.length))
 				throw Node.error(`Cannot dereference @${selector}: antecedent index out of range`, trace);
 
-			parameter = left[n - 1];
-			argument = antecedents[n - 1];
+			pattern = requiredAntecedents[n - 1];
+			instance = antecedents[n - 1];
 		}
 
 		return (function recurse(
 				ptr: number,
-				parameter: Metaexpr, argument: Metaexpr): Metaexpr {
+				pattern: Metaexpr, instance: Metaexpr,
+				params: Parameter[]): Metaexpr {
 			
-			argument = argument.expandMeta(true);
+			instance = instance.expandMeta(true);
 			
-			if (selector.length <= ptr) return argument;
+			if (selector.length <= ptr) return instance;
 
 			if (/^[0-9]$/.test(selector[ptr])) {
 				var n = Number(selector[ptr]);
 
-				if (parameter instanceof Tee && argument instanceof Tee) {
-					if (parameter.left.length != argument.left.length) {
+				if (pattern instanceof Tee && instance instanceof Tee) {
+					if (pattern.left.length != instance.left.length) {
 						throw Node.error(`Cannot dereference @${selector}: antecedent length mismatch`, trace);
 					}
 
-					if (!(1 <= n && n <= argument.left.length)) {
+					if (!(1 <= n && n <= instance.left.length)) {
 						throw Node.error(`Cannot dereference @${selector}: antecedent index out of range`, trace);
 					}
 
-					return recurse(ptr + 1, parameter.left[n - 1], argument.left[n - 1]);
+					return recurse(ptr + 1, pattern.left[n - 1], instance.left[n - 1], params);
 				}
 
 				while (true) {
-					while (argument instanceof Variable && argument.expr) {
-						argument = argument.expr;
+					while (instance instanceof Variable && instance.expr) {
+						instance = instance.expr;
 					}
 
-					if (!(parameter instanceof Funcall && argument instanceof Funcall)) {
+					if (!(pattern instanceof Funcall && instance instanceof Funcall)) {
 						throw Node.error(`Cannot dereference @${selector}`, trace);
 					}
 
-					if (parameter.fun.equals(argument.fun, context)) {
+					if (pattern.fun.equals(instance.fun, context)) {
 						break;
 					}
 
-					if (!argument.isExpandable(context)) {
+					if (!instance.isExpandable(context)) {
 						throw Node.error(`Cannot dereference @${selector}`, trace);
 					}
 
-					argument = argument.expandOnce(context).expanded;
+					instance = instance.expandOnce(context).expanded;
 				}
 
-				if (!(1 <= n && n <= argument.args.length))
+				if (!(1 <= n && n <= instance.args.length))
 					throw Node.error(`Cannot dereference @${selector}`, trace);
 
-				return recurse(ptr + 1, parameter.args[n - 1], argument.args[n - 1]);
+				return recurse(ptr + 1, pattern.args[n - 1], instance.args[n - 1], params);
 			} else if (selector[ptr] == 'r') {
-				if (parameter instanceof Tee && argument instanceof Tee) {
-					return recurse(ptr + 1, parameter.right, argument.right);
+				if (!(pattern instanceof Tee && instance instanceof Tee)) {
+					throw Node.error(`Cannot dereference @${selector}`, trace);
 				}
 
-				throw Node.error(`Cannot dereference @${selector}`, trace);
+				return recurse(ptr + 1, pattern.right, instance.right, params);
+			} else if (selector[ptr] == 'c') {
+				if (!(
+					pattern instanceof Fun && !pattern.name
+					&& instance instanceof Fun && !instance.name
+				)) {
+					throw Node.error(`Cannot dereference @${selector}`, trace);
+				}
+
+				if (pattern.length != instance.length) {
+					throw Node.error(`Cannot dereference @${selector}: parameter length mismatch`, trace);
+				}
+
+				var placeholders = [];
+
+				for (var i = 0; i < pattern.length; i++) {
+					if (!pattern.params[i].type.equals(instance.params[i].type)) {
+						throw Node.error(`Cannot dereference @${selector}: parameter type mismatch`, trace);
+					}
+
+					placeholders.push(new Parameter({
+						type: pattern.params[i].type,
+						name: instance.params[i].name,
+						selector: null
+					}, trace));
+				}
+
+				return recurse(ptr + 1, pattern.call(placeholders), instance.call(placeholders), placeholders.concat(params));
+			} else if (selector[ptr] == 'f') {
+				if (ptr != selector.length - 1) {
+					throw Node.error(`Cannot dereference @${selector}: invalid selector`, trace);
+				}
+
+				// (($0, $1) => f($0, $1)) -> f
+				if (instance instanceof Funcall
+						&& instance.args.length == params.length
+						&& instance.args.every((arg, i) => arg == params[i])) {
+					return instance.fun;
+				}
+
+				return new Schema({
+					doc: null,
+					tex: null,
+					annotations: [],
+					schemaType: 'schema',
+					name: null,
+					params,
+					context: new ExecutionContext(),
+					def$s: [],
+					expr: instance
+				}, trace);
 			}
 
-			throw Node.error(`Cannot dereference @${selector}`, trace);
-		})(1, parameter, argument);
+			throw Node.error(`Cannot dereference @${selector}: invalid selector`, trace);
+		})(1, pattern, instance, []);
 	}
 
 	public toIndentedString(indent: number, root?: boolean): string {
