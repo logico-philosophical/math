@@ -547,7 +547,7 @@ st rel_symmetric($\sim$ cls r, $A$ cls a) {
 
 theorem rel_symmetric_m($\sim$ cls r: @11, $A$ cls a: @12, cls x: @21, cls y: @31) {
 	rel_symmetric(r, a), in(x, a), in(y, a), rel_call(r, x, y) |- {
-		[@h4; [@h1; @h2; @h3] > Uin2_e] > mp
+		[@h4; [@h1; @h2; @h3] > Uin2e] > mp
 	}
 }
 
@@ -639,7 +639,7 @@ theorem equiv_cls_eq_i($\sim$ cls r: @11, $A$ cls a: @12, cls x: @21, cls y: @31
 				$transitive = [
 					@h1 > equiv_rel_is_transitive;
 					$z_in_a; @h2; @h3
-				] > Uin3_e;
+				] > Uin3e;
 
 				[
 					$z_in_a;

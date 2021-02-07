@@ -340,21 +340,71 @@ st Uin4($A$ cls a, $B$ cls b, $C$ cls c, $D$ cls d, pr4 f) {
 	Uin(a, (cls x) => Uin(b, (cls y) => Uin(c, (cls z) => Uin(d, (cls w) => f(x, y, z, w)))))
 }
 
+theorem Uin_i($A$ cls a: @1c12, pr f: @1crf) {
+	(cls x) => { in(x, a) |- f(x) } |- {
+		(cls x) => {
+			@h1(x) > cp
+		} > Ui as Uin(a, f)
+	}
+}
+
 theorem Uin_e($A$ cls a: @11, pr f: @12, cls x: @21) {
 	Uin(a, f), in(x, a) |- {
 		[@h2; @h1 > Ue(?, x)] > mp
 	}
 }
 
-theorem Uin2_e($A$ cls a: @11, $B$ cls b: @12, pr2 f: @13, cls x: @21, cls y: @31) {
+theorem Uin2i($A$ cls a: @1c12, $B$ cls b: @1c22, pr2 f: @1crf) {
+	(cls x, cls y) => { in(x, a), in(y, b) |- f(x, y) } |- {
+		(cls x) => {
+			in(x, a) |- {
+				(cls y) => {
+					in(y, b) |- {
+						[@h2; @h3] > @h1(x, y)
+					}
+				} > Uin_i
+			}
+		} > Uin_i as Uin2(a, b, f)
+	}
+}
+
+theorem Uin2e($A$ cls a: @11, $B$ cls b: @12, pr2 f: @13, cls x: @21, cls y: @31) {
 	Uin2(a, b, f), in(x, a), in(y, b) |- {
 		[@h3; [@h2; @h1 > Ue(?, x)] > mp > Ue(?, y)] > mp
 	}
 }
 
-theorem Uin3_e($A$ cls a: @11, $B$ cls b: @12, $C$ cls c: @13, pr3 f: @14, cls x: @21, cls y: @31, cls z: @41) {
+theorem Uin3i($A$ cls a: @1c12, $B$ cls b: @1c22, $C$ cls c: @1c32, pr3 f: @1crf) {
+	(cls x, cls y, cls z) => { in(x, a), in(y, b), in(z, c) |- f(x, y, z) } |- {
+		(cls x) => {
+			in(x, a) |- {
+				(cls y, cls z) => {
+					in(y, b), in(z, c) |- {
+						[@h2; @h3; @h4] > @h1(x, y, z)
+					}
+				} > Uin2i
+			}
+		} > Uin_i as Uin3(a, b, c, f)
+	}
+}
+
+theorem Uin3e($A$ cls a: @11, $B$ cls b: @12, $C$ cls c: @13, pr3 f: @14, cls x: @21, cls y: @31, cls z: @41) {
 	Uin3(a, b, c, f), in(x, a), in(y, b), in(z, c) |- {
 		[@h4; [@h3; [@h2; @h1 > Ue(?, x)] > mp > Ue(?, y)] > mp > Ue(?, z)] > mp
+	}
+}
+
+theorem Uin4i($A$ cls a: @1c12, $B$ cls b: @1c22, $C$ cls c: @1c32, $D$ cls d: @1c42, pr4 f: @1crf) {
+	(cls x, cls y, cls z, cls w) => { in(x, a), in(y, b), in(z, c), in(w, d) |- f(x, y, z, w) } |- {
+		(cls x) => {
+			in(x, a) |- {
+				(cls y, cls z, cls w) => {
+					in(y, b), in(z, c), in(w, d) |- {
+						[@h2; @h3; @h4; @h5] > @h1(x, y, z, w)
+					}
+				} > Uin3i
+			}
+		} > Uin_i as Uin4(a, b, c, d, f)
 	}
 }
 
