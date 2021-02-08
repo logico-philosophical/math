@@ -17,7 +17,7 @@
 <pre><code>"[$1+1=2]이다."
 <b>theorem</b> one_plus_one_is_two() {
     one_in_omega()
-    &gt; omega_add_one(ord_one) <b>as</b> eq(omega_add(ord_one, ord_one), ord_two)
+    &gt; omega_add_one(omega_one) <b>as</b> eq(omega_add(omega_one, omega_one), omega_two)
 }</code></pre>
 
 The above code produces&hellip;

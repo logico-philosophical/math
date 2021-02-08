@@ -27,15 +27,15 @@ theorem self_in_successor(cls x: @11) {
 
 "순서수(ordinal number)로서의 0."
 $0_\omega$
-cls ord_zero = emptyset;
+cls omega_zero = emptyset;
 
 "순서수(ordinal number)로서의 1. 0의 따름 순서수이다."
 $1_\omega$
-cls ord_one = successor(ord_zero);
+cls omega_one = successor(omega_zero);
 
 "순서수(ordinal number)로서의 2. 1의 따름 순서수이다."
 $2_\omega$
-cls ord_two = successor(ord_one);
+cls omega_two = successor(omega_one);
 
 "따름 순서수는 집합이다."
 theorem successor_is_set(cls x: @11) {
@@ -71,7 +71,7 @@ theorem zero_in_omega() {
 				@h1 > setbuilder_e > Ae1
 			} > cp
 		} > Ui
-	] > bigcap_i(setbuilder((cls z) => is_successor_set(z)), ord_zero) as in(ord_zero, omega)
+	] > bigcap_i(setbuilder((cls z) => is_successor_set(z)), omega_zero) as in(omega_zero, omega)
 }
 
 "`[Pinter]`에 따르면 페아노 공리계 제2공리인 것."
@@ -96,7 +96,7 @@ theorem successor_in_omega(cls z: @11) {
 
 theorem one_in_omega() {
 	zero_in_omega()
-	> successor_in_omega as in(ord_one, omega)
+	> successor_in_omega as in(omega_one, omega)
 }
 
 "[$\omega]는 successor set이다."
@@ -124,7 +124,7 @@ theorem omega_is_set() {
 
 "`[Pinter]` 정리 6.3."
 theorem induce_set($X$ cls x: @11) {
-	subseteq(x, omega), in(ord_zero, x),
+	subseteq(x, omega), in(omega_zero, x),
 	Uin(omega, (cls n) => I(in(n, x), in(successor(n), x))) |- {
 		$x_is_successor_set = [
 			@h2;
@@ -165,12 +165,12 @@ theorem induce(pr f) {
 		}
 	};
 
-	f(ord_zero), Uin(omega, (cls n) => I(f(n), f(successor(n)))) |- {
+	f(omega_zero), Uin(omega, (cls n) => I(f(n), f(successor(n)))) |- {
 		$c1 = subsetbuilder_is_subset(omega, f);
 
 		$c2 = [
 			@h1;
-			zero_in_omega() > $foo(ord_zero)
+			zero_in_omega() > $foo(omega_zero)
 		] > mpE1;
 
 		$c3 = (cls n) => {
@@ -203,7 +203,7 @@ theorem induce(pr f) {
 
 "induce_set의 더 강력한 버전."
 theorem induce_set_strong($X$ cls x: @12) {
-	in(ord_zero, x), Uin(omega, (cls n) => I(in(n, x), in(successor(n), x))) |- {
+	in(omega_zero, x), Uin(omega, (cls n) => I(in(n, x), in(successor(n), x))) |- {
 		[@h1; @h2] > induce(is_in(x)) as subseteq(omega, x)
 	}
 }
@@ -211,23 +211,23 @@ theorem induce_set_strong($X$ cls x: @12) {
 "`[Pinter]`에 따르면 페아노 공리계 제3공리인 것."
 theorem successor_is_not_zero(cls n: @11) {
 	in(n, omega) |- {
-		eq(successor(n), ord_zero) |- {
+		eq(successor(n), omega_zero) |- {
 			[
 				[
 					@h1 > is_set_i > self_in_successor;
 					@h2
 				] > in_eq;
-				emptyset_def(n) > id(Nin(n, ord_zero))
+				emptyset_def(n) > id(Nin(n, omega_zero))
 			] > Fi
-		} > Nim as Neq(successor(n), ord_zero)
+		} > Nim as Neq(successor(n), omega_zero)
 	}
 }
 
 "`[Pinter]` 보조정리 6.6."
 theorem omega_in_to_subseteq(cls n: @11, cls m: @21) {
 	$base = (cls m) => {
-		in(m, ord_zero) |- {
-			N(subseteq(m, ord_zero)) |- {
+		in(m, omega_zero) |- {
+			N(subseteq(m, omega_zero)) |- {
 				[@h1; emptyset_def(m)] > Fi
 			} > Nim_alt
 		} > cp
@@ -341,16 +341,16 @@ theorem successor_eq_e(cls n: @11, cls m: @21) {
 }
 
 st is_recursively_defined($\gamma$ cls g, $A$ cls a, cls c, cls f) {
-	A(is_fun(g, omega, a), A(eq(funcall(g, ord_zero), c), Uin(omega, (cls n) => eq(funcall(g, successor(n)), funcall(f, funcall(g, n))))))
+	A(is_fun(g, omega, a), A(eq(funcall(g, omega_zero), c), Uin(omega, (cls n) => eq(funcall(g, successor(n)), funcall(f, funcall(g, n))))))
 }
 
 st is_recursively_defined_m($\gamma$ cls g, $A$ cls a, cls c, fun f) {
-	A(is_fun(g, omega, a), A(eq(funcall(g, ord_zero), c), Uin(omega, (cls n) => eq(funcall(g, successor(n)), f(funcall(g, n))))))
+	A(is_fun(g, omega, a), A(eq(funcall(g, omega_zero), c), Uin(omega, (cls n) => eq(funcall(g, successor(n)), f(funcall(g, n))))))
 }
 
 "재귀정리의 증명에 사용되는 술어."
 st is_recursive_supset($G$ cls g, $A$ cls a, cls c, cls f) {
-	A(subseteq(g, cartesian(omega, a)), A(in(pair(ord_zero, c), g), Uin(omega, (cls n) => {
+	A(subseteq(g, cartesian(omega, a)), A(in(pair(omega_zero, c), g), Uin(omega, (cls n) => {
 		Uin(a, (cls x) => I(in(pair(n, x), g), in(pair(successor(n), funcall(f, x)), g)))
 	})))
 }
@@ -428,7 +428,7 @@ theorem recursion_theorem_2($A$ cls a: @12, cls c: @11, cls f) using define_recu
 					@h2 > Ae2 > Ae1
 				} > cp
 			} > Ui
-		] > bigcap3_i as in(pair(ord_zero, c), define_recursively(a, c, f))
+		] > bigcap3_i as in(pair(omega_zero, c), define_recursively(a, c, f))
 	}
 }
 
@@ -478,8 +478,8 @@ theorem recursion_theorem_4($A$ cls a: @12, cls c: @11, cls f: @21) {
 		with ($\gamma$ cls g = define_recursively(a, c, f)) {
 			$base = [
 				@h1;
-				@h1 > recursion_theorem_2(a, c, f) as in(pair(ord_zero, c), g)
-			] > Ai > Xi((cls x) => A(in(x, a), in(pair(ord_zero, x), g)), c) as Xin(a, (cls x) => in(pair(ord_zero, x), g));
+				@h1 > recursion_theorem_2(a, c, f) as in(pair(omega_zero, c), g)
+			] > Ai > Xi((cls x) => A(in(x, a), in(pair(omega_zero, x), g)), c) as Xin(a, (cls x) => in(pair(omega_zero, x), g));
 
 			$step = (cls n) => {
 				in(n, omega) |- {
@@ -522,16 +522,16 @@ theorem recursion_theorem_5_base($A$ cls a: @12, cls c: @11, cls f: @21) using d
 	in(c, a), is_fun(f, a, a) |- {
 		with ($\gamma$ cls g = define_recursively(a, c, f)) {
 			(cls d) => {
-				in(pair(ord_zero, d), g) |- {
+				in(pair(omega_zero, d), g) |- {
 					Neq(d, c) |- {
 						$c1 = [
-							setminus_is_smaller(g, singleton(pair(ord_zero, d)));
+							setminus_is_smaller(g, singleton(pair(omega_zero, d)));
 							[@h1; @h2] > recursion_theorem_1 as subseteq(g, cartesian(omega, a))
 						] > subseteq_subseteq;
 
 						$c2 = [
-							@h1 > recursion_theorem_2(a, c, f) as in(pair(ord_zero, c), g);
-							in(pair(ord_zero, c), singleton(pair(ord_zero, d))) |- {
+							@h1 > recursion_theorem_2(a, c, f) as in(pair(omega_zero, c), g);
+							in(pair(omega_zero, c), singleton(pair(omega_zero, d))) |- {
 								[
 									[
 										ax_emptyset();
@@ -552,10 +552,10 @@ theorem recursion_theorem_5_base($A$ cls a: @12, cls c: @11, cls f: @21) using d
 							in(n, omega) |- {
 								(cls x) => {
 									in(x, a) |- {
-										in(pair(n, x), setminus(g, singleton(pair(ord_zero, d)))) |- {
+										in(pair(n, x), setminus(g, singleton(pair(omega_zero, d)))) |- {
 											[
 												[
-													[@h7; setminus_is_smaller(g, singleton(pair(ord_zero, d)))] > in_subseteq;
+													[@h7; setminus_is_smaller(g, singleton(pair(omega_zero, d)))] > in_subseteq;
 													[
 														@h6;
 														[
@@ -566,7 +566,7 @@ theorem recursion_theorem_5_base($A$ cls a: @12, cls c: @11, cls f: @21) using d
 														] > mp > Ue(?, x)
 													] > mp
 												] > mp;
-												in(pair(successor(n), funcall(f, x)), singleton(pair(ord_zero, d))) |- {
+												in(pair(successor(n), funcall(f, x)), singleton(pair(omega_zero, d))) |- {
 													[
 														[
 															@h3 > is_set_i;
@@ -588,7 +588,7 @@ theorem recursion_theorem_5_base($A$ cls a: @12, cls c: @11, cls f: @21) using d
 						$gamma_is_smaller = [
 							$c1;
 							[$c2; $c3] > Ai
-						] > Ai as is_recursive_supset(setminus(define_recursively(a, c, f), singleton(pair(ord_zero, d))), a, c, f) > bigcap3_is_smaller(?, ?, setminus(define_recursively(a, c, f), singleton(pair(ord_zero, d)))) as subseteq(define_recursively(a, c, f), setminus(define_recursively(a, c, f), singleton(pair(ord_zero, d))));
+						] > Ai as is_recursive_supset(setminus(define_recursively(a, c, f), singleton(pair(omega_zero, d))), a, c, f) > bigcap3_is_smaller(?, ?, setminus(define_recursively(a, c, f), singleton(pair(omega_zero, d)))) as subseteq(define_recursively(a, c, f), setminus(define_recursively(a, c, f), singleton(pair(omega_zero, d))));
 
 						[
 							@h3 > is_set_i > self_in_singleton;
@@ -596,7 +596,7 @@ theorem recursion_theorem_5_base($A$ cls a: @12, cls c: @11, cls f: @21) using d
 						] > Fi
 					} > Nim_alt
 				} > cp
-			} > Ui > Qim((cls x) => in(pair(ord_zero, x), g), c)
+			} > Ui > Qim((cls x) => in(pair(omega_zero, x), g), c)
 		}
 	}
 }
@@ -625,8 +625,8 @@ theorem recursion_theorem_5_step($A$ cls a: @12, cls c: @11, cls f: @21) using d
 													] > subseteq_subseteq;
 
 													$c2 = [
-														@h1 > recursion_theorem_2(a, c, f) as in(pair(ord_zero, c), g);
-														in(pair(ord_zero, c), singleton(pair(successor(n), u))) |- {
+														@h1 > recursion_theorem_2(a, c, f) as in(pair(omega_zero, c), g);
+														in(pair(omega_zero, c), singleton(pair(successor(n), u))) |- {
 															[
 																[
 																	@h7 > is_set_i;
@@ -786,7 +786,7 @@ theorem recursion_theorem_7($A$ cls a: @12, cls c: @11, cls f: @21) {
 
 			$c2 = [
 				$c1;
-				@h1 > recursion_theorem_2(a, c, f) as in(pair(ord_zero, c), g)
+				@h1 > recursion_theorem_2(a, c, f) as in(pair(omega_zero, c), g)
 			] > funcall_i > eq_symmetric;
 
 			$c3 = (cls n) => {
@@ -1001,7 +1001,7 @@ theorem omega_add_in_omega(cls m: @11, cls n: @21) {
 "`[Pinter]` 6.10의 1."
 theorem omega_add_base(cls n: @11) {
 	in(n, omega) |- {
-		@h1 > omega_add_unary_ird(n) > Ae2 > Ae1 as eq(omega_add(n, ord_zero), n)
+		@h1 > omega_add_unary_ird(n) > Ae2 > Ae1 as eq(omega_add(n, omega_zero), n)
 	}
 }
 
@@ -1019,8 +1019,8 @@ theorem omega_add_base_alt(cls n: @11) {
 	in(n, omega) |- {
 		$zio = zero_in_omega();
 		
-		with (pr predicate = (cls m) => eq(omega_add(ord_zero, m), m)) {
-			$base = $zio > omega_add_base(ord_zero) as predicate(ord_zero);
+		with (pr predicate = (cls m) => eq(omega_add(omega_zero, m), m)) {
+			$base = $zio > omega_add_base(omega_zero) as predicate(omega_zero);
 
 			$step = (cls m) => {
 				in(m, omega) |- {
@@ -1044,7 +1044,7 @@ theorem omega_add_step_alt(cls m: @11, cls n: @21) {
 			$base = [
 				@h1 > successor_in_omega > omega_add_base;
 				@h1 > omega_add_base > successor_eq_i > eq_symmetric
-			] > eq_transitive as predicate(ord_zero);
+			] > eq_transitive as predicate(omega_zero);
 			
 			$step = ($n'$ cls np) => {
 				in(np, omega) |- {
@@ -1071,7 +1071,7 @@ theorem omega_add_commutative(cls m: @11, cls n: @21) {
 			$base = [
 				@h1 > omega_add_base;
 				@h1 > omega_add_base_alt > eq_symmetric
-			] > eq_transitive as predicate(ord_zero);
+			] > eq_transitive as predicate(omega_zero);
 			
 			$step = ($n'$ cls np) => {
 				in(np, omega) |- {
@@ -1103,7 +1103,7 @@ theorem omega_add_associative(cls l: @11, cls m: @21, cls n: @31) {
 			$base = [
 				$l_plus_m_in_omega > omega_add_base;
 				@h2 > omega_add_base > omega_add_eq_i_left(l, ?, ?) > eq_symmetric
-			] > eq_transitive as predicate(ord_zero);
+			] > eq_transitive as predicate(omega_zero);
 			
 			$step = (cls k) => {
 				in(k, omega) |- {
@@ -1153,14 +1153,14 @@ theorem omega_add_one(cls n: @11) {
 		[
 			[@h1; zero_in_omega()] > omega_add_step;
 			@h1 > omega_add_base > successor_eq_i
-		] > eq_transitive as eq(omega_add(n, ord_one), successor(n))
+		] > eq_transitive as eq(omega_add(n, omega_one), successor(n))
 	}
 }
 
 "[$1+1=2]이다."
 theorem one_plus_one_is_two() {
 	one_in_omega()
-	> omega_add_one(ord_one) as eq(omega_add(ord_one, ord_one), ord_two)
+	> omega_add_one(omega_one) as eq(omega_add(omega_one, omega_one), omega_two)
 }
 
 "자연수를 곱하는 연산. 단항연산이다.
@@ -1168,7 +1168,7 @@ theorem one_plus_one_is_two() {
 [$n\times 0 = 0] 및 [$n\times m^+ = n + n\times m]으로 재귀적으로 정의된다."
 $\left(#1<<\times_\omega>>\cdot\right)$
 cls omega_mul_unary(cls n) {
-	define_recursively_m(omega, ord_zero, ($\gamma$ cls g) => omega_add(n, g))
+	define_recursively_m(omega, omega_zero, ($\gamma$ cls g) => omega_add(n, g))
 }
 
 "자연수 곱셈."
@@ -1266,7 +1266,7 @@ theorem fun_iterated_base(cls f: @11, $A$ cls a: @12, cls x: @21) using fun_iter
 	is_fun(f, a, a), in(x, a) |- {
 		[
 			[@h1; zero_in_omega(); @h2] > fun_iterated_def;
-			[@h1; @h2] > fun_iterated_ird(f, a, x) > Ae2 > Ae1 as eq(fun_iterated_call(f, ord_zero, x), x)
+			[@h1; @h2] > fun_iterated_ird(f, a, x) > Ae2 > Ae1 as eq(fun_iterated_call(f, omega_zero, x), x)
 		] > eq_transitive
 	}
 }
@@ -1322,7 +1322,7 @@ theorem fun_iterated_one(cls f: @11, $A$ cls a: @12, cls x: @21) {
 		$one = [@h1; zero_in_omega(); @h2] > fun_iterated_step;
 		
 		[$one; $zero] > eq_transitive as eq(
-			funcall(fun_iterated(f, ord_one), x),
+			funcall(fun_iterated(f, omega_one), x),
 			funcall(f, x)
 		)
 	}
@@ -1336,7 +1336,7 @@ theorem fun_iterated_one_alt(cls f: @11, $A$ cls a: @12) {
 				$one = [@h1; zero_in_omega(); @h2] > fun_iterated_step;
 
 				[$one; $zero] > eq_transitive as eq(
-					funcall(fun_iterated(f, ord_one), x),
+					funcall(fun_iterated(f, omega_one), x),
 					funcall(f, x)
 				)
 			} > cp
@@ -1355,11 +1355,11 @@ theorem fun_iterated_im_base(cls f: @11, $A$ cls a: @12, $B$ cls b: @21) {
 		$f0_is_fun = [@h1; zero_in_omega()] > fun_iterated_is_fun;
 
 		$foo = (cls y) => {
-			$c1 = in(y, rel_im_set(fun_iterated(f, ord_zero), b)) |- {
+			$c1 = in(y, rel_im_set(fun_iterated(f, omega_zero), b)) |- {
 				$xy_in_f0 = @h3 > setbuilder_e;
 
 				$U = (cls x) => {
-					in(x, b), in(pair(x, y), fun_iterated(f, ord_zero)) |- {
+					in(x, b), in(pair(x, y), fun_iterated(f, omega_zero)) |- {
 						$x_in_a = [@h4; @h2] > in_subseteq;
 
 						$y_is_x = [
@@ -1390,14 +1390,14 @@ theorem fun_iterated_im_base(cls f: @11, $A$ cls a: @12, $B$ cls b: @21) {
 
 				[
 					@h3 > is_set_i;
-					[@h3; $yy_in_f0] > Ai > Xi((cls x) => A(in(x, b), in(pair(x, y), fun_iterated(f, ord_zero))), y)
-				] > setbuilder_i as in(y, rel_im_set(fun_iterated(f, ord_zero), b))
+					[@h3; $yy_in_f0] > Ai > Xi((cls x) => A(in(x, b), in(pair(x, y), fun_iterated(f, omega_zero))), y)
+				] > setbuilder_i as in(y, rel_im_set(fun_iterated(f, omega_zero), b))
 			} > cp;
 
 			[$c1; $c2] > Ei
 		} > Ui;
 
-		$foo > eq_i(rel_im_set(fun_iterated(f, ord_zero), b), b)
+		$foo > eq_i(rel_im_set(fun_iterated(f, omega_zero), b), b)
 	}
 }
 
@@ -1652,7 +1652,7 @@ theorem schroeder_bernstein_1($A$ cls a: @12, $B$ cls b: @13, cls f: @11, cls g:
 										fun_iterated(rel_composite(g, f), n),
 										setminus(a, rel_im(g))
 									)) |- {
-										$n_nz = eq(n, ord_zero) |- {
+										$n_nz = eq(n, omega_zero) |- {
 											$in = [@h6; @h5] > ax_indiscernible_m1((cls n) => in(x, rel_im_set(
 												fun_iterated(rel_composite(g, f), n),
 												setminus(a, rel_im(g))
@@ -1661,10 +1661,10 @@ theorem schroeder_bernstein_1($A$ cls a: @12, $B$ cls b: @13, cls f: @11, cls g:
 											$eq = [$gf_is_fun; setminus_is_smaller(a, rel_im(g))] > fun_iterated_im_base;
 
 											[$x_in_im_g; [$in; $eq] > in_eq > setminus_e2] > Fi
-										} > Nim as Neq(n, ord_zero);
+										} > Nim as Neq(n, omega_zero);
 
 										with (pr predicate = (cls m) => O(
-											eq(m, ord_zero),
+											eq(m, omega_zero),
 											subseteq(
 												rel_im_set(
 													fun_iterated(rel_composite(g, f), m),
@@ -1673,12 +1673,12 @@ theorem schroeder_bernstein_1($A$ cls a: @12, $B$ cls b: @13, cls f: @11, cls g:
 												rel_im_set(rel_composite(g, f), aa)
 											)
 										)) {
-											$base = eq_reflexive(ord_zero) > Oi1 as predicate(ord_zero);
+											$base = eq_reflexive(omega_zero) > Oi1 as predicate(omega_zero);
 
 											$step = (cls m) => {
 												in(m, omega) /* @h6 */ |- {
 													predicate(m) |- {
-														$c1 = eq(m, ord_zero) |- {
+														$c1 = eq(m, omega_zero) |- {
 															$subseteq = (cls x) => {
 																in(x, setminus(a, rel_im(g))) |- {
 																	$eq = [$gf_is_fun; setminus_is_smaller(a, rel_im(g))] > fun_iterated_im_base;
@@ -1694,7 +1694,7 @@ theorem schroeder_bernstein_1($A$ cls a: @12, $B$ cls b: @13, cls f: @11, cls g:
 
 															$subseteq2 = [$eq; $subseteq] > eq_subseteq;
 
-															$eq2 = @h8 > successor_eq_i as eq(successor(m), ord_one)
+															$eq2 = @h8 > successor_eq_i as eq(successor(m), omega_one)
 															> call_eq_i((cls m) => rel_im_set(
 																fun_iterated(rel_composite(g, f), m),
 																setminus(a, rel_im(g))
