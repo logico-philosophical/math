@@ -1203,6 +1203,27 @@ theorem omega_add_flip_inner(cls a: @11, cls b: @21, cls c: @31, cls d: @41) {
 	}
 }
 
+theorem omega_add_inner_to_right(cls a: @11, cls b: @21, cls c: @31, cls d: @41) {
+	in(a, omega), in(b, omega), in(c, omega), in(d, omega) |- {
+		[
+			[@h3; @h4] > omega_add_commutative > omega_add_eq_i_left(omega_add(a, b), ?, ?);
+			[@h1; @h2; @h4; @h3] > omega_add_flip_inner
+		] > eq_transitive
+	}
+}
+
+theorem omega_add_inner_to_left(cls a: @11, cls b: @21, cls c: @31, cls d: @41) {
+	in(a, omega), in(b, omega), in(c, omega), in(d, omega) |- {
+		[
+			[@h1; @h2; @h3; @h4] > omega_add_inner_to_right;
+			[
+				[@h1; @h4] > omega_add_in_omega;
+				[@h2; @h3] > omega_add_in_omega
+			] > omega_add_commutative
+		] > eq_transitive
+	}
+}
+
 theorem omega_add_one(cls n: @11) {
 	in(n, omega) |- {
 		[

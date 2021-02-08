@@ -587,6 +587,12 @@ st is_equiv_rel($\sim$ cls r, $A$ cls a) {
 	A(is_preorder(r, a), rel_symmetric(r, a))
 }
 
+theorem equiv_rel_i($\sim$ cls r: @11, $A$ cls a: @12) {
+	is_rel_over_set(r, a), rel_reflexive(r, a), rel_symmetric(r, a), rel_transitive(r, a) |- {
+		[[@h1; [@h2; @h4] > Ai] > Ai as is_preorder(r, a); @h3] > Ai as is_equiv_rel(r, a)
+	}
+}
+
 theorem equiv_rel_is_reflexive($\sim$ cls r: @11, $A$ cls a: @12) {
 	is_equiv_rel(r, a) |- {
 		@h1 > Ae1 > Ae2 > Ae1

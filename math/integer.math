@@ -137,6 +137,30 @@ theorem rel_omega_pair_is_symmetric() {
 	} > Uin2i as rel_symmetric(rel_omega_pair, cartesian(omega, omega))
 }
 
+theorem rel_omega_pair_i(cls a1: @11, cls b1: @21, cls a2: @31, cls b2: @41) {
+	in(a1, omega), in(b1, omega), in(a2, omega), in(b2, omega), eq(omega_add(a1, b2), omega_add(a2, b1)) |- {
+		with ([(cls, cls) -> pr4] predicate = (cls x, cls y) => {
+			(cls a, cls b, $a'$ cls ap, $b'$ cls bp) => A(
+				A(eq(x, pair(a, b)), eq(y, pair(ap, bp))),
+				eq(omega_add(a, bp), omega_add(ap, b))
+			)
+		}) {
+			$X = [
+				@h1; @h2; @h3; @h4;
+				[eq_reflexive(pair(a1, b1)); eq_reflexive(pair(a2, b2)); @h5] > A3i
+			] > Xin4i as Xin4(omega, omega, omega, omega, predicate(pair(a1, b1), pair(a2, b2)));
+			
+			[
+				[
+					[@h1 > is_set_i; @h2 > is_set_i] > pair_set_i;
+					[@h3 > is_set_i; @h4 > is_set_i] > pair_set_i
+				] > pair_set_i;
+				$X
+			] > setbuilder_pair_i as rel_call(rel_omega_pair, pair(a1, b1), pair(a2, b2))
+		}
+	}
+}
+
 theorem rel_omega_pair_e(cls a: @11, cls b: @21, $a'$ cls ap: @31, $b'$ cls bp: @41) {
 	in(a, omega), in(b, omega), in(ap, omega), in(bp, omega),
 	rel_call(rel_omega_pair, pair(a, b), pair(ap, bp)) |- {
@@ -194,6 +218,101 @@ theorem int_eq_e(cls a: @11, cls b: @21, $a'$ cls ap: @31, $b'$ cls bp: @41) {
 			@h5
 		] > equiv_cls_eq_e
 	}
+}
+
+theorem rel_omega_pair_is_transitive() {
+	(cls x, cls y, cls z) => {
+		in(x, cartesian(omega, omega)), in(y, cartesian(omega, omega)), in(z, cartesian(omega, omega)) |- {
+			with ([(cls, cls) -> pr4] predicate = (cls x, cls y) => {
+				(cls a, cls b, $a'$ cls ap, $b'$ cls bp) => A(
+					A(eq(x, pair(a, b)), eq(y, pair(ap, bp))),
+					eq(omega_add(a, bp), omega_add(ap, b))
+				)
+			}) {
+				/* @h4 */ rel_call(rel_omega_pair, x, y), rel_call(rel_omega_pair, y, z) |- {
+					$X = @h4 > setbuilder_pair_e as Xin4(omega, omega, omega, omega, (cls a1, cls b1, cls a2, cls b2) => (predicate(x, y))(a1, b1, a2, b2));
+
+					$U = (cls a1, cls b1, cls a2, cls b2) => {
+						/* @h6 */ in(a1, omega), in(b1, omega), in(a2, omega), in(b2, omega) |- {
+							/* @h10 */ (predicate(x, y))(a1, b1, a2, b2) |- {
+								$X = @h5 > setbuilder_pair_e as Xin4(omega, omega, omega, omega, ($a_2'$ cls a2p, $b_2'$ cls b2p, cls a3, cls b3) => (predicate(y, z))(a2p, b2p,a3, b3));
+
+								$U = ($a_2'$ cls a2p, $b_2'$ cls b2p, cls a3, cls b3) => {
+									/* @h11 */ in(a2p, omega), in(b2p, omega), in(a3, omega), in(b3, omega) |- {
+										/* @h15 */ (predicate(y, z))(a2p, b2p, a3, b3) |- {
+											$a1b2_is_a2b1 = @h10 > Ae2;
+											$foo1 = @h10 > Ae1;
+											$x_is_a1b1 = $foo1 > Ae1;
+											$y_is_a2b2 = $foo1 > Ae2;
+
+											$a2pb3_is_a3b2p = @h15 > Ae2;
+											$foo2 = @h15 > Ae1;
+											$y_is_a2pb2p = $foo2 > Ae1;
+											$z_is_a3b3 = $foo2 > Ae2;
+
+											$a2b2_is_a2pb2p = [$y_is_a2b2 > eq_symmetric; $y_is_a2pb2p] > eq_transitive;
+											$foo3 = [@h8 > is_set_i; @h9 > is_set_i; @h11 > is_set_i; @h12 > is_set_i; $a2b2_is_a2pb2p] > pair_eq_e;
+											$a2_is_a2p = $foo3 > Ae1;
+											$b2_is_b2p = $foo3 > Ae2;
+
+											$a2b3_is_a3b2 = [
+												$a2_is_a2p > omega_add_eq_i_right(?, ?, b3);
+												$a2pb3_is_a3b2p;
+												$b2_is_b2p > omega_add_eq_i_left(a3, ?, ?) > eq_symmetric
+											] > eq_transitive_3;
+
+											$foo4 = [
+												[@h8; @h9] > omega_add_commutative > omega_add_eq_i_left(omega_add(a1, b3), ?, ?);
+												[@h6; @h9; @h8; @h14] > omega_add_inner_to_right > eq_symmetric;
+												[$a1b2_is_a2b1; $a2b3_is_a3b2] > omega_add_eq_i;
+												[@h8; @h7; @h13; @h9] > omega_add_inner_to_left
+											] > eq_transitive_4;
+
+											$foo5 = [
+												[
+													[@h6; @h14] > omega_add_in_omega;
+													[@h7; @h13] > omega_add_in_omega;
+													[@h8; @h9] > omega_add_in_omega;
+													$foo4
+												] > omega_add_eq_e_right;
+												[@h7; @h13] > omega_add_commutative
+											] > eq_transitive;
+
+											$foo6 = [
+												@h6; @h7; @h13; @h14;
+												$foo5
+											] > rel_omega_pair_i;
+
+											[
+												$z_is_a3b3;
+												[
+													$x_is_a1b1;
+													$foo6
+												] > ax_indiscernible_m2((cls x) => rel_call(rel_omega_pair, x, pair(a3, b3)), ?, ?)
+											] > ax_indiscernible_m2((cls z) => rel_call(rel_omega_pair, x, z), ?, ?)
+										} > cp
+									}
+								} > Uin4i;
+
+								[$X; $U] > mpXin4_alt as rel_call(rel_omega_pair, x, z)
+							} > cp
+						}
+					} > Uin4i;
+
+					[$X; $U] > mpXin4_alt as rel_call(rel_omega_pair, x, z)
+				} > cp2
+			}
+		}
+	} > Uin3i as rel_transitive(rel_omega_pair, cartesian(omega, omega))
+}
+
+theorem rel_omega_pair_is_equiv_rel() {
+	[
+		rel_omega_pair_is_rel();
+		rel_omega_pair_is_reflexive();
+		rel_omega_pair_is_symmetric();
+		rel_omega_pair_is_transitive()
+	] > equiv_rel_i
 }
 
 "정수 집합. 독일어 [*Zahlen]의 Z이다. 자연수 순서쌍의 동치류의 집합으로 정의된다. 이때 자연수 순서쌍의 동치류 [$`[(a, b)]`]가 정수 [$a - b]를 의미한다. 예를 들어 [$`[(3, 5)] = [(5, 7)] = -2`]이다.
