@@ -11,6 +11,18 @@ cls rel_omega_pair = setbuilder_pair((cls x, cls y) => {
 	Xin4(omega, omega, omega, omega, (cls a, cls b, $a'$ cls ap, $b'$ cls bp) => A(A(eq(x, pair(a, b)), eq(y, pair(ap, bp))), eq(omega_add(a, bp), omega_add(ap, b))))
 });
 
+"정수 집합. 독일어 [*Zahlen]의 Z이다. 자연수 순서쌍의 동치류의 집합으로 정의된다. 이때 자연수 순서쌍의 동치류 [$`[(a, b)]`]가 정수 [$a - b]를 의미한다. 예를 들어 [$`[(3, 5)] = [(5, 7)] = -2`]이다.
+
+@see [~https://en.wikipedia.org/wiki/Integer#Construction]"
+$\Z$
+cls int = quotient_set(cartesian(omega, omega), rel_omega_pair);
+
+"자연수 [$m]에서 자연수 [$n]을 뺀 것을 정수로 나타낸 것."
+$\left(#1<<-_{\omega\to\Z}>>#2\right)$
+cls omega_sub_as_int(cls m, cls n) {
+	equiv_cls(pair(m, n), cartesian(omega, omega), rel_omega_pair)
+}
+
 theorem rel_omega_pair_is_rel() {
 	(cls z) => {
 		in(z, rel_omega_pair) |- {
@@ -207,10 +219,7 @@ theorem rel_omega_pair_e(cls a: @11, cls b: @21, $a'$ cls ap: @31, $b'$ cls bp: 
 
 theorem int_eq_e(cls a: @11, cls b: @21, $a'$ cls ap: @31, $b'$ cls bp: @41) {
 	in(a, omega), in(b, omega), in(ap, omega), in(bp, omega),
-	eq(
-		equiv_cls(pair(a, b), cartesian(omega, omega), rel_omega_pair),
-		equiv_cls(pair(ap, bp), cartesian(omega, omega), rel_omega_pair)
-	) |- {
+	eq(omega_sub_as_int(a, b), omega_sub_as_int(ap, bp)) |- {
 		[
 			rel_omega_pair_is_reflexive();
 			[@h1; @h2] > cartesian_in_i;
@@ -315,12 +324,6 @@ theorem rel_omega_pair_is_equiv_rel() {
 	] > equiv_rel_i
 }
 
-"정수 집합. 독일어 [*Zahlen]의 Z이다. 자연수 순서쌍의 동치류의 집합으로 정의된다. 이때 자연수 순서쌍의 동치류 [$`[(a, b)]`]가 정수 [$a - b]를 의미한다. 예를 들어 [$`[(3, 5)] = [(5, 7)] = -2`]이다.
-
-@see [~https://en.wikipedia.org/wiki/Integer#Construction]"
-$\Z$
-cls int = quotient_set(cartesian(omega, omega), rel_omega_pair);
-
 theorem int_in_e(cls n: @11) {
 	in(n, int) |- {
 		$X = @h1 > setbuilder_e;
@@ -340,15 +343,15 @@ theorem int_in_e(cls n: @11) {
 								@h2;
 								@h4 > call_eq_i((cls z) => equiv_cls(z, cartesian(omega, omega), rel_omega_pair), ?, ?)
 							] > eq_transitive
-						] > Xin2i as Xin2(omega, omega, (cls a, cls b) => eq(n, equiv_cls(pair(a, b), cartesian(omega, omega), rel_omega_pair)))
+						] > Xin2i as Xin2(omega, omega, (cls a, cls b) => eq(n, omega_sub_as_int(a, b)))
 					} > cp2
 				} > Ui2;
 
-				[$X; $U] > mpX2_alt as Xin2(omega, omega, (cls a, cls b) => eq(n, equiv_cls(pair(a, b), cartesian(omega, omega), rel_omega_pair)))
+				[$X; $U] > mpX2_alt as Xin2(omega, omega, (cls a, cls b) => eq(n, omega_sub_as_int(a, b)))
 			} > cp2
 		} > Ui;
 		
-		[$X; $U] > mpX_alt as Xin2(omega, omega, (cls a, cls b) => eq(n, equiv_cls(pair(a, b), cartesian(omega, omega), rel_omega_pair)))
+		[$X; $U] > mpX_alt as Xin2(omega, omega, (cls a, cls b) => eq(n, omega_sub_as_int(a, b)))
 	}
 }
 
@@ -357,7 +360,7 @@ $\left(#1<<+_\Z>>#2\right)$
 cls int_add(cls m, cls n) {
 	instantiate((cls k) => {
 		Xin4(omega, omega, omega, omega, (cls a1, cls b1, cls a2, cls b2) => {
-			A(A(eq(m, equiv_cls(pair(a1, b1), cartesian(omega, omega), rel_omega_pair)), eq(n, equiv_cls(pair(a2, b2), cartesian(omega, omega), rel_omega_pair))), eq(k, equiv_cls(pair(omega_add(a1, a2), omega_add(b1, b2)), cartesian(omega, omega), rel_omega_pair)))
+			A(A(eq(m, omega_sub_as_int(a1, b1)), eq(n, omega_sub_as_int(a2, b2))), eq(k, omega_sub_as_int(omega_add(a1, a2), omega_add(b1, b2))))
 		})
 	})
 }
@@ -366,31 +369,31 @@ theorem int_add_X(cls m: @11, cls n: @21) {
 	in(m, int), in(n, int) |- {
 		with (pr predicate = (cls k) => {
 			Xin4(omega, omega, omega, omega, (cls a1, cls b1, cls a2, cls b2) => {
-				A(A(eq(m, equiv_cls(pair(a1, b1), cartesian(omega, omega), rel_omega_pair)), eq(n, equiv_cls(pair(a2, b2), cartesian(omega, omega), rel_omega_pair))), eq(k, equiv_cls(pair(omega_add(a1, a2), omega_add(b1, b2)), cartesian(omega, omega), rel_omega_pair)))
+				A(A(eq(m, omega_sub_as_int(a1, b1)), eq(n, omega_sub_as_int(a2, b2))), eq(k, omega_sub_as_int(omega_add(a1, a2), omega_add(b1, b2))))
 			})
 		}) {
 			$X = @h1 > int_in_e as Xin2(omega, omega, ($a_1'$ cls a1p, $b_1'$ cls b1p) => {
-				eq(m, equiv_cls(pair(a1p, b1p), cartesian(omega, omega), rel_omega_pair))
+				eq(m, omega_sub_as_int(a1p, b1p))
 			});
 			
 			$U = ($a_1'$ cls a1p) => { /* @h3 */ in(a1p, omega) |- {
 			($b_1'$ cls b1p) => { in(b1p, omega) |- {
-				eq(m, equiv_cls(pair(a1p, b1p), cartesian(omega, omega), rel_omega_pair)) |- {
+				eq(m, omega_sub_as_int(a1p, b1p)) |- {
 					$X = @h2 > int_in_e as Xin2(omega, omega, ($a_2'$ cls a2p, $b_2'$ cls b2p) => {
-						eq(n, equiv_cls(pair(a2p, b2p), cartesian(omega, omega), rel_omega_pair))
+						eq(n, omega_sub_as_int(a2p, b2p))
 					});
 					
 					$U = ($a_2'$ cls a2p) => { /* @h6 */ in(a2p, omega) |- {
 					($b_2'$ cls b2p) => { in(b2p, omega) |- {
-						/* @h8 */ eq(n, equiv_cls(pair(a2p, b2p), cartesian(omega, omega), rel_omega_pair)) |- {
+						/* @h8 */ eq(n, omega_sub_as_int(a2p, b2p)) |- {
 							[
 								@h3; @h4; @h6; @h7;
 								[
 									[@h5; @h8] > Ai;
-									eq_reflexive(equiv_cls(pair(omega_add(a1p, a2p), omega_add(b1p, b2p)), cartesian(omega, omega), rel_omega_pair))
+									eq_reflexive(omega_sub_as_int(omega_add(a1p, a2p), omega_add(b1p, b2p)))
 								] > Ai
-							] > Xin4i as predicate(equiv_cls(pair(omega_add(a1p, a2p), omega_add(b1p, b2p)), cartesian(omega, omega), rel_omega_pair))
-							> Xi(?, equiv_cls(pair(omega_add(a1p, a2p), omega_add(b1p, b2p)), cartesian(omega, omega), rel_omega_pair)) as X((cls k) => predicate(k))
+							] > Xin4i as predicate(omega_sub_as_int(omega_add(a1p, a2p), omega_add(b1p, b2p)))
+							> Xi(?, omega_sub_as_int(omega_add(a1p, a2p), omega_add(b1p, b2p))) as X((cls k) => predicate(k))
 						} > cp
 					} > cp } > Ui
 					} > cp } > Ui;
@@ -409,22 +412,22 @@ theorem int_add_Q(cls m: @11, cls n: @21) {
 	in(m, int), in(n, int) |- {
 		with ([cls -> pr4] predicate4 = (cls k) => {
 			($a_1'$ cls a1p, $b_1'$ cls b1p, $a_2'$ cls a2p, $b_2'$ cls b2p) => {
-				A(A(eq(m, equiv_cls(pair(a1p, b1p), cartesian(omega, omega), rel_omega_pair)), eq(n, equiv_cls(pair(a2p, b2p), cartesian(omega, omega), rel_omega_pair))), eq(k, equiv_cls(pair(omega_add(a1p, a2p), omega_add(b1p, b2p)), cartesian(omega, omega), rel_omega_pair)))
+				A(A(eq(m, omega_sub_as_int(a1p, b1p)), eq(n, omega_sub_as_int(a2p, b2p))), eq(k, omega_sub_as_int(omega_add(a1p, a2p), omega_add(b1p, b2p))))
 			}
 		}) {
 			with (pr predicate = (cls k) => {
 				Xin4(omega, omega, omega, omega, predicate4(k))
 			}) {
-				$X = @h1 > int_in_e as Xin2(omega, omega, (cls a1, cls b1) => eq(m, equiv_cls(pair(a1, b1), cartesian(omega, omega), rel_omega_pair)));
+				$X = @h1 > int_in_e as Xin2(omega, omega, (cls a1, cls b1) => eq(m, omega_sub_as_int(a1, b1)));
 
 				$U = (cls a1, cls b1) => {
 					/* @h3 */ in(a1, omega), in(b1, omega) |- {
-						/* @h5 */ eq(m, equiv_cls(pair(a1, b1), cartesian(omega, omega), rel_omega_pair)) |- {
-							$X = @h2 > int_in_e as Xin2(omega, omega, (cls a2, cls b2) => eq(n, equiv_cls(pair(a2, b2), cartesian(omega, omega), rel_omega_pair)));
+						/* @h5 */ eq(m, omega_sub_as_int(a1, b1)) |- {
+							$X = @h2 > int_in_e as Xin2(omega, omega, (cls a2, cls b2) => eq(n, omega_sub_as_int(a2, b2)));
 
 							$U = (cls a2, cls b2) => {
 								/* @h6 */ in(a2, omega), in(b2, omega) |- {
-									/* @h8 */ eq(n, equiv_cls(pair(a2, b2), cartesian(omega, omega), rel_omega_pair)) |- {
+									/* @h8 */ eq(n, omega_sub_as_int(a2, b2)) |- {
 										(cls k) => {
 											/* @h9 */ predicate(k) |- {
 												$U = ($a_1'$ cls a1p, $b_1'$ cls b1p, $a_2'$ cls a2p, $b_2'$ cls b2p) => {
@@ -469,13 +472,16 @@ theorem int_add_Q(cls m: @11, cls n: @21) {
 																	[$nat_a1a2; $nat_b1b2] > cartesian_in_i;
 																	[$nat_a1pa2p; $nat_b1pb2p] > cartesian_in_i;
 																	$rel
-																] > equiv_cls_eq_i > eq_symmetric
+																] > equiv_cls_eq_i as eq(
+																	omega_sub_as_int(omega_add(a1, a2), omega_add(b1, b2)),
+																	omega_sub_as_int(omega_add(a1p, a2p), omega_add(b1p, b2p))
+																) > eq_symmetric
 															] > eq_transitive
 														} > cp
 													}
 												} > Uin4i;
 
-												[@h9; $U] > mpXin4_alt as eq(k, equiv_cls(pair(omega_add(a1, a2), omega_add(b1, b2)), cartesian(omega, omega), rel_omega_pair))
+												[@h9; $U] > mpXin4_alt as eq(k, omega_sub_as_int(omega_add(a1, a2), omega_add(b1, b2)))
 											} > cp
 										} > Ui > Qim
 									} > cp
@@ -497,7 +503,7 @@ theorem int_add_def(cls m: @11, cls n: @21) {
 	in(m, int), in(n, int) |- {
 		with (pr predicate = (cls k) => {
 			Xin4(omega, omega, omega, omega, (cls a1, cls b1, cls a2, cls b2) => {
-				A(A(eq(m, equiv_cls(pair(a1, b1), cartesian(omega, omega), rel_omega_pair)), eq(n, equiv_cls(pair(a2, b2), cartesian(omega, omega), rel_omega_pair))), eq(k, equiv_cls(pair(omega_add(a1, a2), omega_add(b1, b2)), cartesian(omega, omega), rel_omega_pair)))
+				A(A(eq(m, omega_sub_as_int(a1, b1)), eq(n, omega_sub_as_int(a2, b2))), eq(k, omega_sub_as_int(omega_add(a1, a2), omega_add(b1, b2))))
 			})
 		}) {
 			$X = [@h1; @h2] > int_add_X as X(predicate);
