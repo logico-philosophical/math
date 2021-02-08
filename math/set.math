@@ -803,7 +803,7 @@ theorem Qe(pr f: @11, cls x, cls y) {
 	}
 }
 
-theorem Qim(pr f, cls c) {
+theorem Qim(pr f: @11c1f, cls c: @11c22) {
 	U((cls x) => I(f(x), eq(x, c))) |- {
 		@h1 > Xi((cls c) => U((cls x) => I(f(x), eq(x, c))), c) > Qi(f)
 	}
