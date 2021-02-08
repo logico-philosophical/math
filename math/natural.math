@@ -1127,6 +1127,61 @@ theorem omega_add_associative(cls l: @11, cls m: @21, cls n: @31) {
 	}
 }
 
+theorem omega_add_eq_e_right(cls m: @11, $m'$ cls mm: @21, cls n: @31) {
+	in(m, omega), in(mm, omega), in(n, omega), eq(omega_add(m, n), omega_add(mm, n)) |- {
+		with (pr predicate = (cls n) => I(
+			eq(omega_add(m, n), omega_add(mm, n)),
+			eq(m, mm)
+		)) {
+			$base = /* @h5 */ eq(omega_add(m, omega_zero), omega_add(mm, omega_zero)) |- {
+				[
+					@h1 > omega_add_base > eq_symmetric;
+					@h5;
+					@h2 > omega_add_base
+				] > eq_transitive_3
+			} > cp as predicate(omega_zero);
+			
+			$step = (cls n) => {
+				/* @h5 */ in(n, omega) |- {
+					$nat_mn = [@h1; @h5] > omega_add_in_omega;
+					$nat_mmn = [@h2; @h5] > omega_add_in_omega;
+
+					predicate(n) |- {
+						eq(omega_add(m, successor(n)), omega_add(mm, successor(n))) |- {
+							[
+								[
+									$nat_mn; $nat_mmn;
+									[
+										[@h1; @h5] > omega_add_step > eq_symmetric;
+										@h7;
+										[@h2; @h5] > omega_add_step
+									] > eq_transitive_3
+								] > successor_eq_e;
+								@h6
+							] > mp
+						} > cp as predicate(successor(n))
+					} > cp
+				}
+			} > Uin_i;
+			
+			[@h4; [[$base; $step] > induce(predicate); @h3] > Uin_e] > mp
+		}
+	}
+}
+
+theorem omega_add_eq_e_left(cls m: @11, cls n: @21, $n'$ cls nn: @31) {
+	in(m, omega), in(n, omega), in(nn, omega), eq(omega_add(m, n), omega_add(m, nn)) |- {
+		[
+			@h2; @h3; @h1;
+			[
+				[@h2; @h1] > omega_add_commutative;
+				@h4;
+				[@h1; @h3] > omega_add_commutative
+			] > eq_transitive_3
+		] > omega_add_eq_e_right
+	}
+}
+
 theorem omega_add_flip_inner(cls a: @11, cls b: @21, cls c: @31, cls d: @41) {
 	in(a, omega), in(b, omega), in(c, omega), in(d, omega) |- {
 		$nat_ab = [@h1; @h2] > omega_add_in_omega;
