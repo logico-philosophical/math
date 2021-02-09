@@ -619,6 +619,12 @@ cls equiv_cls(cls x, $A$ cls a, ${\sim}$ cls r) {
 	subsetbuilder(a, (cls z) => rel_call(r, z, x))
 }
 
+theorem equiv_cls_set_i(cls x: @r11, $A$ cls a: @11, $\sim$ cls r: @r13) {
+	is_set(a) |- {
+		@h1 > subsetbuilder_set_i as is_set(equiv_cls(x, a, r))
+	}
+}
+
 theorem equiv_cls_in_i(cls x: @23, $A$ cls a: @12, $\sim$ cls r: @21, cls z: @11) {
 	in(z, a), rel_call(r, z, x) |- {
 		[@h1; @h2] > subsetbuilder_i as in(z, equiv_cls(x, a, r))
@@ -677,6 +683,15 @@ theorem equiv_cls_eq_e($\sim$ cls r: @11, $A$ cls a: @12, cls x: @21, cls y: @31
 $\left(#1<</>>#2\right)$
 cls quotient_set($A$ cls a, ${\sim}$ cls r) {
 	setbuilder2((cls x) => equiv_cls(x, a, r), is_in(a))
+}
+
+theorem quotient_set_in_i(cls x: @21, $A$ cls a: @11, $\sim$ cls r: @r22) {
+	is_set(a), in(x, a) |- {
+		[
+			@h1 > equiv_cls_set_i as is_set(equiv_cls(x, a, r));
+			@h2
+		] > setbuilder2_i(?, ?, x) as in(equiv_cls(x, a, r), quotient_set(a, r))
+	}
 }
 
 "부분 순서(partial order). strict partial order와 구분하여 non-strict partial order라고도 한다. 즉 반대칭적인 원순서이다. 보통 [$\leq] 등으로 표기한다."

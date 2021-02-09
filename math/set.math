@@ -1105,6 +1105,15 @@ theorem subset_is_set(cls x: @21, cls y: @22) {
 	}
 }
 
+theorem subsetbuilder_set_i($A$ cls a: @11, pr f: @r12) {
+	is_set(a) |- {
+		[
+			@h1;
+			subsetbuilder_is_subset(a, f)
+		] > subset_is_set
+	}
+}
+
 theorem supset_is_not_set(cls x: @111, cls y: @22) {
 	N(is_set(x)), subseteq(x, y) |- {
 		is_set(y) |- {

@@ -23,6 +23,16 @@ cls omega_sub_as_int(cls m, cls n) {
 	equiv_cls(pair(m, n), cartesian(omega, omega), rel_omega_pair)
 }
 
+theorem omega_sub_as_int_in_int(cls m: @11, cls n: @21) {
+	in(m, omega), in(n, omega) |- {
+		$set_om = omega_is_set();
+		[
+			[$set_om; $set_om] > cartesian_is_set;
+			[@h1; @h2] > cartesian_in_i
+		] > quotient_set_in_i as in(omega_sub_as_int(m, n), int)
+	}
+}
+
 theorem rel_omega_pair_is_rel() {
 	(cls z) => {
 		in(z, rel_omega_pair) |- {
@@ -365,6 +375,47 @@ cls int_add(cls m, cls n) {
 	})
 }
 
+theorem omega_add_sub_eq_i(cls a1: @11, cls b1: @21, cls a2: @31, cls b2: @41, $a_1'$ cls a1p: @51, $b_1'$ cls b1p: @61, $a_2'$ cls a2p: @71, $b_2'$ cls b2p: @81) {
+	in(a1, omega), in(b1, omega), in(a2, omega), in(b2, omega),
+	in(a1p, omega), in(b1p, omega), in(a2p, omega), in(b2p, omega),
+	eq(omega_sub_as_int(a1, b1), omega_sub_as_int(a1p, b1p)),
+	eq(omega_sub_as_int(a2, b2), omega_sub_as_int(a2p, b2p)) |- {
+		$a1b1p_is_a1pb1 = [
+			@h1; @h2; @h5; @h6;
+			[@h1; @h2; @h5; @h6; @h9] > int_eq_e
+		] > rel_omega_pair_e;
+
+		$a2b2p_is_a2pb2 = [
+			@h3; @h4; @h7; @h8;
+			[@h3; @h4; @h7; @h8; @h10] > int_eq_e
+		] > rel_omega_pair_e;
+
+		$nat_a1a2 = [@h1; @h3] > omega_add_in_omega;
+		$nat_b1pb2p = [@h6; @h8] > omega_add_in_omega;
+		$nat_a1pa2p = [@h5; @h7] > omega_add_in_omega;
+		$nat_b1b2 = [@h2; @h4] > omega_add_in_omega;
+
+		$rel = [
+			$nat_a1a2; $nat_b1b2; $nat_a1pa2p; $nat_b1pb2p;
+			[
+				[@h1; @h6; @h3; @h8] > omega_add_flip_inner > eq_symmetric;
+				[$a1b1p_is_a1pb1; $a2b2p_is_a2pb2] > omega_add_eq_i;
+				[@h5; @h2; @h7; @h4] > omega_add_flip_inner
+			] > eq_transitive_3
+		] > rel_omega_pair_i;
+
+		[
+			rel_omega_pair_is_equiv_rel();
+			[$nat_a1a2; $nat_b1b2] > cartesian_in_i;
+			[$nat_a1pa2p; $nat_b1pb2p] > cartesian_in_i;
+			$rel
+		] > equiv_cls_eq_i as eq(
+			omega_sub_as_int(omega_add(a1, a2), omega_add(b1, b2)),
+			omega_sub_as_int(omega_add(a1p, a2p), omega_add(b1p, b2p))
+		)
+	}
+}
+
 theorem int_add_X(cls m: @11, cls n: @21) {
 	in(m, int), in(n, int) |- {
 		with (pr predicate = (cls k) => {
@@ -441,41 +492,16 @@ theorem int_add_Q(cls m: @11, cls n: @21) {
 															$a1b1_is_a1pb1p = [@h5 > eq_symmetric; $m_is_a1pb1p] > eq_transitive;
 															$a2b2_is_a2pb2p = [@h8 > eq_symmetric; $n_is_a2pb2p] > eq_transitive;
 
-															$a1b1p_is_a1pb1 = [
-																@h3; @h4; @h10; @h11;
-																[@h3; @h4; @h10; @h11; $a1b1_is_a1pb1p] > int_eq_e
-															] > rel_omega_pair_e;
-
-															$a2b2p_is_a2pb2 = [
-																@h6; @h7; @h12; @h13;
-																[@h6; @h7; @h12; @h13; $a2b2_is_a2pb2p] > int_eq_e
-															] > rel_omega_pair_e;
-
-															$nat_a1a2 = [@h3; @h6] > omega_add_in_omega;
-															$nat_b1pb2p = [@h11; @h13] > omega_add_in_omega;
-															$nat_a1pa2p = [@h10; @h12] > omega_add_in_omega;
-															$nat_b1b2 = [@h4; @h7] > omega_add_in_omega;
-
-															$rel = [
-																$nat_a1a2; $nat_b1b2; $nat_a1pa2p; $nat_b1pb2p;
-																[
-																	[@h3; @h11; @h6; @h13] > omega_add_flip_inner > eq_symmetric;
-																	[$a1b1p_is_a1pb1; $a2b2p_is_a2pb2] > omega_add_eq_i;
-																	[@h10; @h4; @h12; @h7] > omega_add_flip_inner
-																] > eq_transitive_3
-															] > rel_omega_pair_i;
+															$foo2 = [
+																@h3; @h4; @h6; @h7;
+																@h10; @h11; @h12; @h13;
+																$a1b1_is_a1pb1p;
+																$a2b2_is_a2pb2p
+															] > omega_add_sub_eq_i;
 
 															[
 																$k_is_a1pa2p_b1pb2p;
-																[
-																	rel_omega_pair_is_equiv_rel();
-																	[$nat_a1a2; $nat_b1b2] > cartesian_in_i;
-																	[$nat_a1pa2p; $nat_b1pb2p] > cartesian_in_i;
-																	$rel
-																] > equiv_cls_eq_i as eq(
-																	omega_sub_as_int(omega_add(a1, a2), omega_add(b1, b2)),
-																	omega_sub_as_int(omega_add(a1p, a2p), omega_add(b1p, b2p))
-																) > eq_symmetric
+																$foo2 > eq_symmetric
 															] > eq_transitive
 														} > cp
 													}
@@ -510,6 +536,43 @@ theorem int_add_def(cls m: @11, cls n: @21) {
 			$Q = [@h1; @h2] > int_add_Q as Q(predicate);
 
 			[$X; $Q] > XQ_to_Xq > instantiate_def as predicate(int_add(m, n))
+		}
+	}
+}
+
+theorem int_add_def_alt(cls a1: @11, cls b1: @21, cls a2: @31, cls b2: @41, cls m: @51, cls n: @61) {
+	in(a1, omega), in(b1, omega), in(a2, omega), in(b2, omega),
+	eq(m, omega_sub_as_int(a1, b1)), eq(n, omega_sub_as_int(a2, b2)) |- {
+		with ([cls -> pr4] predicate4 = (cls k) => {
+			($a_1'$ cls a1p, $b_1'$ cls b1p, $a_2'$ cls a2p, $b_2'$ cls b2p) => {
+				A(A(eq(m, omega_sub_as_int(a1p, b1p)), eq(n, omega_sub_as_int(a2p, b2p))), eq(k, omega_sub_as_int(omega_add(a1p, a2p), omega_add(b1p, b2p))))
+			}
+		}) {
+			$int_m = [@h5; [@h1; @h2] > omega_sub_as_int_in_int] > eq_in;
+			$int_n = [@h6; [@h3; @h4] > omega_sub_as_int_in_int] > eq_in;
+			
+			$X = [$int_m; $int_n] > int_add_def as Xin4(omega, omega, omega, omega, predicate4(int_add(m, n)));
+			
+			$U = ($a_1'$ cls a1p, $b_1'$ cls b1p, $a_2'$ cls a2p, $b_2'$ cls b2p) => {
+				in(a1p, omega), in(b1p, omega), in(a2p, omega), in(b2p, omega) |- {
+					/* @h11 */ (predicate4(int_add(m, n)))(a1p, b1p, a2p, b2p) |- {
+						$foo = @h11 > Ae1;
+						$m_is_a1pb1p = $foo > Ae1;
+						$n_is_a2pb2p = $foo > Ae2;
+						$bar = @h11 > Ae2;
+
+						$1 = [@h5 > eq_symmetric; $m_is_a1pb1p] > eq_transitive;
+						$2 = [@h6 > eq_symmetric; $n_is_a2pb2p] > eq_transitive;
+
+						[
+							$bar;
+							[@h1; @h2; @h3; @h4; @h7; @h8; @h9; @h10; $1; $2] > omega_add_sub_eq_i > eq_symmetric
+						] > eq_transitive
+					} > cp
+				}
+			} > Uin4i;
+			
+			[$X; $U] > mpXin4_alt as eq(int_add(m, n), omega_sub_as_int(omega_add(a1, a2), omega_add(b1, b2)))
 		}
 	}
 }
