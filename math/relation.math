@@ -685,6 +685,35 @@ cls quotient_set($A$ cls a, ${\sim}$ cls r) {
 	setbuilder2((cls x) => equiv_cls(x, a, r), is_in(a))
 }
 
+theorem quotient_set_is_set($A$ cls a: @11, $\sim$ cls r: @r12) {
+	is_set(a) |- {
+		$subseteq = ($B$ cls b) => {
+			in(b, quotient_set(a, r)) |- {
+				$X = @h2 > setbuilder_e as X((cls x) => A(eq(b, equiv_cls(x, a, r)), in(x, a)));
+
+				$U = (cls x) => {
+					eq(b, equiv_cls(x, a, r)), in(x, a) |- {
+						$in = [
+							@h1;
+							subsetbuilder_is_subset(a, (cls z) => rel_call(r, z, x))
+							> id(subseteq(equiv_cls(x, a, r), a))
+						] > power_in_i;
+
+						[@h3; $in] > eq_in
+					} > cp2
+				} > Ui;
+
+				[$X; $U] > mpX_alt
+			} > cp
+		} > Ui as subseteq(quotient_set(a, r), power(a));
+		
+		[
+			@h1 > power_is_set;
+			$subseteq
+		] > subset_is_set
+	}
+}
+
 theorem quotient_set_in_i(cls x: @21, $A$ cls a: @11, $\sim$ cls r: @r22) {
 	is_set(a), in(x, a) |- {
 		[

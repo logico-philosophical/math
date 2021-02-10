@@ -17,6 +17,12 @@ cls rel_omega_pair = setbuilder_pair((cls x, cls y) => {
 $\Z$
 cls int = quotient_set(cartesian(omega, omega), rel_omega_pair);
 
+theorem int_is_set() {
+	$om = omega_is_set();
+	$cart = [$om; $om] > cartesian_is_set;
+	$cart > quotient_set_is_set as is_set(int)
+}
+
 "자연수 [$m]에서 자연수 [$n]을 뺀 것을 정수로 나타낸 것."
 $\left(#1<<-_{\omega\to\Z}>>#2\right)$
 cls omega_sub_as_int(cls m, cls n) {
@@ -30,6 +36,18 @@ theorem omega_sub_as_int_in_int(cls m: @11, cls n: @21) {
 			[$set_om; $set_om] > cartesian_is_set;
 			[@h1; @h2] > cartesian_in_i
 		] > quotient_set_in_i as in(omega_sub_as_int(m, n), int)
+	}
+}
+
+"[$\omega]에서 [$\Z]로의 canonical embedding."
+$\left(#1\right)_{<<\omega\to\Z>>}$
+cls ntoz(cls n) {
+	omega_sub_as_int(n, omega_zero)
+}
+
+theorem ntoz_in_int(cls n: @11) {
+	in(n, omega) |- {
+		[@h1; zero_in_omega()] > omega_sub_as_int_in_int as in(ntoz(n), int)
 	}
 }
 
