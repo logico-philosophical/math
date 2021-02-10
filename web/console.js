@@ -67,11 +67,71 @@ function htmlify(v, o) {
 		$tr.classList.add('error');
 	}
 
-	$('#console-display').appendChild($tr);
+	return $tr;
+}
+
+function write(v, o) {
+	var $tr = htmlify(v, o);
+
+	if ($('#console-display-preview')) {
+		$('#console-display').insertBefore($tr, $('#console-display-preview'));
+	} else {
+		$('#console-display').appendChild($tr);
+	}
+
 	$('#console-display-wrap').scrollTop = $('#console-display-wrap').scrollHeight;
 }
 
+function preview(v, o) {
+	var $tr = htmlify(v, o);
+
+	if ($('#console-display-preview')) {
+		$('#console-display').removeChild($('#console-display-preview'));
+	}
+
+	$tr.id = 'console-display-preview';
+
+	$('#console-display').appendChild($tr);
+}
+
+var timeout = null;
+
+function showPreview() {
+	if (typeof program == 'undefined') {
+		$('#console-input').value = '';
+		return preview('Error: program is not defined', {error: true});
+	}
+
+	try {
+		var v = codemirror.getValue();
+
+		if (!v.trim()) return;
+		
+		var parsed = evalParser.parse(v);
+	} catch (e) {
+		preview(`Parse error: ${e.message}\n    at (<repl>:${e.location.start.line}:${e.location.start.column})`, {error: true});
+		return;
+	}
+
+	try {
+		preview(ktx(program.evaluate(parsed).toTeXString(true, true)), {
+			noescape: true
+		});
+	} catch (e) {
+		preview(e, {error: true});
+	}
+}
+
 $('#console-input').addEventListener('keydown', evt => {
+	if (timeout) {
+		clearTimeout(timeout);
+	}
+
+	timeout = setTimeout(() => {
+		showPreview();
+		timeout = null;
+	}, 1000);
+
 	if (evt.key == 'Enter') {
 		// submit
 		if (evt.shiftKey) {
@@ -81,28 +141,28 @@ $('#console-input').addEventListener('keydown', evt => {
 
 			if (!v.trim()) return;
 
-			htmlify(v.trim(), {input: true});
+			write(v.trim(), {input: true});
 
 			if (typeof program == 'undefined') {
 				$('#console-input').value = '';
-				return htmlify('Error: program is not defined', {error: true});
+				return write('Error: program is not defined', {error: true});
 			}
 
 			try {
 				var parsed = evalParser.parse(v);
 			} catch (e) {
-				htmlify(`Parse error: ${e.message}\n    at (<repl>:${e.location.start.line}:${e.location.start.column})`, {error: true});
+				write(`Parse error: ${e.message}\n    at (<repl>:${e.location.start.line}:${e.location.start.column})`, {error: true});
 				if (!evt.ctrlKey) codemirror.setValue('');
 				return;
 			}
 
 			try {
-				htmlify(ktx(program.evaluate(parsed).toTeXString(true, true)), {
+				write(ktx(program.evaluate(parsed).toTeXString(true, true)), {
 					noescape: true
 				});
 			} catch (e) {
 				console.error(e);
-				htmlify(e, {error: true});
+				write(e, {error: true});
 			} finally {
 				if (!evt.ctrlKey) codemirror.setValue('');
 			}
@@ -115,7 +175,7 @@ $('#console-input').addEventListener('keydown', evt => {
 	if (evt.ctrlKey && evt.key == 'l') {
 		evt.preventDefault();
 		$('#console-display').innerHTML = '';
-		htmlify('Console was cleared');
+		write('Console was cleared');
 	}
 
 	if (evt.key == 'F7') {

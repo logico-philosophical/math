@@ -561,6 +561,7 @@ keyword =
 	/ 'import'
 	/ 'schema'
 	/ 'sealed'
+	/ 'theorem'
 	/ 'type'
 	/ 'using'
 	/ 'with'
