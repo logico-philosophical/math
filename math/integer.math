@@ -39,6 +39,27 @@ theorem omega_sub_as_int_in_int(cls m: @11, cls n: @21) {
 	}
 }
 
+theorem omega_sub_as_int_eq_i_left(cls m: @r11, cls n: @11, $n'$ cls np: @12) {
+	eq(n, np) |- {
+		@h1 > call_eq_i((cls n) => omega_sub_as_int(m, n), ?, ?)
+	}
+}
+
+theorem omega_sub_as_int_eq_i_right(cls m: @11, $m'$ cls mp: @12, cls n: @r12) {
+	eq(m, mp) |- {
+		@h1 > call_eq_i((cls m) => omega_sub_as_int(m ,n), ?, ?)
+	}
+}
+
+theorem omega_sub_as_int_eq_i(cls m: @11, cls n: @21, $m'$ cls mp: @12, $n'$ cls np: @22) {
+	eq(m, mp), eq(n, np) |- {
+		[
+			@h1 > omega_sub_as_int_eq_i_right(m, mp, n);
+			@h2 > omega_sub_as_int_eq_i_left(mp, n, np)
+		] > eq_transitive
+	}
+}
+
 "[$\omega]에서 [$\Z]로의 canonical embedding."
 $\left(#1\right)_{<<\omega\to\Z>>}$
 cls ntoz(cls n) {
@@ -50,6 +71,18 @@ theorem ntoz_in_int(cls n: @11) {
 		[@h1; zero_in_omega()] > omega_sub_as_int_in_int as in(ntoz(n), int)
 	}
 }
+
+"정수로서의 0."
+$0_\Z$
+cls int_zero = ntoz(omega_zero);
+
+"정수로서의 1."
+$1_\Z$
+cls int_one = ntoz(omega_one);
+
+"정수로서의 2."
+$1_\Z$
+cls int_two = ntoz(omega_two);
 
 theorem rel_omega_pair_is_rel() {
 	(cls z) => {
@@ -592,5 +625,41 @@ theorem int_add_def_alt(cls a1: @11, cls b1: @21, cls a2: @31, cls b2: @41, cls 
 			
 			[$X; $U] > mpXin4_alt as eq(int_add(m, n), omega_sub_as_int(omega_add(a1, a2), omega_add(b1, b2)))
 		}
+	}
+}
+
+theorem int_add_commutative(cls m: @11, cls n: @21) {
+	in(m, int), in(n, int) |- {
+		$X = @h1 > int_in_e as Xin2(omega, omega, (cls a1, cls b1) => eq(m, omega_sub_as_int(a1, b1)));
+		
+		$U = (cls a1, cls b1) => {
+			in(a1, omega), in(b1, omega) |- {
+				eq(m, omega_sub_as_int(a1, b1)) |- {
+					$X = @h2 > int_in_e as Xin2(omega, omega, (cls a2, cls b2) => eq(n, omega_sub_as_int(a2, b2)));
+
+					$U = (cls a2, cls b2) => {
+						in(a2, omega), in(b2, omega) |- {
+							eq(n, omega_sub_as_int(a2, b2)) |- {
+								$1 = [@h3; @h4; @h6; @h7; @h5; @h8] > int_add_def_alt;
+								$2 = [@h6; @h7; @h3; @h4; @h8; @h5] > int_add_def_alt;
+
+								$3 = [@h3; @h6] > omega_add_commutative;
+								$4 = [@h4; @h7] > omega_add_commutative;
+
+								[
+									$1;
+									[$3; $4] > omega_sub_as_int_eq_i;
+									$2 > eq_symmetric
+								] > eq_transitive_3
+							} > cp
+						}
+					} > Uin2i;
+
+					[$X; $U] > mpXin2_alt as eq(int_add(m, n), int_add(n, m))
+				} > cp
+			}
+		} > Uin2i;
+		
+		[$X; $U] > mpXin2_alt as eq(int_add(m, n), int_add(n, m))
 	}
 }

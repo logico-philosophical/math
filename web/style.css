@@ -261,6 +261,10 @@ table.explorer td.bbb {
 	border: 1px #ccc solid;
 }
 
+#console-display-preview {
+	opacity: .7;
+}
+
 #search-input {
 	padding: .3em;
 	width: 200px;
