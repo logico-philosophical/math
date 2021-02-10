@@ -114,7 +114,13 @@ export default abstract class Fun extends Expr0 implements Nameable {
 		}
 
 		if (this.params.length != args.length) {
-			throw Error('Illegal arguments length');
+			throw Error('Arguments length mismatch');
+		}
+
+		for (var i = 0; i < this.params.length; i++) {
+			if (!this.params[i].type.equals(args[i].type)) {
+				throw Error('Illegal type');
+			}
 		}
 
 		var map: Map<Variable, Expr0> = new Map();
