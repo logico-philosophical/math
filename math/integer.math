@@ -81,7 +81,7 @@ $1_\Z$
 cls int_one = ntoz(omega_one);
 
 "정수로서의 2."
-$1_\Z$
+$2_\Z$
 cls int_two = ntoz(omega_two);
 
 theorem rel_omega_pair_is_rel() {
