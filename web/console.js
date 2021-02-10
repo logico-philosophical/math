@@ -1,6 +1,7 @@
 (() => {
 
 CodeMirror.keyMap.sublime['Shift-Ctrl-Enter'] = null;
+CodeMirror.keyMap.sublime['Ctrl-L'] = null;
 
 var codemirror = CodeMirror(el => {
 	el.id = 'console-input';
