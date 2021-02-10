@@ -117,6 +117,11 @@ $('#console-input').addEventListener('keydown', evt => {
 		$('#console-display').innerHTML = '';
 		htmlify('Console was cleared');
 	}
+
+	if (evt.key == 'F7') {
+		evt.preventDefault();
+		toggleConsole();
+	}
 });
 
 function toggleConsole() {
@@ -133,7 +138,7 @@ $('#button-show-console').addEventListener('click', () => {
 	toggleConsole();
 });
 
-hotkeys('c', (evt, handler) => {
+hotkeys('c,f7', (evt, handler) => {
 	evt.preventDefault();
 	toggleConsole();
 });
