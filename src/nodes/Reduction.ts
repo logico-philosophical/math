@@ -1,19 +1,18 @@
-import Counter from '../Counter';
-import ExecutionContext from '../ExecutionContext';
-import { ProofType } from '../ProofType';
-import StackTrace from '../StackTrace';
-import Expr0 from './Expr0';
-import Fun from './Fun';
-import Funcall from './Funcall';
-import Metaexpr, { EqualsPriority } from './Metaexpr';
-import MetaType from './MetaType';
-import { isNameable } from './Nameable';
-import Node, { Precedence } from './Node';
-import ObjectType from './ObjectType';
-import Parameter from './Parameter';
-import Schema from './Schema';
-import Tee from './Tee';
-import Variable from './Variable';
+import Counter from "../Counter";
+import ExecutionContext from "../ExecutionContext";
+import { ProofType } from "../ProofType";
+import StackTrace from "../StackTrace";
+import Expr0 from "./Expr0";
+import Fun from "./Fun";
+import Funcall from "./Funcall";
+import Metaexpr, { EqualsPriority } from "./Metaexpr";
+import { isNameable } from "./Nameable";
+import Node, { Precedence } from "./Node";
+import Parameter from "./Parameter";
+import Schema from "./Schema";
+import Tee from "./Tee";
+import { FunctionalObjectType, FunctionalMetaType, TeeType } from "./types";
+import Variable from "./Variable";
 
 interface ReductionArgumentType {
 	antecedents: Metaexpr[];
@@ -35,7 +34,7 @@ export default class Reduction extends Metaexpr {
 
 	constructor ({antecedents, subject, args, as}: ReductionArgumentType, context: ExecutionContext, trace: StackTrace) {
 		if (args) {
-			let resolvedType = subject.type.resolve() as ObjectType | MetaType,
+			let resolvedType = subject.type.resolve() as FunctionalObjectType | FunctionalMetaType,
 				paramTypes = resolvedType.from,
 				argTypes = args.map(e => e && e.type);
 
@@ -79,7 +78,7 @@ export default class Reduction extends Metaexpr {
 			throw Node.error('Something\'s wrong', trace);
 		}
 	
-		if (!(subject.type instanceof MetaType && subject.type.isSimple))
+		if (!(subject.type instanceof TeeType))
 			throw Node.error('Subject is not reducible', trace);
 	
 		if (!(antecedents instanceof Array)
@@ -97,7 +96,7 @@ export default class Reduction extends Metaexpr {
 				throw Node.error(`Illegal argument type (expected ${paramTypes[i]}): ${antecedentTypes[i]}`, trace);
 		}
 
-		super(trace, null, null, subject.type.right);
+		super(null, null, subject.type.right, trace);
 
 		this.subject = subject;
 		this.antecedents = antecedents;

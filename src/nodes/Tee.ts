@@ -6,9 +6,8 @@ import $Variable from './$Variable';
 import Expr0 from './Expr0';
 import Fun from './Fun';
 import Metaexpr, { EqualsPriority } from './Metaexpr';
-import MetaType from './MetaType';
 import Node, { Precedence } from './Node';
-import ObjectType from './ObjectType';
+import { ObjectType, Type, TeeType } from './types';
 import Variable from './Variable';
 
 interface TeeArgumentType {
@@ -27,7 +26,7 @@ export default class Tee extends Metaexpr {
 		if (!(left instanceof Array
 				&& left.every(l => {
 					return l.type instanceof ObjectType
-						|| l.type instanceof MetaType;
+						|| l.type instanceof Type;
 				}))) {
 			console.log(left);
 			throw Node.error('Assertion failed', trace);
@@ -36,16 +35,15 @@ export default class Tee extends Metaexpr {
 		if (def$s && !(def$s instanceof Array && def$s.every($ => $ instanceof $Variable)))
 			throw Node.error('Assertion failed', trace);
 
-		if (!(right.type instanceof ObjectType || right.type instanceof MetaType)) {
+		if (!(right.type instanceof ObjectType || right.type instanceof Type)) {
 			console.log(right);
 			throw Node.error('Assertion failed', trace);
 		}
 
-		super(trace, null, null, new MetaType({
-			functional: false,
+		super(null, null, new TeeType({
 			left: left.map(e => e.type),
 			right: right.type
-		}));
+		}, trace), trace);
 
 		this.left = left;
 		this.def$s = def$s || [];

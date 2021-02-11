@@ -1,18 +1,4 @@
-import Counter from '../Counter';
-import ExecutionContext from '../ExecutionContext';
-import { ProofType } from '../ProofType';
-import StackTrace from '../StackTrace';
-import $Variable from './$Variable';
 import Expr0 from './Expr0';
-import Fun from './Fun';
-import Metaexpr, { EqualsPriority } from './Metaexpr';
-import MetaType from './MetaType';
-import { isNameable } from './Nameable';
-import Node, { Precedence } from './Node';
-import ObjectFun from './ObjectFun';
-import ObjectType from './ObjectType';
-import Schema from './Schema';
-import Variable from './Variable';
 
 interface FuncallArgumentType {
 	fun: Metaexpr;
@@ -25,7 +11,7 @@ export default class Funcall extends Expr0 {
 	public readonly args: Expr0[];
 
 	constructor ({fun, args}: FuncallArgumentType, trace: StackTrace) {
-		if (fun.type.isSimple) {
+		if (!fun.type.isFunctional()) {
 			var name = isNameable(fun) ? fun.name : '<anonymous>';
 			throw Node.error(`${name} is not callable`, trace);
 		}
@@ -33,7 +19,7 @@ export default class Funcall extends Expr0 {
 		if (!(args instanceof Array) || args.map(e => e instanceof Node).some(e => !e))
 			throw Node.error('Assertion failed', trace);
 			 
-		var resolvedType = fun.type.resolve() as ObjectType | MetaType,
+		var resolvedType = fun.type.resolve() as FunctionalObjectType | FunctionalMetaType,
 			paramTypes = resolvedType.from,
 			argTypes = args.map(e => e.type);
 
@@ -46,7 +32,7 @@ export default class Funcall extends Expr0 {
 			}
 		}
 
-		super(trace, null, null, resolvedType.to);
+		super(null, null, resolvedType.to, trace);
 		
 		this.fun = fun;
 		this.args = args;
@@ -338,3 +324,17 @@ export default class Funcall extends Expr0 {
 		) + `\\mathord{\\left(${args.join(', ')}\\right)}`;
 	}
 }
+
+import Counter from '../Counter';
+import ExecutionContext from '../ExecutionContext';
+import { ProofType } from '../ProofType';
+import StackTrace from '../StackTrace';
+import $Variable from './$Variable';
+import Fun from './Fun';
+import Metaexpr, { EqualsPriority } from './Metaexpr';
+import { isNameable } from './Nameable';
+import Node, { Precedence } from './Node';
+import ObjectFun from './ObjectFun';
+import Schema from './Schema';
+import Variable from './Variable';
+import { FunctionalMetaType, FunctionalObjectType } from './types';

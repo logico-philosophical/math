@@ -1,6 +1,6 @@
 import StackTrace from "../StackTrace";
 import { Precedence } from "./Node";
-import ObjectType from "./ObjectType";
+import { ObjectType } from "./types";
 import Variable from "./Variable";
 
 interface ParameterArgumentType {

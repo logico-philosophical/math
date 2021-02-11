@@ -5,7 +5,7 @@ import StackTrace from "../StackTrace";
 import Expr0 from "./Expr0";
 import Fun from "./Fun";
 import Node from "./Node";
-import Type from "./Type";
+import { Type } from "./types";
 import Variable from "./Variable";
 
 /**
@@ -31,8 +31,8 @@ export default abstract class Metaexpr extends Node {
 	public readonly type: Type;
 	private expandMetaCache: Metaexpr;
 
-	constructor(trace: StackTrace, doc: string, tex: string, type: Type) {
-		super(trace, doc, tex);
+	constructor (doc: string, tex: string, type: Type, trace: StackTrace) {
+		super(doc, tex, trace);
 
 		if (!type) throw Node.error('Assertion failed', trace);
 

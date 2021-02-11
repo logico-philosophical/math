@@ -10,11 +10,11 @@ import Fun from './nodes/Fun';
 import Funcall from './nodes/Funcall';
 import Metaexpr from './nodes/Metaexpr';
 import ObjectFun from './nodes/ObjectFun';
-import ObjectType from './nodes/ObjectType';
 import Parameter from './nodes/Parameter';
 import Reduction from './nodes/Reduction';
 import Schema, { SchemaType } from './nodes/Schema';
 import Tee from './nodes/Tee';
+import { ObjectType, SimpleObjectType } from './nodes/types';
 import Variable from './nodes/Variable';
 import With from './nodes/With';
 import { Def$Object, DefschemaObject, DefunObject, DefvObject, Expr0Object, FuncallObject, FunexprObject, MetaexprObject, ReductionObject, SchemacallObject, SchemaexprObject, StypeObject, TeeObject, TypedefObject, TypeObject, VarObject, WithObject } from './PegInterfaceDefinitions';
@@ -83,18 +83,18 @@ export default class PI {
 		var doc: string = obj.doc;
 
 		if (origin) {
-			return new ObjectType({
-				name,
+			return new SimpleObjectType({
 				doc,
+				name,
 				origin
-			});
+			}, scope.trace);
 		}
 
-		return new ObjectType({
-			functional: false,
+		return new SimpleObjectType({
+			doc,
 			name,
-			doc
-		});
+			origin: null
+		}, scope.trace);
 	}
 
 	public static variable(obj: DefvObject | VarObject, parentScope: Scope): Variable | Fun {

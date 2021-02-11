@@ -386,7 +386,7 @@
 						map[v._id] = `<div class="block">`
 							+ `<p class="label"><a id="def-${k}" href="#def-${k}"><b>${
 								v.sealed ? 'sealed ' : ''
-							}definition</b> ${k}</a>${v.type.isSimple
+							}definition</b> ${k}</a>${!v.params
 									? ': ' + v.type
 									: `(${v.params.map(p => p.toSimpleString()).join(', ')})`
 										+ `: ${v.type.resolve().to}`

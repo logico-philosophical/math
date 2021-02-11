@@ -20,7 +20,7 @@ export default class $Variable extends Metaexpr implements Nameable {
 	public readonly expr: Metaexpr;
 
 	constructor ({name, expr}: $VariableArgumentType, trace: StackTrace) {
-		super(trace, null, null, expr.type);
+		super(null, null, expr.type, trace);
 
 		if (!name || !expr) {
 			throw Node.error('Assertion failed', trace);

@@ -7,7 +7,6 @@ import Fun from './Fun';
 import Metaexpr, { EqualsPriority } from './Metaexpr';
 import Nameable from './Nameable';
 import Node, { Precedence } from './Node';
-import ObjectType from './ObjectType';
 
 interface VariableArgumentType {
 	doc?: string;
@@ -26,7 +25,7 @@ export default class Variable extends Expr0 implements Nameable {
 	public readonly expr: Expr0 | null;
 
 	constructor ({doc, tex, sealed, type, name, expr}: VariableArgumentType, trace: StackTrace) {
-		super(trace, doc, tex, type);
+		super(doc, tex, type, trace);
 		
 		if (typeof name != 'string')
 			throw Node.error('Assertion failed', trace);
@@ -92,7 +91,7 @@ export default class Variable extends Expr0 implements Nameable {
 
 	// pr f
 	public toSimpleString() {
-		return this.type.toSimpleString() + ' ' + this.name;
+		return this.type.toString() + ' ' + this.name;
 	}
 
 	public toIndentedString(indent: number, root?: boolean): string {
@@ -113,3 +112,4 @@ export default class Variable extends Expr0 implements Nameable {
 }
 
 import Parameter from './Parameter';
+import { ObjectType } from './types';

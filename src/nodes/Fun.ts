@@ -38,12 +38,12 @@ export default abstract class Fun extends Expr0 implements Nameable {
 		}
 		
 		super(
-			trace, doc, tex,
-			new ((rettype || expr.type) instanceof ObjectType ? ObjectType : MetaType)({
-				functional: true,
+			doc, tex,
+			new ((rettype || expr.type) instanceof ObjectType ? FunctionalObjectType : FunctionalMetaType)({
 				from: params.map(variable => variable.type),
 				to: rettype || expr.type as any
-			})
+			}, trace),
+			trace
 		);
 
 		this.annotations = annotations;
@@ -76,7 +76,7 @@ export default abstract class Fun extends Expr0 implements Nameable {
 		}
 
 		var placeholders = [];
-		var types = (this.type.resolve() as ObjectType | MetaType).from;
+		var types = (this.type.resolve() as FunctionalObjectType | FunctionalMetaType).from;
 
 		for (var i = 0; i < types.length; i++) {
 			placeholders.push(new Parameter({
@@ -182,10 +182,7 @@ export default abstract class Fun extends Expr0 implements Nameable {
 
 import Funcall from './Funcall';
 import Metaexpr, { EqualsPriority } from './Metaexpr';
-import MetaType from './MetaType';
 import Node from './Node';
-import ObjectType from './ObjectType';
-import Type from './Type';
 import Variable from './Variable';
 import StackTrace from '../StackTrace';
 import ExecutionContext from '../ExecutionContext';
@@ -193,6 +190,7 @@ import Counter from '../Counter';
 import { ProofType } from '../ProofType';
 import Schema from './Schema';
 import Parameter from './Parameter';
+import { ObjectType, FunctionalObjectType, FunctionalMetaType, Type } from './types';
 
 interface FunArgumentType {
 	doc: string;

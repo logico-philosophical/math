@@ -1,24 +1,4 @@
-import ExecutionContext from "../ExecutionContext";
-import StackTrace from "../StackTrace";
-import Expr0 from "./Expr0";
 import Fun from "./Fun";
-import Metaexpr from "./Metaexpr";
-import Node, { Precedence } from "./Node";
-import ObjectType from "./ObjectType";
-import Parameter from "./Parameter";
-import Type from "./Type";
-import Variable from "./Variable";
-
-interface ObjectFunArgumentType {
-	doc: string;
-	tex: string;
-	annotations: string[];
-	sealed: boolean;
-	rettype: Type;
-	name: string;
-	params: Parameter[];
-	expr: Expr0;
-}
 
 export default class ObjectFun extends Fun {
 	
@@ -122,4 +102,24 @@ export default class ObjectFun extends Fun {
 				: `\\href{#def-${this.name}}{${Node.makeTeXName(this.name)}}`
 		) + `\\mathord{\\left(${args.join(', ')}\\right)}`;
 	}
+}
+
+import ExecutionContext from "../ExecutionContext";
+import StackTrace from "../StackTrace";
+import Expr0 from "./Expr0";
+import Metaexpr from "./Metaexpr";
+import Node, { Precedence } from "./Node";
+import Variable from "./Variable";
+import Parameter from "./Parameter";
+import { Type, ObjectType } from "./types";
+
+interface ObjectFunArgumentType {
+	doc: string;
+	tex: string;
+	annotations: string[];
+	sealed: boolean;
+	rettype: Type;
+	name: string;
+	params: Parameter[];
+	expr: Expr0;
 }

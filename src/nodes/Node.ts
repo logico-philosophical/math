@@ -16,7 +16,7 @@ export default abstract class Node {
 	public static readonly PREC_COMMA = 1000;
 	public static readonly PREC_COLONEQQ = 100000;
 
-	constructor (trace: StackTrace, doc: string, tex: string) {
+	constructor (doc: string, tex: string, trace: StackTrace) {
 		this._id = ++ctr;
 		this.trace = trace;
 		this.doc = doc;

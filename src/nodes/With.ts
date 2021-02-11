@@ -22,7 +22,7 @@ export default class With extends Metaexpr {
 	public readonly expr: Metaexpr;
 
 	constructor({variable, def$s, expr}: WithArgumentType, trace: StackTrace) {
-		super(trace, null, null, expr.type);
+		super(null, null, expr.type, trace);
 
 		this.variable = variable;
 		this.def$s = def$s;

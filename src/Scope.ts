@@ -2,8 +2,8 @@ import $Variable from './nodes/$Variable';
 import Fun from './nodes/Fun';
 import Metaexpr from './nodes/Metaexpr';
 import ObjectFun from './nodes/ObjectFun';
-import ObjectType from './nodes/ObjectType';
 import Schema from './nodes/Schema';
+import { FunctionalObjectType, ObjectType, SimpleObjectType } from './nodes/types';
 import Variable from './nodes/Variable';
 import { LocationObject } from './PegInterfaceDefinitions';
 import StackTrace from './StackTrace';
@@ -102,8 +102,8 @@ export default class Scope {
 		}).every(e => e);
 	}
 
-	public addType(type: ObjectType): ObjectType {
-		if (!(type instanceof ObjectType))
+	public addType(type: SimpleObjectType): SimpleObjectType {
+		if (!(type instanceof SimpleObjectType))
 			throw this.error('Illegal argument type');
 
 		if (!type.name)
@@ -148,11 +148,10 @@ export default class Scope {
 
 		var to = this.getType(name[name.length - 1]);
 
-		return new ObjectType({
-			functional: true,
+		return new FunctionalObjectType({
 			from,
 			to
-		});
+		}, this.trace);
 	}
 
 	public hasOwnVariable(name: string): boolean {
