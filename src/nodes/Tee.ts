@@ -41,10 +41,6 @@ export default class Tee extends Metaexpr {
 			throw Node.error('Assertion failed', trace);
 		}
 
-		if (right.type.isFunctional) {
-			throw Node.error('RHS of a rule cannot be a schema', trace);
-		}
-
 		super(trace, null, null, new MetaType({
 			functional: false,
 			left: left.map(e => e.type),

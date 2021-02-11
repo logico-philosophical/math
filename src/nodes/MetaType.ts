@@ -41,9 +41,6 @@ export default class MetaType extends Type {
 			if (!(o.to instanceof MetaType))
 				throw Node.error('!(o.to instanceof MetaType)', null);
 
-			if (o.to.isFunctional)
-				throw Node.error('Functional metatype in functional metatype is not supported', null);
-
 			this.from = o.from;
 			this.to = o.to;
 		}
