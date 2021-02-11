@@ -4,7 +4,6 @@ import Type from './Type';
 
 export default class ObjectType extends Type implements Nameable {
 
-	public readonly isBaseType: boolean;
 	public readonly name: string;
 	public readonly origin: ObjectType;
 	public readonly from: ObjectType[];
@@ -13,8 +12,6 @@ export default class ObjectType extends Type implements Nameable {
 	constructor (o) {
 		if (o.origin) {
 			super(null, o.doc, null, o.origin.isFunctional);
-
-			this.isBaseType = !!o.base;
 
 			if (typeof o.name != 'string')
 				throw Node.error('typeof o.name != \'string\'', null);
@@ -26,8 +23,6 @@ export default class ObjectType extends Type implements Nameable {
 			this.origin = o.origin;
 		} else {
 			super(null, o.doc, null, o.functional);
-
-			this.isBaseType = !!o.base;
 
 			if (typeof o.functional != 'boolean')
 				throw Node.error('typeof o.functional != \'boolean\'', null);

@@ -308,8 +308,7 @@
 
 				var precedenceMap = new Map();
 
-				var baseType = null,
-					primitiveTypeList = [],
+				var primitiveTypeList = [],
 					macroTypeList = [],
 					primitiveDefinitionList = [],
 					macroDefinitionList = [],
@@ -332,9 +331,6 @@
 							}	
 						}
 					}
-
-					baseType = baseType
-						|| (scope.baseType ? scope.baseType.name : null);
 
 					primitiveTypeList = primitiveTypeList.concat(
 						[...scope.typedefMap]
@@ -373,9 +369,7 @@
 
 					for (var [k, v] of scope.typedefMap) {
 						map[v._id] = `<div class="block">`
-							+ `<p class="label"><a id="type-${k}" href="#type-${k}"><b>${
-								(v.isBaseType ? 'base ' : '')
-							}type</b> ${k}</a></p>`
+							+ `<p class="label"><a id="type-${k}" href="#type-${k}"><b>type</b> ${k}</a></p>`
 							+ `<div class="math">${ktx(v.toTeXString(true, true))}</div>`
 
 							+ (
@@ -489,7 +483,6 @@
 				<ul>
 					<li><p><b>타입</b>(${primitiveTypeList.length + macroTypeList.length})</p>
 					<ul>
-						<li><b>문장 타입</b>: <a href="#type-${baseType}">${baseType}</a>
 						<li><b>원시 타입</b>(${primitiveTypeList.length}): ${
 							primitiveTypeList.map(n => `<a href="#type-${n}">${n}</a>`).join(', ')
 						}

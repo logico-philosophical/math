@@ -22,7 +22,6 @@ export interface ImportObject {
 export interface TypedefObject {
 	_type: 'typedef';
 	doc: string;
-	base: boolean;
 	origin?: FtypeObject;
 	name: string;
 	location: LocationObject;

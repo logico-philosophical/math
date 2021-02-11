@@ -126,14 +126,13 @@ function recurseInternal(
 			/* export interface TypedefObject {
 				_type: 'typedef';
 				doc: string;
-				base: boolean;
 				origin?: FtypeObject;
 				name: string;
 				location: LocationObject;
 			} */
 			return `${
 	line.doc ? `"${line.doc}"\n` : ''
-}${line.base ? 'base ' : ''}type ${
+}type ${
 	line.origin ? recurse(line.origin, Context.NORMAL, 0) + ' ' : ''
 }${line.name};`;
 		case 'def$':

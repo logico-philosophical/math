@@ -81,17 +81,11 @@ export default class PI {
 
 		var name: string = obj.name;
 		var doc: string = obj.doc;
-		var base: boolean = obj.base;
-
-		if (base && origin) {
-			throw scope.error('Base type should not be an alias');
-		}
 
 		if (origin) {
 			return new ObjectType({
 				name,
 				doc,
-				base,
 				origin
 			});
 		}
@@ -99,8 +93,7 @@ export default class PI {
 		return new ObjectType({
 			functional: false,
 			name,
-			doc,
-			base
+			doc
 		});
 	}
 

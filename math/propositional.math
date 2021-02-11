@@ -1,5 +1,5 @@
 "문장 타입."
-base type st;
+type st;
 
 "implies (TFTT)."
 $!<prec=598>#1<<\to>>#2$

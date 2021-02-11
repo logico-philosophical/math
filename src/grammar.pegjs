@@ -34,7 +34,6 @@ import =
 
 typedef =
 	doc:(documentation __)?
-	base:("base" __)?
 	"type" __
 	origin:(o:ftype __ {return o})?
 	name:ident _ sem
@@ -42,7 +41,6 @@ typedef =
 		return {
 			_type: 'typedef',
 			doc: doc ? doc[0] : null,
-			base: !!base,
 			origin,
 			name,
 			location: location()
@@ -557,7 +555,6 @@ plain_var =
 keyword =
 	'as'
 	/ 'axiom'
-	/ 'base'
 	/ 'import'
 	/ 'schema'
 	/ 'sealed'

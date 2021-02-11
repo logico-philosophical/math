@@ -27,7 +27,6 @@ export default class Scope {
 	public readonly root: Scope;
 
 	public readonly trace: StackTrace;
-	public baseType: ObjectType;
 
 	/** 파일 경로. 예를 들어 `/propositional.math`이다. 파일과 일대일대응이어야 한다. */
 	public readonly fileUri: string;
@@ -43,8 +42,6 @@ export default class Scope {
 		}
 
 		this.trace = trace || new StackTrace(fileUri);
-
-		this.baseType = parent ? parent.baseType : null;
 	}
 
 	public extend(type: string, name: string, location: LocationObject): Scope {
@@ -114,17 +111,6 @@ export default class Scope {
 
 		if (this.hasOwnType(type.name))
 			throw this.error(`Type ${type.name} has already been declared`);
-
-		if (type.isBaseType) {
-			if (this.baseType) {
-				throw this.error('A base type already exists');
-			}
-
-			(function broadcast(scope: Scope) {
-				scope.baseType = type;
-				if (scope.parent) broadcast(scope.parent);
-			})(this);
-		}
 
 		this.typedefMap.set(type.name, type);
 		return type;
