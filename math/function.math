@@ -147,7 +147,7 @@ theorem fun_im_Q_m(cls f: @11, $A$ cls a: @12, $B$ cls b: @13, cls x: @21, cls y
 			[
 				@h2;
 				@h1 > fun_im_Q > Ue(?, x)
-			] > mp > Ue2(?, y1, y2)
+			] > mp > U2e(?, y1, y2)
 		] > mp
 	}
 }
@@ -254,7 +254,7 @@ theorem fun_eq_i(cls f: @11, cls g: @21, $A$ cls a: @12, $B$ cls b: @13) {
 						] > eq_transitive
 					] > funcall_e
 				} > cp
-			} > Ui2;
+			} > U2i;
 
 			[
 				@h1 > fun_is_rel;
@@ -628,14 +628,14 @@ theorem fun_composite_is_fun_2(cls f, cls g) {
 													[
 														[
 															[@h5; @h7] > Ai;
-															$fQ > Ue2(?, y1, y2)
+															$fQ > U2e(?, y1, y2)
 														] > mp;
 														eq_reflexive(z2)
 													] > pair_eq_i;
 													@h8
 												] > eq_in
 											] > Ai;
-											@h2 > Ue(?, y1) > Ue2(?, z1, z2)
+											@h2 > Ue(?, y1) > U2e(?, z1, z2)
 										] > mp
 									} > cp2
 								} > Ui;
@@ -646,7 +646,7 @@ theorem fun_composite_is_fun_2(cls f, cls g) {
 
 						[$y1X; $y1U] > mpX_alt(?, eq(z1, z2))
 					} > cp2
-				} > Ui2 as Q((cls z) => in(pair(x, z), h))
+				} > U2i as Q((cls z) => in(pair(x, z), h))
 			} > Ui
 		}
 	}
@@ -697,7 +697,7 @@ theorem fun_composite_is_fun_4(cls f, cls g) {
 							in(pair(x1, y1), f) /* @h5 */, in(pair(y1, z), g) |- {
 								$U2 = (cls y2) => {
 									in(pair(x2, y2), f) /* @h7 */, in(pair(y2, z), g) |- {
-										$y1_is_y2 = [[@h6; @h8] > Ai; $Q > Ue2(?, y1, y2)] > mp;
+										$y1_is_y2 = [[@h6; @h8] > Ai; $Q > U2e(?, y1, y2)] > mp;
 
 										$A = [
 											@h5;
@@ -709,7 +709,7 @@ theorem fun_composite_is_fun_4(cls f, cls g) {
 
 										[
 											$A;
-											@h1 > Ue(?, y1) > Ue2(?, x1, x2)
+											@h1 > Ue(?, y1) > U2e(?, x1, x2)
 										] > mp
 									} > cp2
 								} > Ui;
@@ -720,7 +720,7 @@ theorem fun_composite_is_fun_4(cls f, cls g) {
 
 						[$X1; $U1] > mpX_alt(?, eq(x1, x2))
 					} > cp2
-				} > Ui2 as Q((cls x) => in(pair(x, z), h))
+				} > U2i as Q((cls x) => in(pair(x, z), h))
 			} > Ui
 		}
 	}
@@ -755,7 +755,7 @@ theorem fun_composite_is_fun(cls f: @11, cls g: @21, $A$ cls a: @12, $B$ cls b: 
 
 						[$X; $U] > mpX_alt(?, in(pair(x, z), cartesian(a, c)))
 					} > cp
-				} > Ui2
+				} > U2i
 			] > rel_U(is_in(cartesian(a, c)), ?) as subseteq(rel_composite(g, f), cartesian(a, c));
 
 			$c23 = (cls x) => {
@@ -828,7 +828,7 @@ theorem fun_to_surjection(cls f: @11, $A$ cls a: @12, $B$ cls b: @13) {
 
 						[$x_in_a; $y_in_im] > cartesian_in_i
 					} > cp
-				} > Ui2
+				} > U2i
 			] > rel_U(is_in(cartesian(a, rel_im(f))), ?) as subseteq(f, cartesian(a, rel_im(f)));
 
 			$c23 = (cls x) => {
@@ -920,7 +920,7 @@ theorem injection_dom_Q_m(cls f: @11, $A$ cls a: @12, $B$ cls b: @13, cls x1: @3
 			[
 				@h2;
 				@h1 > Ae2 > Ue(?, y)
-			] > mp > Ue2(?, x1, x2)
+			] > mp > U2e(?, x1, x2)
 		] > mp
 	}
 }

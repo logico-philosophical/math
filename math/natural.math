@@ -693,7 +693,7 @@ theorem recursion_theorem_5_step($A$ cls a: @12, cls c: @11, cls f: @21) using d
 																							] > eq_in_flip;
 																							@h6
 																						] > Ai;
-																						@h4 > Ue2(?, v, x)
+																						@h4 > U2e(?, v, x)
 																					] > mp > funcall_eq_i(f, ?, ?)
 																				] > pair_eq_i;
 																				[
@@ -909,7 +909,7 @@ theorem recursion_theorem_8($A$ cls a: @12, cls c: @11, cls f: @21) {
 					[$base; $step] > induce((cls n) => eq(funcall(g1, n), funcall(g2, n)))
 				] > fun_eq_i
 			} > cp2
-		} > Ui2 as Q(($\gamma$ cls g) => is_recursively_defined(g, a, c, f))
+		} > U2i as Q(($\gamma$ cls g) => is_recursively_defined(g, a, c, f))
 	}
 }
 
@@ -1654,7 +1654,7 @@ theorem schroeder_bernstein_1($A$ cls a: @12, $B$ cls b: @13, cls f: @11, cls g:
 												[$gf_is_fun; $x1_in_a; $y_is_gfx1] > funcall_e;
 												[$gf_is_fun; $x2_in_a; $y_is_gfx2] > funcall_e
 											] > Ai;
-											$gf_is_injection > injection_dom_Q_alt > Ue(?, y) > Ue2(?, x1, x2)
+											$gf_is_injection > injection_dom_Q_alt > Ue(?, y) > U2e(?, x1, x2)
 										] > mp
 									} > cp;
 
@@ -1684,7 +1684,7 @@ theorem schroeder_bernstein_1($A$ cls a: @12, $B$ cls b: @13, cls f: @11, cls g:
 
 									[$O; $c1; $c2] > Oe
 								} > cp2
-							} > Ui2 as Q((cls x) => in(pair(x, y), h))
+							} > U2i as Q((cls x) => in(pair(x, y), h))
 						} > cp
 					} > Ui;
 					

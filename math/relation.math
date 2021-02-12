@@ -211,7 +211,7 @@ theorem setbuilder_pair_i(pr2 f: @r21, cls a: @111, cls b: @112) {
 	is_set(pair(a, b)), f(a, b) |- {
 		[
 			@h1;
-			[eq_reflexive(pair(a, b)); @h2] > Ai > Xi2((cls c, cls d) => A(eq(pair(a, b), pair(c, d)), f(c, d)), a, b)
+			[eq_reflexive(pair(a, b)); @h2] > Ai > X2i((cls c, cls d) => A(eq(pair(a, b), pair(c, d)), f(c, d)), a, b)
 		] > setbuilder_i as in(pair(a, b), setbuilder_pair(f))
 	}
 }
@@ -230,7 +230,7 @@ theorem setbuilder_pair_e(pr2 f: @121, cls a: @111, cls b: @112) {
 						@h3
 					] > ax_indiscernible2_m2(f, ?, ?, ?, ?)
 				} > cp2
-			} > Ui2
+			} > U2i
 		] > mpX2_alt(?, f(a, b))
 	}
 }
@@ -257,7 +257,7 @@ theorem cartesian_in_i($A$ cls a: @12, $B$ cls b: @22, cls x: @11, cls y: @21) {
 			[
 				eq_reflexive(pair(x, y));
 				[@h1; @h2] > Ai
-			] > Ai > Xi2((cls u, cls v) => A(eq(pair(x, y), pair(u, v)), A(in(u, a), in(v, b))), x, y)
+			] > Ai > X2i((cls u, cls v) => A(eq(pair(x, y), pair(u, v)), A(in(u, a), in(v, b))), x, y)
 		] > setbuilder_i as in(pair(x, y), cartesian(a, b))
 	}
 }
@@ -297,7 +297,7 @@ theorem cartesian_in_e($A$ cls a: @121, $B$ cls b: @122, cls x: @111, cls y: @11
 						] > eq_in
 					] > Ai
 				} > cp
-			} > Ui2
+			} > U2i
 		] > mpX2_alt(?, A(in(x, a), in(y, b)))
 	}
 }
@@ -445,7 +445,7 @@ theorem rel_inverse_is_rel($R$ cls r: @11, $A$ cls a: @12, $B$ cls b: @13) using
 								] > cartesian_in_i
 							] > eq_in
 						} > cp2
-					} > Ui2
+					} > U2i
 				] > mpX2_alt(?, in(z, cartesian(b, a)))
 			} > cp
 		} > Ui as is_rel_over_sets(rel_inverse(r), b, a)
@@ -755,7 +755,7 @@ theorem setbuilder_pair_is_rel(pr2 f: @r11) {
 									[$a_in_V; $b_in_V] > cartesian_in_i
 								] > eq_in
 							} > cp2
-						} > Ui2
+						} > U2i
 					] > mpX2_alt(?, in(z, cartesian(universe, universe)))
 				} > cp
 			} > Ui as is_rel(aa)
@@ -778,11 +778,11 @@ theorem rel_U(pr f: @r2, $R$ cls r: @11) {
 								@h4;
 								[
 									[@h4; @h3] > eq_in_flip;
-									@h2 > Ue2(?, x, y)
+									@h2 > U2e(?, x, y)
 								] > mp
 							] > ax_indiscernible_m2(f, ?, ?)
 						} > cp
-					} > Ui2
+					} > U2i
 				] > mpX2_alt(?, f(z))
 			} > cp
 		} > Ui as Uin(r, f)
@@ -821,11 +821,28 @@ theorem cartesian_is_rel(cls x, cls y) {
 								] > Ai
 							] > Ai
 						} > cp2
-					} > Ui2
+					} > U2i
 				] > mpX2(?, (cls a, cls b) => A(eq(z, pair(a, b)), A(in(a, universe), in(b, universe))))
 			] > setbuilder_i as in(z, cartesian(universe, universe))
 		} > cp
 	} > Ui as is_rel(cartesian(x, y))
+}
+
+theorem cartesian_U(pr f: @r2, $A$ cls a: @11, $B$ cls b: @12) {
+	Uin2(a, b, (cls x, cls y) => f(pair(x, y))) |- {
+		$rel_cart = cartesian_is_rel(a, b);
+		
+		$U = (cls x, cls y) => {
+			in(pair(x, y), cartesian(a, b)) |- {
+				$x_in_a = @h2 > cartesian_in_e1;
+				$y_in_b = @h2 > cartesian_in_e2;
+				
+				[@h1; $x_in_a; $y_in_b] > Uin2e
+			} > cp
+		} > U2i;
+		
+		[$rel_cart; $U] > rel_U as Uin(cartesian(a, b), f)
+	}
 }
 
 theorem cartesian_inverse($A$ cls a, $B$ cls b) {
@@ -846,7 +863,7 @@ theorem cartesian_inverse($A$ cls a, $B$ cls b) {
 				[$foo(b, a, x, y); $foo(a, b, y, x)] > Ei;
 				rel_inverse_in(cartesian(a, b), y, x)
 			] > syllE
-		} > Ui2
+		} > U2i
 	] > rel_eq_i > eq_symmetric
 }
 
@@ -925,7 +942,7 @@ theorem cartesian_is_set($A$ cls a: @11, $B$ cls b: @21) using pair {
 						} > Ui as subseteq(pair(x, y), power(cup(a, b)))
 					] > setbuilder_i as in(pair(x, y), power(power(cup(a, b))))
 				} > cp
-			} > Ui2
+			} > U2i
 		] > rel_U(is_in(power(power(cup(a, b)))), cartesian(a, b)) as subseteq(cartesian(a, b), power(power(cup(a, b))));
 
 		[$power_power_cup_is_set; $cartesian_subseteq_power_power_cup] > subset_is_set
@@ -947,7 +964,7 @@ theorem rel_inverse_subseteq($A$ cls a: @21, $B$ cls b: @22) {
 						@h2
 					] > in_subseteq > rel_inverse_in_i
 				} > cp
-			} > Ui2
+			} > U2i
 		] > rel_U(is_in(rel_inverse(b)), ?) as subseteq(rel_inverse(a), rel_inverse(b))
 	}
 }

@@ -139,7 +139,7 @@ theorem rel_omega_pair_is_rel() {
 
 					[@h3; $U] > mpXin4_alt as in(z, cartesian(cartesian(omega, omega), cartesian(omega, omega)))
 				} > cp2
-			} > Ui2;
+			} > U2i;
 
 			[$X; $U] > mpX2_alt as in(z, cartesian(cartesian(omega, omega), cartesian(omega, omega)))
 		} > cp
@@ -171,7 +171,7 @@ theorem rel_omega_pair_is_reflexive() {
 
 					[$set_xx; $X4] > setbuilder_pair_i as rel_call(rel_omega_pair, x, x)
 				} > cp2
-			} > Ui2;
+			} > U2i;
 
 			[$X; $U] > mpX2_alt as rel_call(rel_omega_pair, x, x)
 		} > cp
@@ -272,7 +272,7 @@ theorem rel_omega_pair_e(cls a: @11, cls b: @21, $a'$ cls ap: @31, $b'$ cls bp: 
 					[$ap_is_cp; $b_is_d] > omega_add_eq_i > eq_symmetric
 				] > eq_transitive_3
 			} > cp2
-		} > Ui4 > U4_to_Uin4(omega, omega, omega, omega, ?);
+		} > U4i > U4_to_Uin4(omega, omega, omega, omega, ?);
 		
 		[$X; $U] > mpXin4_alt as eq(omega_add(a, bp), omega_add(ap, b))
 	}
@@ -406,7 +406,7 @@ theorem int_in_e(cls n: @11) {
 							] > eq_transitive
 						] > Xin2i as Xin2(omega, omega, (cls a, cls b) => eq(n, omega_sub_as_int(a, b)))
 					} > cp2
-				} > Ui2;
+				} > U2i;
 
 				[$X; $U] > mpX2_alt as Xin2(omega, omega, (cls a, cls b) => eq(n, omega_sub_as_int(a, b)))
 			} > cp2

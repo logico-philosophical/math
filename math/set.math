@@ -45,7 +45,7 @@ theorem ax_indiscernible_m(pr f, cls x: @11, cls y: @12) {
 	eq(x, y) |- {
 		[
 			@h1;
-			ax_indiscernible(f) > Ue2(?, x, y)
+			ax_indiscernible(f) > U2e(?, x, y)
 		] > mp
 	}
 }
@@ -114,7 +114,7 @@ theorem eq_i(cls x, cls y) {
 	U((cls z) => E(in(z, x), in(z, y))) |- {
 		[
 			@h1;
-			ax_extensional() > Ue2(?, x, y)
+			ax_extensional() > U2e(?, x, y)
 		] > mp
 	}
 }
@@ -764,7 +764,7 @@ theorem NX_to_Q(pr f: @111) {
 
 				[@h2; $Nfx] > Fi > Fe(eq(x, y))
 			} > cp2
-		} > Ui2 as Q(f)
+		} > U2i as Q(f)
 	}
 }
 
@@ -790,7 +790,7 @@ theorem Qi(pr f) {
 					} > Ui
 				] > mpX_alt(?, eq(x, y))
 			} > cp2
-		} > Ui2 as Q(f)
+		} > U2i as Q(f)
 	}
 }
 
@@ -798,7 +798,7 @@ theorem Qe(pr f: @11, cls x, cls y) {
 	Q(f), f(x), f(y) |- {
 		[
 			[@h2; @h3] > Ai;
-			@h1 > Ue2(?, x, y)
+			@h1 > U2e(?, x, y)
 		] > mp
 	}
 }
@@ -824,10 +824,10 @@ theorem QU(pr f: @11, pr g: @r1) {
 							@h2 > Ue(?, y)
 						] > mp
 					] > Ai;
-					@h1 > Ue2(?, x, y)
+					@h1 > U2e(?, x, y)
 				] > mp
 			} > cp2
-		} > Ui2 as Q(g)
+		} > U2i as Q(g)
 	}
 }
 
@@ -1740,7 +1740,7 @@ theorem is_singleton_of_Q(cls z) {
 				@h2 > UE_flip(is_in(x2), (cls w) => eq(w, z))
 			] > syllUE(is_in(x1), (cls w) => eq(w, z), is_in(x2)) > eq_i(x1, x2)
 		} > cp2
-	} > Ui2 as Q((cls x) => is_singleton_of(x, z))
+	} > U2i as Q((cls x) => is_singleton_of(x, z))
 }
 
 theorem is_singleton_of_example(cls z: @11) {
@@ -1818,7 +1818,7 @@ theorem singleton_Q(cls x: @11) {
 					[@h1; @h3] > singleton_e > eq_symmetric
 				] > eq_transitive
 			} > cp2
-		} > Ui2 as Q(is_in(singleton(x)))
+		} > U2i as Q(is_in(singleton(x)))
 	}
 }
 
@@ -2056,7 +2056,7 @@ theorem bigcup_singleton_to_element($A$ cls a: @11, cls x: @21, cls z: @31) {
 								@h2;
 								@h4 > Ae1
 							] > Ai;
-							@h1 > Ae2 > Ue2(?, x, w)
+							@h1 > Ae2 > U2e(?, x, w)
 						] > mp
 					] > in_eq_flip
 				} > cp
