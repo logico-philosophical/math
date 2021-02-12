@@ -319,9 +319,7 @@ function recurseInternal(
 					to: TypeObject;
 					location: LocationObject;
 				} */
-				var from = line.from.length == 1
-					? recurse(line.from[0], Context.NORMAL, 0)
-					: '(' + line.from.map(f => recurse(f, Context.NORMAL, 0)).join(', ') + ')';
+				var from = line.from.map(f => recurse(f, Context.NORMAL, 0)).join(', ');
 				return `[${from} -> ${recurse(line.to, Context.NORMAL, 0)}]`;
 			} else  {
 				/* export interface StypeObject {

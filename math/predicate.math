@@ -7,19 +7,19 @@ type cls;
 type pr = [cls -> st];
 
 "이항 술어."
-type pr2 = [(cls, cls) -> st];
+type pr2 = [cls, cls -> st];
 
 "삼항 술어."
-type pr3 = [(cls, cls, cls) -> st];
+type pr3 = [cls, cls, cls -> st];
 
 "사항 술어."
-type pr4 = [(cls, cls, cls, cls) -> st];
+type pr4 = [cls, cls, cls, cls -> st];
 
 "단항 메타함수."
 type fun = [cls -> cls];
 
 "이항 메타함수."
-type fun2 = [(cls, cls) -> cls];
+type fun2 = [cls, cls -> cls];
 
 "pr 타입을 위한 A."
 $\left(#1<<\land>>#2\right)$

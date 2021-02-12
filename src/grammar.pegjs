@@ -490,17 +490,9 @@ stype =
 ftype =
 	"[" _
 	from:(
-		type:type {return [type]}
-		/ (
-			tt:(
-				"(" _
-				head: type
-				tail:(_ "," _ t:type {return t})*
-				_ ")"
-				{return [head].concat(tail)}
-			)
-			{return tt}
-		)
+		head:type
+		tail:(_ "," _ t:type {return t})*
+		{return [head].concat(tail)}
 	) _
 	"->" _
 	to:type _
