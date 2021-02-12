@@ -95,16 +95,6 @@ theorem ax_indiscernible2_m2(pr2 f, cls x: @11, cls y: @21, cls u: @12, cls v: @
 	}
 }
 
-"eq의 이전 정의."
-theorem eq_def(cls x: @11, cls y: @12) {
-	eq(x, y) |- {
-		[
-			(cls z) => { @h1 > ax_indiscernible_m((cls x) => in(z, x), ?, ?) } > Ui;
-			(cls w) => { @h1 > ax_indiscernible_m((cls x) => in(x, w), ?, ?) } > Ui
-		] > Ai
-	}
-}
-
 "axiom of extensionality."
 axiom ax_extensional() {
 	U2((cls x, cls y) => I(U((cls z) => E(in(z, x), in(z, y))), eq(x, y)))
@@ -119,87 +109,27 @@ theorem eq_i(cls x, cls y) {
 	}
 }
 
-theorem eq_Ae1(cls x: @11, cls y: @12) {
-	eq(x, y) |- {
-		@h1 > eq_def > Ae1
-	}
-}
-
-theorem eq_Ae1_Ue(cls x, cls y, cls z) {
-	eq(x, y) |- {
-		@h1 > eq_Ae1(x, y) > Ue(?, z)
-	}
-}
-
-theorem eq_Ae1_Ue_Ee1(cls x, cls y, cls z) {
-	eq(x, y) |- {
-		@h1 > eq_Ae1_Ue(x, y, z) > Ee1
-	}
-}
-
-theorem eq_Ae1_Ue_Ee2(cls x, cls y, cls z) {
-	eq(x, y) |- {
-		@h1 > eq_Ae1_Ue(x, y, z) > Ee2
-	}
-}
-
-theorem eq_Ae2(cls x: @11, cls y: @12) {
-	eq(x, y) |- {
-		@h1 > eq_def > Ae2
-	}
-}
-
-theorem eq_Ae2_Ue(cls x, cls y, cls w) {
-	eq(x, y) |- {
-		@h1 > eq_Ae2(x, y) > Ue(?, w)
-	}
-}
-
-theorem eq_Ae2_Ue_Ee1(cls x, cls y, cls w) {
-	eq(x, y) |- {
-		@h1 > eq_Ae2_Ue(x, y, w) > Ee1
-	}
-}
-
-theorem eq_Ae2_Ue_Ee2(cls x, cls y, cls z) {
-	eq(x, y) |- {
-		@h1 > eq_Ae2_Ue(x, y, z) > Ee2
-	}
-}
-
 theorem eq_in(cls x: @11, cls y: @12, cls z: @22) {
 	eq(x, y), in(y, z) |- {
-		[
-			@h2;
-			@h1 > eq_Ae2_Ue_Ee2(x, y, z)
-		] > mp
+		[@h1; @h2] > ax_indiscernible_m2(is_in(z), ?, ?) as in(x, z)
 	}
 }
 
-theorem eq_in_flip(cls x: @21, cls y: @12, cls z: @22) {
+theorem eq_in_flip(cls x: @11, cls y: @12, cls z: @22) {
 	eq(x, y), in(x, z) |- {
-		[
-			@h2;
-			@h1 > eq_Ae2_Ue_Ee1(x, y, z)
-		] > mp
+		[@h1; @h2] > ax_indiscernible_m1(is_in(z), ?, ?) as in(y, z)
 	}
 }
 
 theorem in_eq(cls x: @12, cls y: @22, cls z: @11) {
 	in(z, x), eq(x, y) |- {
-		[
-			@h1;
-			@h2 > eq_Ae1_Ue_Ee1(x, y, z)
-		] > mp
+		[@h2; @h1] > ax_indiscernible_m1(contains(z), ?, ?) as in(z, y)
 	}
 }
 
-theorem in_eq_flip(cls x: @21, cls y: @22, cls z: @11) {
+theorem in_eq_flip(cls x: @21, cls y: @12, cls z: @11) {
 	in(z, y), eq(x, y) |- {
-		[
-			@h1;
-			@h2 > eq_Ae1_Ue_Ee2(x, y, z)
-		] > mp
+		[@h2; @h1] > ax_indiscernible_m2(contains(z), ?, ?) as in(z, x)
 	}
 }
 
@@ -209,7 +139,17 @@ theorem eq_reflexive(cls x) {
 
 theorem eq_symmetric(cls x: @11, cls y: @12) {
 	eq(x, y) |- {
-		@h1 > eq_def > Ae1 > UE_flip(is_in(x), is_in(y)) > eq_i(y, x)
+		(cls z) => {
+			$1 = in(z, x) |- {
+				[@h2; @h1] > in_eq
+			};
+			
+			$2 = in(z, y) |- {
+				[@h2; @h1] > in_eq_flip
+			};
+			
+			[$2; $1] > Ei_alt
+		} > Ui > eq_i(y, x)
 	}
 }
 
@@ -226,10 +166,17 @@ theorem Neq_symmetric(cls x: @11, cls y: @12) {
 
 theorem eq_transitive(cls x: @11, cls y: @12, cls z: @22) {
 	eq(x, y), eq(y, z) |- {
-		[
-			@h1 > eq_def > Ae1;
-			@h2 > eq_def > Ae1
-		] > syllUE(is_in(x), is_in(y), is_in(z)) > eq_i(x, z)
+		(cls w) => {
+			$1 = in(w, x) |- {
+				[[@h3; @h1] > in_eq; @h2] > in_eq
+			};
+			
+			$2 = in(w, z) |- {
+				[[@h3; @h2] > in_eq_flip; @h1] > in_eq_flip
+			};
+			
+			[$1; $2] > Ei_alt
+		} > Ui > eq_i(x, z)
 	}
 }
 
@@ -251,22 +198,25 @@ theorem eq_transitive_5(cls x: @11, cls y: @21, cls z: @31, cls w: @41, cls u: @
 	}
 }
 
-theorem eq_simple(cls x, cls y) {
-	[eq_Ae1(x, y); eq_i(x, y)] > Ei_alt
+theorem self_subseteq_self(cls x) {
+	(cls z) => { in(z, x) |- @h1 > cp } > Ui as subseteq(x, x)
 }
 
 theorem eq_to_subseteq_1(cls x: @11, cls y: @12) {
 	eq(x, y) |- {
 		[
 			@h1;
-			eq_simple(x, y) > Ee1
-		] > mp > Ee1U(is_in(x), is_in(y)) as subseteq(x, y)
+			self_subseteq_self(y)
+		] > ax_indiscernible_m2((cls x) => subseteq(x, y), ?, ?)
 	}
 }
 
 theorem eq_to_subseteq_2(cls x: @11, cls y: @12) {
 	eq(x, y) |- {
-		@h1 > eq_symmetric > eq_to_subseteq_1
+		[
+			@h1;
+			self_subseteq_self(x)
+		] > ax_indiscernible_m1((cls y) => subseteq(y, x), ?, ?)
 	}
 }
 
@@ -307,10 +257,6 @@ theorem in_subseteq(cls x: @12, cls y: @22, cls z: @11) {
 			@h2 > Ue(?, z)
 		] > mp
 	}
-}
-
-theorem self_subseteq_self(cls x) {
-	(cls z) => { in(z, x) |- @h1 > cp } > Ui as subseteq(x, x)
 }
 
 theorem call_eq_i(fun f, cls x: @11, cls y: @12) {
@@ -529,22 +475,7 @@ theorem Xin_to_X($A$ cls a: @11, pr f: @12) {
 
 theorem Xin_eq($A$ cls a: @11, $B$ cls b: @12, pr f) {
 	eq(a, b) |- {
-		$foo = (cls z) => {
-			[
-				@h1 > eq_Ae1_Ue(a, b, z);
-				Epp(f(z))
-			] > EAi
-		} > Ui;
-
-		$c1 = Xin(a, f) |- {
-			[@h2; $foo] > mpXE1((cls z) => A(in(z, a), f(z)), (cls z) => A(in(z, b), f(z))) as Xin(b, f)
-		};
-
-		$c2 = Xin(b, f) |- {
-			[@h2; $foo] > mpXE2((cls z) => A(in(z, a), f(z)), (cls z) => A(in(z, b), f(z))) as Xin(a, f)
-		};
-
-		[$c1; $c2] > Ei_alt
+		@h1 > ax_indiscernible_m((cls z) => Xin(z, f), ?, ?)
 	}
 }
 
@@ -794,18 +725,18 @@ theorem Qi(pr f) {
 	}
 }
 
+theorem Qim(pr f: @11c1f, cls c: @11c22) {
+	U((cls x) => I(f(x), eq(x, c))) |- {
+		@h1 > Xi((cls c) => U((cls x) => I(f(x), eq(x, c))), c) > Qi(f)
+	}
+}
+
 theorem Qe(pr f: @11, cls x, cls y) {
 	Q(f), f(x), f(y) |- {
 		[
 			[@h2; @h3] > Ai;
 			@h1 > U2e(?, x, y)
 		] > mp
-	}
-}
-
-theorem Qim(pr f: @11c1f, cls c: @11c22) {
-	U((cls x) => I(f(x), eq(x, c))) |- {
-		@h1 > Xi((cls c) => U((cls x) => I(f(x), eq(x, c))), c) > Qi(f)
 	}
 }
 
@@ -872,10 +803,7 @@ theorem XQ_to_Xq(pr f: @11) {
 
 theorem set_is_set_1(cls x: @11, cls y: @22) {
 	is_set(x), eq(x, y) |- {
-		[
-			@h1;
-			@h2 > eq_Ae2
-		] > mpXE1(contains(x), contains(y)) as is_set(y)
+		[@h2; @h1] > ax_indiscernible_m1((cls z) => is_set(z), ?, ?)
 	}
 }
 
@@ -894,11 +822,7 @@ cls setbuilder(pr f);
 
 "setbuilder의 defining property. f를 만족하는 임의의 [**집합]의 class를 만들게 해 준다. `[Pinter]`에서는 axiom of class construction이라 부르는 것 같다."
 axiom setbuilder_def(pr f) {
-	U((cls w) => E(in(w, setbuilder(f)), A(is_set(w), f(w))))
-}
-
-theorem setbuilder_def_Ue(pr f, cls z) {
-	setbuilder_def(f) > Ue((cls w) => E(in(w, setbuilder(f)), A(is_set(w), f(w))), z)
+	U((cls z) => E(in(z, setbuilder(f)), A(is_set(z), f(z))))
 }
 
 "setbuilder를 소거한다."
@@ -906,13 +830,9 @@ theorem setbuilder_e(pr f: @121, cls z: @11) {
 	in(z, setbuilder(f)) |- {
 		[
 			@h1;
-			setbuilder_def_Ue(f, z) > Ee1
+			setbuilder_def(f) > Ue(?, z) > Ee1
 		] > mp > Ae2
 	}
-}
-
-theorem setbuilder_ec(pr f, cls z) {
-	setbuilder_e(f, z) > cp
 }
 
 "setbuilder를 도입한다."
@@ -920,7 +840,7 @@ theorem setbuilder_i(pr f: @r21, cls z: @11) {
 	is_set(z), f(z) |- {
 		[
 			[@h1; @h2] > Ai;
-			setbuilder_def_Ue(f, z) > Ee2
+			setbuilder_def(f) > Ue(?, z) > Ee2
 		] > mp
 	}
 }
@@ -976,15 +896,6 @@ theorem setbuilder_eq_e(pr f: @211, pr g: @221, cls z: @11) {
 	}
 }
 
-theorem setbuilder_ia(pr f, cls z: @111) {
-	A(is_set(z), f(z)) |- {
-		[
-			@h1;
-			setbuilder_def_Ue(f, z) > Ee2
-		] > mp
-	}
-}
-
 theorem setbuilder_def_set(pr f, cls x: @111) {
 	I(f(x), is_set(x)) |- {
 		[
@@ -1004,21 +915,6 @@ theorem setbuilder_def_set(pr f, cls x: @111) {
 				] > mp
 			} > cp
 		] > Ei
-	}
-}
-
-theorem setbuilder_def_set_2(pr f, cls x) {
-	is_set(x) |- {
-		@h1 > weaken(?, f(x)) > setbuilder_def_set(f, x)
-	}
-}
-
-theorem setbuilder_is_setbuilder(pr f: @121, cls x: @11) {
-	eq(x, setbuilder(f)) |- {
-		[
-			@h1 > eq_Ae1;
-			setbuilder_def(f)
-		] > syllUE(is_in(x), is_in(setbuilder(f)), (cls z) => A(is_set(z), f(z))) as U((cls z) => E(in(z, x), A(is_set(z), f(z))))
 	}
 }
 
@@ -1190,48 +1086,46 @@ cls cap(cls x, cls y) {
 	setbuilder((cls z) => A(in(z, x), in(z, y)))
 }
 
-theorem set_i_A_c(cls x, cls y, cls z) {
-	is_set_i_A(x, y, z) > cp
-}
-
-theorem cap_def(cls x, cls y, cls z) {
-	set_i_A_c(x, y, z) > setbuilder_def_set((cls z) => A(in(z, x), in(z, y)), z) as E(in(z, cap(x, y)), A(in(z, x), in(z, y)))
-}
-
-theorem cap_i(cls x: @112, cls y: @122, cls z: @111) {
-	A(in(z, x), in(z, y)) |- {
+theorem cap_in_i(cls x: @12, cls y: @22, cls z: @11) {
+	in(z, x), in(z, y) |- {
 		[
-			@h1;
-			cap_def(x, y, z) > Ee2
-		] > mp
+			@h1 > is_set_i;
+			[@h1; @h2] > Ai
+		] > setbuilder_i as in(z, cap(x, y))
 	}
 }
 
-theorem cap_e(cls x: @121, cls y: @122, cls z: @11) {
+theorem cap_in_e(cls x: @121, cls y: @122, cls z: @11) {
 	in(z, cap(x, y)) |- {
-		[
-			@h1;
-			cap_def(x, y, z) > Ee1
-		] > mp
+		@h1 > setbuilder_e
 	}
 }
 
-theorem cap_def_vi(cls x, cls y) {
-	(cls z) => cap_def(x, y, z) > Ui
-}
-
-theorem cap_commutative_0(cls x: @121, cls y: @122, cls z: @11) {
+theorem cap_in_e1(cls x: @121, cls y: @122, cls z: @11) {
 	in(z, cap(x, y)) |- {
-		@h1 > cap_e > A_flip > cap_i
+		@h1 > cap_in_e > Ae1
 	}
 }
 
-theorem cap_commutative_1(cls x, cls y, cls z) {
-	[cap_commutative_0(x, y, z); cap_commutative_0(y, x, z)] > Ei_alt
+theorem cap_in_e2(cls x: @121, cls y: @122, cls z: @11) {
+	in(z, cap(x, y)) |- {
+		@h1 > cap_in_e > Ae2
+	}
 }
 
-theorem cap_commutative_2(cls x, cls y) {
-	(cls z) => cap_commutative_1(x, y, z) > Ui((cls z) => E(in(z, cap(x, y)), in(z, cap(y, x)))) > eq_i(cap(x, y), cap(y, x))
+theorem cap_commutative(cls x, cls y) {
+	(cls z) => {
+		$foo = (cls x, cls y) => {
+			in(z, cap(x, y)) |- {
+				$1 = @h1 > cap_in_e1;
+				$2 = @h1 > cap_in_e2;
+
+				[$2; $1] > cap_in_i
+			} > cp
+		};
+		
+		[$foo(x, y); $foo(y, x)] > Ei
+	} > Ui > eq_i(cap(x, y), cap(y, x))
 }
 
 "합집합."
@@ -1240,7 +1134,7 @@ cls cup(cls x, cls y) {
 	setbuilder((cls z) => O(in(z, x), in(z, y)))
 }
 
-theorem cup_i1(cls x: @12, cls y, cls z: @11) {
+theorem cup_in_i1(cls x: @12, cls y, cls z: @11) {
 	in(z, x) |- {
 		[
 			@h1 > is_set_i;
@@ -1249,7 +1143,7 @@ theorem cup_i1(cls x: @12, cls y, cls z: @11) {
 	}
 }
 
-theorem cup_i2(cls x, cls y: @12, cls z: @11) {
+theorem cup_in_i2(cls x, cls y: @12, cls z: @11) {
 	in(z, y) |- {
 		[
 			@h1 > is_set_i;
@@ -1259,17 +1153,17 @@ theorem cup_i2(cls x, cls y: @12, cls z: @11) {
 }
 
 "합집합을 도입한다."
-theorem cup_i(cls x: @112, cls y: @122, cls z: @111) {
+theorem cup_in_i(cls x: @112, cls y: @122, cls z: @111) {
 	O(in(z, x), in(z, y)) |- {
 		[
 			@h1;
-			cup_i1(x, y, z) > cp;
-			cup_i2(x, y, z) > cp
+			cup_in_i1(x, y, z) > cp;
+			cup_in_i2(x, y, z) > cp
 		] > Oe
 	}
 }
 
-theorem cup_e(cls x: @121, cls y: @122, cls z: @11) {
+theorem cup_in_e(cls x: @121, cls y: @122, cls z: @11) {
 	in(z, cup(x, y)) |- {
 		@h1 > setbuilder_e
 	}
@@ -1278,7 +1172,7 @@ theorem cup_e(cls x: @121, cls y: @122, cls z: @11) {
 theorem cup_is_bigger_1(cls x, cls y) {
 	(cls z) => {
 		in(z, x) |- {
-			@h1 > Oi1(?, in(z, y)) > cup_i
+			@h1 > Oi1(?, in(z, y)) > cup_in_i
 		} > cp
 	} > Ui as subseteq(x, cup(x, y))
 }
@@ -1286,7 +1180,7 @@ theorem cup_is_bigger_1(cls x, cls y) {
 theorem cup_is_bigger_2(cls x, cls y) {
 	(cls z) => {
 		in(z, y) |- {
-			@h1 > Oi2(in(z, x), ?) > cup_i
+			@h1 > Oi2(in(z, x), ?) > cup_in_i
 		} > cp
 	} > Ui as subseteq(y, cup(x, y))
 }
@@ -1364,19 +1258,19 @@ cls bigcap3(pr f, fun g) {
 	setbuilder((cls z) => U((cls x) => I(f(x), in(z, g(x)))))
 }
 
-theorem bigcap_i($A$ cls a, cls z) {
+theorem bigcap_in_i($A$ cls a, cls z) {
 	is_set(z), Uin(a, (cls x) => in(z, x)) |- {
 		[@h1; @h2] > setbuilder_i as in(z, bigcap(a))
 	}
 }
 
-theorem bigcap_e($A$ cls a, cls z) {
+theorem bigcap_in_e($A$ cls a, cls z) {
 	in(z, bigcap(a)) |- {
 		@h1 > setbuilder_e((cls z) => Uin(a, (cls x) => in(z, x)), z)
 	}
 }
 
-theorem bigcap3_i(pr f: @r21, fun g: @r22, cls z: @11) {
+theorem bigcap3_in_i(pr f: @r21, fun g: @r22, cls z: @11) {
 	is_set(z), U((cls x) => I(f(x), in(z, g(x)))) |- {
 		[@h1; @h2] > setbuilder_i as in(z, bigcap3(f, g))
 	}
@@ -1388,7 +1282,7 @@ theorem bigcap_is_smaller($A$ cls a: @12, cls x: @11) {
 			in(z, bigcap(a)) |- {
 				[
 					@h1;
-					@h2 > bigcap_e(a, z) > Ue(?, x)
+					@h2 > bigcap_in_e(a, z) > Ue(?, x)
 				] > mp
 			} > cp
 		} > Ui as subseteq(bigcap(a), x)
@@ -1418,7 +1312,7 @@ theorem cap_is_set_2(cls x, cls y) {
 	is_set(y) |- {
 		[
 			@h1 > cap_is_set_1(y, x);
-			cap_commutative_2(y, x)
+			cap_commutative(y, x)
 		] > set_is_set_1
 	}
 }
@@ -1441,7 +1335,7 @@ cls bigcup3(pr f, fun g) {
 	setbuilder((cls z) => X((cls x) => A(f(x), in(z, g(x)))))
 }
 
-theorem bigcup_i($A$ cls a: @12, cls x: @11, cls z: @21) {
+theorem bigcup_in_i($A$ cls a: @12, cls x: @11, cls z: @21) {
 	in(x, a), in(z, x) |- {
 		[
 			@h2 > is_set_i;
@@ -1450,7 +1344,7 @@ theorem bigcup_i($A$ cls a: @12, cls x: @11, cls z: @21) {
 	}
 }
 
-theorem bigcup2_i($A$ cls a: @12, fun f: @r22, cls x: @11, cls z: @21) {
+theorem bigcup2_in_i($A$ cls a: @12, fun f: @r22, cls x: @11, cls z: @21) {
 	in(x, a), in(z, f(x)) |- {
 		[
 			@h2 > is_set_i;
@@ -1515,10 +1409,16 @@ theorem bigcup_is_set($\mathscr A$ cls aa: @11) {
 theorem subset_cap_is_subset(cls x: @11, cls y: @12) {
 	subseteq(x, y) |- {
 		(cls z) => {
-			[
-				@h1 > Ue(?, z) > DIpqEpApq;
-				cap_def(x, y, z) > E_flip
-			] > syllE
+			$1 = in(z, x) |- {
+				$z_in_y = [@h2; @h1] > in_subseteq;
+				[@h2; $z_in_y] > cap_in_i
+			} > cp;
+			
+			$2 = in(z, cap(x, y)) |- {
+				@h2 > cap_in_e > Ae1
+			} > cp;
+			
+			[$1; $2] > Ei
 		} > Ui > eq_i(x, cap(x, y))
 	}
 }
@@ -1529,7 +1429,7 @@ cls setminus(cls x, cls y) {
 	setbuilder((cls z) => A(in(z, x), Nin(z, y)))
 }
 
-theorem setminus_i(cls x: @12, cls y: @212, cls z: @11) {
+theorem setminus_in_i(cls x: @12, cls y: @212, cls z: @11) {
 	in(z, x), N(in(z, y)) |- {
 		[
 			@h1 > is_set_i;
@@ -1538,7 +1438,7 @@ theorem setminus_i(cls x: @12, cls y: @212, cls z: @11) {
 	}
 }
 
-theorem setminus_e1(cls x: @121, cls y: @122, cls z: @11) {
+theorem setminus_in_e1(cls x: @121, cls y: @122, cls z: @11) {
 	in(z, setminus(x, y)) |- {
 		@h1 > setbuilder_e > Ae1
 	}
@@ -1547,12 +1447,12 @@ theorem setminus_e1(cls x: @121, cls y: @122, cls z: @11) {
 theorem setminus_is_smaller(cls x, cls y) {
 	(cls z) => {
 		in(z, setminus(x, y)) |- {
-			@h1 > setminus_e1
+			@h1 > setminus_in_e1
 		} > cp
 	} > Ui as subseteq(setminus(x, y), x)
 }
 
-theorem setminus_e2(cls x: @121, cls y: @122, cls z: @11) {
+theorem setminus_in_e2(cls x: @121, cls y: @122, cls z: @11) {
 	in(z, setminus(x, y)) |- {
 		@h1 > setbuilder_e > Ae2
 	}
@@ -1872,14 +1772,14 @@ theorem doubleton_e(cls x: @11, cls y: @21, cls z: @31) {
 "is_set(y) 조건을 완화할 수도 있으나, 그러면 y가 집합이 아닐 때의 doubleton의 정의에 너무 의존하게 되므로 그러지 않았다."
 theorem doubleton_in_1(cls x, cls y) {
 	is_set(x), is_set(y) |- {
-		@h1 > self_in_singleton(x) > cup_i1(?, singleton(y), ?) as in(x, doubleton(x, y))
+		@h1 > self_in_singleton(x) > cup_in_i1(?, singleton(y), ?) as in(x, doubleton(x, y))
 	}
 }
 
 "is_set(x) 조건을 완화할 수도 있으나, 그러면 x가 집합이 아닐 때의 doubleton의 정의에 너무 의존하게 되므로 그러지 않았다."
 theorem doubleton_in_2(cls x, cls y) {
 	is_set(x), is_set(y) |- {
-		@h2 > self_in_singleton(y) > cup_i2(singleton(x), ?, ?) as in(y, doubleton(x, y))
+		@h2 > self_in_singleton(y) > cup_in_i2(singleton(x), ?, ?) as in(y, doubleton(x, y))
 	}
 }
 
@@ -2034,10 +1934,10 @@ theorem doubleton_to_cup(cls x: @11, cls y: @21, cls z: @31, cls w: @41) {
 		[
 			[@h1; @h2; @h3] > doubleton_e;
 			eq(z, x) |- {
-				[@h4; @h5] > in_eq > cup_i1(?, y, ?)
+				[@h4; @h5] > in_eq > cup_in_i1(?, y, ?)
 			} > cp;
 			eq(z, y) |- {
-				[@h4; @h5] > in_eq > cup_i2(x, ?, ?)
+				[@h4; @h5] > in_eq > cup_in_i2(x, ?, ?)
 			} > cp
 		] > Oe
 	}
@@ -2073,7 +1973,7 @@ theorem bigcup_singleton_is_element($A$ cls a: @11, cls x: @21) {
 					[@h1; @h2; @h3] > bigcup_singleton_to_element
 				} > cp;
 				in(z, x) |- {
-					[@h2; @h3] > bigcup_i
+					[@h2; @h3] > bigcup_in_i
 				} > cp
 			] > Ei
 		} > Ui > eq_i(bigcup(a), x)
@@ -2148,7 +2048,7 @@ theorem cup_to_bigcup_doubleton(cls x: @11, cls y: @21, cls w: @31) {
 		[
 			@h3 > is_set_i;
 			[
-				@h3 > cup_e;
+				@h3 > cup_in_e;
 				in(w, x) |- {
 					[
 						[@h1; @h2] > doubleton_in_1(x, y);
@@ -2271,7 +2171,7 @@ theorem power_is_set(cls x: @11) {
 						@h2 > Ae1;
 						(cls z) => {
 							[
-								setbuilder_ec((cls z) => subseteq(z, x), z);
+								setbuilder_e((cls z) => subseteq(z, x), z) > cp;
 								@h2 > Ae2 > Ue(?, z)
 							] > syll
 						} > Ui as subseteq(power(x), y)

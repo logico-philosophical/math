@@ -888,9 +888,9 @@ theorem cartesian_is_set($A$ cls a: @11, $B$ cls b: @21) using pair {
 
 					$set_y = $set_pair_xy > pair_set_e2;
 
-					$x_in_cup_ab = @h3 > cartesian_in_e1 > cup_i1(?, b, ?);
+					$x_in_cup_ab = @h3 > cartesian_in_e1 > cup_in_i1(?, b, ?);
 
-					$y_in_cup_ab = @h3 > cartesian_in_e2 > cup_i2(a, ?, ?);
+					$y_in_cup_ab = @h3 > cartesian_in_e2 > cup_in_i2(a, ?, ?);
 
 					$1 = [
 						$set_x > singleton_set_i(x);

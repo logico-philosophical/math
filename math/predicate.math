@@ -200,10 +200,6 @@ theorem Ui_p(st p: @1) {
 	}
 }
 
-theorem Ui_c(st p) {
-	Ui_p(p) > cp
-}
-
 "pr 타입을 위한 NNe."
 theorem NNeU(pr f: @1111) {
 	U(Nf(Nf(f))) |- {
@@ -267,8 +263,7 @@ theorem mtU(pr f: @111, pr g: @112) {
 	}
 }
 
-"UA의 m1형."
-theorem UAm1(pr f: @111, pr g: @112) {
+theorem UA_to_AU(pr f: @111, pr g: @112) {
 	U(Af(f, g)) |- {
 		[
 			(cls x) => { @h1 > Ue(?, x) as A(f(x), g(x)) > Ae1 } > Ui;
@@ -277,8 +272,7 @@ theorem UAm1(pr f: @111, pr g: @112) {
 	}
 }
 
-"UA의 m2형."
-theorem UAm2(pr f: @111, pr g: @121) {
+theorem AU_to_UA(pr f: @111, pr g: @121) {
 	A(U(f), U(g)) |- {
 		(cls x) => {
 			[
@@ -289,26 +283,12 @@ theorem UAm2(pr f: @111, pr g: @121) {
 	}
 }
 
-"[$\forall]과 [$\land] 간의 분배법칙 같은 것."
-theorem UA(pr f, pr g) {
-	[
-		UAm1(f, g) > cp;
-		UAm2(f, g) > cp
-	] > Ei
-}
-
-"UI의 m형."
-theorem UIm(pr f: @111, pr g: @112) {
+theorem UI_to_IU(pr f: @111, pr g: @112) {
 	U(If(f, g)) |- {
 		U(f) |- {
 			[@h2; @h1] > mpU
 		} > cp
 	}
-}
-
-"[$\forall]과 [$\to] 간의 분배법칙 같은 것."
-theorem UI(pr f, pr g) {
-	UIm(f, g) > cp
 }
 
 "U를 위한 Oi1."
@@ -339,16 +319,10 @@ theorem UO(pr f, pr g) {
 	UOm(f, g) > cp
 }
 
-"UU의 m형."
-theorem UUm(pr2 f: @11) {
+theorem U2_flip(pr2 f: @11) {
 	U2((cls x, cls y) => f(x, y)) |- {
 		(cls y) => { (cls x) => { @h1 > U2e(?, x, y) } > Ui } > Ui as U2((cls y, cls x) => f(x, y))
 	}
-}
-
-"[$\forall x\forall y]랑 [$\forall y\forall x]가 같다는 것."
-theorem UU(pr2 f) {
-	UUm(f) > cp
 }
 
 theorem UE_flip(pr f: @111, pr g: @112) {
@@ -399,8 +373,8 @@ theorem Ee2U2(pr2 f: @111, pr2 g: @112) {
 theorem UEe(pr f: @111, pr g: @112) {
 	U(Ef(f, g)) |- {
 		[
-			@h1 > Ee1U > UIm;
-			@h1 > Ee2U > UIm
+			@h1 > Ee1U > UI_to_IU;
+			@h1 > Ee2U > UI_to_IU
 		] > Ei
 	}
 }
@@ -564,7 +538,7 @@ theorem mpX2_alt(pr2 f: @11, st p: @21c2) {
 	}
 }
 
-theorem XOm1(pr f: @111, pr g: @112) {
+theorem XO_to_OX(pr f: @111, pr g: @112) {
 	X(Of(f, g)) |- {
 		N(O(X(f), X(g))) |- {
 			$noan = @h2 > NO_to_AN;
@@ -572,7 +546,7 @@ theorem XOm1(pr f: @111, pr g: @112) {
 			$foo = [
 				$noan > Ae1 > NX_to_UN;
 				$noan > Ae2 > NX_to_UN
-			] > Ai > UAm2;
+			] > Ai > AU_to_UA;
 
 			[
 				@h1;
@@ -582,12 +556,12 @@ theorem XOm1(pr f: @111, pr g: @112) {
 	}
 }
 
-theorem XOm2(pr f: @111, pr g: @121) {
+theorem OX_to_XO(pr f: @111, pr g: @121) {
 	O(X(f), X(g)) |- {
 		N(X(Of(f, g))) |- {
 			$foo = @h2 > NNe;
 
-			$1 = (cls x) => { $foo > Ue(?, x) as N(O(f(x), g(x))) > NO_to_AN } > Ui > UAm1(Nf(f), Nf(g));
+			$1 = (cls x) => { $foo > Ue(?, x) as N(O(f(x), g(x))) > NO_to_AN } > Ui > UA_to_AU(Nf(f), Nf(g));
 
 			[
 				@h1;
@@ -600,18 +574,13 @@ theorem XOm2(pr f: @111, pr g: @121) {
 	}
 }
 
-"[$\exists]과 [$\lor] 간의 분배법칙 같은 것. UA로부터 증명할 수 있다."
-theorem XO(pr f, pr g) {
-	[XOm1(f, g); XOm2(f, g)] > Ei_alt
-}
-
 theorem ON_to_NA_U(pr f, pr g) {
 	U(Of(Nf(f), Nf(g))) |- {
 		(cls x) => { @h1 > Ue(?, x) > ON_to_NA(f(x), g(x)) } > Ui
 	}
 }
 
-theorem XAe(pr f: @111, pr g: @112) {
+theorem XA_to_AX(pr f: @111, pr g: @112) {
 	X(Af(f, g)) |- {
 		[
 			@h1 > (ON_to_NA_U(f, g) > contrapose_alt);
@@ -622,17 +591,17 @@ theorem XAe(pr f: @111, pr g: @112) {
 
 theorem XAe1(pr f: @111, pr g: @112) {
 	X(Af(f, g)) |- {
-		@h1 > XAe > Ae1
+		@h1 > XA_to_AX > Ae1
 	}
 }
 
 theorem XAe2(pr f: @111, pr g: @112) {
 	X(Af(f, g)) |- {
-		@h1 > XAe > Ae2
+		@h1 > XA_to_AX > Ae2
 	}
 }
 
-theorem X2Ae(pr2 f, pr2 g) {
+theorem X2A_to_AX2(pr2 f, pr2 g) {
 	X2(Af2(f, g)) |- {
 		[
 			[
@@ -657,13 +626,13 @@ theorem X2Ae(pr2 f, pr2 g) {
 
 theorem X2Ae1(pr2 f: @111, pr2 g: @112) {
 	X2(Af2(f, g)) |- {
-		@h1 > X2Ae(f, g) > Ae1
+		@h1 > X2A_to_AX2(f, g) > Ae1
 	}
 }
 
 theorem X2Ae2(pr2 f: @111, pr2 g: @112) {
 	X2(Af2(f, g)) |- {
-		@h1 > X2Ae(f, g) > Ae2
+		@h1 > X2A_to_AX2(f, g) > Ae2
 	}
 }
 
@@ -682,16 +651,8 @@ theorem swapU(pr f, pr g, pr h) {
 	}
 }
 
-theorem swapU_c(pr f, pr g, pr h) {
-	swapU(f, g, h) > cp
-}
-
 theorem swapU2(pr2 f, pr2 g, pr2 h) {
 	U2(If2(f, If2(g, h))) |- {
 		(cls x, cls y) => { @h1 > U2e(?, x, y) > swap(f(x, y), g(x, y), h(x, y)) } > U2i as U2(If2(g, If2(f, h)))
 	}
-}
-
-theorem swapU2_c(pr2 f, pr2 g, pr2 h) {
-	swapU2(f, g, h) > cp
 }
