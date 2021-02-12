@@ -132,9 +132,9 @@ function recurseInternal(
 			} */
 			return `${
 	line.doc ? `"${line.doc}"\n` : ''
-}type ${
-	line.origin ? recurse(line.origin, Context.NORMAL, 0) + ' ' : ''
-}${line.name};`;
+}type ${line.name}${
+	line.origin ? ' = ' + recurse(line.origin, Context.NORMAL, 0) : ''
+};`;
 		case 'def$':
 			/* export interface Def$Object {
 				_type: 'def$';

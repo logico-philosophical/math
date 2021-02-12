@@ -35,8 +35,9 @@ import =
 typedef =
 	doc:(documentation __)?
 	"type" __
-	origin:(o:ftype __ {return o})?
-	name:ident _ sem
+	name:ident _
+	origin:('=' _ o:ftype _ {return o})?
+	sem
 	{
 		return {
 			_type: 'typedef',

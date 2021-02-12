@@ -4,22 +4,22 @@ import propositional;
 type cls;
 
 "단항 술어(unary predicate)."
-type [cls -> st] pr;
+type pr = [cls -> st];
 
 "이항 술어."
-type [(cls, cls) -> st] pr2;
+type pr2 = [(cls, cls) -> st];
 
 "삼항 술어."
-type [(cls, cls, cls) -> st] pr3;
+type pr3 = [(cls, cls, cls) -> st];
 
 "사항 술어."
-type [(cls, cls, cls, cls) -> st] pr4;
+type pr4 = [(cls, cls, cls, cls) -> st];
 
 "단항 메타함수."
-type [cls -> cls] fun;
+type fun = [cls -> cls];
 
 "이항 메타함수."
-type [(cls, cls) -> cls] fun2;
+type fun2 = [(cls, cls) -> cls];
 
 "pr 타입을 위한 A."
 $\left(#1<<\land>>#2\right)$
