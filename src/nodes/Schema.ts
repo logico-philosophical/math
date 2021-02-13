@@ -32,18 +32,15 @@ export default class Schema extends Fun {
 		}
 	}
 	
-	public isProved(hyps?) {
+	protected isProvedInternal(hypotheses: Metaexpr[]): boolean {
 		if (this.isProvedCache) return true;
 
-		if (!hyps && typeof this.isProvedCache == 'boolean') {
+		if (hypotheses.length == 0 && typeof this.isProvedCache == 'boolean') {
 			return this.isProvedCache;
 		}
 
-		var cache = !hyps || !hyps.length;
-		hyps = hyps || [];
-		
-		var ret = this.schemaType == 'axiom' || super.isProved(hyps);
-		if (cache) this.isProvedCache = ret;
+		var ret = this.schemaType == 'axiom' || this.expr.isProved(hypotheses);
+		if (!hypotheses.length) this.isProvedCache = ret;
 		return ret;
 	}
 
