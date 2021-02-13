@@ -44,7 +44,7 @@ export default class Schema extends Fun {
 		return ret;
 	}
 
-	public substitute(map: Map<Variable, Expr0>): Expr {
+	public substitute(map: Map<Variable, ObjectExpr>): Expr {
 		if (!this.expr) return this;
 
 		// 이름이 있는 것은 스코프 밖에서 보이지 않으므로 치환될 것을
@@ -127,7 +127,7 @@ export default class Schema extends Fun {
 }
 
 import $Variable from "./$Variable";
-import Expr0 from "./Expr0";
+import ObjectExpr from "./ObjectExpr";
 import Expr, { Precedence } from "./Expr";
 import Variable from "./Variable";
 import ObjectFun from "./ObjectFun";

@@ -3,7 +3,7 @@ import ExecutionContext from '../ExecutionContext';
 import { ProofType } from '../ProofType';
 import StackTrace from '../StackTrace';
 import $Variable from './$Variable';
-import Expr0 from './Expr0';
+import ObjectExpr from './ObjectExpr';
 import Fun from './Fun';
 import Expr, { EqualsPriority, Precedence } from './Expr';
 import { ObjectType, Type, TeeType } from './types';
@@ -54,7 +54,7 @@ export default class Tee extends Expr {
 		return this.right.isProved(hypotheses.concat(this.left));
 	}
 
-	public substitute(map: Map<Variable, Expr0>): Expr {
+	public substitute(map: Map<Variable, ObjectExpr>): Expr {
 		var left = this.left.map(e => e.substitute(map));
 		var right = this.right.substitute(map);
 

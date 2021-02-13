@@ -1,4 +1,4 @@
-import { Def$Object, DefvObject, Expr0Object, ImportOrLineObject, ExprObject, StypeObject, TypeObject } from "./PegInterfaceDefinitions";
+import { Def$Object, DefvObject, ObjectExprObject, ImportOrLineObject, ExprObject, StypeObject, TypeObject } from "./PegInterfaceDefinitions";
 
 export default function unparse(tree: ImportOrLineObject[]) {
 	var strings = tree.map(line => recurse(line, Context.NORMAL, 0));
@@ -26,7 +26,7 @@ function isOneLiner(s: string) {
 }
 
 function recurse(
-		line: ImportOrLineObject | Def$Object | ExprObject | Expr0Object | TypeObject,
+		line: ImportOrLineObject | Def$Object | ExprObject | ObjectExprObject | TypeObject,
 		context: Context,
 		indent: number): string {
 	return recurseInternal(line, context)
@@ -35,7 +35,7 @@ function recurse(
 }
 
 function recurseInternal(
-		line: ImportOrLineObject | Def$Object | ExprObject | Expr0Object | TypeObject,
+		line: ImportOrLineObject | Def$Object | ExprObject | ObjectExprObject | TypeObject,
 		context: Context): string {
 	
 	function defv(line: DefvObject, param: boolean) {
@@ -48,7 +48,7 @@ function recurseInternal(
 			sealed?: boolean;
 			type: TypeObject;
 			name: string;
-			expr?: Expr0Object;
+			expr?: ObjectExprObject;
 			location: LocationObject;
 		} */
 		var s = param ? ' ' : '\n';
@@ -97,7 +97,7 @@ function recurseInternal(
 				rettype: TypeObject;
 				name: string;
 				params: DefvObject[];
-				expr: Expr0Object;
+				expr: ObjectExprObject;
 				location: LocationObject;
 			} */
 			return `${
@@ -190,7 +190,7 @@ function recurseInternal(
 			/* export interface ReductionObject {
 				_type: 'reduction';
 				subject: ExprObject;
-				args: Array<Expr0Object | null>;
+				args: Array<ObjectExprObject | null>;
 				antecedents: ExprObject[];
 				as: ExprObject;
 				location: LocationObject;
@@ -228,14 +228,14 @@ function recurseInternal(
 			/* export interface SchemacallObject {
 				_type: 'schemacall';
 				schema: ExprObject;
-				args: Expr0Object[];
+				args: ObjectExprObject[];
 				location: LocationObject;
 			} */
 
 			/* export interface FuncallObject {
 				_type: 'funcall';
-				schema: Expr0Object;
-				args: Expr0Object[];
+				schema: ObjectExprObject;
+				args: ObjectExprObject[];
 				location: LocationObject;
 			} */
 			var brackets = ['var'].includes(line.schema._type)
@@ -283,7 +283,7 @@ function recurseInternal(
 			/* export interface FunexprObject {
 				_type: 'funexpr';
 				params: DefvObject[];
-				expr: Expr0Object;
+				expr: ObjectExprObject;
 				location: LocationObject;
 			} */
 			if (context == Context.CALLEE)

@@ -6,7 +6,7 @@ export default class ObjectFun extends Fun {
 		super({doc, tex, annotations, sealed, rettype, name, params, expr}, trace);
 	}
 
-	public substitute(map: Map<Variable, Expr0>): Expr {
+	public substitute(map: Map<Variable, ObjectExpr>): Expr {
 		if (!this.expr) return this;
 
 		// 이름이 있는 것은 스코프 밖에서 보이지 않으므로 치환될 것을
@@ -106,7 +106,7 @@ export default class ObjectFun extends Fun {
 
 import ExecutionContext from "../ExecutionContext";
 import StackTrace from "../StackTrace";
-import Expr0 from "./Expr0";
+import ObjectExpr from "./ObjectExpr";
 import Expr, { Precedence } from "./Expr";
 import Variable from "./Variable";
 import Parameter from "./Parameter";
@@ -120,5 +120,5 @@ interface ObjectFunArgumentType {
 	rettype: Type;
 	name: string;
 	params: Parameter[];
-	expr: Expr0;
+	expr: ObjectExpr;
 }

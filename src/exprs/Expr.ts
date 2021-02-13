@@ -3,7 +3,7 @@ import ExecutionContext from "../ExecutionContext";
 import { ProofType } from "../ProofType";
 import StackTrace from "../StackTrace";
 import UniversalCounter from "../UniversalCounter";
-import Expr0 from "./Expr0";
+import ObjectExpr from "./ObjectExpr";
 import Fun from "./Fun";
 import { Type } from "./types";
 import Variable from "./Variable";
@@ -55,7 +55,7 @@ export default abstract class Expr {
 		this.type = type;
 	}
 
-	public abstract substitute(map: Map<Variable, Expr0>): Expr;
+	public abstract substitute(map: Map<Variable, ObjectExpr>): Expr;
 
 	/**
 	 * 

@@ -5,7 +5,7 @@
 
 import ExecutionContext from './ExecutionContext';
 import $Variable from './exprs/$Variable';
-import Expr0 from './exprs/Expr0';
+import ObjectExpr from './exprs/ObjectExpr';
 import Fun from './exprs/Fun';
 import Funcall from './exprs/Funcall';
 import Expr from './exprs/Expr';
@@ -17,7 +17,7 @@ import Tee from './exprs/Tee';
 import { ObjectType, SimpleObjectType } from './exprs/types';
 import Variable from './exprs/Variable';
 import With from './exprs/With';
-import { Def$Object, DefschemaObject, DefunObject, DefvObject, Expr0Object, FuncallObject, FunexprObject, ExprObject, ReductionObject, SchemacallObject, SchemaexprObject, StypeObject, TeeObject, TypedefObject, TypeObject, VarObject, WithObject } from './PegInterfaceDefinitions';
+import { Def$Object, DefschemaObject, DefunObject, DefvObject, ObjectExprObject, FuncallObject, FunexprObject, ExprObject, ReductionObject, SchemacallObject, SchemaexprObject, StypeObject, TeeObject, TypedefObject, TypeObject, VarObject, WithObject } from './PegInterfaceDefinitions';
 import Scope, { NestedTypeInput } from './Scope';
 
 function typeObjToString(obj: TypeObject): string {
@@ -119,7 +119,7 @@ export default class PI {
 
 		var type = scope.getType(typeObjToNestedArr(obj.type));
 
-		var expr = obj.expr ? PI.expr0(obj.expr, scope) : null;
+		var expr = obj.expr ? PI.objectexpr(obj.expr, scope) : null;
 
 		if (obj.isParam) {
 			return new Parameter({
@@ -182,7 +182,7 @@ export default class PI {
 		});
 
 		if (obj.expr) {
-			expr = PI.expr0(obj.expr, scope);
+			expr = PI.objectexpr(obj.expr, scope);
 		}
 
 		return new ObjectFun({annotations: [], sealed, rettype, name, params, expr, doc, tex}, scope.trace);
@@ -194,10 +194,10 @@ export default class PI {
 
 		var scope = parentScope.extend('funcall', 'name' in obj.schema ? obj.schema.name : null, obj.location);
 
-		var fun = PI.expr0(obj.schema, scope);
+		var fun = PI.objectexpr(obj.schema, scope);
 
 		var args = obj.args.map(arg => {
-			return PI.expr0(arg, scope);
+			return PI.objectexpr(arg, scope);
 		});
 
 		return new Funcall({fun, args}, scope.trace);
@@ -229,7 +229,7 @@ export default class PI {
 		}
 	}
 
-	public static expr0(obj: Expr0Object, parentScope: Scope): Expr0 {
+	public static objectexpr(obj: ObjectExprObject, parentScope: Scope): ObjectExpr {
 		if (!['funcall', 'funexpr', 'var'].includes(obj._type)) {
 			console.log(obj);
 			throw Error('Assertion failed');
@@ -437,7 +437,7 @@ export default class PI {
 		var fun = PI.expr(obj.schema, scope, context);
 
 		var args = obj.args.map(obj => {
-			return PI.expr0(obj, scope);
+			return PI.objectexpr(obj, scope);
 		});
 
 		return new Funcall({
@@ -461,7 +461,7 @@ export default class PI {
 		var args = !obj.args
 			? null
 			: obj.args.map(g => {
-				return g && PI.expr0(g, scope);
+				return g && PI.objectexpr(g, scope);
 			});
 
 		var antecedents = obj.antecedents.map(obj => {

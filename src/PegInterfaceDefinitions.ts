@@ -36,7 +36,7 @@ export interface DefvObject {
 	sealed?: boolean;
 	type: TypeObject;
 	name: string;
-	expr?: Expr0Object;
+	expr?: ObjectExprObject;
 	location: LocationObject;
 }
 
@@ -48,11 +48,11 @@ export interface DefunObject {
 	rettype: TypeObject;
 	name: string;
 	params: DefvObject[];
-	expr: Expr0Object;
+	expr: ObjectExprObject;
 	location: LocationObject;
 }
 
-export type Expr0Object = FuncallObject | FunexprObject | VarObject;
+export type ObjectExprObject = FuncallObject | FunexprObject | VarObject;
 export type ExprObject = TeeObject | ReductionObject | SchemacallObject | WithObject | VarObject | SchemaexprObject;
 
 export interface DefschemaObject {
@@ -71,7 +71,7 @@ export interface DefschemaObject {
 export interface ReductionObject {
 	_type: 'reduction';
 	subject: ExprObject;
-	args: Array<Expr0Object | null>;
+	args: Array<ObjectExprObject | null>;
 	antecedents: ExprObject[];
 	as: ExprObject;
 	location: LocationObject;
@@ -80,21 +80,21 @@ export interface ReductionObject {
 export interface SchemacallObject {
 	_type: 'schemacall';
 	schema: ExprObject;
-	args: Expr0Object[];
+	args: ObjectExprObject[];
 	location: LocationObject;
 }
 
 export interface FuncallObject {
 	_type: 'funcall';
-	schema: Expr0Object;
-	args: Expr0Object[];
+	schema: ObjectExprObject;
+	args: ObjectExprObject[];
 	location: LocationObject;
 }
 
 export interface FunexprObject {
 	_type: 'funexpr';
 	params: DefvObject[];
-	expr: Expr0Object;
+	expr: ObjectExprObject;
 	location: LocationObject;
 }
 

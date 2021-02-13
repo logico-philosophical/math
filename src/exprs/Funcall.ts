@@ -1,14 +1,14 @@
-import Expr0 from './Expr0';
+import ObjectExpr from './ObjectExpr';
 
 interface FuncallArgumentType {
 	fun: Expr;
-	args: Expr0[];
+	args: ObjectExpr[];
 }
 
-export default class Funcall extends Expr0 {
+export default class Funcall extends ObjectExpr {
 	
 	public readonly fun: Expr;
-	public readonly args: Expr0[];
+	public readonly args: ObjectExpr[];
 
 	constructor ({fun, args}: FuncallArgumentType, trace: StackTrace) {
 		if (!fun.type.isFunctional()) {
@@ -16,7 +16,7 @@ export default class Funcall extends Expr0 {
 			throw Expr.error(`${name} is not callable`, trace);
 		}
 
-		if (!(args instanceof Array) || args.map(e => e instanceof Expr0).some(e => !e))
+		if (!(args instanceof Array) || args.map(e => e instanceof ObjectExpr).some(e => !e))
 			throw Expr.error('Assertion failed', trace);
 			 
 		var resolvedType = fun.type.resolve() as FunctionalObjectType | FunctionalMetaType,
@@ -42,7 +42,7 @@ export default class Funcall extends Expr0 {
 		return this.fun.isProved(hypotheses);
 	}
 
-	public substitute(map: Map<Variable, Expr0>): Expr {
+	public substitute(map: Map<Variable, ObjectExpr>): Expr {
 		return new Funcall({
 			fun: this.fun.substitute(map),
 			args: this.args.map(arg => arg.substitute(map))

@@ -2,7 +2,7 @@ import Counter from '../Counter';
 import ExecutionContext from '../ExecutionContext';
 import { ProofType } from '../ProofType';
 import StackTrace from '../StackTrace';
-import Expr0 from './Expr0';
+import ObjectExpr from './ObjectExpr';
 import Fun from './Fun';
 import Expr, { EqualsPriority, Precedence } from './Expr';
 import Nameable from './Nameable';
@@ -13,15 +13,15 @@ interface VariableArgumentType {
 	sealed: boolean;
 	type: ObjectType;
 	name: string;
-	expr: Expr0;
+	expr: ObjectExpr;
 }
 
-export default class Variable extends Expr0 implements Nameable {
+export default class Variable extends ObjectExpr implements Nameable {
 
 	public readonly sealed: boolean;
 	public readonly type: ObjectType;
 	public readonly name: string;
-	public readonly expr: Expr0 | null;
+	public readonly expr: ObjectExpr | null;
 
 	constructor ({doc, tex, sealed, type, name, expr}: VariableArgumentType, trace: StackTrace) {
 		super(doc, tex, type, trace);
@@ -46,7 +46,7 @@ export default class Variable extends Expr0 implements Nameable {
 		return false;
 	}
 
-	public substitute(map: Map<Variable, Expr0>): Expr {
+	public substitute(map: Map<Variable, ObjectExpr>): Expr {
 		if (map.has(this)) return map.get(this);
 
 		// 매크로 변수는 스코프 밖에서 보이지 않으므로 치환될 것을 갖지 않는다는

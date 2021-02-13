@@ -56,7 +56,7 @@ defv =
 	name:ident _
 	expr:(
 		"=" _
-		expr:expr0 _
+		expr:objectexpr _
 		sem
 		{return expr}
 		/ sem {return null}
@@ -123,7 +123,7 @@ defun =
 	)
 	expr:(
 		"{" _
-		expr:expr0 _
+		expr:objectexpr _
 		"}"
 		{return expr}
 		/ sem {return null}
@@ -215,8 +215,8 @@ reduction =
 		args:(
 			_ "(" _
 			a:(
-				head:('?' {return null} / expr0) _
-				tail:("," _ e:('?' {return null} / expr0) _ {return e})*
+				head:('?' {return null} / objectexpr) _
+				tail:("," _ e:('?' {return null} / objectexpr) _ {return e})*
 				{return [head].concat(tail)}
 			)?
 			")"
@@ -264,8 +264,8 @@ schemacall =
 	args:(
 		"(" _
 		a:(
-			head:expr0 _
-			tail:("," _ e:expr0 _ {return e})*
+			head:objectexpr _
+			tail:("," _ e:objectexpr _ {return e})*
 			{return [head].concat(tail)}
 		)?
 		")"
@@ -281,20 +281,20 @@ schemacall =
 	}
 
 // forall(f, g)
-// (expr0)(f, g)
+// (objectexpr)(f, g)
 funcall =
 	schema:(
 		var
 		/ "(" _
-		e:expr0 _
+		e:objectexpr _
 		")"
 		{return e}
 	) _
 	args:(
 		"(" _
 		a:(
-			head:expr0 _
-			tail:("," _ e:expr0 _ {return e})*
+			head:objectexpr _
+			tail:("," _ e:objectexpr _ {return e})*
 			{return [head].concat(tail)}
 		)?
 		")"
@@ -309,8 +309,8 @@ funcall =
 		}
 	}
 
-// (T t) => expr0
-// (T t) => { expr0 }
+// (T t) => objectexpr
+// (T t) => { objectexpr }
 funexpr =
 	params:(
 		"(" _
@@ -324,8 +324,8 @@ funexpr =
 	)
 	"=>" _
 	expr:(
-		expr0
-		/ "{" _ e:expr0 _ "}" {return e}
+		objectexpr
+		/ "{" _ e:objectexpr _ "}" {return e}
 	)
 	{
 		return {
@@ -403,7 +403,7 @@ with =
 	type:type __
 	varname:ident _
 	"=" _
-	varexpr:expr0 _
+	varexpr:objectexpr _
 	')' _ '{' _
 	defdollars: (d:defdollar _ {return d})* _
 	expr:expr _
@@ -452,11 +452,11 @@ expr_internal_1 =
 	/ with
 	/ "(" _ e:expr _ ")" {return e}
 
-expr0 =
+objectexpr =
 	funcall
 	/ funexpr
 	/ var
-	/ "(" _ e:expr0 _ ")" {return e}
+	/ "(" _ e:objectexpr _ ")" {return e}
 
 defdollar =
 	name:dollar_ident _
