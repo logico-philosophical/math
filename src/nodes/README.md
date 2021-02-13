@@ -13,7 +13,6 @@ Metaexpr
     ├ Funcall
     └ Variable
        └ Parameter
-	
 ```
 
 ## types.ts
