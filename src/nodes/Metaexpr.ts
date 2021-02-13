@@ -2,6 +2,7 @@ import Counter from "../Counter";
 import ExecutionContext from "../ExecutionContext";
 import { ProofType } from "../ProofType";
 import StackTrace from "../StackTrace";
+import UniversalCounter from "../UniversalCounter";
 import Expr0 from "./Expr0";
 import Fun from "./Fun";
 import { Type } from "./types";
@@ -25,8 +26,6 @@ export enum EqualsPriority {
 	FIVE
 }
 
-var ctr = 0;
-
 export type Precedence = boolean | number | [number, number];
 
 export default abstract class Metaexpr {
@@ -46,7 +45,7 @@ export default abstract class Metaexpr {
 	public static readonly PREC_COLONEQQ = 100000;
 
 	constructor (doc: string, tex: string, type: Type, trace: StackTrace) {
-		this._id = ++ctr;
+		this._id = UniversalCounter.next();
 		this.doc = doc;
 		this.tex = tex;
 		this.trace = trace;

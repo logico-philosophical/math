@@ -1,12 +1,15 @@
 import StackTrace from "../StackTrace";
+import UniversalCounter from "../UniversalCounter";
 import Nameable from "./Nameable";
 
 export abstract class Type {
 
+	public readonly _id: number;
 	public readonly trace: StackTrace;
 	public readonly doc: string;
 
 	constructor (doc: string, trace: StackTrace) {
+		this._id = UniversalCounter.next();
 		this.doc = doc;
 		this.trace = trace;
 	}
