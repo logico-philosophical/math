@@ -21,7 +21,7 @@ export default class Program {
 	 * A temporary list used by {@link loadModuleInternal} method.
 	 * 
 	 * This is the list of filenames of the files with a temporary mark during a
-	 * depth-first topological sort. Node that the file is considered to be
+	 * depth-first topological sort. Note that the file is considered to be
 	 * marked with a permanent mark if {@code this.scopeMap} has the filename.
 	 * 
 	 * See https://en.wikipedia.org/wiki/Topological_sorting#Depth-first_search.

@@ -61,14 +61,14 @@ export default class ObjectFun extends Fun {
 
 	public toTeXString(prec?: Precedence, root?: boolean): string {
 		if (!this.name) {
-			this.precedence = Node.PREC_FUNEXPR;
+			this.precedence = Metaexpr.PREC_FUNEXPR;
 			return [
 				(this.shouldConsolidate(prec) ? '\\left(' : ''),
 
 				(
 					this.params.length == 1
 					? this.params[0].toTeXString(false)
-					: `\\left(${this.params.map(e => e.toTeXString(Node.PREC_COMMA)).join(', ')}\\right)`
+					: `\\left(${this.params.map(e => e.toTeXString(Metaexpr.PREC_COMMA)).join(', ')}\\right)`
 				),
 				'\\mapsto ',
 				this.expr.expandMeta(true).toTeXString(false),
@@ -78,18 +78,18 @@ export default class ObjectFun extends Fun {
 		}
 
 		if (!root)
-			return `\\href{#def-${this.name}}{${Node.makeTeXName(this.name)}}`;
+			return `\\href{#def-${this.name}}{${Metaexpr.makeTeXName(this.name)}}`;
 	
 		if (!this.expr)
 			return this.funcallToTeXString(this.params, prec);
 	
-		return this.funcallToTeXString(this.params, Node.PREC_COLONEQQ)
-				+ `\\coloneqq ${this.expr.toTeXString(Node.PREC_COLONEQQ)}`;
+		return this.funcallToTeXString(this.params, Metaexpr.PREC_COLONEQQ)
+				+ `\\coloneqq ${this.expr.toTeXString(Metaexpr.PREC_COLONEQQ)}`;
 	}
 
 	public funcallToTeXString(args, prec) {
 		args = args.map(arg => {
-			return arg.toTeXString(this.tex ? this.precedence : Node.PREC_COMMA);
+			return arg.toTeXString(this.tex ? this.precedence : Metaexpr.PREC_COMMA);
 		});
 	
 		if (this.tex) {
@@ -99,7 +99,7 @@ export default class ObjectFun extends Fun {
 		return (
 			!this.name
 				? this.toTeXString(false)
-				: `\\href{#def-${this.name}}{${Node.makeTeXName(this.name)}}`
+				: `\\href{#def-${this.name}}{${Metaexpr.makeTeXName(this.name)}}`
 		) + `\\mathord{\\left(${args.join(', ')}\\right)}`;
 	}
 }
@@ -107,8 +107,7 @@ export default class ObjectFun extends Fun {
 import ExecutionContext from "../ExecutionContext";
 import StackTrace from "../StackTrace";
 import Expr0 from "./Expr0";
-import Metaexpr from "./Metaexpr";
-import Node, { Precedence } from "./Node";
+import Metaexpr, { Precedence } from "./Metaexpr";
 import Variable from "./Variable";
 import Parameter from "./Parameter";
 import { Type, ObjectType } from "./types";

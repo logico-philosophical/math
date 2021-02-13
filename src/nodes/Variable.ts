@@ -4,9 +4,8 @@ import { ProofType } from '../ProofType';
 import StackTrace from '../StackTrace';
 import Expr0 from './Expr0';
 import Fun from './Fun';
-import Metaexpr, { EqualsPriority } from './Metaexpr';
+import Metaexpr, { EqualsPriority, Precedence } from './Metaexpr';
 import Nameable from './Nameable';
-import Node, { Precedence } from './Node';
 
 interface VariableArgumentType {
 	doc?: string;
@@ -28,14 +27,14 @@ export default class Variable extends Expr0 implements Nameable {
 		super(doc, tex, type, trace);
 		
 		if (typeof name != 'string')
-			throw Node.error('Assertion failed', trace);
+			throw Metaexpr.error('Assertion failed', trace);
 		
 		if (sealed && !expr) {
-			throw Node.error('Cannot seal a primitive fun', trace);
+			throw Metaexpr.error('Cannot seal a primitive fun', trace);
 		}
 
 		if (expr && !type.equals(expr.type)) {
-			throw Node.error(`Expression type ${expr.type} failed to match the type ${type} of variable ${name}`, trace);
+			throw Metaexpr.error(`Expression type ${expr.type} failed to match the type ${type} of variable ${name}`, trace);
 		}
 
 		this.sealed = sealed;
@@ -101,10 +100,10 @@ export default class Variable extends Expr0 implements Nameable {
 	public toTeXString(prec?: Precedence, root?: boolean): string {
 		var id = this instanceof Parameter ? `id-${this._id}` : `def-${this.name}`;
 
-		var tex = this.tex || Node.makeTeXName(this.name);
+		var tex = this.tex || Metaexpr.makeTeXName(this.name);
 		
 		var expr = root && this.expr
-			? `\\coloneqq ${this.expr.toTeXString(Node.PREC_COLONEQQ)}`
+			? `\\coloneqq ${this.expr.toTeXString(Metaexpr.PREC_COLONEQQ)}`
 			: '';
 		
 		return `\\href{#${id}}{${tex}}${expr}`;

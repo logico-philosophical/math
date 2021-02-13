@@ -13,22 +13,22 @@ export default class Funcall extends Expr0 {
 	constructor ({fun, args}: FuncallArgumentType, trace: StackTrace) {
 		if (!fun.type.isFunctional()) {
 			var name = isNameable(fun) ? fun.name : '<anonymous>';
-			throw Node.error(`${name} is not callable`, trace);
+			throw Metaexpr.error(`${name} is not callable`, trace);
 		}
 
-		if (!(args instanceof Array) || args.map(e => e instanceof Node).some(e => !e))
-			throw Node.error('Assertion failed', trace);
+		if (!(args instanceof Array) || args.map(e => e instanceof Expr0).some(e => !e))
+			throw Metaexpr.error('Assertion failed', trace);
 			 
 		var resolvedType = fun.type.resolve() as FunctionalObjectType | FunctionalMetaType,
 			paramTypes = resolvedType.from,
 			argTypes = args.map(e => e.type);
 
 		if (paramTypes.length != argTypes.length)
-			throw Node.error(`Invalid number of arguments (expected ${paramTypes.length}): ${argTypes.length}`, trace);
+			throw Metaexpr.error(`Invalid number of arguments (expected ${paramTypes.length}): ${argTypes.length}`, trace);
 
 		for (var i = 0; i < paramTypes.length; i++) {
 			if (!paramTypes[i].equals(argTypes[i])) {
-				throw Node.error(`Argument #${i + 1} has illegal argument type (expected ${paramTypes[i]}): ${argTypes[i]}`, trace);
+				throw Metaexpr.error(`Argument #${i + 1} has illegal argument type (expected ${paramTypes[i]}): ${argTypes[i]}`, trace);
 			}
 		}
 
@@ -303,10 +303,10 @@ export default class Funcall extends Expr0 {
 		if (this.fun instanceof Schema) {
 			return (
 				this.fun.name
-					? `\\href{#def-${this.fun.name}}{\\htmlData{proved=${this.fun.isProved() ? 'p' : 'np'}}{\\textsf{${Node.escapeTeX(this.fun.name)}}}}`
+					? `\\href{#def-${this.fun.name}}{\\htmlData{proved=${this.fun.isProved() ? 'p' : 'np'}}{\\textsf{${Metaexpr.escapeTeX(this.fun.name)}}}}`
 					: this.fun.toTeXString(false)
 			) + `\\mathord{\\left(${this.args.map(arg => {
-				return arg.toTeXString(Node.PREC_COMMA);
+				return arg.toTeXString(Metaexpr.PREC_COMMA);
 			}).join(', ')}\\right)}`;
 		}
 
@@ -314,13 +314,13 @@ export default class Funcall extends Expr0 {
 			return this.fun.funcallToTeXString(this.args, prec);
 		
 		var args = this.args.map(arg => {
-			return arg.toTeXString(Node.PREC_COMMA);
+			return arg.toTeXString(Metaexpr.PREC_COMMA);
 		});
 
 		return (
 			!(isNameable(this.fun) && this.fun.name) || this.fun instanceof Variable
 				? this.fun.toTeXString(false)
-				: Node.makeTeXName(this.fun.name)
+				: Metaexpr.makeTeXName(this.fun.name)
 		) + `\\mathord{\\left(${args.join(', ')}\\right)}`;
 	}
 }
@@ -331,9 +331,8 @@ import { ProofType } from '../ProofType';
 import StackTrace from '../StackTrace';
 import $Variable from './$Variable';
 import Fun from './Fun';
-import Metaexpr, { EqualsPriority } from './Metaexpr';
+import Metaexpr, { EqualsPriority, Precedence } from './Metaexpr';
 import { isNameable } from './Nameable';
-import Node, { Precedence } from './Node';
 import ObjectFun from './ObjectFun';
 import Schema from './Schema';
 import Variable from './Variable';

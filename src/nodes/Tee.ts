@@ -5,8 +5,7 @@ import StackTrace from '../StackTrace';
 import $Variable from './$Variable';
 import Expr0 from './Expr0';
 import Fun from './Fun';
-import Metaexpr, { EqualsPriority } from './Metaexpr';
-import Node, { Precedence } from './Node';
+import Metaexpr, { EqualsPriority, Precedence } from './Metaexpr';
 import { ObjectType, Type, TeeType } from './types';
 import Variable from './Variable';
 
@@ -29,15 +28,15 @@ export default class Tee extends Metaexpr {
 						|| l.type instanceof Type;
 				}))) {
 			console.log(left);
-			throw Node.error('Assertion failed', trace);
+			throw Metaexpr.error('Assertion failed', trace);
 		}
 
 		if (def$s && !(def$s instanceof Array && def$s.every($ => $ instanceof $Variable)))
-			throw Node.error('Assertion failed', trace);
+			throw Metaexpr.error('Assertion failed', trace);
 
 		if (!(right.type instanceof ObjectType || right.type instanceof Type)) {
 			console.log(right);
-			throw Node.error('Assertion failed', trace);
+			throw Metaexpr.error('Assertion failed', trace);
 		}
 
 		super(null, null, new TeeType({
@@ -48,7 +47,7 @@ export default class Tee extends Metaexpr {
 		this.left = left;
 		this.def$s = def$s || [];
 		this.right = right;
-		this.precedence = Node.PREC_COMMA;
+		this.precedence = Metaexpr.PREC_COMMA;
 	}
 
 	protected isProvedInternal(hypotheses: Metaexpr[]): boolean {
@@ -146,7 +145,7 @@ export default class Tee extends Metaexpr {
 
 		return [
 			(this.shouldConsolidate(prec) ? '\\left(' : ''),
-			`{${expanded.left.map(e => e.toTeXString(Node.PREC_COMMA)).join(', ')} \\vdash ${expanded.right.toTeXString(Node.PREC_COMMA)}}`,
+			`{${expanded.left.map(e => e.toTeXString(Metaexpr.PREC_COMMA)).join(', ')} \\vdash ${expanded.right.toTeXString(Metaexpr.PREC_COMMA)}}`,
 			(this.shouldConsolidate(prec) ? '\\right)' : '')
 		].join('');
 	}

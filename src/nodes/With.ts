@@ -5,8 +5,7 @@ import StackTrace from "../StackTrace";
 import $Variable from "./$Variable";
 import Expr0 from "./Expr0";
 import Fun from "./Fun";
-import Metaexpr, { EqualsPriority } from "./Metaexpr";
-import { Precedence } from "./Node";
+import Metaexpr, { EqualsPriority, Precedence } from "./Metaexpr";
 import Variable from "./Variable";
 
 interface WithArgumentType {

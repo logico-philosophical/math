@@ -1,19 +1,18 @@
 # /src/nodes
 
 ```
-Node
- └ Metaexpr
-    ├ Reduction
-    ├ Tee
-    ├ $Variable
-    ├ With
-    └ Expr0
-       ├ Fun
-       │  ├ ObjectFun
-       │  └ Schema
-       ├ Funcall
-       └ Variable
-          └ Parameter
+Metaexpr
+ ├ Reduction
+ ├ Tee
+ ├ $Variable
+ ├ With
+ └ Expr0
+    ├ Fun
+    │  ├ ObjectFun
+    │  └ Schema
+    ├ Funcall
+    └ Variable
+       └ Parameter
 	
 ```
 

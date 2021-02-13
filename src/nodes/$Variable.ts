@@ -4,9 +4,8 @@ import { ProofType } from "../ProofType";
 import StackTrace from "../StackTrace";
 import Expr0 from "./Expr0";
 import Fun from "./Fun";
-import Metaexpr, { EqualsPriority } from "./Metaexpr";
+import Metaexpr, { EqualsPriority, Precedence } from "./Metaexpr";
 import Nameable from "./Nameable";
-import Node, { Precedence } from "./Node";
 import Variable from "./Variable";
 
 interface $VariableArgumentType {
@@ -23,7 +22,7 @@ export default class $Variable extends Metaexpr implements Nameable {
 		super(null, null, expr.type, trace);
 
 		if (!name || !expr) {
-			throw Node.error('Assertion failed', trace);
+			throw Metaexpr.error('Assertion failed', trace);
 		}
 
 		this.name = name;
@@ -72,6 +71,6 @@ export default class $Variable extends Metaexpr implements Nameable {
 	}
 	
 	public toTeXString(prec?: Precedence, root?: boolean): string {
-		return `\\mathtt{${Node.escapeTeX(this.name)}}`;
+		return `\\mathtt{${Metaexpr.escapeTeX(this.name)}}`;
 	}
 }

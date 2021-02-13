@@ -11,26 +11,26 @@ export default abstract class Fun extends Expr0 implements Nameable {
 
 	constructor ({doc, tex, annotations, sealed, rettype, name, params, expr}: FunArgumentType, trace: StackTrace) {
 		if (!name && !expr)
-			throw Node.error('Anonymous fun cannot be primitive', trace);
+			throw Metaexpr.error('Anonymous fun cannot be primitive', trace);
 
 		if (rettype && expr) {
 			if (!rettype.equals(expr.type)) {
-				throw Node.error(`Expression type ${expr.type} failed to match the return type ${rettype} of fun ${name}`, trace);
+				throw Metaexpr.error(`Expression type ${expr.type} failed to match the return type ${rettype} of fun ${name}`, trace);
 			}
 		}
 
 		if (!rettype && !expr) {
-			throw Node.error('Cannot guess the return type of a primitive fun', trace);
+			throw Metaexpr.error('Cannot guess the return type of a primitive fun', trace);
 		}
 		
 		if (sealed && !expr) {
-			throw Node.error('Cannot seal a primitive fun', trace);
+			throw Metaexpr.error('Cannot seal a primitive fun', trace);
 		}
 		
 		var precedence = false;
 
 		if (tex) {
-			var parsed = Node.parseTeX(tex);
+			var parsed = Metaexpr.parseTeX(tex);
 			precedence = parsed.precedence;
 			tex = parsed.code;
 		} else {
@@ -182,7 +182,6 @@ export default abstract class Fun extends Expr0 implements Nameable {
 
 import Funcall from './Funcall';
 import Metaexpr, { EqualsPriority } from './Metaexpr';
-import Node from './Node';
 import Variable from './Variable';
 import StackTrace from '../StackTrace';
 import ExecutionContext from '../ExecutionContext';
