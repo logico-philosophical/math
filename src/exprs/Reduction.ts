@@ -2,7 +2,6 @@ import Counter from "../Counter";
 import ExecutionContext from "../ExecutionContext";
 import { ProofType } from "../ProofType";
 import StackTrace from "../StackTrace";
-import ObjectExpr from "./ObjectExpr";
 import Fun from "./Fun";
 import Funcall from "./Funcall";
 import Expr, { EqualsPriority, Precedence } from "./Expr";
@@ -16,7 +15,7 @@ import Variable from "./Variable";
 interface ReductionArgumentType {
 	antecedents: Expr[];
 	subject: Expr;
-	args: (ObjectExpr | null)[];
+	args: (Expr | null)[];
 	as: Expr;
 }
 
@@ -25,7 +24,7 @@ export default class Reduction extends Expr {
 	public readonly antecedents: Expr[];
 	public readonly requiredAntecedents: Expr[];
 	public readonly subject: Expr;
-	public readonly args: (ObjectExpr | null)[];
+	public readonly args: (Expr | null)[];
 	public readonly preFormatConsequent: Expr;
 	public readonly consequent: Expr;
 	private readonly antecedentEqualsResults: (Fun | Variable)[][];
@@ -158,7 +157,7 @@ ${as.expandMeta(true)}
 			&& this.antecedents.every(l => l.isProved(hypotheses));
 	}
 
-	public substitute(map: Map<Variable, ObjectExpr>): Expr {
+	public substitute(map: Map<Variable, Expr>): Expr {
 		return this.consequent.substitute(map);
 	}
 
@@ -209,7 +208,7 @@ ${as.expandMeta(true)}
 				: lines[lines.length - 1].ctr;
 		});
 		
-		var args: ObjectExpr[] = null;
+		var args: Expr[] = null;
 		var subjectlines: ProofType[] = [];
 		var subjectnum = hypnumMap.get(this.subject)
 			|| $Map.get(this.subject)

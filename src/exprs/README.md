@@ -6,13 +6,12 @@ Expr
  ├ Tee
  ├ $Variable
  ├ With
- └ ObjectExpr
-    ├ Fun
-    │  ├ ObjectFun
-    │  └ Schema
-    ├ Funcall
-    └ Variable
-       └ Parameter
+ ├ Fun
+ │  ├ ObjectFun
+ │  └ Schema
+ ├ Funcall
+ └ Variable
+    └ Parameter
 ```
 
 ## types.ts

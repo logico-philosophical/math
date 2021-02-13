@@ -1,4 +1,3 @@
-import ObjectExpr from "./exprs/ObjectExpr";
 import Fun from "./exprs/Fun";
 import Expr from "./exprs/Expr";
 import Variable from "./exprs/Variable";
@@ -17,7 +16,7 @@ interface RC {
 	_type: 'RC';
 	ctr: number;
 	schema: number | [number, number];
-	args: ObjectExpr[];
+	args: Expr[];
 	expr: Expr;
 }
 
@@ -72,7 +71,7 @@ interface E {
 	_type: 'E';
 	ctr: number;
 	subject: number | [number, number] | Expr;
-	args: ObjectExpr[];
+	args: Expr[];
 	antecedents: (number | [number, number])[];
 	reduced: Expr;
 }

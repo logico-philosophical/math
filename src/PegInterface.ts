@@ -5,7 +5,6 @@
 
 import ExecutionContext from './ExecutionContext';
 import $Variable from './exprs/$Variable';
-import ObjectExpr from './exprs/ObjectExpr';
 import Fun from './exprs/Fun';
 import Funcall from './exprs/Funcall';
 import Expr from './exprs/Expr';
@@ -229,7 +228,7 @@ export default class PI {
 		}
 	}
 
-	public static objectexpr(obj: ObjectExprObject, parentScope: Scope): ObjectExpr {
+	public static objectexpr(obj: ObjectExprObject, parentScope: Scope): Expr {
 		if (!['funcall', 'funexpr', 'var'].includes(obj._type)) {
 			console.log(obj);
 			throw Error('Assertion failed');

@@ -2,7 +2,6 @@ import Counter from "../Counter";
 import ExecutionContext from "../ExecutionContext";
 import { ProofType } from "../ProofType";
 import StackTrace from "../StackTrace";
-import ObjectExpr from "./ObjectExpr";
 import Fun from "./Fun";
 import Expr, { EqualsPriority, Precedence } from "./Expr";
 import Nameable from "./Nameable";
@@ -33,7 +32,7 @@ export default class $Variable extends Expr implements Nameable {
 		return this.expr.isProved(hypotheses);
 	}
 
-	public substitute(map: Map<Variable, ObjectExpr>): Expr {
+	public substitute(map: Map<Variable, Expr>): Expr {
 		return this.expr.substitute(map);
 	}
 

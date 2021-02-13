@@ -1,14 +1,14 @@
-import ObjectExpr from './ObjectExpr';
+import Expr, { EqualsPriority, Precedence } from './Expr';
 
 interface FuncallArgumentType {
 	fun: Expr;
-	args: ObjectExpr[];
+	args: Expr[];
 }
 
-export default class Funcall extends ObjectExpr {
+export default class Funcall extends Expr {
 	
 	public readonly fun: Expr;
-	public readonly args: ObjectExpr[];
+	public readonly args: Expr[];
 
 	constructor ({fun, args}: FuncallArgumentType, trace: StackTrace) {
 		if (!fun.type.isFunctional()) {
@@ -16,7 +16,7 @@ export default class Funcall extends ObjectExpr {
 			throw Expr.error(`${name} is not callable`, trace);
 		}
 
-		if (!(args instanceof Array) || args.map(e => e instanceof ObjectExpr).some(e => !e))
+		if (!(args instanceof Array) || args.map(e => e instanceof Expr).some(e => !e))
 			throw Expr.error('Assertion failed', trace);
 			 
 		var resolvedType = fun.type.resolve() as FunctionalObjectType | FunctionalMetaType,
@@ -42,7 +42,7 @@ export default class Funcall extends ObjectExpr {
 		return this.fun.isProved(hypotheses);
 	}
 
-	public substitute(map: Map<Variable, ObjectExpr>): Expr {
+	public substitute(map: Map<Variable, Expr>): Expr {
 		return new Funcall({
 			fun: this.fun.substitute(map),
 			args: this.args.map(arg => arg.substitute(map))
@@ -331,7 +331,6 @@ import { ProofType } from '../ProofType';
 import StackTrace from '../StackTrace';
 import $Variable from './$Variable';
 import Fun from './Fun';
-import Expr, { EqualsPriority, Precedence } from './Expr';
 import { isNameable } from './Nameable';
 import ObjectFun from './ObjectFun';
 import Schema from './Schema';

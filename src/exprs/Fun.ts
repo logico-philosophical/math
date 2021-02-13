@@ -1,7 +1,7 @@
-import ObjectExpr from './ObjectExpr';
 import Nameable from './Nameable';
+import Expr, { EqualsPriority } from './Expr';
 
-export default abstract class Fun extends ObjectExpr implements Nameable {
+export default abstract class Fun extends Expr implements Nameable {
 
 	public readonly annotations: string[];
 	public readonly sealed: boolean;
@@ -108,7 +108,7 @@ export default abstract class Fun extends ObjectExpr implements Nameable {
 
 	public abstract isCallable(context: ExecutionContext): boolean;
 
-	public call(args: ObjectExpr[]): Expr {
+	public call(args: Expr[]): Expr {
 		if (!this.expr) {
 			throw Error('Cannot call a primitive fun');
 		}
@@ -123,7 +123,7 @@ export default abstract class Fun extends ObjectExpr implements Nameable {
 			}
 		}
 
-		var map: Map<Variable, ObjectExpr> = new Map();
+		var map: Map<Variable, Expr> = new Map();
 
 		for (var i = 0; i < this.params.length; i++) {
 			map.set(this.params[i], args[i]);
@@ -181,7 +181,6 @@ export default abstract class Fun extends ObjectExpr implements Nameable {
 }
 
 import Funcall from './Funcall';
-import Expr, { EqualsPriority } from './Expr';
 import Variable from './Variable';
 import StackTrace from '../StackTrace';
 import ExecutionContext from '../ExecutionContext';

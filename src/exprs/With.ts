@@ -3,7 +3,6 @@ import ExecutionContext from "../ExecutionContext";
 import { ProofType } from "../ProofType";
 import StackTrace from "../StackTrace";
 import $Variable from "./$Variable";
-import ObjectExpr from "./ObjectExpr";
 import Fun from "./Fun";
 import Expr, { EqualsPriority, Precedence } from "./Expr";
 import Variable from "./Variable";
@@ -28,7 +27,7 @@ export default class With extends Expr {
 		this.expr = expr;
 	}
 
-	public substitute(map: Map<Variable, ObjectExpr>): Expr {
+	public substitute(map: Map<Variable, Expr>): Expr {
 		if (map.has(this.variable))
 			throw Error('Parameter collision');
 		
@@ -38,7 +37,7 @@ export default class With extends Expr {
 	}
 
 	protected expandMetaInternal(andFuncalls: boolean): Expr {
-		var map = new Map<Variable, ObjectExpr>();
+		var map = new Map<Variable, Expr>();
 		map.set(this.variable, this.variable.expr);
 
 		return this.expr.substitute(map).expandMeta(andFuncalls);
