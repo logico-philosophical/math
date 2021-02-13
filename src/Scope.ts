@@ -1,6 +1,6 @@
 import $Variable from './exprs/$Variable';
 import Fun from './exprs/Fun';
-import Metaexpr from './exprs/Metaexpr';
+import Expr from './exprs/Expr';
 import ObjectFun from './exprs/ObjectFun';
 import Schema from './exprs/Schema';
 import { FunctionalObjectType, ObjectType, SimpleObjectType } from './exprs/types';
@@ -21,7 +21,7 @@ export default class Scope {
 	public readonly defMap: Map<string, Variable | ObjectFun> = new Map();
 	public readonly schemaMap: Map<string, Schema> = new Map();
 	public readonly $Map: Map<string, $Variable> = new Map();
-	public readonly hypotheses: Metaexpr[] = [];
+	public readonly hypotheses: Expr[] = [];
 
 	public readonly parent: Scope;
 	public readonly root: Scope;

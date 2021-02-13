@@ -1,5 +1,5 @@
-import Metaexpr from "./Metaexpr";
+import Expr from "./Expr";
 
-export default abstract class Expr0 extends Metaexpr {
+export default abstract class Expr0 extends Expr {
 	
 }

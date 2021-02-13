@@ -7,30 +7,30 @@ export default abstract class Fun extends Expr0 implements Nameable {
 	public readonly sealed: boolean;
 	public readonly name: string;
 	public readonly params: Parameter[];
-	public readonly expr: Metaexpr;
+	public readonly expr: Expr;
 
 	constructor ({doc, tex, annotations, sealed, rettype, name, params, expr}: FunArgumentType, trace: StackTrace) {
 		if (!name && !expr)
-			throw Metaexpr.error('Anonymous fun cannot be primitive', trace);
+			throw Expr.error('Anonymous fun cannot be primitive', trace);
 
 		if (rettype && expr) {
 			if (!rettype.equals(expr.type)) {
-				throw Metaexpr.error(`Expression type ${expr.type} failed to match the return type ${rettype} of fun ${name}`, trace);
+				throw Expr.error(`Expression type ${expr.type} failed to match the return type ${rettype} of fun ${name}`, trace);
 			}
 		}
 
 		if (!rettype && !expr) {
-			throw Metaexpr.error('Cannot guess the return type of a primitive fun', trace);
+			throw Expr.error('Cannot guess the return type of a primitive fun', trace);
 		}
 		
 		if (sealed && !expr) {
-			throw Metaexpr.error('Cannot seal a primitive fun', trace);
+			throw Expr.error('Cannot seal a primitive fun', trace);
 		}
 		
 		var precedence = false;
 
 		if (tex) {
-			var parsed = Metaexpr.parseTeX(tex);
+			var parsed = Expr.parseTeX(tex);
 			precedence = parsed.precedence;
 			tex = parsed.code;
 		} else {
@@ -61,7 +61,7 @@ export default abstract class Fun extends Expr0 implements Nameable {
 		return this.params.length;
 	}
 
-	protected isProvedInternal(hypotheses: Metaexpr[]): boolean {
+	protected isProvedInternal(hypotheses: Expr[]): boolean {
 		return this.expr && this.expr.isProved(hypotheses);
 	}
 
@@ -69,7 +69,7 @@ export default abstract class Fun extends Expr0 implements Nameable {
 		return EqualsPriority.ONE;
 	}
 	
-	protected equalsInternal(obj: Metaexpr, context: ExecutionContext): (Fun | Variable)[] | false {
+	protected equalsInternal(obj: Expr, context: ExecutionContext): (Fun | Variable)[] | false {
 		if (!(this.expr && !this.sealed)
 				&& !(obj instanceof Fun && obj.expr && !obj.sealed)) {
 			return false;
@@ -108,7 +108,7 @@ export default abstract class Fun extends Expr0 implements Nameable {
 
 	public abstract isCallable(context: ExecutionContext): boolean;
 
-	public call(args: Expr0[]): Metaexpr {
+	public call(args: Expr0[]): Expr {
 		if (!this.expr) {
 			throw Error('Cannot call a primitive fun');
 		}
@@ -133,8 +133,8 @@ export default abstract class Fun extends Expr0 implements Nameable {
 	}
 
 	protected getProofInternal(
-			hypnumMap: Map<Metaexpr, number>,
-			$Map: Map<Metaexpr, number | [number, number]>,
+			hypnumMap: Map<Expr, number>,
+			$Map: Map<Expr, number | [number, number]>,
 			ctr: Counter,
 			root: boolean=false): ProofType[] {
 		
@@ -181,7 +181,7 @@ export default abstract class Fun extends Expr0 implements Nameable {
 }
 
 import Funcall from './Funcall';
-import Metaexpr, { EqualsPriority } from './Metaexpr';
+import Expr, { EqualsPriority } from './Expr';
 import Variable from './Variable';
 import StackTrace from '../StackTrace';
 import ExecutionContext from '../ExecutionContext';
@@ -199,5 +199,5 @@ interface FunArgumentType {
 	rettype: Type;
 	name: string;
 	params: Parameter[];
-	expr: Metaexpr;
+	expr: Expr;
 }

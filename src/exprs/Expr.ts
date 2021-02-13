@@ -28,7 +28,7 @@ export enum EqualsPriority {
 
 export type Precedence = boolean | number | [number, number];
 
-export default abstract class Metaexpr {
+export default abstract class Expr {
 	
 	public readonly _id: number;
 
@@ -38,7 +38,7 @@ export default abstract class Metaexpr {
 	public precedence: Precedence;
 
 	public readonly type: Type;
-	private expandMetaCache: Metaexpr;
+	private expandMetaCache: Expr;
 
 	public static readonly PREC_FUNEXPR = 1000;
 	public static readonly PREC_COMMA = 1000;
@@ -50,29 +50,29 @@ export default abstract class Metaexpr {
 		this.tex = tex;
 		this.trace = trace;
 
-		if (!type) throw Metaexpr.error('Assertion failed', trace);
+		if (!type) throw Expr.error('Assertion failed', trace);
 
 		this.type = type;
 	}
 
-	public abstract substitute(map: Map<Variable, Expr0>): Metaexpr;
+	public abstract substitute(map: Map<Variable, Expr0>): Expr;
 
 	/**
 	 * 
 	 * @param andFuncalls 이름 없는 Funcall도 푼다.
 	 */
-	public expandMeta(andFuncalls: boolean): Metaexpr {
+	public expandMeta(andFuncalls: boolean): Expr {
 		if (this.expandMetaCache) return this.expandMetaCache;
 		return this.expandMetaCache = this.expandMetaInternal(andFuncalls);
 	}
 
-	protected abstract expandMetaInternal(andFuncalls: boolean): Metaexpr;
+	protected abstract expandMetaInternal(andFuncalls: boolean): Expr;
 
 	/**
 	 * 
 	 * @return 같지 않으면 `false`. 같으면 같음을 보이는 데 사용한 매크로들의 목록.
 	 */
-	public equals(obj: Metaexpr, context: ExecutionContext): (Fun | Variable)[] | false {
+	public equals(obj: Expr, context: ExecutionContext): (Fun | Variable)[] | false {
 		// console.log(`${this}\n\n${obj}`);
 		// var ret = (() => {
 		
@@ -93,11 +93,11 @@ export default abstract class Metaexpr {
 	 * 
 	 * @return 같지 않으면 `false`. 같으면 같음을 보이는 데 사용한 매크로들의 목록.
 	 */
-	protected abstract equalsInternal(obj: Metaexpr, context: ExecutionContext): (Fun | Variable)[] | false;
+	protected abstract equalsInternal(obj: Expr, context: ExecutionContext): (Fun | Variable)[] | false;
 
 	protected abstract getEqualsPriority(context: ExecutionContext): EqualsPriority;
 
-	public isProved(hypotheses?: Metaexpr[]): boolean {
+	public isProved(hypotheses?: Expr[]): boolean {
 		hypotheses = hypotheses || [];
 
 		for (var i = 0; i < hypotheses.length; i++) {
@@ -107,11 +107,11 @@ export default abstract class Metaexpr {
 		return this.isProvedInternal(hypotheses);
 	}
 
-	protected abstract isProvedInternal(hypotheses: Metaexpr[]): boolean;
+	protected abstract isProvedInternal(hypotheses: Expr[]): boolean;
 
 	public getProof(
-			hypnumMap: Map<Metaexpr, number>,
-			$Map: Map<Metaexpr, number | [number, number]>,
+			hypnumMap: Map<Expr, number>,
+			$Map: Map<Expr, number | [number, number]>,
 			ctr: Counter,
 			root: boolean=false): ProofType[] {
 		
@@ -137,8 +137,8 @@ export default abstract class Metaexpr {
 	}
 
 	protected abstract getProofInternal(
-			hypnumMap: Map<Metaexpr, number>,
-			$Map: Map<Metaexpr, number | [number, number]>,
+			hypnumMap: Map<Expr, number>,
+			$Map: Map<Expr, number | [number, number]>,
 			ctr: Counter,
 			root?: boolean): ProofType[];
 	
@@ -150,7 +150,7 @@ export default abstract class Metaexpr {
 	public abstract toTeXString(prec?: Precedence, root?: boolean): string;
 
 	public error(message: string) {
-		return Metaexpr.error(message, this.trace);
+		return Expr.error(message, this.trace);
 	}
 
 	public static error(message: string, trace: StackTrace) {
@@ -179,8 +179,8 @@ export default abstract class Metaexpr {
 	}
 
 	public shouldConsolidate(prec: Precedence): boolean {
-		var my = Metaexpr.normalizePrecedence(this.precedence || false),
-			your = Metaexpr.normalizePrecedence(prec || false);
+		var my = Expr.normalizePrecedence(this.precedence || false),
+			your = Expr.normalizePrecedence(prec || false);
 
 		if (my[0] == 0 && my[1] == 0) return false;
 
@@ -246,10 +246,10 @@ export default abstract class Metaexpr {
 		}
 
 		if (name.length == 1) {
-			return Metaexpr.escapeTeX(name);
+			return Expr.escapeTeX(name);
 		}
 
-		return `\\mathrm{${Metaexpr.escapeTeX(name)}}`;
+		return `\\mathrm{${Expr.escapeTeX(name)}}`;
 	}
 
 	public makeTeX(id, args, prec) {

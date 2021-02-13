@@ -6,7 +6,7 @@ export default class ObjectFun extends Fun {
 		super({doc, tex, annotations, sealed, rettype, name, params, expr}, trace);
 	}
 
-	public substitute(map: Map<Variable, Expr0>): Metaexpr {
+	public substitute(map: Map<Variable, Expr0>): Expr {
 		if (!this.expr) return this;
 
 		// 이름이 있는 것은 스코프 밖에서 보이지 않으므로 치환될 것을
@@ -29,7 +29,7 @@ export default class ObjectFun extends Fun {
 		}, this.trace);
 	}
 
-	protected expandMetaInternal(andFuncalls: boolean): Metaexpr {
+	protected expandMetaInternal(andFuncalls: boolean): Expr {
 		if (!this.expr) return this;
 		if (this.type instanceof ObjectType && this.name) return this;
 
@@ -61,14 +61,14 @@ export default class ObjectFun extends Fun {
 
 	public toTeXString(prec?: Precedence, root?: boolean): string {
 		if (!this.name) {
-			this.precedence = Metaexpr.PREC_FUNEXPR;
+			this.precedence = Expr.PREC_FUNEXPR;
 			return [
 				(this.shouldConsolidate(prec) ? '\\left(' : ''),
 
 				(
 					this.params.length == 1
 					? this.params[0].toTeXString(false)
-					: `\\left(${this.params.map(e => e.toTeXString(Metaexpr.PREC_COMMA)).join(', ')}\\right)`
+					: `\\left(${this.params.map(e => e.toTeXString(Expr.PREC_COMMA)).join(', ')}\\right)`
 				),
 				'\\mapsto ',
 				this.expr.expandMeta(true).toTeXString(false),
@@ -78,18 +78,18 @@ export default class ObjectFun extends Fun {
 		}
 
 		if (!root)
-			return `\\href{#def-${this.name}}{${Metaexpr.makeTeXName(this.name)}}`;
+			return `\\href{#def-${this.name}}{${Expr.makeTeXName(this.name)}}`;
 	
 		if (!this.expr)
 			return this.funcallToTeXString(this.params, prec);
 	
-		return this.funcallToTeXString(this.params, Metaexpr.PREC_COLONEQQ)
-				+ `\\coloneqq ${this.expr.toTeXString(Metaexpr.PREC_COLONEQQ)}`;
+		return this.funcallToTeXString(this.params, Expr.PREC_COLONEQQ)
+				+ `\\coloneqq ${this.expr.toTeXString(Expr.PREC_COLONEQQ)}`;
 	}
 
 	public funcallToTeXString(args, prec) {
 		args = args.map(arg => {
-			return arg.toTeXString(this.tex ? this.precedence : Metaexpr.PREC_COMMA);
+			return arg.toTeXString(this.tex ? this.precedence : Expr.PREC_COMMA);
 		});
 	
 		if (this.tex) {
@@ -99,7 +99,7 @@ export default class ObjectFun extends Fun {
 		return (
 			!this.name
 				? this.toTeXString(false)
-				: `\\href{#def-${this.name}}{${Metaexpr.makeTeXName(this.name)}}`
+				: `\\href{#def-${this.name}}{${Expr.makeTeXName(this.name)}}`
 		) + `\\mathord{\\left(${args.join(', ')}\\right)}`;
 	}
 }
@@ -107,7 +107,7 @@ export default class ObjectFun extends Fun {
 import ExecutionContext from "../ExecutionContext";
 import StackTrace from "../StackTrace";
 import Expr0 from "./Expr0";
-import Metaexpr, { Precedence } from "./Metaexpr";
+import Expr, { Precedence } from "./Expr";
 import Variable from "./Variable";
 import Parameter from "./Parameter";
 import { Type, ObjectType } from "./types";

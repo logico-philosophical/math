@@ -5,20 +5,20 @@ import StackTrace from "../StackTrace";
 import $Variable from "./$Variable";
 import Expr0 from "./Expr0";
 import Fun from "./Fun";
-import Metaexpr, { EqualsPriority, Precedence } from "./Metaexpr";
+import Expr, { EqualsPriority, Precedence } from "./Expr";
 import Variable from "./Variable";
 
 interface WithArgumentType {
 	variable: Variable;
 	def$s: $Variable[];
-	expr: Metaexpr;
+	expr: Expr;
 }
 
-export default class With extends Metaexpr {
+export default class With extends Expr {
 
 	public readonly variable: Variable;
 	public readonly def$s: $Variable[];
-	public readonly expr: Metaexpr;
+	public readonly expr: Expr;
 
 	constructor({variable, def$s, expr}: WithArgumentType, trace: StackTrace) {
 		super(null, null, expr.type, trace);
@@ -28,7 +28,7 @@ export default class With extends Metaexpr {
 		this.expr = expr;
 	}
 
-	public substitute(map: Map<Variable, Expr0>): Metaexpr {
+	public substitute(map: Map<Variable, Expr0>): Expr {
 		if (map.has(this.variable))
 			throw Error('Parameter collision');
 		
@@ -37,7 +37,7 @@ export default class With extends Metaexpr {
 		return this.expandMeta(false).substitute(map);
 	}
 
-	protected expandMetaInternal(andFuncalls: boolean): Metaexpr {
+	protected expandMetaInternal(andFuncalls: boolean): Expr {
 		var map = new Map<Variable, Expr0>();
 		map.set(this.variable, this.variable.expr);
 
@@ -48,15 +48,15 @@ export default class With extends Metaexpr {
 		throw new Error("Method not implemented.");
 	}
 
-	protected equalsInternal(obj: Metaexpr, context: ExecutionContext): (Fun | Variable)[] | false {
+	protected equalsInternal(obj: Expr, context: ExecutionContext): (Fun | Variable)[] | false {
 		throw new Error("Method not implemented.");
 	}
 
-	protected isProvedInternal(hypotheses: Metaexpr[]): boolean {
+	protected isProvedInternal(hypotheses: Expr[]): boolean {
 		return this.expr.isProved(hypotheses);
 	}
 
-	protected getProofInternal(hypnumMap: Map<Metaexpr, number>, $Map: Map<Metaexpr, number | [number, number]>, ctr: Counter, root?: boolean): ProofType[] {
+	protected getProofInternal(hypnumMap: Map<Expr, number>, $Map: Map<Expr, number | [number, number]>, ctr: Counter, root?: boolean): ProofType[] {
 
 		$Map = new Map($Map);
 

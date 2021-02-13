@@ -12,11 +12,11 @@ export default class Schema extends Fun {
 
 	constructor ({doc, tex, annotations, schemaType, name, params, context, def$s, expr}: SchemaArgumentType, trace: StackTrace) {
 		if (!expr) {
-			throw Metaexpr.error('wut', trace);
+			throw Expr.error('wut', trace);
 		}
 
 		if (schemaType != 'schema' && !name) {
-			throw Metaexpr.error(`wut`, trace);
+			throw Expr.error(`wut`, trace);
 		}
 
 		super({doc, tex, annotations, sealed: false, rettype: null, name, params, expr}, trace);
@@ -27,12 +27,12 @@ export default class Schema extends Fun {
 
 		if (schemaType == 'theorem') {
 			if (!this.isProved()) {
-				throw Metaexpr.error(`Schema ${name} is marked as a theorem but it is not proved`, trace);
+				throw Expr.error(`Schema ${name} is marked as a theorem but it is not proved`, trace);
 			}
 		}
 	}
 	
-	protected isProvedInternal(hypotheses: Metaexpr[]): boolean {
+	protected isProvedInternal(hypotheses: Expr[]): boolean {
 		if (this.isProvedCache) return true;
 
 		if (hypotheses.length == 0 && typeof this.isProvedCache == 'boolean') {
@@ -44,7 +44,7 @@ export default class Schema extends Fun {
 		return ret;
 	}
 
-	public substitute(map: Map<Variable, Expr0>): Metaexpr {
+	public substitute(map: Map<Variable, Expr0>): Expr {
 		if (!this.expr) return this;
 
 		// 이름이 있는 것은 스코프 밖에서 보이지 않으므로 치환될 것을
@@ -68,7 +68,7 @@ export default class Schema extends Fun {
 		}, this.trace);
 	}
 
-	protected expandMetaInternal(andFuncalls: boolean): Metaexpr {
+	protected expandMetaInternal(andFuncalls: boolean): Expr {
 		if (!this.expr) return this;
 		if (this.type instanceof ObjectType && this.name) return this;
 
@@ -99,14 +99,14 @@ export default class Schema extends Fun {
 	
 	public toTeXString(prec?: Precedence, root?: boolean): string {
 		if (!this.name) {
-			this.precedence = Metaexpr.PREC_FUNEXPR;
+			this.precedence = Expr.PREC_FUNEXPR;
 			return [
 				(this.shouldConsolidate(prec) ? '\\left(' : ''),
 
 				(
 					this.params.length == 1
 					? this.params[0].toTeXString(false)
-					: `\\left(${this.params.map(e => e.toTeXString(Metaexpr.PREC_COMMA)).join(', ')}\\right)`
+					: `\\left(${this.params.map(e => e.toTeXString(Expr.PREC_COMMA)).join(', ')}\\right)`
 				),
 				'\\mapsto ',
 				this.expr.expandMeta(true).toTeXString(false),
@@ -119,16 +119,16 @@ export default class Schema extends Fun {
 			proved = this.isProved() ? 'p' : 'np';
 	
 		if (!root)
-			return `\\href{#${id}}{\\htmlData{proved=${proved}}{\\mathsf{${Metaexpr.escapeTeX(this.name)}}}}`;
+			return `\\href{#${id}}{\\htmlData{proved=${proved}}{\\mathsf{${Expr.escapeTeX(this.name)}}}}`;
 	
-		return `\\href{#${id}}{\\htmlData{proved=${proved}}{\\mathsf{${Metaexpr.escapeTeX(this.name)}}}}\\mathord{\\left(${this.params.map(e => e.toTeXStringWithId(Metaexpr.PREC_COMMA) + (e.selector ? `: \\texttt{@${e.selector}}` : '')).join(', ')}\\right)}:\\\\\\quad`
+		return `\\href{#${id}}{\\htmlData{proved=${proved}}{\\mathsf{${Expr.escapeTeX(this.name)}}}}\\mathord{\\left(${this.params.map(e => e.toTeXStringWithId(Expr.PREC_COMMA) + (e.selector ? `: \\texttt{@${e.selector}}` : '')).join(', ')}\\right)}:\\\\\\quad`
 				+ this.expr.expandMeta(true).toTeXString(true);
 	}
 }
 
 import $Variable from "./$Variable";
 import Expr0 from "./Expr0";
-import Metaexpr, { Precedence } from "./Metaexpr";
+import Expr, { Precedence } from "./Expr";
 import Variable from "./Variable";
 import ObjectFun from "./ObjectFun";
 import StackTrace from "../StackTrace";
@@ -145,5 +145,5 @@ interface SchemaArgumentType {
 	params: Parameter[];
 	context: ExecutionContext;
 	def$s: $Variable[];
-	expr: Metaexpr;
+	expr: Expr;
 }

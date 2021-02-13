@@ -18,7 +18,7 @@ evaluable_internal =
 	/ defv
 	/ defun
 	/ defschema
-	/ metaexpr
+	/ expr
 
 import =
 	'import' __
@@ -168,7 +168,7 @@ defschema =
 	)?
 	"{" _
 	defdollars: (d:defdollar _ {return d})* _
-	expr:metaexpr _
+	expr:expr _
 	"}"
 	{
 		return {
@@ -188,15 +188,15 @@ defschema =
 // var[...]
 // foo(...)[...]
 // foo[...][...]
-// (metaexpr)[...]
+// (expr)[...]
 // schema(?, ...)[...]
 reduction =
 	antecedents:(
-		a:metaexpr_internal_2 {return [a]}
+		a:expr_internal_2 {return [a]}
 		/ "[" _
 		b:(
-			head:metaexpr _
-			tail:(";" _ e:metaexpr _ {return e})*
+			head:expr _
+			tail:(";" _ e:expr _ {return e})*
 			{return [head].concat(tail)}
 		)?
 		"]"
@@ -208,7 +208,7 @@ reduction =
 			schemacall
 			/ var
 			/ "(" _
-			e:metaexpr _
+			e:expr _
 			")"
 			{return e}
 		)
@@ -224,7 +224,7 @@ reduction =
 		)?
 		as_:(
 			__ 'as' __
-			m:metaexpr_internal_2
+			m:expr_internal_2
 			{return m}
 		)?
 		{return {subject, args, as_: as_ || null};}
@@ -254,11 +254,11 @@ reduction =
 	}
 
 // var(...)
-// (metaexpr)(...)
+// (expr)(...)
 schemacall =
 	schema:(
 		var
-		/ "(" _ e:metaexpr _ ")"
+		/ "(" _ e:expr _ ")"
 		{return e}
 	) _
 	args:(
@@ -336,8 +336,8 @@ funexpr =
 		}
 	}
 
-// (T t) => metaexpr_internal_1
-// (T t) => { $foo = ...; metaexpr }
+// (T t) => expr_internal_1
+// (T t) => { $foo = ...; expr }
 schemaexpr =
 	params:(
 		"(" _
@@ -351,11 +351,11 @@ schemaexpr =
 	)
 	"=>" _
 	foo:(
-		expr:metaexpr_internal_1
+		expr:expr_internal_1
 		{return {defdollars: [], expr}}
 		/ "{" _
 		defdollars: (d:defdollar _ {return d})* _
-		expr:metaexpr _
+		expr:expr _
 		"}"
 		{return {defdollars, expr}}
 	)
@@ -372,18 +372,18 @@ schemaexpr =
 tee =
 	left:(
 		l:(
-			head:metaexpr_internal_1 _
-			tail:("," _ e:metaexpr_internal_1 _ {return e})*
+			head:expr_internal_1 _
+			tail:("," _ e:expr_internal_1 _ {return e})*
 			{return [head].concat(tail)}
 		)? {return l || []}
 	)
 	"|-" _
 	foo:(
-		expr:metaexpr_internal_2
+		expr:expr_internal_2
 		{return {defdollars: [], expr}}
 		/ "{" _
 		defdollars: (d:defdollar _ {return d})* _
-		expr:metaexpr _
+		expr:expr _
 		"}"
 		{return {defdollars, expr}}
 	)
@@ -406,7 +406,7 @@ with =
 	varexpr:expr0 _
 	')' _ '{' _
 	defdollars: (d:defdollar _ {return d})* _
-	expr:metaexpr _
+	expr:expr _
 	'}'
 	{
 		return {
@@ -428,16 +428,16 @@ with =
 		}
 	}
 
-metaexpr =
-	metaexpr_internal_3
+expr =
+	expr_internal_3
 
-metaexpr_internal_3 =
+expr_internal_3 =
 	reduction
-	/ metaexpr_internal_2
+	/ expr_internal_2
 
-metaexpr_internal_2 =
+expr_internal_2 =
 	tee
-	/ metaexpr_internal_1
+	/ expr_internal_1
 
 /*
  * The following should hold:
@@ -445,12 +445,12 @@ metaexpr_internal_2 =
  * - `schemacall` should precede `var`.
  *
  */
-metaexpr_internal_1 =
+expr_internal_1 =
 	schemacall
 	/ var
 	/ schemaexpr
 	/ with
-	/ "(" _ e:metaexpr _ ")" {return e}
+	/ "(" _ e:expr _ ")" {return e}
 
 expr0 =
 	funcall
@@ -461,7 +461,7 @@ expr0 =
 defdollar =
 	name:dollar_ident _
 	'=' _
-	expr:metaexpr _
+	expr:expr _
 	sem
 	{
 		return {

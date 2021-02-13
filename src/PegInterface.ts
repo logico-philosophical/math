@@ -8,7 +8,7 @@ import $Variable from './exprs/$Variable';
 import Expr0 from './exprs/Expr0';
 import Fun from './exprs/Fun';
 import Funcall from './exprs/Funcall';
-import Metaexpr from './exprs/Metaexpr';
+import Expr from './exprs/Expr';
 import ObjectFun from './exprs/ObjectFun';
 import Parameter from './exprs/Parameter';
 import Reduction from './exprs/Reduction';
@@ -17,7 +17,7 @@ import Tee from './exprs/Tee';
 import { ObjectType, SimpleObjectType } from './exprs/types';
 import Variable from './exprs/Variable';
 import With from './exprs/With';
-import { Def$Object, DefschemaObject, DefunObject, DefvObject, Expr0Object, FuncallObject, FunexprObject, MetaexprObject, ReductionObject, SchemacallObject, SchemaexprObject, StypeObject, TeeObject, TypedefObject, TypeObject, VarObject, WithObject } from './PegInterfaceDefinitions';
+import { Def$Object, DefschemaObject, DefunObject, DefvObject, Expr0Object, FuncallObject, FunexprObject, ExprObject, ReductionObject, SchemacallObject, SchemaexprObject, StypeObject, TeeObject, TypedefObject, TypeObject, VarObject, WithObject } from './PegInterfaceDefinitions';
 import Scope, { NestedTypeInput } from './Scope';
 
 function typeObjToString(obj: TypeObject): string {
@@ -203,7 +203,7 @@ export default class PI {
 		return new Funcall({fun, args}, scope.trace);
 	}
 
-	public static metaexpr(obj: MetaexprObject, parentScope: Scope, context: ExecutionContext): Metaexpr {
+	public static expr(obj: ExprObject, parentScope: Scope, context: ExecutionContext): Expr {
 		if (!['tee', 'reduction', 'schemacall', 'schemaexpr', 'var', 'with'].includes(obj._type)) {
 			throw Error('Assertion failed');
 		}
@@ -250,7 +250,7 @@ export default class PI {
 		}
 	}
 
-	public static metavar(obj: VarObject, parentScope: Scope): Metaexpr {
+	public static metavar(obj: VarObject, parentScope: Scope): Expr {
 		if (obj._type != 'var')
 			throw Error('Assertion failed');
 
@@ -313,7 +313,7 @@ export default class PI {
 			return scope.add$($v);
 		});
 
-		var expr = PI.metaexpr(obj.expr, scope, context);
+		var expr = PI.expr(obj.expr, scope, context);
 
 		return new With({
 			variable: tv,
@@ -328,7 +328,7 @@ export default class PI {
 
 		var scope = parentScope.extend('tee', null, obj.location);
 
-		var left = obj.left.map(o => PI.metaexpr(o, scope, context));
+		var left = obj.left.map(o => PI.expr(o, scope, context));
 
 		var scopeRight = scope.extend('tee.right', null, obj.right.location);
 		left.forEach(l => scopeRight.hypotheses.push(l));
@@ -343,7 +343,7 @@ export default class PI {
 			return scopeRight.add$($v);
 		});
 
-		var right = PI.metaexpr(obj.right, scopeRight, context);
+		var right = PI.expr(obj.right, scopeRight, context);
 
 		return new Tee({left, def$s, right}, scope.trace);
 	}
@@ -354,7 +354,7 @@ export default class PI {
 		
 		var scope = parentScope.extend('def$', obj.name, obj.location);
 		
-		var expr = PI.metaexpr(obj.expr, scope, context);
+		var expr = PI.expr(obj.expr, scope, context);
 
 		return new $Variable({name: obj.name, expr}, scope.trace);
 	}
@@ -423,7 +423,7 @@ export default class PI {
 			return scope.add$($v);
 		});
 
-		var expr = PI.metaexpr(obj.expr, scope, context);
+		var expr = PI.expr(obj.expr, scope, context);
 
 		return new Schema({doc, tex: null, annotations, schemaType, name, params, context, def$s, expr}, scope.trace);
 	}
@@ -434,7 +434,7 @@ export default class PI {
 
 		var scope = parentScope.extend('schemacall', 'name' in obj.schema ? obj.schema.name : null, obj.location);
 
-		var fun = PI.metaexpr(obj.schema, scope, context);
+		var fun = PI.expr(obj.schema, scope, context);
 
 		var args = obj.args.map(obj => {
 			return PI.expr0(obj, scope);
@@ -456,7 +456,7 @@ export default class PI {
 
 		var scope = parentScope.extend('reduction', 'name' in obj.subject ? obj.subject.name : null, obj.location);
 
-		var subject = PI.metaexpr(obj.subject, scope, context);
+		var subject = PI.expr(obj.subject, scope, context);
 
 		var args = !obj.args
 			? null
@@ -465,10 +465,10 @@ export default class PI {
 			});
 
 		var antecedents = obj.antecedents.map(obj => {
-			return PI.metaexpr(obj, scope, context);
+			return PI.expr(obj, scope, context);
 		});
 
-		var as = obj.as && PI.metaexpr(obj.as, scope, context);
+		var as = obj.as && PI.expr(obj.as, scope, context);
 
 		return new Reduction({
 			subject,

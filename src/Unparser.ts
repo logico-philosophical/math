@@ -1,4 +1,4 @@
-import { Def$Object, DefvObject, Expr0Object, ImportOrLineObject, MetaexprObject, StypeObject, TypeObject } from "./PegInterfaceDefinitions";
+import { Def$Object, DefvObject, Expr0Object, ImportOrLineObject, ExprObject, StypeObject, TypeObject } from "./PegInterfaceDefinitions";
 
 export default function unparse(tree: ImportOrLineObject[]) {
 	var strings = tree.map(line => recurse(line, Context.NORMAL, 0));
@@ -26,7 +26,7 @@ function isOneLiner(s: string) {
 }
 
 function recurse(
-		line: ImportOrLineObject | Def$Object | MetaexprObject | Expr0Object | TypeObject,
+		line: ImportOrLineObject | Def$Object | ExprObject | Expr0Object | TypeObject,
 		context: Context,
 		indent: number): string {
 	return recurseInternal(line, context)
@@ -35,7 +35,7 @@ function recurse(
 }
 
 function recurseInternal(
-		line: ImportOrLineObject | Def$Object | MetaexprObject | Expr0Object | TypeObject,
+		line: ImportOrLineObject | Def$Object | ExprObject | Expr0Object | TypeObject,
 		context: Context): string {
 	
 	function defv(line: DefvObject, param: boolean) {
@@ -74,7 +74,7 @@ function recurseInternal(
 				params: DefvObject[];
 				using: string[];
 				def$s: Def$Object[];
-				expr: MetaexprObject;
+				expr: ExprObject;
 				location: LocationObject;
 			} */
 			return `${
@@ -139,16 +139,16 @@ function recurseInternal(
 			/* export interface Def$Object {
 				_type: 'def$';
 				name: string;
-				expr: MetaexprObject;
+				expr: ExprObject;
 				location: LocationObject;
 			} */
 			return `${line.name} = ${recurse(line.expr, Context.NORMAL, 0)};`;
 		case 'tee':
 			/* export interface TeeObject {
 				_type: 'tee';
-				left: MetaexprObject[];
+				left: ExprObject[];
 				def$s: Def$Object[];
-				right: MetaexprObject;
+				right: ExprObject;
 				location: LocationObject;
 			} */
 			if (context <= Context.TEELEFT)
@@ -189,10 +189,10 @@ function recurseInternal(
 		case 'reduction':
 			/* export interface ReductionObject {
 				_type: 'reduction';
-				subject: MetaexprObject;
+				subject: ExprObject;
 				args: Array<Expr0Object | null>;
-				antecedents: MetaexprObject[];
-				as: MetaexprObject;
+				antecedents: ExprObject[];
+				as: ExprObject;
 				location: LocationObject;
 			} */
 			if (context <= Context.REDUCTIONRIGHT)
@@ -227,7 +227,7 @@ function recurseInternal(
 		case 'funcall':
 			/* export interface SchemacallObject {
 				_type: 'schemacall';
-				schema: MetaexprObject;
+				schema: ExprObject;
 				args: Expr0Object[];
 				location: LocationObject;
 			} */
@@ -250,7 +250,7 @@ function recurseInternal(
 				_type: 'with';
 				with: DefvObject;
 				def$s: Def$Object[];
-				expr: MetaexprObject;
+				expr: ExprObject;
 				location: LocationObject;
 			} */
 			return `with (${defv(line.with, true)}) {
@@ -276,7 +276,7 @@ function recurseInternal(
 				_type: 'schemaexpr';
 				params: DefvObject[];
 				def$s: Def$Object[];
-				expr: MetaexprObject;
+				expr: ExprObject;
 				location: LocationObject;
 			} */
 

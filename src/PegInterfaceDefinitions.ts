@@ -11,7 +11,7 @@ export type EvaluableObject = TypedefObject
 		| DefvObject
 		| DefunObject
 		| DefschemaObject
-		| MetaexprObject;
+		| ExprObject;
 
 export interface ImportObject {
 	_type: 'import';
@@ -53,7 +53,7 @@ export interface DefunObject {
 }
 
 export type Expr0Object = FuncallObject | FunexprObject | VarObject;
-export type MetaexprObject = TeeObject | ReductionObject | SchemacallObject | WithObject | VarObject | SchemaexprObject;
+export type ExprObject = TeeObject | ReductionObject | SchemacallObject | WithObject | VarObject | SchemaexprObject;
 
 export interface DefschemaObject {
 	_type: 'defschema';
@@ -64,22 +64,22 @@ export interface DefschemaObject {
 	params: DefvObject[];
 	using: string[];
 	def$s: Def$Object[];
-	expr: MetaexprObject;
+	expr: ExprObject;
 	location: LocationObject;
 }
 
 export interface ReductionObject {
 	_type: 'reduction';
-	subject: MetaexprObject;
+	subject: ExprObject;
 	args: Array<Expr0Object | null>;
-	antecedents: MetaexprObject[];
-	as: MetaexprObject;
+	antecedents: ExprObject[];
+	as: ExprObject;
 	location: LocationObject;
 }
 
 export interface SchemacallObject {
 	_type: 'schemacall';
-	schema: MetaexprObject;
+	schema: ExprObject;
 	args: Expr0Object[];
 	location: LocationObject;
 }
@@ -102,7 +102,7 @@ export interface SchemaexprObject {
 	_type: 'schemaexpr';
 	params: DefvObject[];
 	def$s: Def$Object[];
-	expr: MetaexprObject;
+	expr: ExprObject;
 	location: LocationObject;
 }
 
@@ -110,22 +110,22 @@ export interface WithObject {
 	_type: 'with';
 	with: DefvObject;
 	def$s: Def$Object[];
-	expr: MetaexprObject;
+	expr: ExprObject;
 	location: LocationObject;
 }
 
 export interface TeeObject {
 	_type: 'tee';
-	left: MetaexprObject[];
+	left: ExprObject[];
 	def$s: Def$Object[];
-	right: MetaexprObject;
+	right: ExprObject;
 	location: LocationObject;
 }
 
 export interface Def$Object {
 	_type: 'def$';
 	name: string;
-	expr: MetaexprObject;
+	expr: ExprObject;
 	location: LocationObject;
 }
 

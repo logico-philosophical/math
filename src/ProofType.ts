@@ -1,6 +1,6 @@
 import Expr0 from "./exprs/Expr0";
 import Fun from "./exprs/Fun";
-import Metaexpr from "./exprs/Metaexpr";
+import Expr from "./exprs/Expr";
 import Variable from "./exprs/Variable";
 
 export type ProofType = R | RC | RCX | RS | H | NP | Wut | T | V | E | Def | ByDef;
@@ -10,7 +10,7 @@ interface R {
 	_type: 'R';
 	ctr: number;
 	num: number | [number, number];
-	expr: Metaexpr;
+	expr: Expr;
 }
 
 interface RC {
@@ -18,39 +18,39 @@ interface RC {
 	ctr: number;
 	schema: number | [number, number];
 	args: Expr0[];
-	expr: Metaexpr;
+	expr: Expr;
 }
 
 interface RCX {
 	_type: 'RCX';
 	ctr: number;
-	expr: Metaexpr;
+	expr: Expr;
 }
 
 interface RS {
 	_type: 'RS';
 	ctr: number;
-	expr: Metaexpr;
+	expr: Expr;
 }
 
 /** hypothesis */
 interface H {
 	_type : 'H';
 	ctr: number;
-	expr: Metaexpr;
+	expr: Expr;
 }
 
 /** not proved */
 interface NP {
 	_type: 'NP';
 	ctr: number;
-	expr: Metaexpr;
+	expr: Expr;
 }
 
 interface Wut {
 	_type: '?';
 	ctr: number;
-	expr: Metaexpr;
+	expr: Expr;
 }
 
 interface T {
@@ -71,10 +71,10 @@ interface V {
 interface E {
 	_type: 'E';
 	ctr: number;
-	subject: number | [number, number] | Metaexpr;
+	subject: number | [number, number] | Expr;
 	args: Expr0[];
 	antecedents: (number | [number, number])[];
-	reduced: Metaexpr;
+	reduced: Expr;
 }
 
 interface Def {
@@ -87,6 +87,6 @@ interface ByDef {
 	_type: 'bydef';
 	ctr: number;
 	ref: number | [number, number];
-	expr: Metaexpr;
+	expr: Expr;
 	of: (Fun | Variable)[];
 }

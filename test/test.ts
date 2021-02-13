@@ -1,7 +1,7 @@
 import chai, { expect } from "chai";
 import ExecutionContext from "../src/ExecutionContext";
 chai.use(require('chai-as-promised'));
-import Metaexpr from "../src/exprs/Metaexpr";
+import Expr from "../src/exprs/Expr";
 import ObjectFun from "../src/exprs/ObjectFun";
 import Program from "../src/Program";
 var pegjs = require('pegjs');
@@ -84,8 +84,8 @@ cls x;
 cls y;
 `
 		}));
-		var foo = program.evaluate(evalParser.parse(`(f(x))(y)`)) as Metaexpr,
-			baz = program.evaluate(evalParser.parse(`(f(x))(y)`)) as Metaexpr;
+		var foo = program.evaluate(evalParser.parse(`(f(x))(y)`)) as Expr,
+			baz = program.evaluate(evalParser.parse(`(f(x))(y)`)) as Expr;
 		
 		expect(!!foo.equals(baz, null)).to.be.true;
 	});
@@ -108,8 +108,8 @@ sealed st N2(st p) {
 }
 `
 		}));
-		var foo = program.evaluate(evalParser.parse(`N(p)`)) as Metaexpr,
-			baz = program.evaluate(evalParser.parse(`N2(p)`)) as Metaexpr;
+		var foo = program.evaluate(evalParser.parse(`N(p)`)) as Expr,
+			baz = program.evaluate(evalParser.parse(`N2(p)`)) as Expr;
 		
 		expect(foo.equals(baz, new ExecutionContext())).to.be.false;
 	});

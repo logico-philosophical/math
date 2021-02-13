@@ -5,21 +5,21 @@ import StackTrace from '../StackTrace';
 import $Variable from './$Variable';
 import Expr0 from './Expr0';
 import Fun from './Fun';
-import Metaexpr, { EqualsPriority, Precedence } from './Metaexpr';
+import Expr, { EqualsPriority, Precedence } from './Expr';
 import { ObjectType, Type, TeeType } from './types';
 import Variable from './Variable';
 
 interface TeeArgumentType {
-	left: Metaexpr[];
+	left: Expr[];
 	def$s: $Variable[];
-	right: Metaexpr;
+	right: Expr;
 }
 
-export default class Tee extends Metaexpr {
+export default class Tee extends Expr {
 
-	public readonly left: Metaexpr[];
+	public readonly left: Expr[];
 	public readonly def$s: $Variable[];
-	public readonly right: Metaexpr;
+	public readonly right: Expr;
 
 	constructor ({left, def$s, right}: TeeArgumentType, trace: StackTrace) {
 		if (!(left instanceof Array
@@ -28,15 +28,15 @@ export default class Tee extends Metaexpr {
 						|| l.type instanceof Type;
 				}))) {
 			console.log(left);
-			throw Metaexpr.error('Assertion failed', trace);
+			throw Expr.error('Assertion failed', trace);
 		}
 
 		if (def$s && !(def$s instanceof Array && def$s.every($ => $ instanceof $Variable)))
-			throw Metaexpr.error('Assertion failed', trace);
+			throw Expr.error('Assertion failed', trace);
 
 		if (!(right.type instanceof ObjectType || right.type instanceof Type)) {
 			console.log(right);
-			throw Metaexpr.error('Assertion failed', trace);
+			throw Expr.error('Assertion failed', trace);
 		}
 
 		super(null, null, new TeeType({
@@ -47,14 +47,14 @@ export default class Tee extends Metaexpr {
 		this.left = left;
 		this.def$s = def$s || [];
 		this.right = right;
-		this.precedence = Metaexpr.PREC_COMMA;
+		this.precedence = Expr.PREC_COMMA;
 	}
 
-	protected isProvedInternal(hypotheses: Metaexpr[]): boolean {
+	protected isProvedInternal(hypotheses: Expr[]): boolean {
 		return this.right.isProved(hypotheses.concat(this.left));
 	}
 
-	public substitute(map: Map<Variable, Expr0>): Metaexpr {
+	public substitute(map: Map<Variable, Expr0>): Expr {
 		var left = this.left.map(e => e.substitute(map));
 		var right = this.right.substitute(map);
 
@@ -65,7 +65,7 @@ export default class Tee extends Metaexpr {
 		}, this.trace);
 	}
 
-	protected expandMetaInternal(andFuncalls: boolean): Metaexpr {
+	protected expandMetaInternal(andFuncalls: boolean): Expr {
 		var left = this.left.map(lef => lef.expandMeta(andFuncalls));
 		var right = this.right.expandMeta(andFuncalls);
 
@@ -76,7 +76,7 @@ export default class Tee extends Metaexpr {
 		return EqualsPriority.TWO;
 	}
 
-	protected equalsInternal(obj: Metaexpr, context: ExecutionContext): (Fun | Variable)[] | false {
+	protected equalsInternal(obj: Expr, context: ExecutionContext): (Fun | Variable)[] | false {
 		if (!(obj instanceof Tee)) {
 			throw Error('Assertion failed');
 		}
@@ -93,8 +93,8 @@ export default class Tee extends Metaexpr {
 	}
 
 	protected getProofInternal(
-			hypnumMap: Map<Metaexpr, number>,
-			$Map: Map<Metaexpr, number | [number, number]>,
+			hypnumMap: Map<Expr, number>,
+			$Map: Map<Expr, number | [number, number]>,
 			ctr: Counter): ProofType[] {
 		
 		hypnumMap = new Map(hypnumMap);
@@ -145,7 +145,7 @@ export default class Tee extends Metaexpr {
 
 		return [
 			(this.shouldConsolidate(prec) ? '\\left(' : ''),
-			`{${expanded.left.map(e => e.toTeXString(Metaexpr.PREC_COMMA)).join(', ')} \\vdash ${expanded.right.toTeXString(Metaexpr.PREC_COMMA)}}`,
+			`{${expanded.left.map(e => e.toTeXString(Expr.PREC_COMMA)).join(', ')} \\vdash ${expanded.right.toTeXString(Expr.PREC_COMMA)}}`,
 			(this.shouldConsolidate(prec) ? '\\right)' : '')
 		].join('');
 	}

@@ -4,7 +4,7 @@ import { ProofType } from '../ProofType';
 import StackTrace from '../StackTrace';
 import Expr0 from './Expr0';
 import Fun from './Fun';
-import Metaexpr, { EqualsPriority, Precedence } from './Metaexpr';
+import Expr, { EqualsPriority, Precedence } from './Expr';
 import Nameable from './Nameable';
 
 interface VariableArgumentType {
@@ -27,14 +27,14 @@ export default class Variable extends Expr0 implements Nameable {
 		super(doc, tex, type, trace);
 		
 		if (typeof name != 'string')
-			throw Metaexpr.error('Assertion failed', trace);
+			throw Expr.error('Assertion failed', trace);
 		
 		if (sealed && !expr) {
-			throw Metaexpr.error('Cannot seal a primitive fun', trace);
+			throw Expr.error('Cannot seal a primitive fun', trace);
 		}
 
 		if (expr && !type.equals(expr.type)) {
-			throw Metaexpr.error(`Expression type ${expr.type} failed to match the type ${type} of variable ${name}`, trace);
+			throw Expr.error(`Expression type ${expr.type} failed to match the type ${type} of variable ${name}`, trace);
 		}
 
 		this.sealed = sealed;
@@ -42,11 +42,11 @@ export default class Variable extends Expr0 implements Nameable {
 		this.expr = expr;
 	}
 
-	protected isProvedInternal(hypotheses: Metaexpr[]): boolean {
+	protected isProvedInternal(hypotheses: Expr[]): boolean {
 		return false;
 	}
 
-	public substitute(map: Map<Variable, Expr0>): Metaexpr {
+	public substitute(map: Map<Variable, Expr0>): Expr {
 		if (map.has(this)) return map.get(this);
 
 		// 매크로 변수는 스코프 밖에서 보이지 않으므로 치환될 것을 갖지 않는다는
@@ -54,7 +54,7 @@ export default class Variable extends Expr0 implements Nameable {
 		return this;
 	}
 
-	protected expandMetaInternal(andFuncalls: boolean): Metaexpr {
+	protected expandMetaInternal(andFuncalls: boolean): Expr {
 		return this;
 	}
 
@@ -64,7 +64,7 @@ export default class Variable extends Expr0 implements Nameable {
 			: EqualsPriority.ZERO;
 	}
 
-	protected equalsInternal(obj: Metaexpr, context: ExecutionContext): (Fun | Variable)[] | false {
+	protected equalsInternal(obj: Expr, context: ExecutionContext): (Fun | Variable)[] | false {
 		if (!this.expr) return false;
 
 		if (!this.sealed || context.canUse(this)) {
@@ -77,8 +77,8 @@ export default class Variable extends Expr0 implements Nameable {
 	}
 
 	protected getProofInternal(
-			hypnumMap: Map<Metaexpr, number>,
-			$Map: Map<Metaexpr, number | [number, number]>,
+			hypnumMap: Map<Expr, number>,
+			$Map: Map<Expr, number | [number, number]>,
 			ctr: Counter): ProofType[] {
 		
 		return [{
@@ -100,10 +100,10 @@ export default class Variable extends Expr0 implements Nameable {
 	public toTeXString(prec?: Precedence, root?: boolean): string {
 		var id = this instanceof Parameter ? `id-${this._id}` : `def-${this.name}`;
 
-		var tex = this.tex || Metaexpr.makeTeXName(this.name);
+		var tex = this.tex || Expr.makeTeXName(this.name);
 		
 		var expr = root && this.expr
-			? `\\coloneqq ${this.expr.toTeXString(Metaexpr.PREC_COLONEQQ)}`
+			? `\\coloneqq ${this.expr.toTeXString(Expr.PREC_COLONEQQ)}`
 			: '';
 		
 		return `\\href{#${id}}{${tex}}${expr}`;

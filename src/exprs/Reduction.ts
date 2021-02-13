@@ -5,7 +5,7 @@ import StackTrace from "../StackTrace";
 import Expr0 from "./Expr0";
 import Fun from "./Fun";
 import Funcall from "./Funcall";
-import Metaexpr, { EqualsPriority, Precedence } from "./Metaexpr";
+import Expr, { EqualsPriority, Precedence } from "./Expr";
 import { isNameable } from "./Nameable";
 import Parameter from "./Parameter";
 import Schema from "./Schema";
@@ -14,20 +14,20 @@ import { FunctionalObjectType, FunctionalMetaType, TeeType } from "./types";
 import Variable from "./Variable";
 
 interface ReductionArgumentType {
-	antecedents: Metaexpr[];
-	subject: Metaexpr;
+	antecedents: Expr[];
+	subject: Expr;
 	args: (Expr0 | null)[];
-	as: Metaexpr;
+	as: Expr;
 }
 
-export default class Reduction extends Metaexpr {
+export default class Reduction extends Expr {
 	
-	public readonly antecedents: Metaexpr[];
-	public readonly requiredAntecedents: Metaexpr[];
-	public readonly subject: Metaexpr;
+	public readonly antecedents: Expr[];
+	public readonly requiredAntecedents: Expr[];
+	public readonly subject: Expr;
 	public readonly args: (Expr0 | null)[];
-	public readonly preFormatConsequent: Metaexpr;
-	public readonly consequent: Metaexpr;
+	public readonly preFormatConsequent: Expr;
+	public readonly consequent: Expr;
 	private readonly antecedentEqualsResults: (Fun | Variable)[][];
 	private readonly rightEqualsResult: (Fun | Variable)[];
 
@@ -38,11 +38,11 @@ export default class Reduction extends Metaexpr {
 				argTypes = args.map(e => e && e.type);
 
 			if (paramTypes.length != argTypes.length)
-				throw Metaexpr.error(`Invalid number of arguments (expected ${paramTypes.length}): ${argTypes.length}`, trace);
+				throw Expr.error(`Invalid number of arguments (expected ${paramTypes.length}): ${argTypes.length}`, trace);
 
 			for (var i = 0; i < paramTypes.length; i++) {
 				if (argTypes[i] && !paramTypes[i].equals(argTypes[i])) {
-					throw Metaexpr.error(`Argument #${i + 1} has illegal argument type (expected ${paramTypes[i]}): ${argTypes[i]}`, trace);
+					throw Expr.error(`Argument #${i + 1} has illegal argument type (expected ${paramTypes[i]}): ${argTypes[i]}`, trace);
 				}
 			}
 		}
@@ -50,7 +50,7 @@ export default class Reduction extends Metaexpr {
 		if (subject instanceof Fun) {
 			subject.params.forEach((p, i) => {
 				if (!(args && args[i]) && !p.selector) {
-					throw Metaexpr.error(`Argument #${i + 1} could not be guessed`, trace);
+					throw Expr.error(`Argument #${i + 1} could not be guessed`, trace);
 				}
 			});
 	
@@ -74,25 +74,25 @@ export default class Reduction extends Metaexpr {
 				args: derefs,
 			}, trace);
 		} else if (args) {
-			throw Metaexpr.error('Something\'s wrong', trace);
+			throw Expr.error('Something\'s wrong', trace);
 		}
 	
 		if (!(subject.type instanceof TeeType))
-			throw Metaexpr.error('Subject is not reducible', trace);
+			throw Expr.error('Subject is not reducible', trace);
 	
 		if (!(antecedents instanceof Array)
-				|| antecedents.map(e => e instanceof Metaexpr).some(e => !e))
-			throw Metaexpr.error('Assertion failed', trace);
+				|| antecedents.map(e => e instanceof Expr).some(e => !e))
+			throw Expr.error('Assertion failed', trace);
 
 		var paramTypes = subject.type.left,
 			antecedentTypes = antecedents.map(e => e.type);
 
 		if (paramTypes.length != antecedentTypes.length)
-			throw Metaexpr.error(`Invalid number of arguments (expected ${paramTypes.length}): ${antecedentTypes.length}`, trace);
+			throw Expr.error(`Invalid number of arguments (expected ${paramTypes.length}): ${antecedentTypes.length}`, trace);
 
 		for (let i = 0; i < paramTypes.length; i++) {
 			if (!paramTypes[i].equals(antecedentTypes[i]))
-				throw Metaexpr.error(`Illegal argument type (expected ${paramTypes[i]}): ${antecedentTypes[i]}`, trace);
+				throw Expr.error(`Illegal argument type (expected ${paramTypes[i]}): ${antecedentTypes[i]}`, trace);
 		}
 
 		super(null, null, subject.type.right, trace);
@@ -103,7 +103,7 @@ export default class Reduction extends Metaexpr {
 		var tee = subject.expandMeta(true);
 
 		if (!(tee instanceof Tee)) {
-			throw Metaexpr.error('Assertion failed', trace);
+			throw Expr.error('Assertion failed', trace);
 		}
 
 		this.requiredAntecedents = tee.left;
@@ -116,7 +116,7 @@ export default class Reduction extends Metaexpr {
 		for (let i = 0; i < tee.left.length; i++) {
 			var tmp = tee.left[i].equals(antecedentsExpanded[i], context);
 			if (!tmp) {
-				throw Metaexpr.error(`LHS #${i + 1} failed to match:
+				throw Expr.error(`LHS #${i + 1} failed to match:
 
 --- EXPECTED ---
 ${tee.left[i].expandMeta(true)}
@@ -135,7 +135,7 @@ ${antecedents[i].expandMeta(true)}
 		if (as) {
 			var tmp = tee.right.equals(as, context);
 			if (!tmp) {
-				throw Metaexpr.error(`RHS failed to match:
+				throw Expr.error(`RHS failed to match:
 
 --- EXPECTED ---
 ${tee.right.expandMeta(true)}
@@ -153,16 +153,16 @@ ${as.expandMeta(true)}
 		}
 	}
 
-	protected isProvedInternal(hypotheses: Metaexpr[]): boolean {
+	protected isProvedInternal(hypotheses: Expr[]): boolean {
 		return this.subject.isProved(hypotheses)
 			&& this.antecedents.every(l => l.isProved(hypotheses));
 	}
 
-	public substitute(map: Map<Variable, Expr0>): Metaexpr {
+	public substitute(map: Map<Variable, Expr0>): Expr {
 		return this.consequent.substitute(map);
 	}
 
-	protected expandMetaInternal(andFuncalls: boolean): Metaexpr {
+	protected expandMetaInternal(andFuncalls: boolean): Expr {
 		return this.consequent.expandMeta(andFuncalls);
 	}
 
@@ -170,13 +170,13 @@ ${as.expandMeta(true)}
 		return EqualsPriority.FIVE;
 	}
 
-	protected equalsInternal(obj: Metaexpr, context: ExecutionContext): (Fun | Variable)[] | false {
+	protected equalsInternal(obj: Expr, context: ExecutionContext): (Fun | Variable)[] | false {
 		return this.consequent.equals(obj, context);
 	}
 
 	protected getProofInternal(
-			hypnumMap: Map<Metaexpr, number>,
-			$Map: Map<Metaexpr, number | [number, number]>,
+			hypnumMap: Map<Expr, number>,
+			$Map: Map<Expr, number | [number, number]>,
 			ctr: Counter): ProofType[] {
 		
 		var antecedentLinesList: ProofType[][] = [];
@@ -266,17 +266,17 @@ ${as.expandMeta(true)}
 
 	public static guess(
 			selector: string,
-			requiredAntecedents: Metaexpr[], antecedents: Metaexpr[],
-			right: Metaexpr, as: Metaexpr,
-			context: ExecutionContext, trace: StackTrace): Metaexpr {
+			requiredAntecedents: Expr[], antecedents: Expr[],
+			right: Expr, as: Expr,
+			context: ExecutionContext, trace: StackTrace): Expr {
 		
-		if (selector.length == 0) throw Metaexpr.error('wut', trace);
+		if (selector.length == 0) throw Expr.error('wut', trace);
 
-		var pattern: Metaexpr, instance: Metaexpr;
+		var pattern: Expr, instance: Expr;
 
 		if (selector[0] == 'r') {
 			if (!as) {
-				throw Metaexpr.error(`Cannot dereference @${selector} (at 0): expected output is not given`, trace);
+				throw Expr.error(`Cannot dereference @${selector} (at 0): expected output is not given`, trace);
 			}
 
 			pattern = right;
@@ -285,7 +285,7 @@ ${as.expandMeta(true)}
 			var n = Number(selector[0]);
 
 			if (!(1 <= n && n <= antecedents.length))
-				throw Metaexpr.error(`Cannot dereference @${selector} (at 0): antecedent index out of range`, trace);
+				throw Expr.error(`Cannot dereference @${selector} (at 0): antecedent index out of range`, trace);
 
 			pattern = requiredAntecedents[n - 1];
 			instance = antecedents[n - 1];
@@ -293,8 +293,8 @@ ${as.expandMeta(true)}
 
 		return (function recurse(
 				ptr: number,
-				pattern: Metaexpr, instance: Metaexpr,
-				params: Parameter[]): Metaexpr {
+				pattern: Expr, instance: Expr,
+				params: Parameter[]): Expr {
 			
 			instance = instance.expandMeta(true);
 			
@@ -305,11 +305,11 @@ ${as.expandMeta(true)}
 
 				if (pattern instanceof Tee && instance instanceof Tee) {
 					if (pattern.left.length != instance.left.length) {
-						throw Metaexpr.error(`Cannot dereference @${selector} (at ${ptr}): antecedent length mismatch`, trace);
+						throw Expr.error(`Cannot dereference @${selector} (at ${ptr}): antecedent length mismatch`, trace);
 					}
 
 					if (!(1 <= n && n <= instance.left.length)) {
-						throw Metaexpr.error(`Cannot dereference @${selector} (at ${ptr}): antecedent index out of range`, trace);
+						throw Expr.error(`Cannot dereference @${selector} (at ${ptr}): antecedent index out of range`, trace);
 					}
 
 					return recurse(ptr + 1, pattern.left[n - 1], instance.left[n - 1], params);
@@ -321,7 +321,7 @@ ${as.expandMeta(true)}
 					}
 
 					if (!(pattern instanceof Funcall && instance instanceof Funcall)) {
-						throw Metaexpr.error(`Cannot dereference @${selector} (at ${ptr})`, trace);
+						throw Expr.error(`Cannot dereference @${selector} (at ${ptr})`, trace);
 					}
 
 					if (pattern.fun.equals(instance.fun, context)) {
@@ -329,19 +329,19 @@ ${as.expandMeta(true)}
 					}
 
 					if (!instance.isExpandable(context)) {
-						throw Metaexpr.error(`Cannot dereference @${selector} (at ${ptr}): ${instance}`, trace);
+						throw Expr.error(`Cannot dereference @${selector} (at ${ptr}): ${instance}`, trace);
 					}
 
 					instance = instance.expandOnce(context).expanded;
 				}
 
 				if (!(1 <= n && n <= instance.args.length))
-					throw Metaexpr.error(`Cannot dereference @${selector} (at ${ptr})`, trace);
+					throw Expr.error(`Cannot dereference @${selector} (at ${ptr})`, trace);
 
 				return recurse(ptr + 1, pattern.args[n - 1], instance.args[n - 1], params);
 			} else if (selector[ptr] == 'r') {
 				if (!(pattern instanceof Tee && instance instanceof Tee)) {
-					throw Metaexpr.error(`Cannot dereference @${selector} (at ${ptr})`, trace);
+					throw Expr.error(`Cannot dereference @${selector} (at ${ptr})`, trace);
 				}
 
 				return recurse(ptr + 1, pattern.right, instance.right, params);
@@ -350,18 +350,18 @@ ${as.expandMeta(true)}
 					pattern instanceof Fun && !pattern.name
 					&& instance instanceof Fun && !instance.name
 				)) {
-					throw Metaexpr.error(`Cannot dereference @${selector} (at ${ptr})`, trace);
+					throw Expr.error(`Cannot dereference @${selector} (at ${ptr})`, trace);
 				}
 
 				if (pattern.length != instance.length) {
-					throw Metaexpr.error(`Cannot dereference @${selector} (at ${ptr}): parameter length mismatch`, trace);
+					throw Expr.error(`Cannot dereference @${selector} (at ${ptr}): parameter length mismatch`, trace);
 				}
 
 				var placeholders = [];
 
 				for (var i = 0; i < pattern.length; i++) {
 					if (!pattern.params[i].type.equals(instance.params[i].type)) {
-						throw Metaexpr.error(`Cannot dereference @${selector} (at ${ptr}): parameter type mismatch`, trace);
+						throw Expr.error(`Cannot dereference @${selector} (at ${ptr}): parameter type mismatch`, trace);
 					}
 
 					placeholders.push(new Parameter({
@@ -375,7 +375,7 @@ ${as.expandMeta(true)}
 				return recurse(ptr + 1, pattern.call(placeholders), instance.call(placeholders), placeholders.concat(params));
 			} else if (selector[ptr] == 'f') {
 				if (ptr != selector.length - 1) {
-					throw Metaexpr.error(`Cannot dereference @${selector} (at ${ptr}): invalid selector`, trace);
+					throw Expr.error(`Cannot dereference @${selector} (at ${ptr}): invalid selector`, trace);
 				}
 
 				// (($0, $1) => f($0, $1)) -> f
@@ -398,7 +398,7 @@ ${as.expandMeta(true)}
 				}, trace);
 			}
 
-			throw Metaexpr.error(`Cannot dereference @${selector} (at ${ptr}): invalid selector`, trace);
+			throw Expr.error(`Cannot dereference @${selector} (at ${ptr}): invalid selector`, trace);
 		})(1, pattern, instance, []);
 	}
 
@@ -428,6 +428,6 @@ ${as.expandMeta(true)}
 	}
 
 	public toTeXString(prec?: Precedence, root?: boolean): string {
-		return `${this.subject.toTeXString(false)}[${this.antecedents.map(e => e.toTeXString(Metaexpr.PREC_COMMA)).join(', ')}]`;
+		return `${this.subject.toTeXString(false)}[${this.antecedents.map(e => e.toTeXString(Expr.PREC_COMMA)).join(', ')}]`;
 	}
 }

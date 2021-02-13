@@ -4,40 +4,40 @@ import { ProofType } from "../ProofType";
 import StackTrace from "../StackTrace";
 import Expr0 from "./Expr0";
 import Fun from "./Fun";
-import Metaexpr, { EqualsPriority, Precedence } from "./Metaexpr";
+import Expr, { EqualsPriority, Precedence } from "./Expr";
 import Nameable from "./Nameable";
 import Variable from "./Variable";
 
 interface $VariableArgumentType {
 	name: string;
-	expr: Metaexpr;
+	expr: Expr;
 }
 
-export default class $Variable extends Metaexpr implements Nameable {
+export default class $Variable extends Expr implements Nameable {
 
 	public readonly name: string;
-	public readonly expr: Metaexpr;
+	public readonly expr: Expr;
 
 	constructor ({name, expr}: $VariableArgumentType, trace: StackTrace) {
 		super(null, null, expr.type, trace);
 
 		if (!name || !expr) {
-			throw Metaexpr.error('Assertion failed', trace);
+			throw Expr.error('Assertion failed', trace);
 		}
 
 		this.name = name;
 		this.expr = expr;
 	}
 
-	protected isProvedInternal(hypotheses: Metaexpr[]): boolean {
+	protected isProvedInternal(hypotheses: Expr[]): boolean {
 		return this.expr.isProved(hypotheses);
 	}
 
-	public substitute(map: Map<Variable, Expr0>): Metaexpr {
+	public substitute(map: Map<Variable, Expr0>): Expr {
 		return this.expr.substitute(map);
 	}
 
-	protected expandMetaInternal(andFuncalls: boolean): Metaexpr {
+	protected expandMetaInternal(andFuncalls: boolean): Expr {
 		return this.expr.expandMeta(andFuncalls);
 	}
 
@@ -45,13 +45,13 @@ export default class $Variable extends Metaexpr implements Nameable {
 		return EqualsPriority.FIVE;
 	}
 
-	protected equalsInternal(obj: Metaexpr, context: ExecutionContext): (Fun | Variable)[] | false {
+	protected equalsInternal(obj: Expr, context: ExecutionContext): (Fun | Variable)[] | false {
 		return this.expr.equals(obj, context);
 	}
 
 	protected getProofInternal(
-			hypnumMap: Map<Metaexpr, number>,
-			$Map: Map<Metaexpr, number | [number, number]>,
+			hypnumMap: Map<Expr, number>,
+			$Map: Map<Expr, number | [number, number]>,
 			ctr: Counter): ProofType[] {
 		
 		if (!$Map.has(this)) {
@@ -71,6 +71,6 @@ export default class $Variable extends Metaexpr implements Nameable {
 	}
 	
 	public toTeXString(prec?: Precedence, root?: boolean): string {
-		return `\\mathtt{${Metaexpr.escapeTeX(this.name)}}`;
+		return `\\mathtt{${Expr.escapeTeX(this.name)}}`;
 	}
 }

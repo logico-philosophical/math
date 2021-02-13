@@ -1,34 +1,34 @@
 import Expr0 from './Expr0';
 
 interface FuncallArgumentType {
-	fun: Metaexpr;
+	fun: Expr;
 	args: Expr0[];
 }
 
 export default class Funcall extends Expr0 {
 	
-	public readonly fun: Metaexpr;
+	public readonly fun: Expr;
 	public readonly args: Expr0[];
 
 	constructor ({fun, args}: FuncallArgumentType, trace: StackTrace) {
 		if (!fun.type.isFunctional()) {
 			var name = isNameable(fun) ? fun.name : '<anonymous>';
-			throw Metaexpr.error(`${name} is not callable`, trace);
+			throw Expr.error(`${name} is not callable`, trace);
 		}
 
 		if (!(args instanceof Array) || args.map(e => e instanceof Expr0).some(e => !e))
-			throw Metaexpr.error('Assertion failed', trace);
+			throw Expr.error('Assertion failed', trace);
 			 
 		var resolvedType = fun.type.resolve() as FunctionalObjectType | FunctionalMetaType,
 			paramTypes = resolvedType.from,
 			argTypes = args.map(e => e.type);
 
 		if (paramTypes.length != argTypes.length)
-			throw Metaexpr.error(`Invalid number of arguments (expected ${paramTypes.length}): ${argTypes.length}`, trace);
+			throw Expr.error(`Invalid number of arguments (expected ${paramTypes.length}): ${argTypes.length}`, trace);
 
 		for (var i = 0; i < paramTypes.length; i++) {
 			if (!paramTypes[i].equals(argTypes[i])) {
-				throw Metaexpr.error(`Argument #${i + 1} has illegal argument type (expected ${paramTypes[i]}): ${argTypes[i]}`, trace);
+				throw Expr.error(`Argument #${i + 1} has illegal argument type (expected ${paramTypes[i]}): ${argTypes[i]}`, trace);
 			}
 		}
 
@@ -38,18 +38,18 @@ export default class Funcall extends Expr0 {
 		this.args = args;
 	}
 
-	protected isProvedInternal(hypotheses: Metaexpr[]): boolean {
+	protected isProvedInternal(hypotheses: Expr[]): boolean {
 		return this.fun.isProved(hypotheses);
 	}
 
-	public substitute(map: Map<Variable, Expr0>): Metaexpr {
+	public substitute(map: Map<Variable, Expr0>): Expr {
 		return new Funcall({
 			fun: this.fun.substitute(map),
 			args: this.args.map(arg => arg.substitute(map))
 		}, this.trace);
 	}
 
-	protected expandMetaInternal(andFuncalls: boolean): Metaexpr {
+	protected expandMetaInternal(andFuncalls: boolean): Expr {
 		var fun = this.fun.expandMeta(andFuncalls),
 			args = this.args.map(arg => arg.expandMeta(andFuncalls));
 		
@@ -60,7 +60,7 @@ export default class Funcall extends Expr0 {
 	}
 
 	public isExpandable(context: ExecutionContext): boolean {
-		var callee: Metaexpr = this.fun;
+		var callee: Expr = this.fun;
 
 		while (callee instanceof $Variable) {
 			callee = callee.expr;
@@ -79,14 +79,14 @@ export default class Funcall extends Expr0 {
 		return callee.isCallable(context);
 	}
 	
-	public expandOnce(context: ExecutionContext): {expanded: Metaexpr, used: (Fun | Variable)[]} {
+	public expandOnce(context: ExecutionContext): {expanded: Expr, used: (Fun | Variable)[]} {
 		if (!this.isExpandable(context)) {
 			throw Error('Cannot expand');
 		}
 
 		var used: (Fun | Variable)[] = [];
 
-		var callee: Metaexpr = this.fun;
+		var callee: Expr = this.fun;
 
 		while (callee instanceof $Variable) {
 			callee = callee.expr;
@@ -132,7 +132,7 @@ export default class Funcall extends Expr0 {
 		return EqualsPriority.THREE;
 	}
 
-	protected equalsInternal(obj: Metaexpr, context: ExecutionContext): (Fun | Variable)[] | false {
+	protected equalsInternal(obj: Expr, context: ExecutionContext): (Fun | Variable)[] | false {
 		if (!(obj instanceof Funcall)) {
 			if (!this.isExpandable(context)) return false;
 			
@@ -197,8 +197,8 @@ export default class Funcall extends Expr0 {
 	}
 
 	protected getProofInternal(
-			hypnumMap: Map<Metaexpr, number>,
-			$Map: Map<Metaexpr, number | [number, number]>,
+			hypnumMap: Map<Expr, number>,
+			$Map: Map<Expr, number | [number, number]>,
 			ctr: Counter): ProofType[] {
 
 		if (hypnumMap.has(this.fun)) {
@@ -303,10 +303,10 @@ export default class Funcall extends Expr0 {
 		if (this.fun instanceof Schema) {
 			return (
 				this.fun.name
-					? `\\href{#def-${this.fun.name}}{\\htmlData{proved=${this.fun.isProved() ? 'p' : 'np'}}{\\textsf{${Metaexpr.escapeTeX(this.fun.name)}}}}`
+					? `\\href{#def-${this.fun.name}}{\\htmlData{proved=${this.fun.isProved() ? 'p' : 'np'}}{\\textsf{${Expr.escapeTeX(this.fun.name)}}}}`
 					: this.fun.toTeXString(false)
 			) + `\\mathord{\\left(${this.args.map(arg => {
-				return arg.toTeXString(Metaexpr.PREC_COMMA);
+				return arg.toTeXString(Expr.PREC_COMMA);
 			}).join(', ')}\\right)}`;
 		}
 
@@ -314,13 +314,13 @@ export default class Funcall extends Expr0 {
 			return this.fun.funcallToTeXString(this.args, prec);
 		
 		var args = this.args.map(arg => {
-			return arg.toTeXString(Metaexpr.PREC_COMMA);
+			return arg.toTeXString(Expr.PREC_COMMA);
 		});
 
 		return (
 			!(isNameable(this.fun) && this.fun.name) || this.fun instanceof Variable
 				? this.fun.toTeXString(false)
-				: Metaexpr.makeTeXName(this.fun.name)
+				: Expr.makeTeXName(this.fun.name)
 		) + `\\mathord{\\left(${args.join(', ')}\\right)}`;
 	}
 }
@@ -331,7 +331,7 @@ import { ProofType } from '../ProofType';
 import StackTrace from '../StackTrace';
 import $Variable from './$Variable';
 import Fun from './Fun';
-import Metaexpr, { EqualsPriority, Precedence } from './Metaexpr';
+import Expr, { EqualsPriority, Precedence } from './Expr';
 import { isNameable } from './Nameable';
 import ObjectFun from './ObjectFun';
 import Schema from './Schema';

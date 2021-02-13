@@ -1,5 +1,5 @@
 import Counter from "./Counter";
-import Metaexpr from "./exprs/Metaexpr";
+import Expr from "./exprs/Expr";
 import Schema from "./exprs/Schema";
 import Variable from "./exprs/Variable";
 import { ProofType } from "./ProofType";
@@ -34,7 +34,7 @@ export default class ProofExplorer {
 			return `<tr><th>${ctr}</th>${htmlLeft}<td ${bbb ? 'class="bbb" ' : ''}colspan="${ncols-padding}">${h1}</td>${h2 instanceof Array ? h2.map(e => `<td>${e}</td>`).join('') : `<td colspan="2">${h2}</td>`}</tr>`;
 		}
 
-		function exprToHtml(expr: number | [number, number] | Metaexpr, expand?: boolean): string {
+		function exprToHtml(expr: number | [number, number] | Expr, expand?: boolean): string {
 			if (typeof expr == 'number') return `<b>${expr}</b>`;
 			if (expr instanceof Array) return `<b>${expr[0]}&ndash;${expr[1]}</b>`;
 			if (expand) return ktx(expr.expandMeta(true).toTeXString(true, true));
