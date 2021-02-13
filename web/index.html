@@ -334,12 +334,12 @@
 
 					primitiveTypeList = primitiveTypeList.concat(
 						[...scope.typedefMap]
-							.filter(([k, v]) => !v.origin).map(([k, v]) => k)
+							.filter(([k, v]) => !v.expr).map(([k, v]) => k)
 					);
 
 					macroTypeList = macroTypeList.concat(
 						[...scope.typedefMap]
-							.filter(([k, v]) => v.origin).map(([k, v]) => k)
+							.filter(([k, v]) => v.expr).map(([k, v]) => k)
 					);
 
 					primitiveDefinitionList = primitiveDefinitionList.concat(

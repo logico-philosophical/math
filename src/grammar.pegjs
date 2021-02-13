@@ -36,13 +36,13 @@ typedef =
 	doc:(documentation __)?
 	"type" __
 	name:ident _
-	origin:('=' _ o:ftype _ {return o})?
+	expr:('=' _ o:ftype _ {return o})?
 	sem
 	{
 		return {
 			_type: 'typedef',
 			doc: doc ? doc[0] : null,
-			origin,
+			expr,
 			name,
 			location: location()
 		}

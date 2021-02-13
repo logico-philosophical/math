@@ -40,12 +40,12 @@ export abstract class Type {
 			return this.right.equals(t.right);
 		}
 
-		if (this instanceof SimpleObjectType && this.origin) {
-			return this.origin.equals(t);
+		if (this instanceof SimpleObjectType && this.expr) {
+			return this.expr.equals(t);
 		}
 
-		if (t instanceof SimpleObjectType && t.origin) {
-			return this.equals(t.origin);
+		if (t instanceof SimpleObjectType && t.expr) {
+			return this.equals(t.expr);
 		}
 
 		if (this instanceof SimpleObjectType || t instanceof SimpleObjectType) {
@@ -149,25 +149,25 @@ export abstract class ObjectType extends Type {
 interface SimpleObjectTypeArgumentType {
 	doc: string;
 	name: string;
-	origin: ObjectType;
+	expr: ObjectType;
 }
 
 export class SimpleObjectType extends ObjectType implements Nameable {
 
 	public readonly name: string;
-	public readonly origin: ObjectType;
+	public readonly expr: ObjectType;
 
-	constructor ({doc, name, origin}: SimpleObjectTypeArgumentType, trace: StackTrace) {
+	constructor ({doc, name, expr}: SimpleObjectTypeArgumentType, trace: StackTrace) {
 		super(doc, trace);
 
 		if (!name) throw Error('duh');
 
 		this.name = name;
-		this.origin = origin;
+		this.expr = expr;
 	}
 
 	public resolve(): ObjectType {
-		return this.origin ? this.origin.resolve() : this;
+		return this.expr ? this.expr.resolve() : this;
 	}
 
 	public toIndentedString(indent: number): string {
@@ -177,15 +177,15 @@ export class SimpleObjectType extends ObjectType implements Nameable {
 	public toTeXString(root?: boolean): string {
 		var name = `\\href{#type-${this.name}}{\\mathsf{${this.name}}}`;
 
-		if (root && this.origin) {
-			return name + `\\coloneqq${this.origin.toTeXString()}`;
+		if (root && this.expr) {
+			return name + `\\coloneqq${this.expr.toTeXString()}`;
 		}
 
 		return name;
 	}
 
 	public isFunctional(): boolean {
-		if (this.origin) return this.origin.isFunctional();
+		if (this.expr) return this.expr.isFunctional();
 
 		return false;
 	}

@@ -77,23 +77,23 @@ export default class PI {
 
 		var scope: Scope = parentScope.extend('type', obj.name, obj.location);
 
-		var origin: ObjectType = obj.origin ? scope.getType(typeObjToNestedArr(obj.origin)) : null;
+		var expr: ObjectType = obj.expr ? scope.getType(typeObjToNestedArr(obj.expr)) : null;
 
 		var name: string = obj.name;
 		var doc: string = obj.doc;
 
-		if (origin) {
+		if (expr) {
 			return new SimpleObjectType({
 				doc,
 				name,
-				origin
+				expr
 			}, scope.trace);
 		}
 
 		return new SimpleObjectType({
 			doc,
 			name,
-			origin: null
+			expr: null
 		}, scope.trace);
 	}
 
