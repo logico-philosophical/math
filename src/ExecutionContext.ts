@@ -1,5 +1,5 @@
-import ObjectFun from "./nodes/ObjectFun";
-import Variable from "./nodes/Variable";
+import ObjectFun from "./exprs/ObjectFun";
+import Variable from "./exprs/Variable";
 
 export default class ExecutionContext {
 

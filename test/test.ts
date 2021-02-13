@@ -1,8 +1,8 @@
 import chai, { expect } from "chai";
 import ExecutionContext from "../src/ExecutionContext";
 chai.use(require('chai-as-promised'));
-import Metaexpr from "../src/nodes/Metaexpr";
-import ObjectFun from "../src/nodes/ObjectFun";
+import Metaexpr from "../src/exprs/Metaexpr";
+import ObjectFun from "../src/exprs/ObjectFun";
 import Program from "../src/Program";
 var pegjs = require('pegjs');
 var fs = require('fs');

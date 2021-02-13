@@ -1,7 +1,7 @@
 import Counter from "./Counter";
-import Metaexpr from "./nodes/Metaexpr";
-import Schema from "./nodes/Schema";
-import Variable from "./nodes/Variable";
+import Metaexpr from "./exprs/Metaexpr";
+import Schema from "./exprs/Schema";
+import Variable from "./exprs/Variable";
 import { ProofType } from "./ProofType";
 import Scope from "./Scope";
 

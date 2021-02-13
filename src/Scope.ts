@@ -1,10 +1,10 @@
-import $Variable from './nodes/$Variable';
-import Fun from './nodes/Fun';
-import Metaexpr from './nodes/Metaexpr';
-import ObjectFun from './nodes/ObjectFun';
-import Schema from './nodes/Schema';
-import { FunctionalObjectType, ObjectType, SimpleObjectType } from './nodes/types';
-import Variable from './nodes/Variable';
+import $Variable from './exprs/$Variable';
+import Fun from './exprs/Fun';
+import Metaexpr from './exprs/Metaexpr';
+import ObjectFun from './exprs/ObjectFun';
+import Schema from './exprs/Schema';
+import { FunctionalObjectType, ObjectType, SimpleObjectType } from './exprs/types';
+import Variable from './exprs/Variable';
 import { LocationObject } from './PegInterfaceDefinitions';
 import StackTrace from './StackTrace';
 

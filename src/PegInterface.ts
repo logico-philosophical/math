@@ -4,19 +4,19 @@
  */
 
 import ExecutionContext from './ExecutionContext';
-import $Variable from './nodes/$Variable';
-import Expr0 from './nodes/Expr0';
-import Fun from './nodes/Fun';
-import Funcall from './nodes/Funcall';
-import Metaexpr from './nodes/Metaexpr';
-import ObjectFun from './nodes/ObjectFun';
-import Parameter from './nodes/Parameter';
-import Reduction from './nodes/Reduction';
-import Schema, { SchemaType } from './nodes/Schema';
-import Tee from './nodes/Tee';
-import { ObjectType, SimpleObjectType } from './nodes/types';
-import Variable from './nodes/Variable';
-import With from './nodes/With';
+import $Variable from './exprs/$Variable';
+import Expr0 from './exprs/Expr0';
+import Fun from './exprs/Fun';
+import Funcall from './exprs/Funcall';
+import Metaexpr from './exprs/Metaexpr';
+import ObjectFun from './exprs/ObjectFun';
+import Parameter from './exprs/Parameter';
+import Reduction from './exprs/Reduction';
+import Schema, { SchemaType } from './exprs/Schema';
+import Tee from './exprs/Tee';
+import { ObjectType, SimpleObjectType } from './exprs/types';
+import Variable from './exprs/Variable';
+import With from './exprs/With';
 import { Def$Object, DefschemaObject, DefunObject, DefvObject, Expr0Object, FuncallObject, FunexprObject, MetaexprObject, ReductionObject, SchemacallObject, SchemaexprObject, StypeObject, TeeObject, TypedefObject, TypeObject, VarObject, WithObject } from './PegInterfaceDefinitions';
 import Scope, { NestedTypeInput } from './Scope';
 

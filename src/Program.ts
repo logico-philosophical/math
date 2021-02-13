@@ -1,4 +1,4 @@
-import { SimpleObjectType } from './nodes/types';
+import { SimpleObjectType } from './exprs/types';
 import PegInterface from './PegInterface';
 import { EvaluableObject, ImportOrLineObject } from './PegInterfaceDefinitions';
 import ProofExplorer from './ProofExplorer';
