@@ -416,6 +416,29 @@ theorem int_in_e(cls n: @11) {
 	}
 }
 
+theorem int_U(pr f: @r2) {
+	Uin2(omega, omega, (cls a, cls b) => f(omega_sub_as_int(a, b))) |- {
+		(cls n) => {
+			in(n, int) |- {
+				$X = @h2 > int_in_e;
+				
+				$U = (cls a, cls b) => {
+					in(a, omega), in(b, omega) |- {
+						eq(n, omega_sub_as_int(a, b)) |- {
+							[
+								@h5;
+								[@h1; @h3; @h4] > Uin2e
+							] > ax_indiscernible_m2(f, ?, ?)
+						} > cp
+					}
+				} > Uin2i;
+				
+				[$X; $U] > mpXin2_alt as f(n)
+			} > cp
+		} > Ui as Uin(int, f)
+	}
+}
+
 "정수 덧셈."
 $\left(#1<<+_\Z>>#2\right)$
 cls int_add(cls m, cls n) {
@@ -424,6 +447,27 @@ cls int_add(cls m, cls n) {
 			A(A(eq(m, omega_sub_as_int(a1, b1)), eq(n, omega_sub_as_int(a2, b2))), eq(k, omega_sub_as_int(omega_add(a1, a2), omega_add(b1, b2))))
 		})
 	})
+}
+
+theorem int_add_eq_i_left(cls m: @r11, cls n: @11, $n'$ cls np: @12) {
+	eq(n, np) |- {
+		@h1 > call_eq_i((cls n) => int_add(m, n), ?, ?)
+	}
+}
+
+theorem int_add_eq_i_right(cls m: @11, $m'$ cls mp: @12, cls n: @r12) {
+	eq(m, mp) |- {
+		@h1 > call_eq_i((cls m) => int_add(m ,n), ?, ?)
+	}
+}
+
+theorem int_add_eq_i(cls m: @11, cls n: @21, $m'$ cls mp: @12, $n'$ cls np: @22) {
+	eq(m, mp), eq(n, np) |- {
+		[
+			@h1 > int_add_eq_i_right(m, mp, n);
+			@h2 > int_add_eq_i_left(mp, n, np)
+		] > eq_transitive
+	}
 }
 
 theorem omega_add_sub_eq_i(cls a1: @11, cls b1: @21, cls a2: @31, cls b2: @41, $a_1'$ cls a1p: @51, $b_1'$ cls b1p: @61, $a_2'$ cls a2p: @71, $b_2'$ cls b2p: @81) {
@@ -628,6 +672,16 @@ theorem int_add_def_alt(cls a1: @11, cls b1: @21, cls a2: @31, cls b2: @41, cls 
 	}
 }
 
+theorem int_add_def_alt2(cls a1: @11, cls b1: @21, cls a2: @31, cls b2: @41) {
+	in(a1, omega), in(b1, omega), in(a2, omega), in(b2, omega) |- {
+		[
+			@h1; @h2; @h3; @h4;
+			eq_reflexive(omega_sub_as_int(a1, b1));
+			eq_reflexive(omega_sub_as_int(a2, b2))
+		] > int_add_def_alt
+	}
+}
+
 theorem int_add_commutative(cls m: @11, cls n: @21) {
 	in(m, int), in(n, int) |- {
 		$X = @h1 > int_in_e as Xin2(omega, omega, (cls a1, cls b1) => eq(m, omega_sub_as_int(a1, b1)));
@@ -661,5 +715,64 @@ theorem int_add_commutative(cls m: @11, cls n: @21) {
 		} > Uin2i;
 		
 		[$X; $U] > mpXin2_alt as eq(int_add(m, n), int_add(n, m))
+	}
+}
+
+theorem int_add_associative(cls l: @11, cls m: @21, cls n: @31) {
+	in(l, int), in(m, int), in(n, int) |- {
+		$U = (cls a1, cls b1) => {
+			/* @h4 */ in(a1, omega), in(b1, omega) |- {
+				with (cls l = omega_sub_as_int(a1, b1)) {
+					$U = (cls a2, cls b2) => {
+						/* @h6 */ in(a2, omega), in(b2, omega) |- {
+							with (cls m = omega_sub_as_int(a2, b2)) {
+								$U = (cls a3, cls b3) => {
+									/* @h8 */ in(a3, omega), in(b3, omega) |- {
+										with (cls n = omega_sub_as_int(a3, b3)) {
+											$nat_a12 = [@h4; @h6] > omega_add_in_omega;
+											$nat_b12 = [@h5; @h7] > omega_add_in_omega;
+											$nat_a23 = [@h6; @h8] > omega_add_in_omega;
+											$nat_b23 = [@h7; @h9] > omega_add_in_omega;
+											
+											$1 = [
+												[@h4; @h5; @h6; @h7] > int_add_def_alt2 > int_add_eq_i_right(?, ?, n);
+												[$nat_a12; $nat_b12; @h8; @h9] > int_add_def_alt2
+											] > eq_transitive;
+											
+											$2 = [
+												[@h4; @h6; @h8] > omega_add_associative;
+												[@h5; @h7; @h9] > omega_add_associative
+											] > omega_sub_as_int_eq_i;
+											
+											$3 = [
+												[@h6; @h7; @h8; @h9] > int_add_def_alt2 > int_add_eq_i_left(l, ?, ?);
+												[@h4; @h5; $nat_a23; $nat_b23] > int_add_def_alt2
+											] > eq_transitive;
+											
+											[$1; $2; $3 > eq_symmetric] > eq_transitive_3
+										}
+									}
+								} > Uin2i > int_U as Uin(int, (cls n) => eq(
+									int_add(int_add(l, m), n),
+									int_add(l, int_add(m, n))
+								));
+								
+								[$U; @h3] > Uin_e
+							}
+						}
+					} > Uin2i > int_U as Uin(int, (cls m) => eq(
+						int_add(int_add(l, m), n),
+						int_add(l, int_add(m, n))
+					));
+					
+					[$U; @h2] > Uin_e
+				}
+			}
+		} > Uin2i > int_U as Uin(int, (cls l) => eq(
+			int_add(int_add(l, m), n),
+			int_add(l, int_add(m, n))
+		));
+		
+		[$U; @h1] > Uin_e
 	}
 }
