@@ -43,7 +43,7 @@ axiom mp(st p: @1, st q: @22) {
 	p, I(p, q) |- q
 }
 
-theorem weaken(st p: @1, st q) {
+theorem weaken(st p: @1, st q: @r1) {
 	p |- {
 		q |- p > cp
 	}
@@ -133,7 +133,7 @@ theorem Nim_alt(st p: @111) {
 	}
 }
 
-theorem Nec1(st p: @11, st q) {
+theorem Nec1(st p: @11, st q: @r2) {
 	N(p) |- {
 		@h1 > weaken(?, N(q)) > luk3
 	}

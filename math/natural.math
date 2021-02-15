@@ -223,8 +223,52 @@ theorem successor_is_not_zero(cls n: @11) {
 	}
 }
 
+theorem nonzero_is_successor(cls n: @11) {
+	in(n, omega), neq(n, omega_zero) |- {
+		with (pr predicate = (cls n) => {
+			I(neq(n, omega_zero), Xin(omega, (cls m) => eq(successor(m), n)))
+		}) {
+			$base = eq_reflexive(omega_zero) > NNi > Nec1 as predicate(omega_zero);
+			
+			$step = (cls n) => {
+				in(n, omega) |- {
+					predicate(n) |- {
+						$c1 = eq(n, omega_zero) |- {
+							[zero_in_omega(); @h5 > successor_eq_i > eq_symmetric]
+							> Xin_i as Xin(omega, (cls m) => eq(successor(m), successor(n)))
+							> weaken as predicate(successor(n))
+						} > cp;
+
+						$c2 = neq(n, omega_zero) |- {
+							$X = [@h5; @h4] > mp;
+
+							$U = (cls m) => {
+								in(m, omega) |- {
+									eq(successor(m), n) |- {
+										[
+											@h6 > successor_in_omega;
+											@h7 > successor_eq_i
+										] > Xin_i as Xin(omega, (cls m) => eq(successor(m), successor(n)))
+										> weaken as predicate(successor(n))
+									} > cp
+								}
+							} > Uin_i;
+
+							[$X; $U] > mpXin_alt as predicate(successor(n))
+						} > cp;
+
+						[lxm(eq(n, omega_zero)); $c1; $c2] > Oe
+					} > cp
+				}
+			} > Uin_i;
+			
+			[@h2; [[$base; $step] > induce(predicate); @h1] > Uin_e] > mp
+		}
+	}
+}
+
 "`[Pinter]` 보조정리 6.6."
-theorem omega_in_to_subset(cls n: @11, cls m: @21) {
+theorem omega_in_to_subset(cls m: @21, cls n: @11) {
 	$base = (cls m) => {
 		in(m, omega_zero) |- {
 			N(subset(m, omega_zero)) |- {
@@ -279,8 +323,8 @@ theorem omega_in_to_subset(cls n: @11, cls m: @21) {
 }
 
 "`[Pinter]`에 따르면 페아노 공리계 제5공리인 것."
-theorem successor_eq_e(cls n: @11, cls m: @21) {
-	in(n, omega), in(m, omega), eq(successor(n), successor(m)) |- {
+theorem successor_eq_e(cls m: @11, cls n: @21) {
+	in(m, omega), in(n, omega), eq(successor(m), successor(n)) |- {
 		$base = [
 			@h1 > is_set_i > self_in_successor;
 			@h3
@@ -291,26 +335,26 @@ theorem successor_eq_e(cls n: @11, cls m: @21) {
 			@h3
 		] > in_eq_flip > setbuilder_e;
 
-		$c1 = in(n, singleton(m)) |- {
+		$c1 = in(m, singleton(n)) |- {
 			[
 				@h2 > is_set_i;
 				@h4
 			] > singleton_e
 		};
 
-		$c1_dual = in(m, singleton(n)) |- {
+		$c1_dual = in(n, singleton(m)) |- {
 			[
 				@h1 > is_set_i;
 				@h4
 			] > singleton_e
 		};
 
-		neq(n, m) |- {
+		neq(m, n) |- {
 			$c2 = [
 				@h2;
 				[
 					$base;
-					in(n, singleton(m)) |- {
+					in(m, singleton(n)) |- {
 						[
 							@h5 > $c1;
 							@h4
@@ -323,7 +367,7 @@ theorem successor_eq_e(cls n: @11, cls m: @21) {
 				@h1;
 				[
 					$base_dual;
-					in(m, singleton(n)) |- {
+					in(n, singleton(m)) |- {
 						[
 							@h5 > $c1_dual;
 							@h4 > neq_symmetric

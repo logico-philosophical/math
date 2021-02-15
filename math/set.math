@@ -15,13 +15,11 @@ pr contains(cls x) {
 	(cls y) => in(x, y)
 }
 
-"[$\notin]."
 $!<prec=450>#1<<\notin>>#2$
 st Nin(cls x, cls y) {
 	N(in(x, y))
 }
 
-"[$\subseteq]."
 $!<prec=350>#1<<\subseteq>>#2$
 st subset(cls x, cls y) {
 	U((cls z) => I(in(z, x), in(z, y)))
@@ -30,10 +28,14 @@ st subset(cls x, cls y) {
 $!<prec=350>#1<<=>>#2$
 st eq(cls x, cls y);
 
-"[$\neq]."
 $!<prec=350>#1<<\neq>>#2$
 st neq(cls x, cls y) {
 	N(eq(x, y))
+}
+
+$!<prec=350>#1<<\subsetneq>>#2$
+st subsetneq(cls x, cls y) {
+	A(subset(x, y), neq(x, y))
 }
 
 "동일자의 식별불가능성 원리(indiscernibility of identicals)."
@@ -1035,6 +1037,12 @@ theorem emptyset_def(cls z) {
 	in(z, emptyset) |- {
 		@h1 > setbuilder_e
 	} > Nim as Nin(z, emptyset)
+}
+
+theorem emptyset_subset_any($A$ cls a) {
+	(cls z) => {
+		emptyset_def(z) > Nec1(?, in(z, a))
+	} > Ui as subset(emptyset, a)
 }
 
 "universal class."
