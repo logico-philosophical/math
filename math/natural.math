@@ -47,50 +47,50 @@ theorem successor_is_set(cls x: @11) {
 	}
 }
 
-"[$x]가 inductive set이다."
-$\left(<<\operatorname{inductive\ set}>> #1\right)$
-st is_inductive_set(cls x) {
+"[$x]가 successor set이다. `[Pinter]` 6장에 나오는 정의이다. inductive set이라고도 한다."
+$\left(<<\operatorname{successor\ set}>> #1\right)$
+st is_successor_set(cls x) {
 	A(in(emptyset, x), U((cls z) => I(in(z, x), in(successor(z), x))))
 }
 
-"무한 공리(axiom of infinity). 즉 inductive set 중에는 집합인 것이 있다."
+"무한 공리(axiom of infinity). 즉 successor set 중에는 집합인 것이 있다."
 axiom ax_infinity() {
-	X((cls x) => A(is_set(x), is_inductive_set(x)))
+	X((cls x) => A(is_set(x), is_successor_set(x)))
 }
 
-"최소의 inductive set. 즉 모든 inductive set을 교집합한 것이다. 이는 순서수(ordinal number)의 von Neumann 정의에서 최소의 무한 순서수이며, 자연수의 von Neumann 정의에서 0을 포함하는 자연수 집합이 된다."
+"최소의 successor set. 즉 모든 successor set을 교집합한 것이다. 이는 순서수(ordinal number)의 von Neumann 정의에서 최소의 무한 순서수이며, 자연수의 von Neumann 정의에서 0을 포함하는 자연수 집합이 된다."
 $\omega$
-cls omega = bigcap(setbuilder((cls z) => is_inductive_set(z)));
+cls omega = bigcap(setbuilder((cls z) => is_successor_set(z)));
 
 "자연수 집합은 0을 포함한다. `[Pinter]`에 따르면 페아노 공리계 제1공리이다."
 theorem zero_in_omega() {
 	[
 		ax_emptyset();
 		(cls z) => {
-			in(z, setbuilder((cls z) => is_inductive_set(z))) |- {
+			in(z, setbuilder((cls z) => is_successor_set(z))) |- {
 				@h1 > setbuilder_e > Ae1
 			} > cp
 		} > Ui
-	] > bigcap_in_i(setbuilder((cls z) => is_inductive_set(z)), omega_zero) as in(omega_zero, omega)
+	] > bigcap_in_i(setbuilder((cls z) => is_successor_set(z)), omega_zero) as in(omega_zero, omega)
 }
 
 "`[Pinter]`에 따르면 페아노 공리계 제2공리인 것."
-theorem successor_in_omega(cls z: @11) {
-	in(z, omega) |- {
+theorem successor_in_omega(cls n: @11) {
+	in(n, omega) |- {
 		[
-			@h1 > Xi(contains(z), omega) > successor_is_set(z);
+			@h1 > Xi(contains(n), omega) > successor_is_set(n);
 			(cls x) => {
-				in(x, setbuilder((cls z) => is_inductive_set(z))) |- {
+				in(x, setbuilder((cls n) => is_successor_set(n))) |- {
 					[
 						[
 							@h2;
-							@h1 > bigcap_in_e(setbuilder((cls z) => is_inductive_set(z)), z) > Ue(?, x)
+							@h1 > bigcap_in_e(setbuilder((cls n) => is_successor_set(n)), n) > Ue(?, x)
 						] > mp;
-						@h2 > setbuilder_e((cls z) => is_inductive_set(z), x) > Ae2 > Ue(?, z)
+						@h2 > setbuilder_e((cls n) => is_successor_set(n), x) > Ae2 > Ue(?, n)
 					] > mp
 				} > cp
 			} > Ui
-		] > bigcap_in_i(setbuilder((cls z) => is_inductive_set(z)), successor(z)) as in(successor(z), omega)
+		] > bigcap_in_i(setbuilder((cls n) => is_successor_set(n)), successor(n)) as in(successor(n), omega)
 	}
 }
 
@@ -99,12 +99,12 @@ theorem one_in_omega() {
 	> successor_in_omega as in(omega_one, omega)
 }
 
-"[$\omega]는 inductive set이다."
-theorem omega_is_inductive_set() {
+"[$\omega]는 successor set이다."
+theorem omega_is_successor_set() {
 	[
 		zero_in_omega();
 		(cls z) => { successor_in_omega(z) > cp } > Ui
-	] > Ai as is_inductive_set(omega)
+	] > Ai as is_successor_set(omega)
 }
 
 "자연수 집합은 집합이다. ax_infinity로부터 유도된다."
@@ -112,21 +112,21 @@ theorem omega_is_set() {
 	[
 		ax_infinity();
 		(cls x) => {
-			is_set(x), is_inductive_set(x) |- {
+			is_set(x), is_successor_set(x) |- {
 				[
 					@h1;
-					[@h1; @h2] > setbuilder_i((cls z) => is_inductive_set(z), ?) > bigcap_is_smaller
+					[@h1; @h2] > setbuilder_i((cls z) => is_successor_set(z), ?) > bigcap_is_smaller
 				] > subset_is_set as is_set(omega)
 			} > cp2
 		} > Ui
 	] > mpX_alt(?, is_set(omega))
 }
 
-"`[Pinter]` 정리 6.3."
+"`[Pinter]` 정리 6.3. `[Pinter]`에 따르면 페아노 공리계 제4공리이다."
 theorem induce_set($X$ cls x: @11) {
 	subseteq(x, omega), in(omega_zero, x),
 	Uin(omega, (cls n) => I(in(n, x), in(successor(n), x))) |- {
-		$x_is_inductive_set = [
+		$x_is_successor_set = [
 			@h2;
 			(cls n) => {
 				in(n, x) |- {
@@ -139,12 +139,12 @@ theorem induce_set($X$ cls x: @11) {
 					] > mp
 				} > cp
 			} > Ui
-		] > Ai as is_inductive_set(x);
+		] > Ai as is_successor_set(x);
 
 		$omega_subseteq_x = [
 			[omega_is_set(); @h1] > subset_is_set;
-			$x_is_inductive_set
-		] > setbuilder_i((cls z) => is_inductive_set(z), ?) > bigcap_is_smaller as subseteq(omega, x);
+			$x_is_successor_set
+		] > setbuilder_i((cls z) => is_successor_set(z), ?) > bigcap_is_smaller as subseteq(omega, x);
 
 		[@h1; $omega_subseteq_x] > subseteq_to_eq
 	}

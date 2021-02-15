@@ -369,6 +369,10 @@ table.explorer td.bbb {
 	color: unset;
 }
 
+.m42kup-error {
+	color: red;
+}
+
 .flicker {
 	animation: flicker 1s 1 normal!important;
 }
