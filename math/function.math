@@ -8,7 +8,7 @@ import relation;
 [$f\subseteq A\times B]이고 임의의 [$x\in A]에 대해 [$.(x, y)\in f]를 만족하는 유일한 [$y]가 존재한다는 뜻이다."
 $<<\mathop\mathrm{function}>>\left(#1: #2 \to #3\right)$
 st is_fun(cls f, $A$ cls a, $B$ cls b) {
-	A(subseteq(f, cartesian(a, b)), Uin(a, (cls x) => A(Xin(b, (cls y) => in(pair(x, y), f)), Q((cls y) => in(pair(x, y), f)))))
+	A(subset(f, cartesian(a, b)), Uin(a, (cls x) => A(Xin(b, (cls y) => in(pair(x, y), f)), Q((cls y) => in(pair(x, y), f)))))
 }
 
 "함수공간(function space)."
@@ -29,7 +29,7 @@ theorem fun_space_in_i(cls f: @31, $A$ cls a: @11, $B$ cls b: @21) {
 	}
 }
 
-theorem fun_space_subseteq_cartesian($A$ cls a, $B$ cls b) {
+theorem fun_space_subset_cartesian($A$ cls a, $B$ cls b) {
 	(cls f) => {
 		in(f, fun_space(a, b)) |- {
 			[
@@ -37,10 +37,10 @@ theorem fun_space_subseteq_cartesian($A$ cls a, $B$ cls b) {
 				@h1 > setbuilder_e > Ae1
 			] > setbuilder_i as in(f, power(cartesian(a, b)))
 		} > cp
-	} > Ui as subseteq(fun_space(a, b), power(cartesian(a, b)))
+	} > Ui as subset(fun_space(a, b), power(cartesian(a, b)))
 }
 
-theorem fun_subseteq_cartesian(cls f: @11, $A$ cls a: @12, $B$ cls b: @13) {
+theorem fun_subset_cartesian(cls f: @11, $A$ cls a: @12, $B$ cls b: @13) {
 	is_fun(f, a, b) |- {
 		@h1 > Ae1
 	}
@@ -50,8 +50,8 @@ theorem fun_in_e1(cls f: @11, $A$ cls a: @12, $B$ cls b: @13, cls x: @211, cls y
 	is_fun(f, a, b), in(pair(x, y), f) |- {
 		[
 			@h2;
-			@h1 > fun_subseteq_cartesian
-		] > in_subseteq > cartesian_in_e1
+			@h1 > fun_subset_cartesian
+		] > in_subset > cartesian_in_e1
 	}
 }
 
@@ -59,8 +59,8 @@ theorem fun_in_e2(cls f: @11, $A$ cls a: @12, $B$ cls b: @13, cls x: @211, cls y
 	is_fun(f, a, b), in(pair(x, y), f) |- {
 		[
 			@h2;
-			@h1 > fun_subseteq_cartesian
-		] > in_subseteq > cartesian_in_e2
+			@h1 > fun_subset_cartesian
+		] > in_subset > cartesian_in_e2
 	}
 }
 
@@ -127,8 +127,8 @@ theorem fun_im_Q_alt(cls f: @11, $A$ cls a: @12, $B$ cls b: @13) {
 						[
 							[
 								@h3;
-								@h1 > fun_subseteq_cartesian
-							] > in_subseteq > cartesian_in_e1;
+								@h1 > fun_subset_cartesian
+							] > in_subset > cartesian_in_e1;
 							@h2
 						] > Fi
 					} > Nim
@@ -155,7 +155,7 @@ theorem fun_im_Q_m(cls f: @11, $A$ cls a: @12, $B$ cls b: @13, cls x: @21, cls y
 theorem fun_is_rel(cls f: @11, $A$ cls a: @12, $B$ cls b: @13) {
 	is_fun(f, a, b) |- {
 		[
-			@h1 > fun_subseteq_cartesian(f, a, b);
+			@h1 > fun_subset_cartesian(f, a, b);
 			cartesian_is_rel(a, b)
 		] > rel_subset_is_rel
 	}
@@ -216,8 +216,8 @@ theorem funcall_i(cls f: @11, $A$ cls a: @12, $B$ cls b: @13, cls x: @211, cls y
 	is_fun(f, a, b), in(pair(x, y), f) |- {
 		$x_in_a = [
 			@h2;
-			@h1 > fun_subseteq_cartesian
-		] > in_subseteq > cartesian_in_e1;
+			@h1 > fun_subset_cartesian
+		] > in_subset > cartesian_in_e1;
 
 		[
 			@h1; $x_in_a; @h2;
@@ -259,7 +259,7 @@ theorem fun_eq_i(cls f: @11, cls g: @21, $A$ cls a: @12, $B$ cls b: @13) {
 			[
 				@h1 > fun_is_rel;
 				$foo
-			] > rel_U(is_in(g), ?) as subseteq(f, g)
+			] > rel_U(is_in(g), ?) as subset(f, g)
 		}
 	};
 
@@ -278,7 +278,7 @@ theorem fun_eq_i(cls f: @11, cls g: @21, $A$ cls a: @12, $B$ cls b: @13) {
 					} > cp
 				} > Ui
 			] > $bar(g, f, a, b)
-		] > subseteq_to_eq
+		] > subset_to_eq
 	}
 }
 
@@ -308,7 +308,7 @@ theorem funcall_in_codomain(cls f: @11, $A$ cls a: @12, $B$ cls b: @13, cls x: @
 	}
 }
 
-theorem fun_im_subseteq_codomain(cls f: @11, $A$ cls a: @12, $B$ cls b: @13) {
+theorem fun_im_subset_codomain(cls f: @11, $A$ cls a: @12, $B$ cls b: @13) {
 	is_fun(f, a, b) |- {
 		(cls y) => {
 			in(y, rel_im(f)) |- {
@@ -321,12 +321,12 @@ theorem fun_im_subseteq_codomain(cls f: @11, $A$ cls a: @12, $B$ cls b: @13) {
 							[
 								@h3;
 								@h1 > Ae1
-							] > in_subseteq > cartesian_in_e2
+							] > in_subset > cartesian_in_e2
 						} > cp
 					} > Ui
 				] > mpX_alt(?, in(y, b))
 			} > cp
-		} > Ui as subseteq(rel_im(f), b)
+		} > Ui as subset(rel_im(f), b)
 	}
 }
 
@@ -349,7 +349,7 @@ theorem fun_im_set_in_i(cls f: @11, $A$ cls a: @12, $B$ cls b: @13, $C$ cls c: @
 	}
 }
 
-theorem fun_im_set_subseteq_im(cls f: @11, $A$ cls a: @12, $B$ cls b: @13, $C$ cls c) {
+theorem fun_im_set_subset_im(cls f: @11, $A$ cls a: @12, $B$ cls b: @13, $C$ cls c) {
 	is_fun(f, a, b) |- {
 		(cls y) => {
 			in(y, rel_im_set(f, c)) |- {
@@ -358,16 +358,16 @@ theorem fun_im_set_subseteq_im(cls f: @11, $A$ cls a: @12, $B$ cls b: @13, $C$ c
 					@h2 > setbuilder_e > Xin_to_X
 				] > setbuilder_i as in(y, rel_im(f))
 			} > cp
-		} > Ui as subseteq(rel_im_set(f, c), rel_im(f))
+		} > Ui as subset(rel_im_set(f, c), rel_im(f))
 	}
 }
 
-theorem fun_im_set_subseteq_codomain(cls f: @11, $A$ cls a: @12, $B$ cls b: @13, $C$ cls c) {
+theorem fun_im_set_subset_codomain(cls f: @11, $A$ cls a: @12, $B$ cls b: @13, $C$ cls c) {
 	is_fun(f, a, b) |- {
 		[
-			@h1 > fun_im_set_subseteq_im(f, a, b, c);
-			@h1 > fun_im_subseteq_codomain
-		] > subseteq_subseteq
+			@h1 > fun_im_set_subset_im(f, a, b, c);
+			@h1 > fun_im_subset_codomain
+		] > subset_subset
 	}
 }
 
@@ -408,7 +408,7 @@ theorem map_is_fun(fun f: @r11, $A$ cls a: @r2, $B$ cls b: @r3) {
 					} > Ui
 				] > mpX_alt(?, in(w, cartesian(a, b)))
 			} > cp
-		} > Ui as subseteq(map(f, a), cartesian(a, b));
+		} > Ui as subset(map(f, a), cartesian(a, b));
 
 		$c23 = (cls x) => {
 			in(x, a) |- {
@@ -504,7 +504,7 @@ theorem fun_id_funcall($A$ cls a: @12, cls x: @11) {
 }
 
 theorem fun_id_im_set($A$ cls a: @12, $B$ cls b: @11) {
-	subseteq(b, a) |- {
+	subset(b, a) |- {
 		with (cls f = fun_id(a)) {
 			$E = (cls y) => {
 				$c1 = in(y, rel_im_set(f, b)) |- {
@@ -544,7 +544,7 @@ theorem fun_id_im_set($A$ cls a: @12, $B$ cls b: @11) {
 				} > cp;
 
 				$c2 = in(y, b) |- {
-					$y_in_a = [@h2; @h1] > in_subseteq;
+					$y_in_a = [@h2; @h1] > in_subset;
 
 					$set_y = @h2 > is_set_i;
 
@@ -742,12 +742,12 @@ theorem fun_composite_is_fun(cls f: @11, cls g: @21, $A$ cls a: @12, $B$ cls b: 
 								$x_in_a = [
 									@h4;
 									@h1 > Ae1
-								] > in_subseteq > cartesian_in_e1;
+								] > in_subset > cartesian_in_e1;
 
 								$z_in_c = [
 									@h5;
 									@h2 > Ae1
-								] > in_subseteq > cartesian_in_e2;
+								] > in_subset > cartesian_in_e2;
 
 								[$x_in_a; $z_in_c] > cartesian_in_i
 							} > cp2
@@ -756,7 +756,7 @@ theorem fun_composite_is_fun(cls f: @11, cls g: @21, $A$ cls a: @12, $B$ cls b: 
 						[$X; $U] > mpX_alt(?, in(pair(x, z), cartesian(a, c)))
 					} > cp
 				} > U2i
-			] > rel_U(is_in(cartesian(a, c)), ?) as subseteq(rel_composite(g, f), cartesian(a, c));
+			] > rel_U(is_in(cartesian(a, c)), ?) as subset(rel_composite(g, f), cartesian(a, c));
 
 			$c23 = (cls x) => {
 				in(x, a) |- {
@@ -815,7 +815,7 @@ theorem fun_to_surjection(cls f: @11, $A$ cls a: @12, $B$ cls b: @13) {
 						$xy_in_ab = [
 							@h2;
 							@h1 > Ae1
-						] > in_subseteq;
+						] > in_subset;
 
 						$x_in_a = $xy_in_ab > cartesian_in_e1;
 
@@ -829,7 +829,7 @@ theorem fun_to_surjection(cls f: @11, $A$ cls a: @12, $B$ cls b: @13) {
 						[$x_in_a; $y_in_im] > cartesian_in_i
 					} > cp
 				} > U2i
-			] > rel_U(is_in(cartesian(a, rel_im(f))), ?) as subseteq(f, cartesian(a, rel_im(f)));
+			] > rel_U(is_in(cartesian(a, rel_im(f))), ?) as subset(f, cartesian(a, rel_im(f)));
 
 			$c23 = (cls x) => {
 				in(x, a) |- {
@@ -841,7 +841,7 @@ theorem fun_to_surjection(cls f: @11, $A$ cls a: @12, $B$ cls b: @13) {
 						(cls y) => {
 							in(y, b), in(pair(x, y), f) |- {
 								[
-									[@h4; $c1] > in_subseteq > cartesian_in_e2;
+									[@h4; $c1] > in_subset > cartesian_in_e2;
 									@h4
 								] > Ai
 							} > cp2
@@ -869,7 +869,7 @@ theorem fun_to_surjection(cls f: @11, $A$ cls a: @12, $B$ cls b: @13) {
 									[
 										@h3;
 										@h1 > Ae1
-									] > in_subseteq > cartesian_in_e1;
+									] > in_subset > cartesian_in_e1;
 									@h3
 								] > Ai
 							} > cp
@@ -1002,7 +1002,7 @@ theorem injection_to_bijection(cls f: @11, $A$ cls a: @12, $B$ cls b: @13) {
 		$f_is_inj = @h1 > Ae2;
 
 		$inj = [
-			$f_is_fun > fun_im_subseteq_codomain;
+			$f_is_fun > fun_im_subset_codomain;
 			$f_is_inj
 		] > Uin_subset;
 
@@ -1030,9 +1030,9 @@ theorem bijection_inverse_is_bijection(cls f: @11, $A$ cls a: @12, $B$ cls b: @1
 		$fXq2 = @h1 > Ae2;
 
 		$f_inv_in_ba = [
-			[$f_is_rel; $f_in_ab] > rel_inverse_subseteq;
+			[$f_is_rel; $f_in_ab] > rel_inverse_subset;
 			cartesian_inverse(a, b)
-		] > subseteq_eq;
+		] > subset_eq;
 
 		$f_inv_Xq1 = (cls y) => {
 			in(y, b) |- {
@@ -1169,9 +1169,9 @@ theorem cantor($A$ cls a: @11, cls f: @r11) {
 			with ($B$ cls b = subsetbuilder(a, (cls x) => Nin(x, funcall(f, x)))) {
 				$f_is_fun = @h2 > Ae1;
 
-				$b_subseteq_a = subsetbuilder_is_subset(a, (cls x) => Nin(x, funcall(f, x))) > id(subseteq(b, a));
+				$b_subset_a = subsetbuilder_is_subset(a, (cls x) => Nin(x, funcall(f, x))) > id(subset(b, a));
 
-				$b_in_power_a = [@h1; $b_subseteq_a] > power_in_i;
+				$b_in_power_a = [@h1; $b_subset_a] > power_in_i;
 
 				$X = [
 					$b_in_power_a;

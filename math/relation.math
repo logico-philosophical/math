@@ -317,7 +317,7 @@ theorem cartesian_in_e2($A$ cls a: @121, $B$ cls b: @122, cls x: @111, cls y: @1
 "[$A] 및 [$B] 상에서의 이항관계. [$A\times B]의 부분집합이다. heterogeneous relation이라고도 한다."
 $\left(<<\operatorname{relation}>>{#1}\text{ over }{#2}\text{ and }{#3}\right)$
 st is_rel_over_sets($R$ cls r, $A$ cls a, $B$ cls b) {
-	subseteq(r, cartesian(a, b))
+	subset(r, cartesian(a, b))
 }
 
 "[$A] 상에서의 이항관계. [$A\times A]의 부분집합이다. homogeneous relation 또는 endorelation이라고도 한다."
@@ -372,8 +372,8 @@ theorem rel_im_set_eq_i($R$ cls r, $A$ cls a: @11, $B$ cls b: @12) {
 	}
 }
 
-theorem rel_im_set_subseteq_i($R$ cls r, $A$ cls a: @11, $B$ cls b: @12) {
-	subseteq(a, b) |- {
+theorem rel_im_set_subset_i($R$ cls r, $A$ cls a: @11, $B$ cls b: @12) {
+	subset(a, b) |- {
 		(cls y) => {
 			in(y, rel_im_set(r, a)) |- {
 				[
@@ -384,7 +384,7 @@ theorem rel_im_set_subseteq_i($R$ cls r, $A$ cls a: @11, $B$ cls b: @12) {
 					] > Xin_supset
 				] > setbuilder_i as in(y, rel_im_set(r, b))
 			} > cp
-		} > Ui as subseteq(rel_im_set(r, a), rel_im_set(r, b))
+		} > Ui as subset(rel_im_set(r, a), rel_im_set(r, b))
 	}
 }
 
@@ -435,7 +435,7 @@ theorem rel_inverse_is_rel($R$ cls r: @11, $A$ cls a: @12, $B$ cls b: @13) using
 					@h2 > setbuilder_e;
 					(cls x, cls y) => {
 						eq(z, pair(x, y)), in(pair(y, x), r) |- {
-							$foo = [@h4; @h1] > in_subseteq > cartesian_in_e;
+							$foo = [@h4; @h1] > in_subset > cartesian_in_e;
 
 							[
 								@h3;
@@ -687,7 +687,7 @@ cls quotient_set($A$ cls a, ${\sim}$ cls r) {
 
 theorem quotient_set_is_set($A$ cls a: @11, $\sim$ cls r: @r12) {
 	is_set(a) |- {
-		$subseteq = ($B$ cls b) => {
+		$subset = ($B$ cls b) => {
 			in(b, quotient_set(a, r)) |- {
 				$X = @h2 > setbuilder_e as X((cls x) => A(eq(b, equiv_cls(x, a, r)), in(x, a)));
 
@@ -696,7 +696,7 @@ theorem quotient_set_is_set($A$ cls a: @11, $\sim$ cls r: @r12) {
 						$in = [
 							@h1;
 							subsetbuilder_is_subset(a, (cls z) => rel_call(r, z, x))
-							> id(subseteq(equiv_cls(x, a, r), a))
+							> id(subset(equiv_cls(x, a, r), a))
 						] > power_in_i;
 
 						[@h3; $in] > eq_in
@@ -705,11 +705,11 @@ theorem quotient_set_is_set($A$ cls a: @11, $\sim$ cls r: @r12) {
 
 				[$X; $U] > mpX_alt
 			} > cp
-		} > Ui as subseteq(quotient_set(a, r), power(a));
+		} > Ui as subset(quotient_set(a, r), power(a));
 		
 		[
 			@h1 > power_is_set;
-			$subseteq
+			$subset
 		] > subset_is_set
 	}
 }
@@ -771,7 +771,7 @@ theorem rel_U(pr f: @r2, $R$ cls r: @11) {
 		(cls z) => {
 			in(z, r) |- {
 				[
-					[@h3; @h1] > in_subseteq > setbuilder_e > X2Ae1((cls x, cls y) => eq(z, pair(x, y)), (cls x, cls y) => A(in(x, universe), in(y, universe)));
+					[@h3; @h1] > in_subset > setbuilder_e > X2Ae1((cls x, cls y) => eq(z, pair(x, y)), (cls x, cls y) => A(in(x, universe), in(y, universe)));
 					(cls x, cls y) => {
 						eq(z, pair(x, y)) |- {
 							[
@@ -797,9 +797,9 @@ theorem rel_eq_i($R_1$ cls r1: @11, $R_2$ cls r2: @21) {
 		$Ee2 = @h3 > Ee2U2((cls x, cls y) => in(pair(x, y), r1), (cls x, cls y) => in(pair(x, y), r2)) as U2((cls x, cls y) => I(in(pair(x, y), r2), in(pair(x, y), r1)));
 
 		[
-			[@h1; $Ee1] > rel_U(is_in(r2), ?) as subseteq(r1, r2);
-			[@h2; $Ee2] > rel_U(is_in(r1), ?) as subseteq(r2, r1)
-		] > subseteq_to_eq
+			[@h1; $Ee1] > rel_U(is_in(r2), ?) as subset(r1, r2);
+			[@h2; $Ee2] > rel_U(is_in(r1), ?) as subset(r2, r1)
+		] > subset_to_eq
 	}
 }
 
@@ -868,8 +868,8 @@ theorem cartesian_inverse($A$ cls a, $B$ cls b) {
 }
 
 theorem rel_subset_is_rel(cls x: @11, cls y: @12) {
-	subseteq(x, y), is_rel(y) |- {
-		[@h1; @h2] > subseteq_subseteq as is_rel(x)
+	subset(x, y), is_rel(y) |- {
+		[@h1; @h2] > subset_subset as is_rel(x)
 	}
 }
 
@@ -878,7 +878,7 @@ theorem cartesian_is_set($A$ cls a: @11, $B$ cls b: @21) using pair {
 	is_set(a), is_set(b) |- {
 		$power_power_cup_is_set = [@h1; @h2] > cup_is_set > power_is_set > power_is_set;
 
-		$cartesian_subseteq_power_power_cup = [
+		$cartesian_subset_power_power_cup = [
 			cartesian_is_rel(a, b);
 			(cls x, cls y) => {
 				in(pair(x, y), cartesian(a, b)) |- {
@@ -901,7 +901,7 @@ theorem cartesian_is_set($A$ cls a: @11, $B$ cls b: @21) using pair {
 									$x_in_cup_ab
 								] > eq_in
 							} > cp
-						} > Ui as subseteq(singleton(x), cup(a, b))
+						} > Ui as subset(singleton(x), cup(a, b))
 					] > setbuilder_i as in(singleton(x), power(cup(a, b)));
 
 					$2 = [
@@ -918,7 +918,7 @@ theorem cartesian_is_set($A$ cls a: @11, $B$ cls b: @21) using pair {
 									}
 								] > Oe_alt
 							} > cp
-						} > Ui as subseteq(doubleton(x, y), cup(a, b))
+						} > Ui as subset(doubleton(x, y), cup(a, b))
 					] > setbuilder_i as in(doubleton(x, y), power(cup(a, b)));
 
 					[
@@ -939,13 +939,13 @@ theorem cartesian_is_set($A$ cls a: @11, $B$ cls b: @21) using pair {
 									}
 								] > Oe_alt
 							} > cp
-						} > Ui as subseteq(pair(x, y), power(cup(a, b)))
+						} > Ui as subset(pair(x, y), power(cup(a, b)))
 					] > setbuilder_i as in(pair(x, y), power(power(cup(a, b))))
 				} > cp
 			} > U2i
-		] > rel_U(is_in(power(power(cup(a, b)))), cartesian(a, b)) as subseteq(cartesian(a, b), power(power(cup(a, b))));
+		] > rel_U(is_in(power(power(cup(a, b)))), cartesian(a, b)) as subset(cartesian(a, b), power(power(cup(a, b))));
 
-		[$power_power_cup_is_set; $cartesian_subseteq_power_power_cup] > subset_is_set
+		[$power_power_cup_is_set; $cartesian_subset_power_power_cup] > subset_is_set
 	}
 }
 
@@ -953,8 +953,8 @@ schema rel_composite_associative(cls x, cls y, cls z) {
 	is_rel(x), is_rel(y), is_rel(z) |- eq(rel_composite(rel_composite(x, y), z), rel_composite(x, rel_composite(y, z)))
 }
 
-theorem rel_inverse_subseteq($A$ cls a: @21, $B$ cls b: @22) {
-	is_rel(a), subseteq(a, b) |- {
+theorem rel_inverse_subset($A$ cls a: @21, $B$ cls b: @22) {
+	is_rel(a), subset(a, b) |- {
 		[
 			@h1 > rel_inverse_is_rel as is_rel(rel_inverse(a));
 			(cls x, cls y) => {
@@ -962,9 +962,9 @@ theorem rel_inverse_subseteq($A$ cls a: @21, $B$ cls b: @22) {
 					[
 						@h3 > rel_inverse_in_e;
 						@h2
-					] > in_subseteq > rel_inverse_in_i
+					] > in_subset > rel_inverse_in_i
 				} > cp
 			} > U2i
-		] > rel_U(is_in(rel_inverse(b)), ?) as subseteq(rel_inverse(a), rel_inverse(b))
+		] > rel_U(is_in(rel_inverse(b)), ?) as subset(rel_inverse(a), rel_inverse(b))
 	}
 }

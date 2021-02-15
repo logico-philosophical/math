@@ -23,7 +23,7 @@ st Nin(cls x, cls y) {
 
 "[$\subseteq]."
 $!<prec=350>#1<<\subseteq>>#2$
-st subseteq(cls x, cls y) {
+st subset(cls x, cls y) {
 	U((cls z) => I(in(z, x), in(z, y)))
 }
 
@@ -32,7 +32,7 @@ st eq(cls x, cls y);
 
 "[$\neq]."
 $!<prec=350>#1<<\neq>>#2$
-st Neq(cls x, cls y) {
+st neq(cls x, cls y) {
 	N(eq(x, y))
 }
 
@@ -153,14 +153,14 @@ theorem eq_symmetric(cls x: @11, cls y: @12) {
 	}
 }
 
-theorem Neq_symmetric(cls x: @11, cls y: @12) {
-	Neq(x, y) |- {
+theorem neq_symmetric(cls x: @11, cls y: @12) {
+	neq(x, y) |- {
 		eq(y, x) |- {
 			[
 				@h2 > eq_symmetric;
 				@h1
 			] > Fi
-		} > Nim as Neq(y, x)
+		} > Nim as neq(y, x)
 	}
 }
 
@@ -198,60 +198,60 @@ theorem eq_transitive_5(cls x: @11, cls y: @21, cls z: @31, cls w: @41, cls u: @
 	}
 }
 
-theorem self_subseteq_self(cls x) {
-	(cls z) => { in(z, x) |- @h1 > cp } > Ui as subseteq(x, x)
+theorem self_subset_self(cls x) {
+	(cls z) => { in(z, x) |- @h1 > cp } > Ui as subset(x, x)
 }
 
-theorem eq_to_subseteq_1(cls x: @11, cls y: @12) {
+theorem eq_to_subset_1(cls x: @11, cls y: @12) {
 	eq(x, y) |- {
 		[
 			@h1;
-			self_subseteq_self(y)
-		] > ax_indiscernible_m2((cls x) => subseteq(x, y), ?, ?)
+			self_subset_self(y)
+		] > ax_indiscernible_m2((cls x) => subset(x, y), ?, ?)
 	}
 }
 
-theorem eq_to_subseteq_2(cls x: @11, cls y: @12) {
+theorem eq_to_subset_2(cls x: @11, cls y: @12) {
 	eq(x, y) |- {
 		[
 			@h1;
-			self_subseteq_self(x)
-		] > ax_indiscernible_m1((cls y) => subseteq(y, x), ?, ?)
+			self_subset_self(x)
+		] > ax_indiscernible_m1((cls y) => subset(y, x), ?, ?)
 	}
 }
 
-theorem subseteq_to_eq(cls x: @11, cls y: @12) {
-	subseteq(x, y), subseteq(y, x) |- {
+theorem subset_to_eq(cls x: @11, cls y: @12) {
+	subset(x, y), subset(y, x) |- {
 		[@h1; @h2] > EiU(is_in(x), is_in(y)) > eq_i(x, y)
 	}
 }
 
-theorem subseteq_subseteq(cls x: @11, cls y: @12, cls z: @22) {
-	subseteq(x, y), subseteq(y, z) |- {
-		[@h1; @h2] > syllU(is_in(x), is_in(y), is_in(z)) as subseteq(x, z)
+theorem subset_subset(cls x: @11, cls y: @12, cls z: @22) {
+	subset(x, y), subset(y, z) |- {
+		[@h1; @h2] > syllU(is_in(x), is_in(y), is_in(z)) as subset(x, z)
 	}
 }
 
-theorem eq_subseteq(cls x: @11, cls y: @12, cls z: @22) {
-	eq(x, y), subseteq(y, z) |- {
+theorem eq_subset(cls x: @11, cls y: @12, cls z: @22) {
+	eq(x, y), subset(y, z) |- {
 		[
-			@h1 > eq_to_subseteq_1;
+			@h1 > eq_to_subset_1;
 			@h2
-		] > subseteq_subseteq
+		] > subset_subset
 	}
 }
 
-theorem subseteq_eq(cls x: @11, cls y: @12, cls z: @22) {
-	subseteq(x, y), eq(y, z) |- {
+theorem subset_eq(cls x: @11, cls y: @12, cls z: @22) {
+	subset(x, y), eq(y, z) |- {
 		[
 			@h1;
-			@h2 > eq_to_subseteq_1
-		] > subseteq_subseteq
+			@h2 > eq_to_subset_1
+		] > subset_subset
 	}
 }
 
-theorem in_subseteq(cls x: @12, cls y: @22, cls z: @11) {
-	in(z, x), subseteq(x, y) |- {
+theorem in_subset(cls x: @12, cls y: @22, cls z: @11) {
+	in(z, x), subset(x, y) |- {
 		[
 			@h1;
 			@h2 > Ue(?, z)
@@ -374,7 +374,7 @@ theorem UinA_i(pr f: @12, pr g: @22, $A$ cls a: @11) {
 }
 
 theorem Uin_subset($A$ cls a: @11, $B$ cls b: @12, pr f: @22) {
-	subseteq(a, b), Uin(b, f) |- {
+	subset(a, b), Uin(b, f) |- {
 		[@h1; @h2] > syllU(is_in(a), is_in(b), f) as Uin(a, f)
 	}
 }
@@ -450,11 +450,11 @@ st Xin4($A$ cls a, $B$ cls b, $C$ cls c, $D$ cls d, pr4 f) {
 }
 
 theorem Xin_supset($A$ cls a: @11, $B$ cls b: @12, pr f: @22) {
-	subseteq(a, b), Xin(a, f) |- {
+	subset(a, b), Xin(a, f) |- {
 		$U = (cls x) => {
 			in(x, a), f(x) |- {
 				[
-					[@h3; @h1] > in_subseteq;
+					[@h3; @h1] > in_subset;
 					@h4
 				] > Ai
 			} > cp2
@@ -845,7 +845,7 @@ theorem setbuilder_i(pr f: @r21, cls z: @11) {
 	}
 }
 
-theorem setbuilder_subseteq_i(pr f: @111, pr g: @112) {
+theorem setbuilder_subset_i(pr f: @111, pr g: @112) {
 	U(If(f, g)) |- {
 		(cls z) => {
 			in(z, setbuilder(f)) |- {
@@ -857,17 +857,17 @@ theorem setbuilder_subseteq_i(pr f: @111, pr g: @112) {
 					] > mp
 				] > setbuilder_i(g, z)
 			} > cp
-		} > Ui as subseteq(setbuilder(f), setbuilder(g))
+		} > Ui as subset(setbuilder(f), setbuilder(g))
 	}
 }
 
-theorem setbuilder_subseteq_e(pr f: @211, pr g: @221, cls z: @11) {
-	is_set(z), subseteq(setbuilder(f), setbuilder(g)) |- {
+theorem setbuilder_subset_e(pr f: @211, pr g: @221, cls z: @11) {
+	is_set(z), subset(setbuilder(f), setbuilder(g)) |- {
 		f(z) |- {
 			[
 				[@h1; @h3] > setbuilder_i(f, z);
 				@h2
-			] > in_subseteq > setbuilder_e
+			] > in_subset > setbuilder_e
 		} > cp
 	}
 }
@@ -875,8 +875,8 @@ theorem setbuilder_subseteq_e(pr f: @211, pr g: @221, cls z: @11) {
 theorem setbuilder_eq_i(pr f: @111, pr g: @112) {
 	U(Ef(f, g)) |- {
 		[
-			@h1 > Ee1U > setbuilder_subseteq_i;
-			@h1 > Ee2U > setbuilder_subseteq_i
+			@h1 > Ee1U > setbuilder_subset_i;
+			@h1 > Ee2U > setbuilder_subset_i
 		] > EiU(is_in(setbuilder(f)), is_in(setbuilder(g))) > eq_i(setbuilder(f), setbuilder(g))
 	}
 }
@@ -886,12 +886,12 @@ theorem setbuilder_eq_e(pr f: @211, pr g: @221, cls z: @11) {
 		[
 			[
 				@h1;
-				@h2 > eq_to_subseteq_1
-			] > setbuilder_subseteq_e;
+				@h2 > eq_to_subset_1
+			] > setbuilder_subset_e;
 			[
 				@h1;
-				@h2 > eq_to_subseteq_2
-			] > setbuilder_subseteq_e
+				@h2 > eq_to_subset_2
+			] > setbuilder_subset_e
 		] > Ei
 	}
 }
@@ -960,7 +960,7 @@ theorem subsetbuilder_is_subset(cls x, pr f) {
 		in(z, subsetbuilder(x, f)) |- {
 			@h1 > setbuilder_e > Ae1
 		} > cp
-	} > Ui as subseteq(subsetbuilder(x, f), x)
+	} > Ui as subset(subsetbuilder(x, f), x)
 }
 
 "axiom schema of specification. 어떤 집합에서 임의 술어를 만족시키는 원소들의 class를 만들었을 때 이 class가 집합이라는 뜻이다."
@@ -978,11 +978,11 @@ theorem ax_specify_m(pr f: @r12, cls x: @11) {
 }
 
 theorem subset_is_set(cls x: @21, cls y: @22) {
-	is_set(y), subseteq(x, y) |- {
+	is_set(y), subset(x, y) |- {
 		with (cls x2 = subsetbuilder(y, is_in(x))) {
 			$eq = (cls z) => {
 				$c1 = in(z, x) |- {
-					$z_in_y = [@h3; @h2] > in_subseteq;
+					$z_in_y = [@h3; @h2] > in_subset;
 
 					[$z_in_y; @h3] > subsetbuilder_i as in(z, x2)
 				} > cp;
@@ -1011,7 +1011,7 @@ theorem subsetbuilder_set_i($A$ cls a: @11, pr f: @r12) {
 }
 
 theorem supset_is_not_set(cls x: @111, cls y: @22) {
-	N(is_set(x)), subseteq(x, y) |- {
+	N(is_set(x)), subset(x, y) |- {
 		is_set(y) |- {
 			[
 				[@h3; @h2] > subset_is_set;
@@ -1047,12 +1047,12 @@ theorem universe_in_i(cls x: @11) {
 	}
 }
 
-theorem universe_subseteq_i($X$ cls x) {
+theorem universe_subset_i($X$ cls x) {
 	(cls z) => {
 		in(z, x) |- {
 			@h1 > is_set_i > universe_in_i
 		} > cp
-	} > Ui as subseteq(x, universe)
+	} > Ui as subset(x, universe)
 }
 
 "러셀 집합. 사실 집합이 아니라 proper class이다."
@@ -1077,7 +1077,7 @@ theorem russell_set_is_not_set() {
 
 "전체집합은 집합이 아니다."
 theorem universe_is_not_set() {
-	[russell_set_is_not_set(); universe_subseteq_i(russell_set)] > supset_is_not_set
+	[russell_set_is_not_set(); universe_subset_i(russell_set)] > supset_is_not_set
 }
 
 "교집합."
@@ -1174,7 +1174,7 @@ theorem cup_is_bigger_1(cls x, cls y) {
 		in(z, x) |- {
 			@h1 > Oi1(?, in(z, y)) > cup_in_i
 		} > cp
-	} > Ui as subseteq(x, cup(x, y))
+	} > Ui as subset(x, cup(x, y))
 }
 
 theorem cup_is_bigger_2(cls x, cls y) {
@@ -1182,7 +1182,7 @@ theorem cup_is_bigger_2(cls x, cls y) {
 		in(z, y) |- {
 			@h1 > Oi2(in(z, x), ?) > cup_in_i
 		} > cp
-	} > Ui as subseteq(y, cup(x, y))
+	} > Ui as subset(y, cup(x, y))
 }
 
 theorem cup_eq_i(cls x: @11, cls y: @12, cls u: @21, cls v: @22) {
@@ -1224,9 +1224,9 @@ theorem cup_universe_is_universe($X$ cls x) {
 			in(z, cup(x, universe)) |- {
 				@h1 > is_set_i > universe_in_i
 			} > cp
-		} > Ui as subseteq(cup(x, universe), universe);
+		} > Ui as subset(cup(x, universe), universe);
 		cup_is_bigger_2(x, universe)
-	] > subseteq_to_eq
+	] > subset_to_eq
 }
 
 theorem universe_cup_is_universe($X$ cls x) {
@@ -1235,9 +1235,9 @@ theorem universe_cup_is_universe($X$ cls x) {
 			in(z, cup(universe, x)) |- {
 				@h1 > is_set_i > universe_in_i
 			} > cp
-		} > Ui as subseteq(cup(universe, x), universe);
+		} > Ui as subset(cup(universe, x), universe);
 		cup_is_bigger_1(universe, x)
-	] > subseteq_to_eq
+	] > subset_to_eq
 }
 
 "일반화된 교집합."
@@ -1285,7 +1285,7 @@ theorem bigcap_is_smaller($A$ cls a: @12, cls x: @11) {
 					@h2 > bigcap_in_e(a, z) > Ue(?, x)
 				] > mp
 			} > cp
-		} > Ui as subseteq(bigcap(a), x)
+		} > Ui as subset(bigcap(a), x)
 	}
 }
 
@@ -1298,7 +1298,7 @@ theorem bigcap3_is_smaller(pr f: @r11, fun g: @r12, cls x) {
 					@h2 > setbuilder_e > Ue(?, x)
 				] > mp
 			} > cp
-		} > Ui as subseteq(bigcap3(f, g), g(x))
+		} > Ui as subset(bigcap3(f, g), g(x))
 	}
 }
 
@@ -1407,10 +1407,10 @@ theorem bigcup_is_set($\mathscr A$ cls aa: @11) {
 }
 
 theorem subset_cap_is_subset(cls x: @11, cls y: @12) {
-	subseteq(x, y) |- {
+	subset(x, y) |- {
 		(cls z) => {
 			$1 = in(z, x) |- {
-				$z_in_y = [@h2; @h1] > in_subseteq;
+				$z_in_y = [@h2; @h1] > in_subset;
 				[@h2; $z_in_y] > cap_in_i
 			} > cp;
 			
@@ -1449,7 +1449,7 @@ theorem setminus_is_smaller(cls x, cls y) {
 		in(z, setminus(x, y)) |- {
 			@h1 > setminus_in_e1
 		} > cp
-	} > Ui as subseteq(setminus(x, y), x)
+	} > Ui as subset(setminus(x, y), x)
 }
 
 theorem setminus_in_e2(cls x: @121, cls y: @122, cls z: @11) {
@@ -1516,7 +1516,7 @@ theorem instantiate_not_set_i(pr f: @111) using instantiate {
 						} > cp
 					] > setbuilder_i as in(z, instantiate(f))
 				} > cp
-			} > Ui as subseteq(universe, instantiate(f))
+			} > Ui as subset(universe, instantiate(f))
 		] > supset_is_not_set
 	}
 }
@@ -1920,7 +1920,7 @@ theorem doubleton_set_i(cls x: @11, cls y: @21) {
 										@h4 > Ue(?, z)
 									] > mpE2
 								} > cp
-							} > Ui as subseteq(doubleton(x, y), d)
+							} > Ui as subset(doubleton(x, y), d)
 						] > subset_is_set
 					} > cp
 				} > cp
@@ -2093,11 +2093,11 @@ theorem cup_is_set(cls x: @11, cls y: @21) {
 "power class."
 $<<\mathcal P>>(#1)$
 cls power(cls x) {
-	setbuilder((cls z) => subseteq(z, x))
+	setbuilder((cls z) => subset(z, x))
 }
 
 theorem power_in_i(cls x: @11, cls z: @21) {
-	is_set(x), subseteq(z, x) |- {
+	is_set(x), subset(z, x) |- {
 		[
 			[@h1; @h2] > subset_is_set;
 			@h2
@@ -2111,7 +2111,7 @@ theorem power_def_Ue(cls x, cls y) {
 			in(y, power(x)) |- {
 				@h2 > setbuilder_e
 			};
-			subseteq(y, x) |- {
+			subset(y, x) |- {
 				[
 					[@h1; @h2] > subset_is_set;
 					@h2
@@ -2126,14 +2126,14 @@ theorem self_in_power(cls x, cls z) {
 	is_set(x) |- {
 		eq(z, x) |- {
 			[
-				@h2 > eq_to_subseteq_1;
+				@h2 > eq_to_subset_1;
 				@h1 > power_def_Ue(x, z) > Ee2
 			] > mp
 		} > cp
 	}
 }
 
-theorem singleton_subseteq_power(cls x: @11) {
+theorem singleton_subset_power(cls x: @11) {
 	is_set(x) |- {
 		(cls y) => {
 			in(y, singleton(x)) |- {
@@ -2142,13 +2142,13 @@ theorem singleton_subseteq_power(cls x: @11) {
 					@h1 > self_in_power(x, y)
 				] > mp
 			} > cp
-		} > Ui as subseteq(singleton(x), power(x))
+		} > Ui as subset(singleton(x), power(x))
 	}
 }
 
 "axiom of power set."
 axiom ax_power() {
-	U((cls x) => I(is_set(x), X((cls y) => A(is_set(y), U((cls z) => I(subseteq(z, x), in(z, y)))))))
+	U((cls x) => I(is_set(x), X((cls y) => A(is_set(y), U((cls z) => I(subset(z, x), in(z, y)))))))
 }
 
 theorem ax_power_m(cls x) {
@@ -2166,15 +2166,15 @@ theorem power_is_set(cls x: @11) {
 		[
 			@h1 > ax_power_m(x);
 			(cls y) => {
-				A(is_set(y), U((cls z) => I(subseteq(z, x), in(z, y)))) |- {
+				A(is_set(y), U((cls z) => I(subset(z, x), in(z, y)))) |- {
 					[
 						@h2 > Ae1;
 						(cls z) => {
 							[
-								setbuilder_e((cls z) => subseteq(z, x), z) > cp;
+								setbuilder_e((cls z) => subset(z, x), z) > cp;
 								@h2 > Ae2 > Ue(?, z)
 							] > syll
-						} > Ui as subseteq(power(x), y)
+						} > Ui as subset(power(x), y)
 					] > subset_is_set
 				} > cp
 			} > Ui
@@ -2187,7 +2187,7 @@ theorem singleton_set_i(cls x: @11) {
 	is_set(x) |- {
 		[
 			@h1 > power_is_set;
-			@h1 > singleton_subseteq_power(x)
+			@h1 > singleton_subset_power(x)
 		] > subset_is_set
 	}
 }
