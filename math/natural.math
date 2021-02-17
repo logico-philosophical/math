@@ -396,27 +396,28 @@ theorem omega_in_to_subset_successor(cls m: @21, cls n: @11) {
 	}
 }
 
-theorem omega_subset_to_in_or_eq(cls m: @11, cls n: @21) {
+theorem omega_subset_to_in_successor(cls m: @11, cls n: @21) {
 	in(m, omega), in(n, omega), subset(m, n) |- {
-		with (pr predicate = (cls n) => I(
-			subset(m, n),
-			O(in(m, n), eq(m, n))
-		)) {
-			$base = subset(m, omega_zero) |- {
-				[@h4; emptyset_subset_any(m)] > subset_to_eq
-				> Oi2 as O(in(m, omega_zero), eq(m, omega_zero))
+		with (pr predicate = (cls n) => I(subset(m, n), in(m, successor(n)))) {
+			$base = /* @h4 */ subset(m, omega_zero) |- {
+				[
+					[@h4; emptyset_subset_any(m)] > subset_to_eq;
+					zero_in_omega() > is_set_i > self_in_successor(omega_zero)
+				] > eq_in
 			} > cp as predicate(omega_zero);
 			
 			$step = (cls n) => {
-				in(n, omega) |- {
+				/* @h4 */ in(n, omega) |- {
 					predicate(n) |- {
-						subset(m, successor(n)) |- {
+						/* @h6 */ subset(m, successor(n)) |- {
 							$c1 = in(n, m) |- {
 								[
-									@h6;
-									[@h1; @h7] > omega_in_to_subset_successor
-								] > subset_to_eq
-								 > Oi2(in(m, successor(n)), ?)
+									[
+										@h6;
+										[@h1; @h7] > omega_in_to_subset_successor
+									] > subset_to_eq;
+									@h4 > successor_in_omega > is_set_i > self_in_successor
+								] > eq_in
 							} > cp;
 							
 							$c2 = /* @h7 */ Nin(n, m) |- {
@@ -424,9 +425,12 @@ theorem omega_subset_to_in_or_eq(cls m: @11, cls n: @21) {
 									in(k, m) |- {
 										$O = [@h8; @h6] > in_subset > cup_in_e;
 										
-										$N = /* @h9 */ in(k, singleton(n)) |- {
+										$N = in(k, singleton(n)) |- {
 											[
-												[[@h4 > is_set_i; @h9] > singleton_e; @h8] > eq_in_flip;
+												[
+													[@h4 > is_set_i; @h9] > singleton_e;
+													@h8
+												] > eq_in_flip;
 												@h7
 											] > Fi
 										} > Nim;
@@ -435,24 +439,10 @@ theorem omega_subset_to_in_or_eq(cls m: @11, cls n: @21) {
 									} > cp
 								} > Ui as subset(m, n);
 								
-								$O = [$subset; @h5] > mp;
-								
-								$c1 = /* @h8 */ in(m, n) |- {
-									[
-										@h8;
-										successor_is_bigger(n)
-									] > in_subset
-								} > cp;
-								
-								$c2 = eq(m, n) |- {
-									[
-										@h8;
-										@h4 > is_set_i > self_in_successor(n)
-									] > eq_in
-								} > cp;
-								
-								[$O; $c1; $c2] > Oe
-								> Oi1(?, eq(m, successor(n)))
+								[
+									[$subset; @h5] > mp;
+									successor_is_bigger(successor(n))
+								] > in_subset
 							} > cp;
 							
 							[lxm(in(n, m)); $c1; $c2] > Oe
@@ -463,12 +453,19 @@ theorem omega_subset_to_in_or_eq(cls m: @11, cls n: @21) {
 			
 			[
 				@h3;
-				[
-					[$base; $step] > induce(predicate);
-					@h2
-				] > Uin_e
+				[[$base; $step] > induce(predicate); @h2] > Uin_e
 			] > mp
 		}
+	}
+}
+
+theorem omega_successor_in_i(cls m: @21, cls n: @11) {
+	in(n, omega), in(m, n) |- {
+		$nat_m = [@h1; @h2] > omega_element_in_omega;
+		$nat_suc_m = $nat_m > successor_in_omega;
+		$subset = [@h1; @h2] > omega_in_to_subset_successor;
+		
+		[$nat_suc_m; @h1; $subset] > omega_subset_to_in_successor
 	}
 }
 
