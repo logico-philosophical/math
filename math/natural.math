@@ -99,6 +99,21 @@ theorem successor_in_omega(cls n: @11) {
 	}
 }
 
+"`[Pinter]`에 따르면 페아노 공리계 제3공리인 것."
+theorem successor_is_not_zero(cls n: @11) {
+	in(n, omega) |- {
+		eq(successor(n), omega_zero) |- {
+			[
+				[
+					@h1 > is_set_i > self_in_successor;
+					@h2
+				] > in_eq;
+				emptyset_def(n) > id(Nin(n, omega_zero))
+			] > Fi
+		} > Nim as neq(successor(n), omega_zero)
+	}
+}
+
 theorem one_in_omega() {
 	zero_in_omega()
 	> successor_in_omega as in(omega_one, omega)
@@ -213,8 +228,20 @@ theorem induce_set_strong($X$ cls x: @12) {
 	}
 }
 
-theorem omega_element_in_omega(cls m: @21, cls n: @11) {
-	in(n, omega), in(m, n) |- {
+"[$\omega]의 표준 strict order."
+$!<prec=350>#1<<<_\omega>>#2$
+st omega_lt(cls m, cls n) {
+	in(m, n)
+}
+
+"[$\omega]의 표준 순서."
+$!<prec=350>#1<<\leq_\omega>>#2$
+st omega_leq(cls m, cls n) {
+	subset(m, n)
+}
+
+theorem omega_lt_in_omega(cls m: @21, cls n: @11) {
+	in(n, omega), omega_lt(m, n) |- {
 		with (pr predicate = (cls n) => I(in(m, n), in(m, omega))) {
 			$base = in(m, omega_zero) |- {
 				[@h3; emptyset_def(m)] > Ne(?, in(m, omega))
@@ -251,21 +278,6 @@ theorem omega_element_in_omega(cls m: @21, cls n: @11) {
 				] > Uin_e
 			] > mp
 		}
-	}
-}
-
-"`[Pinter]`에 따르면 페아노 공리계 제3공리인 것."
-theorem successor_is_not_zero(cls n: @11) {
-	in(n, omega) |- {
-		eq(successor(n), omega_zero) |- {
-			[
-				[
-					@h1 > is_set_i > self_in_successor;
-					@h2
-				] > in_eq;
-				emptyset_def(n) > id(Nin(n, omega_zero))
-			] > Fi
-		} > Nim as neq(successor(n), omega_zero)
 	}
 }
 
@@ -314,7 +326,7 @@ theorem nonzero_is_successor(cls n: @11) {
 }
 
 "`[Pinter]` 보조정리 6.6."
-theorem omega_in_to_subset(cls m: @21, cls n: @11) {
+theorem omega_lt_to_leq(cls m: @21, cls n: @11) {
 	$base = (cls m) => {
 		in(m, omega_zero) |- {
 			N(subset(m, omega_zero)) |- {
@@ -357,115 +369,14 @@ theorem omega_in_to_subset(cls m: @21, cls n: @11) {
 		} > cp
 	} > Ui;
 
-	in(n, omega), in(m, n) |- {
+	in(n, omega), omega_lt(m, n) |- {
 		[
 			@h2;
 			[
 				@h1;
 				[$base; $step] > induce((cls n) => U((cls m) => I(in(m, n), subset(m, n)))) > Ue(?, n)
 			] > mp > Ue(?, m)
-		] > mp
-	}
-}
-
-theorem omega_in_to_subset_successor(cls m: @21, cls n: @11) {
-	in(n, omega), in(m, n) |- {
-		(cls k) => {
-			in(k, successor(m)) |- {
-				$O = @h3 > cup_in_e;
-
-				$c1 = in(k, m) |- {
-					[
-						@h4;
-						[@h1; @h2] > omega_in_to_subset
-					] > in_subset
-				} > cp;
-
-				$c2 = in(k, singleton(m)) |- {
-					$eq = [
-						[@h1; @h2] > omega_element_in_omega > is_set_i;
-						@h4
-					] > singleton_e;
-
-					[$eq; @h2] > eq_in
-				} > cp;
-
-				[$O; $c1; $c2] > Oe
-			} > cp
-		} > Ui as subset(successor(m), n)
-	}
-}
-
-theorem omega_subset_to_in_successor(cls m: @11, cls n: @21) {
-	in(m, omega), in(n, omega), subset(m, n) |- {
-		with (pr predicate = (cls n) => I(subset(m, n), in(m, successor(n)))) {
-			$base = /* @h4 */ subset(m, omega_zero) |- {
-				[
-					[@h4; emptyset_subset_any(m)] > subset_to_eq;
-					zero_in_omega() > is_set_i > self_in_successor(omega_zero)
-				] > eq_in
-			} > cp as predicate(omega_zero);
-			
-			$step = (cls n) => {
-				/* @h4 */ in(n, omega) |- {
-					predicate(n) |- {
-						/* @h6 */ subset(m, successor(n)) |- {
-							$c1 = in(n, m) |- {
-								[
-									[
-										@h6;
-										[@h1; @h7] > omega_in_to_subset_successor
-									] > subset_to_eq;
-									@h4 > successor_in_omega > is_set_i > self_in_successor
-								] > eq_in
-							} > cp;
-							
-							$c2 = /* @h7 */ Nin(n, m) |- {
-								$subset = (cls k) => {
-									in(k, m) |- {
-										$O = [@h8; @h6] > in_subset > cup_in_e;
-										
-										$N = in(k, singleton(n)) |- {
-											[
-												[
-													[@h4 > is_set_i; @h9] > singleton_e;
-													@h8
-												] > eq_in_flip;
-												@h7
-											] > Fi
-										} > Nim;
-										
-										[$O; $N] > Oe2
-									} > cp
-								} > Ui as subset(m, n);
-								
-								[
-									[$subset; @h5] > mp;
-									successor_is_bigger(successor(n))
-								] > in_subset
-							} > cp;
-							
-							[lxm(in(n, m)); $c1; $c2] > Oe
-						} > cp as predicate(successor(n))
-					} > cp
-				}
-			} > Uin_i;
-			
-			[
-				@h3;
-				[[$base; $step] > induce(predicate); @h2] > Uin_e
-			] > mp
-		}
-	}
-}
-
-theorem omega_successor_in_i(cls m: @21, cls n: @11) {
-	in(n, omega), in(m, n) |- {
-		$nat_m = [@h1; @h2] > omega_element_in_omega;
-		$nat_suc_m = $nat_m > successor_in_omega;
-		$subset = [@h1; @h2] > omega_in_to_subset_successor;
-		
-		[$nat_suc_m; @h1; $subset] > omega_subset_to_in_successor
+		] > mp as omega_leq(m, n)
 	}
 }
 
@@ -508,7 +419,7 @@ theorem successor_eq_e(cls m: @11, cls n: @21) {
 						] > Fi
 					} > Nim
 				] > Oe2
-			] > omega_in_to_subset;
+			] > omega_lt_to_leq;
 
 			$c2_dual = [
 				@h1;
@@ -521,13 +432,114 @@ theorem successor_eq_e(cls m: @11, cls n: @21) {
 						] > Fi
 					} > Nim
 				] > Oe2
-			] > omega_in_to_subset;
+			] > omega_lt_to_leq;
 
 			[
 				[$c2; $c2_dual] > subset_to_eq;
 				@h4
 			] > Fi
 		} > Nim_alt
+	}
+}
+
+theorem omega_lt_to_leq_successor(cls m: @21, cls n: @11) {
+	in(n, omega), omega_lt(m, n) |- {
+		(cls k) => {
+			in(k, successor(m)) |- {
+				$O = @h3 > cup_in_e;
+
+				$c1 = in(k, m) |- {
+					[
+						@h4;
+						[@h1; @h2] > omega_lt_to_leq
+					] > in_subset
+				} > cp;
+
+				$c2 = in(k, singleton(m)) |- {
+					$eq = [
+						[@h1; @h2] > omega_lt_in_omega > is_set_i;
+						@h4
+					] > singleton_e;
+
+					[$eq; @h2] > eq_in
+				} > cp;
+
+				[$O; $c1; $c2] > Oe
+			} > cp
+		} > Ui as omega_leq(successor(m), n)
+	}
+}
+
+theorem omega_leq_to_lt_successor(cls m: @11, cls n: @21) {
+	in(m, omega), in(n, omega), omega_leq(m, n) |- {
+		with (pr predicate = (cls n) => I(omega_leq(m, n), omega_lt(m, successor(n)))) {
+			$base = /* @h4 */ omega_leq(m, omega_zero) |- {
+				[
+					[@h4; emptyset_subset_any(m)] > subset_to_eq;
+					zero_in_omega() > is_set_i > self_in_successor(omega_zero)
+				] > eq_in
+			} > cp as predicate(omega_zero);
+			
+			$step = (cls n) => {
+				/* @h4 */ in(n, omega) |- {
+					predicate(n) |- {
+						/* @h6 */ omega_leq(m, successor(n)) |- {
+							$c1 = in(n, m) |- {
+								[
+									[
+										@h6;
+										[@h1; @h7] > omega_lt_to_leq_successor
+									] > subset_to_eq;
+									@h4 > successor_in_omega > is_set_i > self_in_successor
+								] > eq_in
+							} > cp;
+							
+							$c2 = /* @h7 */ Nin(n, m) |- {
+								$leq = (cls k) => {
+									in(k, m) |- {
+										$O = [@h8; @h6] > in_subset > cup_in_e;
+										
+										$N = in(k, singleton(n)) |- {
+											[
+												[
+													[@h4 > is_set_i; @h9] > singleton_e;
+													@h8
+												] > eq_in_flip;
+												@h7
+											] > Fi
+										} > Nim;
+										
+										[$O; $N] > Oe2
+									} > cp
+								} > Ui as omega_leq(m, n);
+								
+								[
+									[$leq; @h5] > mp;
+									successor_is_bigger(successor(n))
+								] > in_subset
+							} > cp;
+							
+							[lxm(in(n, m)); $c1; $c2] > Oe
+						} > cp as predicate(successor(n))
+					} > cp
+				}
+			} > Uin_i;
+			
+			[
+				@h3;
+				[[$base; $step] > induce(predicate); @h2] > Uin_e
+			] > mp
+		}
+	}
+}
+
+theorem omega_successor_lt_i(cls m: @21, cls n: @11) {
+	in(n, omega), omega_lt(m, n) |- {
+		$nat_m = [@h1; @h2] > omega_lt_in_omega;
+		$nat_suc_m = $nat_m > successor_in_omega;
+		$subset = [@h1; @h2] > omega_lt_to_leq_successor;
+		
+		[$nat_suc_m; @h1; $subset] > omega_leq_to_lt_successor
 	}
 }
 
