@@ -59,7 +59,7 @@ st bin_op_distributive($\cdot$ cls f, $+$ cls g, $A$ cls a) {
 	A(bin_op_left_distributive(f, g, a), bin_op_right_distributive(f, g, a))
 }
 
-"대수학에서의 마그마(magma)."
+"마그마(magma)."
 $\left(<<\operatorname{magma}>>\left(#1,#2\right)\right)$
 st is_magma($M$ cls m, $\ast$ cls f) {
 	is_bin_op(f, m)
@@ -100,7 +100,7 @@ theorem identity_element_Q($S$ cls s, $\ast$ cls f) {
 }
 
 "[$.(S, \ast)]의 항등원(존재한다면)."
-${<<\text{identity}>>}_{\left(#1,#2\right)}$
+${<<e>>}_{\left(#1,#2\right)}$
 cls identity_element($S$ cls s, $\ast$ cls f) {
 	instantiate((cls e) => is_identity_element(e, s, f))
 }
@@ -135,13 +135,13 @@ theorem identity_element_eq_2(cls a, $S$ cls s, $\ast$ cls f) {
 	}
 }
 
-"대수학에서의 모노이드(monoid)."
+"모노이드(monoid)."
 $\left(<<\operatorname{monoid}>>\left(#1,#2\right)\right)$
 st is_monoid($M$ cls m, $\ast$ cls f) {
 	A(is_semigroup(m, f), X((cls e) => is_identity_element(e, m, f)))
 }
 
-"대수학에서의 가환 모노이드(commutative monoid)."
+"가환 모노이드(commutative monoid)."
 $\left(<<\operatorname{commutative\ monoid}>>\left(#1,#2\right)\right)$
 st is_commutative_monoid($M$ cls m, $\ast$ cls f) {
 	A(is_monoid(m, f), bin_op_commutative(f, m))
@@ -154,12 +154,12 @@ st is_inverse_element(cls b, cls a, $S$ cls s, $\ast$ cls f) {
 }
 
 "[$.(S, \ast)]에서 [$a]의 역원(존재한다면)."
-$\left(<<\operatorname{inverse}>>#1\right)_{\left(#2,#3\right)}$
+$\left(#1\right)_{\left(#2,#3\right)}^{<<-1>>}$
 cls inverse_element(cls a, $S$ cls s, $\ast$ cls f) {
 	instantiate((cls b) => is_inverse_element(b, a, s, f))
 }
 
-"대수학에서의 군(group)."
+"군(group)."
 $\left(<<\operatorname{group}>>\left(#1,#2\right)\right)$
 st is_group($G$ cls g, $\ast$ cls f) {
 	A(is_monoid(g, f), Uin(g, (cls a) => X((cls b) => is_inverse_element(b, a, g, f))))
@@ -171,25 +171,25 @@ st subgroup(cls H, cls G, $\ast$ cls f) {
 	A(subset(H, G), is_group(H, rel_restrict(f, cartesian(H, H))))
 }
 
-"대수학에서의 아벨 군(abelian group)."
+"아벨 군(abelian group)."
 $\left(<<\operatorname{abelian\ group}>>\left(#1,#2\right)\right)$
 st is_abelian_group($G$ cls g, $\ast$ cls f) {
 	A(is_group(g, f), bin_op_commutative(f, g))
 }
 
-"대수학에서의 유사환(rng)."
+"유사환(rng)."
 $\left(<<\operatorname{rng}>>\left(#1,#2,#3\right)\right)$
 st is_rng($R$ cls r, $+$ cls g, $\cdot$ cls f) {
 	A(is_abelian_group(r, g), A(is_semigroup(r, f), bin_op_distributive(f, g, r)))
 }
 
-"대수학에서의 환(ring)."
+"환(ring)."
 $\left(<<\operatorname{ring}>>\left(#1,#2,#3\right)\right)$
 st is_ring($R$ cls r, $+$ cls g, $\cdot$ cls f) {
 	A(is_abelian_group(r, g), A(is_monoid(r, f), bin_op_distributive(f, g, r)))
 }
 
-"대수학에서의 가환환(commutative ring)."
+"가환환(commutative ring)."
 $\left(<<\operatorname{commutative\ ring}>>\left(#1,#2,#3\right)\right)$
 st is_commutative_ring($R$ cls r, $+$ cls g, $\cdot$ cls f) {
 	A(is_ring(r, g, f), bin_op_commutative(f, r))
