@@ -17,12 +17,12 @@
   "bugs": {
     "url": "http://github.com/logico-philosophical/math-o-matic/issues"
   },
-  "main": "dist/math.min.js",
+  "main": "dist/math-o-matic.min.js",
   "scripts": {
     "test": "nyc mocha",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
-    "build": "webpack",
-    "prepublishOnly": "nyc mocha && webpack",
+    "build": "pegjs --cache -o ./dist/parser.js ./src/grammar.pegjs && pegjs --allowed-start-rules evaluable --cache -o ./dist/evalParser.js ./src/grammar.pegjs && webpack",
+    "prepublishOnly": "npm test && npm run build",
     "reformat": "ts-node ./bin/reformat.ts"
   },
   "license": "MIT",
@@ -37,7 +37,6 @@
     "mocha": "^8.2.1",
     "nyc": "^15.1.0",
     "pegjs": "^0.10.0",
-    "raw-loader": "^4.0.2",
     "source-map-support": "^0.5.19",
     "terser-webpack-plugin": "^4.2.3",
     "ts-loader": "^8.0.12",

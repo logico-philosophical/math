@@ -4,12 +4,13 @@ const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = {
 	mode: 'production',
-	entry: './src/entry.js',
+	entry: './src/entry.ts',
 	output: {
 		path: path.resolve(__dirname, 'dist'),
-		filename: 'math.min.js',
-		library: 'math',
+		filename: 'math-o-matic.min.js',
+		library: 'MathOMatic',
 		libraryTarget: 'umd',
+		libraryExport: 'default',
 		globalObject: 'typeof self !== \'undefined\' ? self : this'
 	},
 	resolve: {

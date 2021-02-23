@@ -102,19 +102,11 @@ function showPreview() {
 		return preview('Error: program is not defined', {error: true});
 	}
 
-	try {
-		var v = codemirror.getValue();
-
-		if (!v.trim()) return;
-		
-		var parsed = evalParser.parse(v);
-	} catch (e) {
-		preview(`Parse error: ${e.message}\n    at (<repl>:${e.location.start.line}:${e.location.start.column})`, {error: true});
-		return;
-	}
+	var v = codemirror.getValue();
+	if (!v.trim()) return;
 
 	try {
-		preview(ktx(program.evaluate(parsed).toTeXString(true, true)), {
+		preview(ktx(program.evaluate(v).toTeXString(true, true)), {
 			noescape: true
 		});
 	} catch (e) {
@@ -149,15 +141,7 @@ $('#console-input').addEventListener('keydown', evt => {
 			}
 
 			try {
-				var parsed = evalParser.parse(v);
-			} catch (e) {
-				write(`Parse error: ${e.message}\n    at (<repl>:${e.location.start.line}:${e.location.start.column})`, {error: true});
-				if (!evt.ctrlKey) codemirror.setValue('');
-				return;
-			}
-
-			try {
-				write(ktx(program.evaluate(parsed).toTeXString(true, true)), {
+				write(ktx(program.evaluate(v).toTeXString(true, true)), {
 					noescape: true
 				});
 			} catch (e) {

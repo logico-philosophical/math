@@ -3,14 +3,9 @@ import ExecutionContext from "../src/ExecutionContext";
 chai.use(require('chai-as-promised'));
 import Expr from "../src/exprs/Expr";
 import ObjectFun from "../src/exprs/ObjectFun";
-import Program from "../src/Program";
-var pegjs = require('pegjs');
+import M from '../src/entry';
 var fs = require('fs');
 var path = require('path');
-
-var grammar = fs.readFileSync(path.join(__dirname, '../src/grammar.pegjs'), 'utf-8');
-var parser = pegjs.generate(grammar, {cache: true});
-var evalParser = pegjs.generate(grammar, {cache: true, allowedStartRules: ['evaluable']});
 
 import unparse from '../src/Unparser';
 
@@ -22,8 +17,6 @@ function removeLocationify(obj) {
 }
 
 describe('Unparser', function () {
-	var program = new Program(parser);
-
 	[
 		'propositional', 'predicate', 'set',
 		'relation', 'function', 'natural',
@@ -31,8 +24,8 @@ describe('Unparser', function () {
 	].forEach(name => {
 		it(`can unparse ${name}.math`, async function () {
             var o = fs.readFileSync(path.join(__dirname, '../math/' + name + '.math'), 'utf-8');
-			var parsed = parser.parse(o);
-			var parsed_unparsed_parsed = parser.parse(unparse(parsed));
+			var parsed = M.parser.parse(o);
+			var parsed_unparsed_parsed = M.parser.parse(unparse(parsed));
 			
 			expect(removeLocationify(parsed) == removeLocationify(parsed_unparsed_parsed)).to.be.true;
 		});
@@ -40,7 +33,7 @@ describe('Unparser', function () {
 });
 
 describe('Program', function () {
-	var program = new Program(parser);
+	var program = new M.Program();
 
 	[
 		'propositional', 'predicate', 'set',
@@ -73,7 +66,7 @@ describe('ObjectFun', function () {
 
 describe('Issue #52', function () {
 	it('(f(x))(y) == (f(x))(y)', async function () {
-		var program = new Program(parser);
+		var program = new M.Program();
 
 		await program.loadModule('duh', (_filename: string) => ({
 			code: `
@@ -84,8 +77,8 @@ cls x;
 cls y;
 `
 		}));
-		var foo = program.evaluate(evalParser.parse(`(f(x))(y)`)) as Expr,
-			baz = program.evaluate(evalParser.parse(`(f(x))(y)`)) as Expr;
+		var foo = program.evaluate('(f(x))(y)') as Expr,
+			baz = program.evaluate('(f(x))(y)') as Expr;
 		
 		expect(!!foo.equals(baz, null)).to.be.true;
 	});
@@ -93,7 +86,7 @@ cls y;
 
 describe('Sealed macro & using', function () {
 	it('N(p) != (sealed p => N(p))', async function () {
-		var program = new Program(parser);
+		var program = new M.Program();
 		
 		await program.loadModule('duh', (_filename: string) => ({
 			code: `
@@ -108,15 +101,15 @@ sealed st N2(st p) {
 }
 `
 		}));
-		var foo = program.evaluate(evalParser.parse(`N(p)`)) as Expr,
-			baz = program.evaluate(evalParser.parse(`N2(p)`)) as Expr;
+		var foo = program.evaluate('N(p)') as Expr,
+			baz = program.evaluate('N2(p)') as Expr;
 		
 		expect(foo.equals(baz, new ExecutionContext())).to.be.false;
 	});
 
 	for (let i = 0; i < 2; i++) {
 		it(`Issue #53.${i + 1}`, async function () {
-			var program = new Program(parser);
+			var program = new M.Program();
 			
 			await expect(program.loadModule('duh', (_filename: string) => ({
 				code: `
