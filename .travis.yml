@@ -17,7 +17,6 @@ script:
   - sed -i 's/^dist\/$//g' .gitignore
   - sed -i 's/^docs\/build\/$//g' .gitignore
   - npm test
-  - mkdir dist
   - npm run build
   - cd docs && npx m42kup-builder && cd ..
 
