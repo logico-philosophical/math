@@ -4,7 +4,7 @@ const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = {
 	mode: 'production',
-	entry: './src/entry.ts',
+	entry: './src/Program.ts',
 	output: {
 		path: path.resolve(__dirname, 'dist'),
 		filename: 'math-o-matic.min.js',

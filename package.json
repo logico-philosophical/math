@@ -21,9 +21,9 @@
   "scripts": {
     "test": "nyc mocha",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
-    "build": "mkdirp dist && pegjs --cache -o ./dist/parser.js ./src/grammar.pegjs && pegjs --allowed-start-rules evaluable --cache -o ./dist/evalParser.js ./src/grammar.pegjs && webpack",
-    "prepublishOnly": "npm test && npm run build",
-    "reformat": "ts-node ./bin/reformat.ts"
+    "build": "mkdirp dist && mkdirp build_tmp && pegjs --cache -o build_tmp/parser.js src/grammar.pegjs && pegjs --allowed-start-rules evaluable --cache -o build_tmp/evalParser.js src/grammar.pegjs && webpack && del-cli build_tmp",
+    "prepublishOnly": "npm test && del-cli dist && del-cli build_tmp && npm run build",
+    "reformat": "ts-node bin/reformat.ts"
   },
   "license": "MIT",
   "dependencies": {},
@@ -34,6 +34,7 @@
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
     "coveralls": "^3.1.0",
+    "del-cli": "^3.0.1",
     "mkdirp": "^1.0.4",
     "mocha": "^8.2.1",
     "nyc": "^15.1.0",

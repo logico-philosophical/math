@@ -3,7 +3,7 @@ import ExecutionContext from "../src/ExecutionContext";
 chai.use(require('chai-as-promised'));
 import Expr from "../src/exprs/Expr";
 import ObjectFun from "../src/exprs/ObjectFun";
-import M from '../src/entry';
+import Program from '../src/Program';
 var fs = require('fs');
 var path = require('path');
 
@@ -24,8 +24,8 @@ describe('Unparser', function () {
 	].forEach(name => {
 		it(`can unparse ${name}.math`, async function () {
             var o = fs.readFileSync(path.join(__dirname, '../math/' + name + '.math'), 'utf-8');
-			var parsed = M.parser.parse(o);
-			var parsed_unparsed_parsed = M.parser.parse(unparse(parsed));
+			var parsed = Program.parser.parse(o);
+			var parsed_unparsed_parsed = Program.parser.parse(unparse(parsed));
 			
 			expect(removeLocationify(parsed) == removeLocationify(parsed_unparsed_parsed)).to.be.true;
 		});
@@ -33,7 +33,7 @@ describe('Unparser', function () {
 });
 
 describe('Program', function () {
-	var program = new M.Program();
+	var program = new Program();
 
 	[
 		'propositional', 'predicate', 'set',
@@ -66,7 +66,7 @@ describe('ObjectFun', function () {
 
 describe('Issue #52', function () {
 	it('(f(x))(y) == (f(x))(y)', async function () {
-		var program = new M.Program();
+		var program = new Program();
 
 		await program.loadModule('duh', (_filename: string) => ({
 			code: `
@@ -86,7 +86,7 @@ cls y;
 
 describe('Sealed macro & using', function () {
 	it('N(p) != (sealed p => N(p))', async function () {
-		var program = new M.Program();
+		var program = new Program();
 		
 		await program.loadModule('duh', (_filename: string) => ({
 			code: `
@@ -109,7 +109,7 @@ sealed st N2(st p) {
 
 	for (let i = 0; i < 2; i++) {
 		it(`Issue #53.${i + 1}`, async function () {
-			var program = new M.Program();
+			var program = new Program();
 			
 			await expect(program.loadModule('duh', (_filename: string) => ({
 				code: `

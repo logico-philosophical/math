@@ -556,7 +556,7 @@
 				try {
 					console.log('--- PROGRAM START ---');
 					var start = new Date();
-					program = new MathOMatic.Program();
+					program = new MathOMatic();
 					await program.loadModule(filename, async filename => ({
 						fileUri: `/${filename}.math`,
 						code: await new Promise((resolve, reject) => {
