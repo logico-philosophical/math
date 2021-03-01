@@ -29,6 +29,16 @@ module.exports = {
 			]
 		},
 		{
+			name: '현재의 공리계',
+			dir: 'current-axiomatic-system',
+			list: [
+				{
+					name: '대응 관계',
+					file: 'counterparts'
+				}
+			]
+		},
+		{
 			name: '우선순위',
 			file: 'precedence'
 		}

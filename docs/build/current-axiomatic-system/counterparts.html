@@ -1,0 +1,321 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>대응 관계</title>
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Roboto+Mono">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.4.1/styles/tomorrow.min.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+		<style>
+			* {
+				box-sizing: border-box;
+			}
+
+			html, body {
+				margin: 0;
+				padding: 0;
+			}
+
+			body {
+				padding: 0; 
+				margin: 0;
+				font: 16px Roboto, sans-serif;
+				font-weight: 400;
+				-webkit-font-smoothing: antialiased;
+				color: #5f6368;
+				line-height: 1.5;
+				word-break: normal;
+				overflow-wrap: break-word;
+			}
+
+			h1, h2, h3, h4, h5, h6 {
+				font-weight: 400;
+				line-height: 1.2;
+			}
+
+			h1, h2, h3, h4, h5, h6, a, b, strong, input, textarea, th, .katex {
+				color: #202124;
+			}
+
+			img {
+				max-width: 100%;
+			}
+
+			pre, pre.hljs, code {
+				font-family: Consolas, 'Roboto Mono', monospace;
+				background-color: rgba(0,0,0,.05);
+				white-space: pre-wrap;
+				word-break: break-all;
+				tab-size: 4;
+			}
+
+			pre {
+				padding: 6px;
+			}
+
+			code {
+				font-size: .85em;
+				padding: .15em .3em;
+				border-radius: .3em;
+			}
+
+			pre code {
+				background-color: unset;
+				padding: 0;
+			}
+
+			p {
+				margin: 0;
+			}
+
+			p + p {
+				margin-top: 1em;
+			}
+
+			ul, ol {
+				margin: 1em 0;
+			}
+
+			ol li, ul li {
+				margin: .5em 0;
+			}
+
+			table {
+				margin: 1em 0;
+				border-collapse: collapse;
+			}
+
+			table tr td {
+				border: 1px #ccc solid;
+				padding: .6em;
+			}
+
+			kbd {
+				font: .85em 'Roboto Mono', monospace;
+				color: #202124;
+				border: 1px #ccc solid;
+				padding: .1em;
+				border-radius: .2em;
+			}
+
+			blockquote {
+				margin: 1em 0;
+				padding: .5em 20px;
+				border-left: 5px #202124 solid;
+				background-color: #f7f7f7;
+			}
+
+			#toc {
+				position: fixed;
+				z-index: 1;
+				overflow-y: auto;
+				top: 0;
+				left: 0;
+				bottom: 0;
+				width: 280px;
+				height: 100%;
+				background-color: #f1f1f1;
+				padding-bottom:100px;
+			}
+
+			#toc > div {
+				display: block;
+				text-align: center;
+				background-color: #263238;
+				padding: 1.5em;
+			}
+
+			#toc > div button {
+				background: none;
+				border: none;
+				vertical-align: middle;
+				display: none;
+			}
+
+			#toc > div a {
+				color: white;
+				text-decoration: none;
+			}
+
+			#toc ol {
+				padding: 0;
+				margin: 0;
+			}
+
+			#toc > ol {
+				background-color: #f1f1f1;
+			}
+
+			#toc ol li {
+				list-style: none;
+				margin: 0;
+			}
+
+			#toc ol li a {
+				display: block;
+				padding: .5em;
+				text-decoration: none;
+			}
+
+			#toc ol li a:hover {
+				background-color: rgba(0, 0, 0, .12);
+			}
+
+			#toc ol li ol {
+				padding: 0;
+				margin: 0;
+				background-color: rgba(0, 0, 0, .08);
+				font-size: .85em;
+			}
+
+			#toc ol li ol li {
+				list-style: none;
+			}
+
+			#content {
+				margin-left: 280px;
+				padding: 1em;
+				padding-top: 30px;
+				padding-bottom: 150px;
+			}
+
+			@media screen and (max-width: 800px) {
+				#toc {
+					position: fixed;
+					width: 100%;
+					top: 0;
+					border-bottom: 1px #ccc solid;
+				}
+
+				#toc:not(.toc-expanded) {
+					bottom: unset;
+					height: unset;
+					padding-bottom: 0;
+					box-shadow: 0 0 2px 0 rgba(0,0,0,.16), 0 0 0 1px rgba(0,0,0,.08);
+				}
+
+				#toc.toc-expanded .toc-on-folded {
+					display: none;
+				}
+
+				#toc:not(.toc-expanded) .toc-on-expanded {
+					display: none;
+				}
+
+				#toc > div {
+					padding: 1em;
+					text-align: left;
+					height: 60px;
+				}
+
+				#toc > div button {
+					display: inline-block;
+					margin-right: 1em;
+				}
+
+				#content {
+					margin-left: 0;
+					margin-top: 60px;
+				}
+			}
+		</style>
+		<style>
+			.m42kup-error {
+				color: red;
+				border: 1px red solid;
+				padding: 0 .2em;
+			}
+
+			blockquote.m42kup-bq-info {
+				border-left-color: #1976d2;
+			    background-color: #e3f2fd;
+			    color: #1976d2;
+			}
+
+			blockquote.m42kup-bq-info a {
+			    color: #1976d2;
+			    font-weight: bold;
+			}
+
+			blockquote.m42kup-bq-info::before {
+				content: url('data:image/svg+xml,%0A%3Csvg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="%231976d2"%3E%3Cpath d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/%3E%3C/svg%3E');
+				display: inline-block;
+			    width: 24px;
+			    height: 24px;
+			    float: left;
+			    margin-right: .5em;
+			}
+
+			blockquote.m42kup-bq-warn {
+				border-left-color: #d32f2f;
+				background-color: #ffebee;
+				color: #d32f2f;
+			}
+
+			blockquote.m42kup-bq-warn a {
+			    color: #d32f2f;
+			    font-weight: bold;
+			}
+
+			blockquote.m42kup-bq-warn::before {
+				content: url('data:image/svg+xml,%0A%3Csvg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="%23d32f2f"%3E%3Cpath d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/%3E%3C/svg%3E');
+			    display: inline-block;
+			    width: 24px;
+			    height: 24px;
+			    float: left;
+			    margin-right: .5em;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="toc">
+			<div>
+						<button id="toc-fold-toggle">
+							<svg class="toc-on-folded" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="#fff"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+							<svg class="toc-on-expanded" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="#fff"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+						</button>
+						<a href="../index.html">math-o-matic 설명서</a>
+					</div>
+					<ol class="toc-on-expanded"><li><div><a href="../background.html">이론적 배경</a></div></li><li><div><a href="../code.html">코드를 작성하는 법</a></div></li><li><div><a href="../syntax/index.html">문법</a></div><ol><li><div><a href="../syntax/import.html">import</a></div></li></ol></li><li><div><a href="./index.html">현재의 공리계</a></div><ol><li><div><a href="./counterparts.html">대응 관계</a></div></li></ol></li><li><div><a href="../precedence.html">우선순위</a></div></li></ol>
+		</div>
+		<div id="content">
+			
+				<h1>대응 관계</h1><h2><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo separator="true">,</mo></mrow><annotation encoding="application/x-tex">,</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.3em;vertical-align:-0.19444em;"></span><span class="mpunct">,</span></span></span></span>와 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>∧</mo></mrow><annotation encoding="application/x-tex">\land</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.55556em;vertical-align:0em;"></span><span class="mord">∧</span></span></span></span></h2><p>이때 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo separator="true">,</mo></mrow><annotation encoding="application/x-tex">,</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.3em;vertical-align:-0.19444em;"></span><span class="mpunct">,</span></span></span></span>는 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>⊢</mo></mrow><annotation encoding="application/x-tex">\vdash</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mrel">⊢</span></span></span></span> 좌변의 전건들의 구분자이다. 예를 들어 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo separator="true">,</mo><mi>q</mi><mo>⊢</mo><mi>r</mi></mrow><annotation encoding="application/x-tex">p, q \vdash r</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord mathnormal">p</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">q</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">⊢</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span></span></span></span>의 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo separator="true">,</mo></mrow><annotation encoding="application/x-tex">,</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.3em;vertical-align:-0.19444em;"></span><span class="mpunct">,</span></span></span></span>는 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>∧</mo></mrow><annotation encoding="application/x-tex">\land</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.55556em;vertical-align:0em;"></span><span class="mord">∧</span></span></span></span>와 같은 의미를 갖는다. 이는 다음의 공리들에 의해 대응 관계가 성립한다.</p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mtable rowspacing="0.24999999999999992em" columnalign="right left" columnspacing="0em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mrow><mi mathvariant="sans-serif">A</mi><mi mathvariant="sans-serif">i</mi></mrow><mo stretchy="false">(</mo><mi>p</mi><mo separator="true">,</mo><mi>q</mi><mo stretchy="false">)</mo></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mrow></mrow><mo><mi mathvariant="normal">≔</mi></mo><mi>p</mi><mo separator="true">,</mo><mi>q</mi><mo>⊢</mo><mi>p</mi><mo>∧</mo><mi>q</mi><mo separator="true">,</mo></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mrow><mi mathvariant="sans-serif">A</mi><mi mathvariant="sans-serif">e</mi><mn mathvariant="sans-serif">1</mn></mrow><mo stretchy="false">(</mo><mi>p</mi><mo separator="true">,</mo><mi>q</mi><mo stretchy="false">)</mo></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mrow></mrow><mo><mi mathvariant="normal">≔</mi></mo><mi>p</mi><mo>∧</mo><mi>q</mi><mo>⊢</mo><mi>p</mi><mo separator="true">,</mo></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mrow><mi mathvariant="sans-serif">A</mi><mi mathvariant="sans-serif">e</mi><mn mathvariant="sans-serif">2</mn></mrow><mo stretchy="false">(</mo><mi>p</mi><mo separator="true">,</mo><mi>q</mi><mo stretchy="false">)</mo></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mrow></mrow><mo><mi mathvariant="normal">≔</mi></mo><mi>p</mi><mo>∧</mo><mi>q</mi><mo>⊢</mo><mi>q</mi><mi mathvariant="normal">.</mi></mrow></mstyle></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{aligned}
+	\mathsf{Ai}(p, q) &amp;\coloneqq p, q\vdash p\land q, \\
+	\mathsf{Ae1}(p, q) &amp;\coloneqq p\land q\vdash p, \\
+	\mathsf{Ae2}(p, q) &amp;\coloneqq p\land q\vdash q.
+\end{aligned}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:4.500000000000002em;vertical-align:-2.000000000000001em;"></span><span class="mord"><span class="mtable"><span class="col-align-r"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:2.5000000000000004em;"><span style="top:-4.66em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathsf">A</span><span class="mord mathsf">i</span></span><span class="mopen">(</span><span class="mord mathnormal">p</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">q</span><span class="mclose">)</span></span></span><span style="top:-3.16em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathsf">A</span><span class="mord mathsf">e</span><span class="mord mathsf">1</span></span><span class="mopen">(</span><span class="mord mathnormal">p</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">q</span><span class="mclose">)</span></span></span><span style="top:-1.6599999999999993em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathsf">A</span><span class="mord mathsf">e</span><span class="mord mathsf">2</span></span><span class="mopen">(</span><span class="mord mathnormal">p</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">q</span><span class="mclose">)</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:2.000000000000001em;"><span></span></span></span></span></span><span class="col-align-l"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:2.5000000000000004em;"><span style="top:-4.66em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel"><span class="mrel"><span class="mop" style="position:relative;top:-0.03472em;">:</span></span><span class="mrel"><span class="mspace" style="margin-right:-0.06666666666666667em;"></span></span><span class="mrel">=</span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mord mathnormal">p</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">q</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">⊢</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mord mathnormal">p</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">∧</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">q</span><span class="mpunct">,</span></span></span><span style="top:-3.16em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel"><span class="mrel"><span class="mop" style="position:relative;top:-0.03472em;">:</span></span><span class="mrel"><span class="mspace" style="margin-right:-0.06666666666666667em;"></span></span><span class="mrel">=</span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mord mathnormal">p</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">∧</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">q</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">⊢</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mord mathnormal">p</span><span class="mpunct">,</span></span></span><span style="top:-1.6599999999999993em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel"><span class="mrel"><span class="mop" style="position:relative;top:-0.03472em;">:</span></span><span class="mrel"><span class="mspace" style="margin-right:-0.06666666666666667em;"></span></span><span class="mrel">=</span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mord mathnormal">p</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">∧</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">q</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">⊢</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">q</span><span class="mord">.</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:2.000000000000001em;"><span></span></span></span></span></span></span></span></span></span></span></span><h2><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>∨</mo></mrow><annotation encoding="application/x-tex">\lor</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.55556em;vertical-align:0em;"></span><span class="mord">∨</span></span></span></span>?</h2><p>우리의 체계에는 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>∨</mo></mrow><annotation encoding="application/x-tex">\lor</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.55556em;vertical-align:0em;"></span><span class="mord">∨</span></span></span></span>의 메타논리적 대응이 없다. sequent calculus 체계에서는 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>∨</mo></mrow><annotation encoding="application/x-tex">\lor</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.55556em;vertical-align:0em;"></span><span class="mord">∨</span></span></span></span>의 메타논리적 대응을 만들기 위해 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>⊢</mo></mrow><annotation encoding="application/x-tex">\vdash</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mrel">⊢</span></span></span></span> 우변에도 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo separator="true">,</mo></mrow><annotation encoding="application/x-tex">,</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.3em;vertical-align:-0.19444em;"></span><span class="mpunct">,</span></span></span></span> 구분자를 추가하였으나 우리의 체계에는 직관적이지 않다는 이유로 추가되지 않았다.</p><h2><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>⊢</mo></mrow><annotation encoding="application/x-tex">\vdash</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mrel">⊢</span></span></span></span>와 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>→</mo></mrow><annotation encoding="application/x-tex">\to</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.36687em;vertical-align:0em;"></span><span class="mrel">→</span></span></span></span></h2><p>다음의 공리들에 의해 대응 관계가 성립한다.</p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mtable rowspacing="0.24999999999999992em" columnalign="right left" columnspacing="0em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mrow><mi mathvariant="sans-serif">c</mi><mi mathvariant="sans-serif">p</mi></mrow><mo stretchy="false">(</mo><mi>p</mi><mo separator="true">,</mo><mi>q</mi><mo stretchy="false">)</mo></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mrow></mrow><mo><mi mathvariant="normal">≔</mi></mo><mo stretchy="false">(</mo><mi>p</mi><mo>⊢</mo><mi>q</mi><mo stretchy="false">)</mo><mo>⊢</mo><mi>p</mi><mo>→</mo><mi>q</mi><mo separator="true">,</mo></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mrow><mi mathvariant="sans-serif">m</mi><mi mathvariant="sans-serif">p</mi></mrow><mo stretchy="false">(</mo><mi>p</mi><mo separator="true">,</mo><mi>q</mi><mo stretchy="false">)</mo></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mrow></mrow><mo><mi mathvariant="normal">≔</mi></mo><mi>p</mi><mo separator="true">,</mo><mi>p</mi><mo>→</mo><mi>q</mi><mo>⊢</mo><mi>q</mi><mi mathvariant="normal">.</mi></mrow></mstyle></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{aligned}
+	\mathsf{cp}(p, q) &amp;\coloneqq (p\vdash q)\vdash p\to q, \\
+	\mathsf{mp}(p, q) &amp;\coloneqq p, p\to q\vdash q.
+\end{aligned}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:3.0000000000000004em;vertical-align:-1.2500000000000002em;"></span><span class="mord"><span class="mtable"><span class="col-align-r"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.7500000000000002em;"><span style="top:-3.91em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathsf">c</span><span class="mord mathsf">p</span></span><span class="mopen">(</span><span class="mord mathnormal">p</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">q</span><span class="mclose">)</span></span></span><span style="top:-2.41em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathsf">m</span><span class="mord mathsf">p</span></span><span class="mopen">(</span><span class="mord mathnormal">p</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">q</span><span class="mclose">)</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.2500000000000002em;"><span></span></span></span></span></span><span class="col-align-l"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.7500000000000002em;"><span style="top:-3.91em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel"><span class="mrel"><span class="mop" style="position:relative;top:-0.03472em;">:</span></span><span class="mrel"><span class="mspace" style="margin-right:-0.06666666666666667em;"></span></span><span class="mrel">=</span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mopen">(</span><span class="mord mathnormal">p</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">⊢</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">q</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">⊢</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mord mathnormal">p</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">q</span><span class="mpunct">,</span></span></span><span style="top:-2.41em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel"><span class="mrel"><span class="mop" style="position:relative;top:-0.03472em;">:</span></span><span class="mrel"><span class="mspace" style="margin-right:-0.06666666666666667em;"></span></span><span class="mrel">=</span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mord mathnormal">p</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathnormal">p</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">q</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">⊢</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">q</span><span class="mord">.</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.2500000000000002em;"><span></span></span></span></span></span></span></span></span></span></span></span><h2><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi></mrow><annotation encoding="application/x-tex">f</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord mathnormal" style="margin-right:0.10764em;">f</span></span></span></span>와 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">∀</mi><mi>f</mi></mrow><annotation encoding="application/x-tex">\forall f</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord">∀</span><span class="mord mathnormal" style="margin-right:0.10764em;">f</span></span></span></span></h2><p>이때 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi></mrow><annotation encoding="application/x-tex">f</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord mathnormal" style="margin-right:0.10764em;">f</span></span></span></span>는 술어(<code>pr := [cls -&gt; st]</code>)이다. 다음의 공리들에 의해 대응 관계가 성립한다.</p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mtable rowspacing="0.24999999999999992em" columnalign="right left" columnspacing="0em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mrow><mi mathvariant="sans-serif">U</mi><mi mathvariant="sans-serif">i</mi></mrow><mo stretchy="false">(</mo><mi>f</mi><mo stretchy="false">)</mo></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mrow></mrow><mo><mi mathvariant="normal">≔</mi></mo><mi>f</mi><mo>⊢</mo><mi mathvariant="normal">∀</mi><mi>f</mi><mo separator="true">,</mo></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mrow><mi mathvariant="sans-serif">U</mi><mi mathvariant="sans-serif">e</mi></mrow><mo stretchy="false">(</mo><mi>f</mi><mo separator="true">,</mo><mi>x</mi><mo stretchy="false">)</mo></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mrow></mrow><mo><mi mathvariant="normal">≔</mi></mo><mi mathvariant="normal">∀</mi><mi>f</mi><mo>⊢</mo><mi>f</mi><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo><mi mathvariant="normal">.</mi></mrow></mstyle></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{aligned}
+	\mathsf{Ui}(f) &amp;\coloneqq f\vdash \forall f, \\
+	\mathsf{Ue}(f, x) &amp;\coloneqq \forall f\vdash f(x).
+\end{aligned}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:3.0000000000000004em;vertical-align:-1.2500000000000002em;"></span><span class="mord"><span class="mtable"><span class="col-align-r"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.7500000000000002em;"><span style="top:-3.91em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathsf">U</span><span class="mord mathsf">i</span></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="mclose">)</span></span></span><span style="top:-2.41em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathsf">U</span><span class="mord mathsf">e</span></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathnormal">x</span><span class="mclose">)</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.2500000000000002em;"><span></span></span></span></span></span><span class="col-align-l"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.7500000000000002em;"><span style="top:-3.91em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel"><span class="mrel"><span class="mop" style="position:relative;top:-0.03472em;">:</span></span><span class="mrel"><span class="mspace" style="margin-right:-0.06666666666666667em;"></span></span><span class="mrel">=</span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">⊢</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mord">∀</span><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="mpunct">,</span></span></span><span style="top:-2.41em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel"><span class="mrel"><span class="mop" style="position:relative;top:-0.03472em;">:</span></span><span class="mrel"><span class="mspace" style="margin-right:-0.06666666666666667em;"></span></span><span class="mrel">=</span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mord">∀</span><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">⊢</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mclose">)</span><span class="mord">.</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.2500000000000002em;"><span></span></span></span></span></span></span></span></span></span></span></span><p>술어논리를 위하여 추가되어야 하는 공리는 이 둘 뿐이다.</p><h2>메타함수와 함수</h2><p>이때 메타함수는 <code>fun := [cls -&gt; cls]</code> 타입을 갖는다. <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">m</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">p</mi></mrow><annotation encoding="application/x-tex">\mathrm{map}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathrm">m</span><span class="mord mathrm">a</span><span class="mord mathrm">p</span></span></span></span></span>과 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">f</mi><mi mathvariant="normal">u</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">c</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">l</mi><mi mathvariant="normal">l</mi></mrow><annotation encoding="application/x-tex">\mathrm{funcall}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord"><span class="mord mathrm" style="margin-right:0.07778em;">f</span><span class="mord mathrm">u</span><span class="mord mathrm">n</span><span class="mord mathrm">c</span><span class="mord mathrm">a</span><span class="mord mathrm">l</span><span class="mord mathrm">l</span></span></span></span></span>을 써서 상호 변환할 수 있다. 단 대상언어의 함수는 고유 클래스(proper class)에 관하여 얘기할 수 없다.</p><h2>메타함수와 이항연산자</h2><p>이때 메타함수는 <code>fun2 := [cls, cls -&gt; cls]</code> 타입을 갖는다. <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">m</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">p</mi><mn>2</mn></mrow><annotation encoding="application/x-tex">\mathrm{map2}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8388800000000001em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathrm">m</span><span class="mord mathrm">a</span><span class="mord mathrm">p</span><span class="mord mathrm">2</span></span></span></span></span>와 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">b</mi><mi mathvariant="normal">i</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">_</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">p</mi><mi mathvariant="normal">_</mi><mi mathvariant="normal">c</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">l</mi><mi mathvariant="normal">l</mi></mrow><annotation encoding="application/x-tex">\mathrm{bin\_op\_call}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.00444em;vertical-align:-0.31em;"></span><span class="mord"><span class="mord mathrm">b</span><span class="mord mathrm">i</span><span class="mord mathrm">n</span><span class="mord mathrm" style="margin-right:0.02778em;">_</span><span class="mord mathrm">o</span><span class="mord mathrm">p</span><span class="mord mathrm" style="margin-right:0.02778em;">_</span><span class="mord mathrm">c</span><span class="mord mathrm">a</span><span class="mord mathrm">l</span><span class="mord mathrm">l</span></span></span></span></span>을 써서 상호 변환할 수 있다. 단 대상언어의 이항연산자는 고유 클래스(proper class)에 관하여 얘기할 수 없다.</p><h2>이항 술어와 이항관계</h2><p>이때 이항 술어는 <code>pr2 := [cls, cls -&gt; st]</code> 타입을 갖는다. <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">s</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">t</mi><mi mathvariant="normal">b</mi><mi mathvariant="normal">u</mi><mi mathvariant="normal">i</mi><mi mathvariant="normal">l</mi><mi mathvariant="normal">d</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">r</mi><mi mathvariant="normal">_</mi><mi mathvariant="normal">p</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">i</mi><mi mathvariant="normal">r</mi></mrow><annotation encoding="application/x-tex">\mathrm{setbuilder\_pair}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.00444em;vertical-align:-0.31em;"></span><span class="mord"><span class="mord mathrm">s</span><span class="mord mathrm">e</span><span class="mord mathrm">t</span><span class="mord mathrm">b</span><span class="mord mathrm">u</span><span class="mord mathrm">i</span><span class="mord mathrm">l</span><span class="mord mathrm">d</span><span class="mord mathrm">e</span><span class="mord mathrm">r</span><span class="mord mathrm" style="margin-right:0.02778em;">_</span><span class="mord mathrm">p</span><span class="mord mathrm">a</span><span class="mord mathrm">i</span><span class="mord mathrm">r</span></span></span></span></span>와 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">r</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">l</mi><mi mathvariant="normal">_</mi><mi mathvariant="normal">c</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">l</mi><mi mathvariant="normal">l</mi></mrow><annotation encoding="application/x-tex">\mathrm{rel\_call}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.00444em;vertical-align:-0.31em;"></span><span class="mord"><span class="mord mathrm">r</span><span class="mord mathrm">e</span><span class="mord mathrm">l</span><span class="mord mathrm" style="margin-right:0.02778em;">_</span><span class="mord mathrm">c</span><span class="mord mathrm">a</span><span class="mord mathrm">l</span><span class="mord mathrm">l</span></span></span></span></span>을 써서 상호 변환할 수 있다. 단 대상언어의 이항관계는 고유 클래스(proper class)에 관하여 얘기할 수 없다.</p>
+			
+		</div>
+		<script>
+			$ = (q, n) => (n || document).querySelector(q);
+
+			var expanded = false;
+
+			function applyExpandedState(expanded) {
+				if (expanded) {
+					$('#toc').classList.add('toc-expanded');
+					$('#content').classList.add('toc-expanded');
+				} else {
+					$('#toc').classList.remove('toc-expanded');
+					$('#content').classList.remove('toc-expanded');
+				}
+			}
+
+			applyExpandedState(expanded);
+
+			$('#toc-fold-toggle').addEventListener('click', _ => {
+				expanded = !expanded;
+
+				applyExpandedState(expanded);
+			});
+		</script>
+	</body>
+</html>

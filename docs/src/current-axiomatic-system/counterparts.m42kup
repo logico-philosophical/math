@@ -1,0 +1,47 @@
+[=대응 관계]
+
+[==[$,]와 [$\land]]
+
+이때 [$,]는 [$\vdash] 좌변의 전건들의 구분자이다. 예를 들어 [$p, q \vdash r]의 [$,]는 [$\land]와 같은 의미를 갖는다. 이는 다음의 공리들에 의해 대응 관계가 성립한다.
+
+[$$\begin{aligned}
+	\mathsf{Ai}(p, q) &\coloneqq p, q\vdash p\land q, \\
+	\mathsf{Ae1}(p, q) &\coloneqq p\land q\vdash p, \\
+	\mathsf{Ae2}(p, q) &\coloneqq p\land q\vdash q.
+\end{aligned}]
+
+[==[$\lor]?]
+
+우리의 체계에는 [$\lor]의 메타논리적 대응이 없다. sequent calculus 체계에서는 [$\lor]의 메타논리적 대응을 만들기 위해 [$\vdash] 우변에도 [$,] 구분자를 추가하였으나 우리의 체계에는 직관적이지 않다는 이유로 추가되지 않았다.
+
+[==[$\vdash]와 [$\to]]
+
+다음의 공리들에 의해 대응 관계가 성립한다.
+
+[$$\begin{aligned}
+	\mathsf{cp}(p, q) &\coloneqq (p\vdash q)\vdash p\to q, \\
+	\mathsf{mp}(p, q) &\coloneqq p, p\to q\vdash q.
+\end{aligned}]
+
+[==[$f]와 [$\forall f]]
+
+이때 [$f]는 술어([;pr := `[cls -> st]`])이다. 다음의 공리들에 의해 대응 관계가 성립한다.
+
+[$$\begin{aligned}
+	\mathsf{Ui}(f) &\coloneqq f\vdash \forall f, \\
+	\mathsf{Ue}(f, x) &\coloneqq \forall f\vdash f(x).
+\end{aligned}]
+
+술어논리를 위하여 추가되어야 하는 공리는 이 둘 뿐이다.
+
+[==메타함수와 함수]
+
+이때 메타함수는 [;fun := `[cls -> cls]`] 타입을 갖는다. [$\mathrm{map}]과 [$\mathrm{funcall}]을 써서 상호 변환할 수 있다. 단 대상언어의 함수는 고유 클래스(proper class)에 관하여 얘기할 수 없다.
+
+[==메타함수와 이항연산자]
+
+이때 메타함수는 [;fun2 := `[cls, cls -> cls]`] 타입을 갖는다. [$\mathrm{map2}]와 [$\mathrm{bin\_op\_call}]을 써서 상호 변환할 수 있다. 단 대상언어의 이항연산자는 고유 클래스(proper class)에 관하여 얘기할 수 없다.
+
+[==이항 술어와 이항관계]
+
+이때 이항 술어는 [;pr2 := `[cls, cls -> st]`] 타입을 갖는다. [$\mathrm{setbuilder\_pair}]와 [$\mathrm{rel\_call}]을 써서 상호 변환할 수 있다. 단 대상언어의 이항관계는 고유 클래스(proper class)에 관하여 얘기할 수 없다.
