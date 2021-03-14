@@ -305,7 +305,7 @@
 				
 				var ret = '';
 
-				function foo(scope) {
+				function printThisScope(scope) {
 					var map = {};
 
 					for (var [k, v] of scope.defMap) {
@@ -431,18 +431,18 @@
 
 				var printedImports = [filename];
 
-				function bar(scope) {
+				function printImportedScopes(scope) {
 					for (var [k, s] of scope.importMap) {
 						if (printedImports.includes(k)) continue;
 						printedImports.push(k);
 
-						bar(s);
-						foo(s);
+						printImportedScopes(s);
+						printThisScope(s);
 					}
 				}
 				
-				bar(program.scope);
-				foo(program.scope);
+				printImportedScopes(program.scope);
+				printThisScope(program.scope);
 
 				end = new Date();
 				console.log('--- HTML GENERATION END ---');
@@ -576,24 +576,24 @@
 
 					searchDatabase = [];
 
-					function foo(scope) {
+					function addThisScope(scope) {
 						searchDatabase = searchDatabase
 							.concat([...scope.defMap.keys()])
 							.concat([...scope.schemaMap.keys()]);
 					}
 
-					function bar(scope) {
+					function addImportedScopes(scope) {
 						for (var [k, s] of scope.importMap) {
 							if (visitedFiles.includes(k)) continue;
 							visitedFiles.push(k);
 
-							bar(s);
-							foo(s);
+							addImportedScopes(s);
+							addThisScope(s);
 						}
 					}
 
-					bar(program.scope);
-					foo(program.scope);
+					addImportedScopes(program.scope);
+					addThisScope(program.scope);
 
 					var end = new Date();
 					console.log(program);
