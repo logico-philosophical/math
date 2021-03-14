@@ -46,7 +46,7 @@ $input.addEventListener('input', evt => {
 
 	list = [];
 
-	getList(v, '', searchDatabase).forEach(({name, match}, i) => {
+	getSearchResults(v, '', searchDatabase).forEach(({name, match}, i) => {
 		if (i == 0) selected = 0;
 
 		html += `<li${i == 0 ? ' class="selected"' : ''}><a href="#def-${name}">`

@@ -29,7 +29,7 @@ function hint() {
 	var inputBefore = str.substring(0, str.length - keyword.length);
 
 	return {
-		list: getList(keyword, inputBefore, searchDatabase).map(({name, match}) => ({
+		list: getSearchResults(keyword, inputBefore, searchDatabase).map(({name, match}) => ({
 			text: name,
 			render($el, self, data) {
 				var $span = document.createElement('span');

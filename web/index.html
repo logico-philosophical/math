@@ -42,54 +42,7 @@
 					<ul></ul>
 				</div>
 			</div>
-			<script>
-				var nmax = 10;
-	
-				function getList(keyword, inputBefore, list) {
-					keyword = keyword.toLowerCase().trim();
-	
-					if (!keyword || keyword == '$') return [];
-	
-					return (
-							keyword.startsWith('$')
-								? [...new Set(inputBefore.match(/\$?[a-z0-9_]*/gi))]
-								: list
-						)
-						.map(name => {
-							var lowername = name.toLowerCase();
-	
-							var pname = 0;
-							var matchptrs = [];
-	
-							for (var pval = 0; pval < keyword.length; pval++) {
-								if (pname >= name.length) return false;
-								
-								while (lowername[pname] != keyword[pval]) {
-									pname++;
-									if (pname >= name.length) return false;
-								}
-	
-								matchptrs.push(pname);
-								pname++;
-							}
-	
-							return {
-								name,
-								match: matchptrs
-							};
-						})
-						.filter(e => e)
-						.sort((a, b) => {
-							for (var i = 0; i < a.match.length; i++) {
-								if (a.match[i] != b.match[i])
-									return a.match[i] - b.match[i];
-							}
-	
-							return a.name.localeCompare(b.name);
-						})
-						.slice(0, nmax);
-				}
-			</script>
+			<script src="get-search-results.js"></script>
 			<script src="search-bar.js"></script>
 		</nav>
 		<h1 id="top">math-o-matic</h1>
@@ -100,11 +53,11 @@
 				<li> 로컬 서버를 통해 접속하기. 이는 npm의 <a href="https://www.npmjs.com/package/http-server">http-server</a> 패키지를 사용하여 할 수 있습니다. 프로젝트 최상단에서 <pre><code>npx http-server -c-1</code></pre>를 실행한 후 터미널에 출력되는 주소로 접속하세요.
 				<li> Chrome의 경우 <code>--allow-file-access-from-files</code> 플래그를 통해 로컬 파일 로드를 가능하게 할 수 있습니다. <a href="https://stackoverflow.com/a/18137280">StackOverflow 링크</a>
 			</ul>
-			<script>
-				if (location.protocol == 'file:')
-					$('#bq-note-file-scheme').style.display = 'block';
-			</script>
 		</blockquote>
+		<script>
+			if (location.protocol == 'file:')
+				$('#bq-note-file-scheme').style.display = 'block';
+		</script>
 		<h2>개요</h2>
 		이 페이지는 math-o-matic으로 만들고 있는 공리계를 보여 줍니다. 페이지 하단에 있는 버튼 중 하나를 눌러서 공리계를 로드하세요. 장치의 계산 성능에 따라 많은 시간이 걸릴 수 있습니다.
 		<h2>우상단 컨트롤</h2>
@@ -126,6 +79,24 @@
 		<div id="precedence">[로드하세요]</div>
 		<h2>목록</h2>
 		<div id="list"></div>
+		<script>
+			var filename = null;
+
+			var fileList = [
+				['propositional', '명제논리'],
+				['predicate', '술어논리'],
+				['set', '집합론'],
+				['relation', '이항관계'],
+				['function', '함수'],
+				['algebra', '대수학'],
+				['natural', '자연수 집합'],
+				['integer', '정수 집합']
+			];
+
+			$('#list').innerHTML = fileList.map(([k, v]) => {
+				return `<input type="button" value="${v}" style="border:1px #222 solid" onclick="filename='${k}';reload()"> `;
+			}).join('');
+		</script>
 		<div id="summary"></div>
 		<div id="all"></div>
 		<div class="console-wrap-wrap" style="display:none">
@@ -135,11 +106,12 @@
 				</div>
 			</div>
 		</div>
-		<script src="./console.js"></script>
+		<script src="console.js"></script>
+		<script src="generate-html.js"></script>
 		<script>
 			var program = null;
 			
-			var katexOpts = {
+			var katexOptions = {
 				trust: context => {
 					if (context.command == '\\href'
 							&& context.protocol == '_relative')
@@ -159,7 +131,7 @@
 			var ktx = s => {
 				var ret = '';
 				try {
-					ret = katex.renderToString(s, katexOpts);
+					ret = katex.renderToString(s, katexOptions);
 				} catch (e) {
 					console.error(`Error parsing ${s}`);
 					throw Error(e);
@@ -168,249 +140,7 @@
 				return ret;
 			}
 
-			var fileList = [
-				['propositional', '명제논리'],
-				['predicate', '술어논리'],
-				['set', '집합론'],
-				['relation', '이항관계'],
-				['function', '함수'],
-				['algebra', '대수학'],
-				['natural', '자연수 집합'],
-				['integer', '정수 집합']
-			];
-
-			var filename = null;
-
-			$('#list').innerHTML = fileList.map(([k, v]) => {
-				return `<input type="button" value="${v}" style="border:1px #222 solid" onclick="filename='${k}';reload()"> `;
-			}).join('');
-
-			var expansionList = [];
-
-			function generateHtml() {
-				console.log('--- HTML GENERATION START ---');
-				var start = new Date(), end;
-
-				var precedenceMap = new Map();
-
-				var primitiveTypeList = [],
-					macroTypeList = [],
-					primitiveDefinitionList = [],
-					macroDefinitionList = [],
-					axiomSchemaList = [],
-					notProvedList = [],
-					provedList = [];
-				
-				var ret = '';
-
-				function printThisScope(scope) {
-					var map = {};
-
-					for (var [k, v] of scope.defMap) {
-						var prec = v.precedence;
-						if (prec) {
-							if (precedenceMap.has(prec)) {
-								precedenceMap.set(prec, precedenceMap.get(prec).concat([k]));
-							} else {
-								precedenceMap.set(prec, [k]);
-							}	
-						}
-					}
-
-					primitiveTypeList = primitiveTypeList.concat(
-						[...scope.typedefMap]
-							.filter(([k, v]) => !v.expr).map(([k, v]) => k)
-					);
-
-					macroTypeList = macroTypeList.concat(
-						[...scope.typedefMap]
-							.filter(([k, v]) => v.expr).map(([k, v]) => k)
-					);
-
-					primitiveDefinitionList = primitiveDefinitionList.concat(
-						[...scope.defMap]
-							.filter(([k, v]) => !v.expr).map(([k, v]) => k)
-					);
-
-					macroDefinitionList = macroDefinitionList.concat(
-						[...scope.defMap]
-							.filter(([k, v]) => v.expr).map(([k, v]) => k)
-					);
-					
-					axiomSchemaList = axiomSchemaList.concat(
-						[...scope.schemaMap]
-							.filter(([k, v]) => v.schemaType == 'axiom').map(([k, v]) => k)
-					);
-
-					notProvedList = notProvedList.concat(
-						[...scope.schemaMap]
-							.filter(([k, v]) => !v.isProved()).map(([k, v]) => k)
-					);
-
-					provedList = provedList.concat(
-						[...scope.schemaMap]
-							.filter(([k, v]) => v.schemaType != 'axiom' && v.isProved()).map(([k, v]) => k)
-					);
-
-					for (var [k, v] of scope.typedefMap) {
-						map[v._id] = `<div class="block">`
-							+ `<p class="label"><a id="type-${k}" href="#type-${k}"><b>type</b> ${k}</a></p>`
-							+ `<div class="math">${ktx(v.toTeXString(true, true))}</div>`
-
-							+ (
-								v.doc
-								? '<p class="label"><b>description</b></p>'
-								  + `<p class="description">${m42kup.render(v.doc)}</p>`
-								: ''
-							)
-
-							+ `</div>`;
-					}
-
-					for (var [k, v] of scope.defMap) {
-						map[v._id] = `<div class="block">`
-							+ `<p class="label"><a id="def-${k}" href="#def-${k}"><b>${
-								v.sealed ? 'sealed ' : ''
-							}definition</b> ${k}</a>${!v.params
-									? ': ' + v.type
-									: `(${v.params.map(p => p.toSimpleString()).join(', ')})`
-										+ `: ${v.type.resolve().to}`
-							}</p>`
-							+ `<div class="math">${ktx(v.toTeXString(true, true))}</div>`
-
-							+ (
-								v.doc
-								? '<p class="label"><b>description</b></p>'
-								  + `<p class="description">${m42kup.render(v.doc)}</p>`
-								: ''
-							)
-
-							+ `</div>`;
-					}
-
-					for (var [k, v] of scope.schemaMap) {
-						map[v._id] = `<div class="block">`
-							+ `<p class="label"><a id="def-${k}" href="#def-${k}">${
-								v.annotations.map(a => `<b class="red">${a}</b> `).join('')
-							}<b>${v.schemaType}</b> ${k}</a>(${v.params.map(p => p.toSimpleString()).join(', ')})${
-								v.context.usingList.length
-									? ` <b>using</b> ${v.context.usingList.map(u => u.name).join(', ')}`
-									: ''
-							}</p>`
-							+ `<div class="math">${ktx(v.toTeXString(true, true))}</div>`
-
-							+ (
-								v.expr
-									? v.schemaType == 'axiom'
-										? ''
-										: '<p class="label"><b>proof explorer</b></p>'
-											+ (
-												expansionList.includes(k)
-													? `<p>${program.getProofExplorer(k, ktx)}</p>`
-													: `<p><input type="button" value="show" class="colored button-expand-proof" onclick="this.parentElement.innerHTML = program.getProofExplorer('${k}', ktx);expansionList.push('${k}');"></p>`
-											)
-									: ''
-							)
-
-							+ (
-								v.doc
-								? '<p class="label"><b>description</b></p>'
-								  + `<p class="description">${m42kup.render(v.doc)}</p>`
-								: ''
-							)
-
-							+ `</div>`;
-					}
-
-					ret += `<h3 class="label">${scope.fileUri} (${Object.keys(map).length})</h3><div class="block-file">`
-						+ Object.keys(map).sort((l, r) => l._id - r._id).map(k => map[k]).join('')
-						+ '</div>';
-				}
-
-				var printedImports = [filename];
-
-				function printImportedScopes(scope) {
-					for (var [k, s] of scope.importMap) {
-						if (printedImports.includes(k)) continue;
-						printedImports.push(k);
-
-						printImportedScopes(s);
-						printThisScope(s);
-					}
-				}
-				
-				printImportedScopes(program.scope);
-				printThisScope(program.scope);
-
-				end = new Date();
-				console.log('--- HTML GENERATION END ---');
-				console.log(`HTML generation took ${end - start} ms`);
-				console.log('--- HTML RENDER START ---');
-				start = new Date();
-
-				precedenceMap = [...precedenceMap].sort((a, b) => a[0] - b[0]);
-
-				$('#precedence').innerHTML = `
-				<p>현재 연산자 우선순위는 다음과 같습니다.</p>
-
-				<table>
-					<tr><th>우선순위</th><th>연산자</th></tr>
-					${precedenceMap.map(([k, v]) => {
-						return `<tr><td>${k}</td><td>${v.map(w => {
-							return `<a href="#def-${w}">${w}</a>`;
-						}).join(', ')}</td></tr>`;
-					}).join('')}
-				</table>
-
-				<p>위 표는 자동으로 생성되었습니다.</p>`;
-				
-				$('#summary').innerHTML = `
-				<ul>
-					<li><p><b>타입</b>(${primitiveTypeList.length + macroTypeList.length})</p>
-					<ul>
-						<li><b>원시 타입</b>(${primitiveTypeList.length}): ${
-							primitiveTypeList.map(n => `<a href="#type-${n}">${n}</a>`).join(', ')
-						}
-						<li><b>매크로</b>(${macroTypeList.length}): ${
-							macroTypeList.map(n => `<a href="#type-${n}">${n}</a>`).join(', ')
-						}
-					</ul>
-
-					<li><p><b>정의</b>(${primitiveDefinitionList.length + macroDefinitionList.length})</p>
-					<ul>
-						<li><b>원시 기호</b>(${primitiveDefinitionList.length}): ${
-							primitiveDefinitionList.map(n => `<a href="#def-${n}">${n}</a>`).join(', ')
-						}
-						<li><b>매크로</b>(${macroDefinitionList.length}): ${
-							macroDefinitionList.map(n => `<a href="#def-${n}">${n}</a>`).join(', ')
-						}
-					</ul>
-					
-					<li><p><b>스키마</b>(${axiomSchemaList.length + notProvedList.length + provedList.length})</p>
-					<ul>
-						<li><b>공리</b>(${axiomSchemaList.length}): ${
-							axiomSchemaList.map(n => `<a href="#def-${n}">${n}</a>`).join(', ')
-						}
-						<li><b>증명되지 않음</b>(${notProvedList.length}): ${
-							notProvedList.map(n => `<a href="#def-${n}">${n}</a>`).join(', ')
-						}
-						<li><b>정리</b>(${provedList.length})
-					</ul>
-				</ul>`;
-
-				$('#all').innerHTML = ret;
-
-				end = new Date();
-				console.log('--- HTML RENDER END ---');
-				console.log(`HTML render took ${end - start} ms`);
-			}
-
-			hotkeys('r', (evt, handler) => {
-				evt.preventDefault();
-				reload();
-			});
-
-			document.body.addEventListener('click', evt => {
+			document.addEventListener('click', evt => {
 				var $a = evt.target;
 
 				while (!($a instanceof HTMLAnchorElement)) {
@@ -498,7 +228,7 @@
 					console.log('--- PROGRAM END ---');
 					console.log(`Program took ${end - start} ms`);
 
-					generateHtml();
+					generateHtml(program);
 				} finally {
 					$('#reload').disabled = false;
 					$('#reload svg').classList.remove('rotate');
@@ -507,6 +237,11 @@
 			}
 
 			$('#reload').addEventListener('click', reload);
+
+			hotkeys('r', (evt, handler) => {
+				evt.preventDefault();
+				reload();
+			});
 		</script>
 	</body>
 </html>
