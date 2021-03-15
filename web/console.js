@@ -19,7 +19,7 @@ var codemirror = CodeMirror(el => {
 });
 
 function hint() {
-	if (typeof program == 'undefined') return;
+	if (!Globals.program) return;
 
 	const cursor = codemirror.getCursor();
 	var str = codemirror.getRange({line:0,ch:0}, cursor);
@@ -29,7 +29,7 @@ function hint() {
 	var inputBefore = str.substring(0, str.length - keyword.length);
 
 	return {
-		list: getSearchResults(keyword, inputBefore, searchDatabase).map(({name, match}) => ({
+		list: getSearchResults(keyword, inputBefore, Globals.searchDatabase).map(({name, match}) => ({
 			text: name,
 			render($el, self, data) {
 				var $span = document.createElement('span');
@@ -97,7 +97,7 @@ function preview(v, o) {
 var timeout = null;
 
 function showPreview() {
-	if (typeof program == 'undefined') {
+	if (!Globals.program) {
 		$('#console-input').value = '';
 		return preview('Error: program is not defined', {error: true});
 	}
@@ -106,7 +106,7 @@ function showPreview() {
 	if (!v.trim()) return;
 
 	try {
-		preview(ktx(program.evaluate(v).toTeXString(true, true)), {
+		preview(ktx(Globals.program.evaluate(v).toTeXString(true, true)), {
 			noescape: true
 		});
 	} catch (e) {
@@ -135,13 +135,13 @@ $('#console-input').addEventListener('keydown', evt => {
 
 			write(v.trim(), {input: true});
 
-			if (typeof program == 'undefined') {
+			if (!Globals.program) {
 				$('#console-input').value = '';
 				return write('Error: program is not defined', {error: true});
 			}
 
 			try {
-				write(ktx(program.evaluate(v).toTeXString(true, true)), {
+				write(ktx(Globals.program.evaluate(v).toTeXString(true, true)), {
 					noescape: true
 				});
 			} catch (e) {

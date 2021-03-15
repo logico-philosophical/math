@@ -25,6 +25,37 @@
 					'&': '&amp;', '<': '&lt;', '>': '&gt;',
 					'"': '&quot;', "'": '&#39;'
 			})[m]);
+
+			const ktx = (() => {
+				var katexOptions = {
+					trust: context => {
+						if (context.command == '\\href'
+								&& context.protocol == '_relative')
+							return true;
+						
+						if (['\\htmlId', '\\htmlData'].includes(context.command))
+							return true;
+						
+						return false;
+					},
+					strict: (errorCode, errorMsg, token) => {
+						if (errorCode == 'htmlExtension') return 'ignore';
+						return 'warn';
+					}
+				};
+
+				return s => {
+					var ret = '';
+					try {
+						ret = katex.renderToString(s, katexOptions);
+					} catch (e) {
+						console.error(`Error parsing ${s}`);
+						throw Error(e);
+					}
+
+					return ret;
+				}
+			})();
 		</script>
 		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Roboto+Mono">
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
@@ -35,6 +66,7 @@
 	<body>
 		<nav>
 			<a href="#top" style="color: #222; font-size: 2em; text-decoration: none;">𝕸</a>
+			<p id="currently-loaded-thing" class="label"><b></b></p>
 			<div id="whatever">
 				<input id="search-input" type="text" placeholder="Search (S)" class="mono" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
 				<button id="reload" title="reload (R)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#222" width="24px" height="24px"><path d="M0 0h24v24H0z" fill="none"/><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg></button>
@@ -81,8 +113,8 @@
 		<h2>목록</h2>
 		<div id="list"></div>
 		<script>
-			var filename = null;
-
+			(() => {
+			
 			var fileList = [
 				['propositional', '명제논리'],
 				['predicate', '술어논리'],
@@ -95,8 +127,10 @@
 			];
 
 			$('#list').innerHTML = fileList.map(([k, v]) => {
-				return `<input type="button" value="${v}" style="border:1px #222 solid" onclick="filename='${k}';reload()"> `;
+				return `<input type="button" value="${v}" style="border:1px #222 solid" onclick="reload('${k}')"> `;
 			}).join('');
+
+			})();
 		</script>
 		<div id="summary"></div>
 		<div id="all"></div>
@@ -110,36 +144,49 @@
 		<script src="console.js"></script>
 		<script src="generate-html.js"></script>
 		<script>
-			var program = null;
-			
-			var katexOptions = {
-				trust: context => {
-					if (context.command == '\\href'
-							&& context.protocol == '_relative')
-						return true;
-					
-					if (['\\htmlId', '\\htmlData'].includes(context.command))
-						return true;
-					
-					return false;
+			Globals = {
+				program: null,
+				reloading: false,
+				filename: null,
+				currentlyLoadedThing: {
+					_thing: null,
+					set(thing) {
+						this._thing = thing;
+						$('#currently-loaded-thing b').innerText = thing;
+					},
+					get() {
+						return this._thing;
+					}
 				},
-				strict: (errorCode, errorMsg, token) => {
-					if (errorCode == 'htmlExtension') return 'ignore';
-					return 'warn';
-				}
-			}
+				searchDatabase: [],
+				updateSearchDatabase() {
+					var visitedFiles = [this.filename];
 
-			var ktx = s => {
-				var ret = '';
-				try {
-					ret = katex.renderToString(s, katexOptions);
-				} catch (e) {
-					console.error(`Error parsing ${s}`);
-					throw Error(e);
-				}
+					var searchDatabase = [];
 
-				return ret;
-			}
+					function addThisScope(scope) {
+						searchDatabase = searchDatabase
+							.concat([...scope.defMap.keys()])
+							.concat([...scope.schemaMap.keys()]);
+					}
+
+					function addImportedScopes(scope) {
+						for (var [k, s] of scope.importMap) {
+							if (visitedFiles.includes(k)) continue;
+							visitedFiles.push(k);
+
+							addImportedScopes(s);
+							addThisScope(s);
+						}
+					}
+
+					addImportedScopes(this.program.scope);
+					addThisScope(this.program.scope);
+
+					this.searchDatabase = searchDatabase;
+				},
+				expansionList: []
+			};
 
 			document.addEventListener('click', evt => {
 				var $a = evt.target;
@@ -201,38 +248,38 @@
 
 					evt.preventDefault();
 
-					if (program.scope.hasVariable(name)) {
-						var var_ = program.scope.getVariable(name);
-						$('#popper-tooltip-holder').innerHTML = generateDefHtml(name, var_);
+					if (Globals.program.scope.hasVariable(name)) {
+						var var_ = Globals.program.scope.getVariable(name);
+						$('#popper-tooltip-holder').innerHTML = generateDefHtml(Globals.program, name, var_);
 
 						Popper.createPopper($a, $('#popper-tooltip-holder *'));
 						return;
 					}
 
-					if (program.scope.hasSchema(name)) {
-						var var_ = program.scope.getSchema(name);
-						$('#popper-tooltip-holder').innerHTML = generateSchemaHtml(name, var_, true);
+					if (Globals.program.scope.hasSchema(name)) {
+						var var_ = Globals.program.scope.getSchema(name);
+						$('#popper-tooltip-holder').innerHTML = generateSchemaHtml(Globals.program, name, var_, true);
 
 						Popper.createPopper($a, $('#popper-tooltip-holder *'));
 					}
 				}
 			});
 
-			var reloading = false;
-			var searchDatabase = [];
-
-			async function reload() {
+			async function reload(filename) {
 				if (!filename) return;
-				if (reloading) return;
-				reloading = true;
+
+				if (Globals.reloading) return;
+				Globals.reloading = true;
+				Globals.filename = filename;
+
 				$('#reload').disabled = true;
 				$('#reload svg').classList.add('rotate');
 
 				try {
 					console.log('--- PROGRAM START ---');
 					var start = new Date();
-					program = new MathOMatic();
-					await program.loadModule(filename, async filename => ({
+					Globals.program = new MathOMatic();
+					await Globals.program.loadModule(filename, async filename => ({
 						fileUri: `/${filename}.math`,
 						code: await new Promise((resolve, reject) => {
 							var xhr = new XMLHttpRequest();
@@ -247,47 +294,28 @@
 						})
 					}));
 
-					var visitedFiles = [filename];
-
-					searchDatabase = [];
-
-					function addThisScope(scope) {
-						searchDatabase = searchDatabase
-							.concat([...scope.defMap.keys()])
-							.concat([...scope.schemaMap.keys()]);
-					}
-
-					function addImportedScopes(scope) {
-						for (var [k, s] of scope.importMap) {
-							if (visitedFiles.includes(k)) continue;
-							visitedFiles.push(k);
-
-							addImportedScopes(s);
-							addThisScope(s);
-						}
-					}
-
-					addImportedScopes(program.scope);
-					addThisScope(program.scope);
+					Globals.updateSearchDatabase();
 
 					var end = new Date();
-					console.log(program);
+					console.log(Globals.program);
 					console.log('--- PROGRAM END ---');
 					console.log(`Program took ${end - start} ms`);
 
-					generateHtml(program);
+					generateHtml(Globals.program);
+
+					Globals.currentlyLoadedThing.set(filename);
 				} finally {
 					$('#reload').disabled = false;
 					$('#reload svg').classList.remove('rotate');
-					reloading = false;
+					Globals.reloading = false;
 				}
 			}
 
-			$('#reload').addEventListener('click', reload);
+			$('#reload').addEventListener('click', () => reload(Globals.filename));
 
 			hotkeys('r', (evt, handler) => {
 				evt.preventDefault();
-				reload();
+				reload(Globals.filename);
 			});
 		</script>
 		<div id="popper-tooltip-holder"></div>

@@ -1,6 +1,4 @@
-var expansionList = [];
-
-function generateTypedefHtml(k, v) {
+function generateTypedefHtml(program, k, v) {
 	return `<div class="block">`
 		+ `<p class="label"><a id="type-${k}" href="#type-${k}"><b>type</b> ${k}</a></p>`
 		+ `<div class="math">${ktx(v.toTeXString(true, true))}</div>`
@@ -15,7 +13,7 @@ function generateTypedefHtml(k, v) {
 		+ `</div>`;
 }
 
-function generateDefHtml(k, v) {
+function generateDefHtml(program, k, v) {
 	return `<div class="block">`
 		+ `<p class="label"><a id="def-${k}" href="#def-${k}"><b>${
 			v.sealed ? 'sealed ' : ''
@@ -36,7 +34,7 @@ function generateDefHtml(k, v) {
 		+ `</div>`;
 }
 
-function generateSchemaHtml(k, v, omitProofExplorer) {
+function generateSchemaHtml(program, k, v, omitProofExplorer) {
 	return `<div class="block">`
 		+ `<p class="label"><a id="def-${k}" href="#def-${k}">${
 			v.annotations.map(a => `<b class="red">${a}</b> `).join('')
@@ -52,9 +50,9 @@ function generateSchemaHtml(k, v, omitProofExplorer) {
 				? ''
 				: '<p class="label"><b>proof explorer</b></p>'
 					+ (
-						expansionList.includes(k)
+						Globals.expansionList.includes(k)
 							? `<p>${program.getProofExplorer(k, ktx, m42kup)}</p>`
-							: `<p><input type="button" value="show" class="colored button-expand-proof" onclick="this.parentElement.innerHTML = program.getProofExplorer('${k}', ktx, m42kup);expansionList.push('${k}');"></p>`
+							: `<p><input type="button" value="show" class="colored button-expand-proof" onclick="this.parentElement.innerHTML = Globals.program.getProofExplorer('${k}', ktx, m42kup);Globals.expansionList.push('${k}');"></p>`
 					)
 		)
 
@@ -134,15 +132,15 @@ function generateHtml(program) {
 		);
 
 		for (var [k, v] of scope.typedefMap) {
-			map[v._id] = generateTypedefHtml(k, v);
+			map[v._id] = generateTypedefHtml(program, k, v);
 		}
 
 		for (var [k, v] of scope.defMap) {
-			map[v._id] = generateDefHtml(k, v);
+			map[v._id] = generateDefHtml(program, k, v);
 		}
 
 		for (var [k, v] of scope.schemaMap) {
-			map[v._id] = generateSchemaHtml(k, v);
+			map[v._id] = generateSchemaHtml(program, k, v);
 		}
 
 		return `<h3 class="label">${scope.fileUri} (${Object.keys(map).length})</h3><div class="block-file">`
@@ -150,7 +148,7 @@ function generateHtml(program) {
 			+ '</div>';
 	}
 
-	var visitedFiles = [filename];
+	var visitedFiles = [Globals.filename];
 
 	function printImportedScopes(scope) {
 		var ret = '';
