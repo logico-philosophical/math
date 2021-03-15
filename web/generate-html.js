@@ -1,5 +1,73 @@
 var expansionList = [];
 
+function generateTypedefHtml(k, v) {
+	return `<div class="block">`
+		+ `<p class="label"><a id="type-${k}" href="#type-${k}"><b>type</b> ${k}</a></p>`
+		+ `<div class="math">${ktx(v.toTeXString(true, true))}</div>`
+
+		+ (
+			v.doc
+			? '<p class="label"><b>description</b></p>'
+				+ `<p class="description">${m42kup.render(v.doc)}</p>`
+			: ''
+		)
+
+		+ `</div>`;
+}
+
+function generateDefHtml(k, v) {
+	return `<div class="block">`
+		+ `<p class="label"><a id="def-${k}" href="#def-${k}"><b>${
+			v.sealed ? 'sealed ' : ''
+		}definition</b> ${k}</a>${!v.params
+				? ': ' + v.type
+				: `(${v.params.map(p => p.toSimpleString()).join(', ')})`
+					+ `: ${v.type.resolve().to}`
+		}</p>`
+		+ `<div class="math">${ktx(v.toTeXString(true, true))}</div>`
+
+		+ (
+			v.doc
+			? '<p class="label"><b>description</b></p>'
+				+ `<p class="description">${m42kup.render(v.doc)}</p>`
+			: ''
+		)
+
+		+ `</div>`;
+}
+
+function generateSchemaHtml(k, v, omitProofExplorer) {
+	return `<div class="block">`
+		+ `<p class="label"><a id="def-${k}" href="#def-${k}">${
+			v.annotations.map(a => `<b class="red">${a}</b> `).join('')
+		}<b>${v.schemaType}</b> ${k}</a>(${v.params.map(p => p.toSimpleString()).join(', ')})${
+			v.context.usingList.length
+				? ` <b>using</b> ${v.context.usingList.map(u => u.name).join(', ')}`
+				: ''
+		}</p>`
+		+ `<div class="math">${ktx(v.toTeXString(true, true))}</div>`
+
+		+ (
+			!v.expr || v.schemaType == 'axiom' || omitProofExplorer
+				? ''
+				: '<p class="label"><b>proof explorer</b></p>'
+					+ (
+						expansionList.includes(k)
+							? `<p>${program.getProofExplorer(k, ktx)}</p>`
+							: `<p><input type="button" value="show" class="colored button-expand-proof" onclick="this.parentElement.innerHTML = program.getProofExplorer('${k}', ktx);expansionList.push('${k}');"></p>`
+					)
+		)
+
+		+ (
+			v.doc
+			? '<p class="label"><b>description</b></p>'
+				+ `<p class="description">${m42kup.render(v.doc)}</p>`
+			: ''
+		)
+
+		+ `</div>`;
+}
+
 function generateHtml(program) {
 	console.log('--- HTML GENERATION START ---');
 	var start = new Date(), end;
@@ -66,73 +134,15 @@ function generateHtml(program) {
 		);
 
 		for (var [k, v] of scope.typedefMap) {
-			map[v._id] = `<div class="block">`
-				+ `<p class="label"><a id="type-${k}" href="#type-${k}"><b>type</b> ${k}</a></p>`
-				+ `<div class="math">${ktx(v.toTeXString(true, true))}</div>`
-
-				+ (
-					v.doc
-					? '<p class="label"><b>description</b></p>'
-						+ `<p class="description">${m42kup.render(v.doc)}</p>`
-					: ''
-				)
-
-				+ `</div>`;
+			map[v._id] = generateTypedefHtml(k, v);
 		}
 
 		for (var [k, v] of scope.defMap) {
-			map[v._id] = `<div class="block">`
-				+ `<p class="label"><a id="def-${k}" href="#def-${k}"><b>${
-					v.sealed ? 'sealed ' : ''
-				}definition</b> ${k}</a>${!v.params
-						? ': ' + v.type
-						: `(${v.params.map(p => p.toSimpleString()).join(', ')})`
-							+ `: ${v.type.resolve().to}`
-				}</p>`
-				+ `<div class="math">${ktx(v.toTeXString(true, true))}</div>`
-
-				+ (
-					v.doc
-					? '<p class="label"><b>description</b></p>'
-						+ `<p class="description">${m42kup.render(v.doc)}</p>`
-					: ''
-				)
-
-				+ `</div>`;
+			map[v._id] = generateDefHtml(k, v);
 		}
 
 		for (var [k, v] of scope.schemaMap) {
-			map[v._id] = `<div class="block">`
-				+ `<p class="label"><a id="def-${k}" href="#def-${k}">${
-					v.annotations.map(a => `<b class="red">${a}</b> `).join('')
-				}<b>${v.schemaType}</b> ${k}</a>(${v.params.map(p => p.toSimpleString()).join(', ')})${
-					v.context.usingList.length
-						? ` <b>using</b> ${v.context.usingList.map(u => u.name).join(', ')}`
-						: ''
-				}</p>`
-				+ `<div class="math">${ktx(v.toTeXString(true, true))}</div>`
-
-				+ (
-					v.expr
-						? v.schemaType == 'axiom'
-							? ''
-							: '<p class="label"><b>proof explorer</b></p>'
-								+ (
-									expansionList.includes(k)
-										? `<p>${program.getProofExplorer(k, ktx)}</p>`
-										: `<p><input type="button" value="show" class="colored button-expand-proof" onclick="this.parentElement.innerHTML = program.getProofExplorer('${k}', ktx);expansionList.push('${k}');"></p>`
-								)
-						: ''
-				)
-
-				+ (
-					v.doc
-					? '<p class="label"><b>description</b></p>'
-						+ `<p class="description">${m42kup.render(v.doc)}</p>`
-					: ''
-				)
-
-				+ `</div>`;
+			map[v._id] = generateSchemaHtml(k, v);
 		}
 
 		return `<h3 class="label">${scope.fileUri} (${Object.keys(map).length})</h3><div class="block-file">`

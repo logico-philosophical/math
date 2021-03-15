@@ -317,6 +317,10 @@ table.explorer td.bbb {
 	flex-shrink: 0;
 }
 
+#popper-tooltip-holder .block {
+	background-color: aliceblue;
+}
+
 .CodeMirror {
 	z-index: 10000!important;
 	border: 1px #666 solid;

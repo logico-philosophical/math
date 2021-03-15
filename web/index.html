@@ -7,11 +7,12 @@
 		<script src="../dist/math-o-matic.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/m42kup@0.3.0/dist/m42kup.min.js"></script>
-		<script src="https://unpkg.com/hotkeys-js/dist/hotkeys.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/hotkeys-js@3.8.3/dist/hotkeys.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/codemirror@5.57.0/lib/codemirror.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/codemirror@5.57.0/keymap/sublime.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/codemirror@5.57.0/addon/hint/show-hint.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/codemirror@5.57.0/addon/display/placeholder.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
 		<script>
 			m42kup.set({
 				katex
@@ -143,6 +144,19 @@
 			document.addEventListener('click', evt => {
 				var $a = evt.target;
 
+				while ($a.id != 'popper-tooltip-holder') {
+					$a = $a.parentElement;
+
+					if (!$a) {
+						$('#popper-tooltip-holder').innerHTML = '';
+						return;
+					}
+				}
+			});
+
+			document.addEventListener('click', evt => {
+				var $a = evt.target;
+
 				while (!($a instanceof HTMLAnchorElement)) {
 					$a = $a.parentElement;
 
@@ -167,6 +181,39 @@
 						};
 						
 						$el.addEventListener('animationend', listener);
+					}
+				}
+
+				match = $a.getAttribute('href').match(/^#def-(.+)$/);
+
+				if (match) {
+					var name = match[1];
+
+					var $table = $a;
+
+					while (!($table instanceof HTMLTableElement)) {
+						$table = $table.parentElement;
+
+						if (!$table) return;
+					}
+
+					if (!$table.classList.contains('explorer')) return;
+
+					evt.preventDefault();
+
+					if (program.scope.hasVariable(name)) {
+						var var_ = program.scope.getVariable(name);
+						$('#popper-tooltip-holder').innerHTML = generateDefHtml(name, var_);
+
+						Popper.createPopper($a, $('#popper-tooltip-holder *'));
+						return;
+					}
+
+					if (program.scope.hasSchema(name)) {
+						var var_ = program.scope.getSchema(name);
+						$('#popper-tooltip-holder').innerHTML = generateSchemaHtml(name, var_, true);
+
+						Popper.createPopper($a, $('#popper-tooltip-holder *'));
 					}
 				}
 			});
@@ -243,5 +290,6 @@
 				reload();
 			});
 		</script>
+		<div id="popper-tooltip-holder"></div>
 	</body>
 </html>
