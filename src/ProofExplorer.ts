@@ -7,9 +7,8 @@ import Scope from "./Scope";
 
 export default class ProofExplorer {
 	public static get(scope: Scope, name: string, ktx): string {
-		var DIAMOND = '&#x25C7;',
-			DOWN = '&#x25BC;';
-		// var UP = '&#x25B2;';
+		var REPEAT = '<b>R</b>',
+			ELIMINATE = '<b>⊢E</b>';
 		
 		if (!scope.hasSchema(name)) {
 			throw Error('wut');
@@ -31,7 +30,7 @@ export default class ProofExplorer {
 			for (var i = 0; i < left.length; i++)
 				while(left[i].length) left[i].pop();
 	
-			return `<tr><th>${ctr}</th>${htmlLeft}<td ${bbb ? 'class="bbb" ' : ''}colspan="${ncols-padding}">${h1}</td>${h2 instanceof Array ? h2.map(e => `<td>${e}</td>`).join('') : `<td colspan="2">${h2}</td>`}</tr>`;
+			return `<tr><th>${ctr}</th>${htmlLeft}<td ${bbb ? 'class="bbb" ' : ''}colspan="${ncols-padding}">${h1}</td>${h2 instanceof Array ? h2.map((e, i) => `<td${i == 0 ? ' style="text-align:center"' : ''}>${e}</td>`).join('') : `<td colspan="2">${h2}</td>`}</tr>`;
 		}
 
 		function exprToHtml(expr: number | [number, number] | Expr, expand?: boolean): string {
@@ -66,7 +65,7 @@ export default class ProofExplorer {
 		})(innertree);
 
 		var html = '<table class="explorer">';
-		html += `<tr><th>#</th><th colspan="${ncols}">expr</th><th colspan="2">rule</th></tr>`;
+		html += `<tr><th>#</th><th colspan="${ncols}">expression</th><th colspan="2">rule</th></tr>`;
 		
 		html += (function tree2html(lines: ProofType[], left: Variable[][]) {
 			return lines.map(line => {
@@ -120,7 +119,7 @@ export default class ProofExplorer {
 							line.ctr,
 							left,
 							exprToHtml(line.expr, true),
-							[DIAMOND, exprToHtml(line.num)]
+							[REPEAT, exprToHtml(line.num)]
 						);
 					case 'RS':
 					case 'RCX':
@@ -128,21 +127,21 @@ export default class ProofExplorer {
 							line.ctr,
 							left,
 							exprToHtml(line.expr, true),
-							[DIAMOND, exprToHtml(line.expr)]
+							[REPEAT, exprToHtml(line.expr)]
 						);
 					case 'RC':
 						return getHtmlLine(
 							line.ctr,
 							left,
 							exprToHtml(line.expr, true),
-							[DIAMOND, `${exprToHtml(line.schema)} (${line.args.map(a => exprToHtml(a)).join(', ')})`]
+							[REPEAT, `${exprToHtml(line.schema)} (${line.args.map(a => exprToHtml(a)).join(', ')})`]
 						);
 					case 'E':
 						return getHtmlLine(
 							line.ctr,
 							left,
 							exprToHtml(line.reduced, true),
-							[DOWN, `${exprToHtml(line.subject)}${line.args ? ' (' + line.args.map(a => exprToHtml(a)).join(', ') + ')' : ''} [${line.antecedents.map(a => exprToHtml(a)).join(', ')}]`]
+							[ELIMINATE, `${exprToHtml(line.subject)}${line.args ? ' (' + line.args.map(a => exprToHtml(a)).join(', ') + ')' : ''} [${line.antecedents.map(a => exprToHtml(a)).join(', ')}]`]
 						);
 					case 'NP':
 						return getHtmlLine(
