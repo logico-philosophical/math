@@ -53,8 +53,8 @@ function generateSchemaHtml(k, v, omitProofExplorer) {
 				: '<p class="label"><b>proof explorer</b></p>'
 					+ (
 						expansionList.includes(k)
-							? `<p>${program.getProofExplorer(k, ktx)}</p>`
-							: `<p><input type="button" value="show" class="colored button-expand-proof" onclick="this.parentElement.innerHTML = program.getProofExplorer('${k}', ktx);expansionList.push('${k}');"></p>`
+							? `<p>${program.getProofExplorer(k, ktx, m42kup)}</p>`
+							: `<p><input type="button" value="show" class="colored button-expand-proof" onclick="this.parentElement.innerHTML = program.getProofExplorer('${k}', ktx, m42kup);expansionList.push('${k}');"></p>`
 					)
 		)
 

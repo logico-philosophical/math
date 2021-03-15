@@ -1702,7 +1702,10 @@ theorem schroeder_bernstein_1($A$ cls a: @12, $B$ cls b: @13, cls f: @11, cls g:
 	is_injection(f, a, b), is_injection(g, b, a) |- {
 		with ($A^\ast$ cls aa = bigcup2(omega, (cls n) => rel_im_set(fun_iterated(rel_composite(g, f), n), setminus(a, rel_im(g))))) {
 			with ($\mathfrak h$ fun hh = (cls x) => if(in(x, aa), funcall(g, funcall(f, x)), x)) {
-				with (cls h = map(hh, a)) {
+				with (
+					"[$A]에서 [$\operatorname{im} g]로의 함수. 이제 이것이 전단사임을 보일 것이다."
+					cls h = map(hh, a)
+				) {
 					$f_is_fun = @h1 > Ae1;
 					$g_is_fun = @h2 > Ae1;
 					$gf_is_fun = [$f_is_fun; $g_is_fun] > fun_composite_is_fun;

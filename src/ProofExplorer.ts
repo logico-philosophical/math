@@ -6,7 +6,7 @@ import { ProofType } from "./ProofType";
 import Scope from "./Scope";
 
 export default class ProofExplorer {
-	public static get(scope: Scope, name: string, ktx): string {
+	public static get(scope: Scope, name: string, ktx, m42kup): string {
 		var REPEAT = '<b>R</b>',
 			ELIMINATE = '<b>⊢E</b>';
 		
@@ -154,7 +154,7 @@ export default class ProofExplorer {
 						return getHtmlLine(
 							line.ctr,
 							left,
-							exprToHtml(line.var),
+							exprToHtml(line.var) + (line.var.doc ? `${m42kup.render(line.var.doc)}` : ''),
 							'definition'
 						);
 					case 'bydef':

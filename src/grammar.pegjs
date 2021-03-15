@@ -399,6 +399,7 @@ tee =
 
 with =
 	'with' _ '(' _
+	doc:(documentation __)?
 	tex:(tex __)?
 	type:type __
 	varname:ident _
@@ -414,7 +415,7 @@ with =
 			with: {
 				_type: 'defv',
 				isParam: false,
-				doc: null,
+				doc: doc ? doc[0] : null,
 				tex: tex ? tex[0] : null,
 				sealed: false,
 				type,
