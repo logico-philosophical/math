@@ -123,13 +123,18 @@ export default class ProofExplorer {
 							[REPEAT, exprToHtml(line.num)]
 						);
 					case 'RS':
-					case 'RC':
-						console.log(line._type, line.expr + '');
 						return getHtmlLine(
 							line.ctr,
 							left,
 							exprToHtml(line.expr, true),
 							[REPEAT, exprToHtml(line.expr)]
+						);
+					case 'RC':
+						return getHtmlLine(
+							line.ctr,
+							left,
+							exprToHtml(line.expr, true),
+							[SE, exprToHtml(line.expr)]
 						);
 					case 'SE':
 						return getHtmlLine(
