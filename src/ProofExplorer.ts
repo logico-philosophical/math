@@ -8,7 +8,8 @@ import Scope from "./Scope";
 export default class ProofExplorer {
 	public static get(scope: Scope, name: string, ktx, m42kup): string {
 		var REPEAT = '<b>R</b>',
-			ELIMINATE = '<b>⊢E</b>';
+			TE = '<b>⊢E</b>',
+			SE = '<b>↦E</b>';
 		
 		if (!scope.hasSchema(name)) {
 			throw Error('wut');
@@ -122,26 +123,27 @@ export default class ProofExplorer {
 							[REPEAT, exprToHtml(line.num)]
 						);
 					case 'RS':
-					case 'RCX':
+					case 'RC':
+						console.log(line._type, line.expr + '');
 						return getHtmlLine(
 							line.ctr,
 							left,
 							exprToHtml(line.expr, true),
 							[REPEAT, exprToHtml(line.expr)]
 						);
-					case 'RC':
+					case 'SE':
 						return getHtmlLine(
 							line.ctr,
 							left,
 							exprToHtml(line.expr, true),
-							[REPEAT, `${exprToHtml(line.schema)} (${line.args.map(a => exprToHtml(a)).join(', ')})`]
+							[SE, `${exprToHtml(line.schema)} (${line.args.map(a => exprToHtml(a)).join(', ')})`]
 						);
-					case 'E':
+					case 'TE':
 						return getHtmlLine(
 							line.ctr,
 							left,
 							exprToHtml(line.reduced, true),
-							[ELIMINATE, `${exprToHtml(line.subject)}${line.args ? ' (' + line.args.map(a => exprToHtml(a)).join(', ') + ')' : ''} [${line.antecedents.map(a => exprToHtml(a)).join(', ')}]`]
+							[TE, `${exprToHtml(line.subject)}${line.args ? ' (' + line.args.map(a => exprToHtml(a)).join(', ') + ')' : ''} [${line.antecedents.map(a => exprToHtml(a)).join(', ')}]`]
 						);
 					case 'NP':
 						return getHtmlLine(

@@ -2,7 +2,7 @@ import Fun from "./exprs/Fun";
 import Expr from "./exprs/Expr";
 import Variable from "./exprs/Variable";
 
-export type ProofType = R | RC | RCX | RS | H | NP | Wut | T | V | E | Def | ByDef;
+export type ProofType = R | SE | RC | RS | H | NP | Wut | T | V | TE | Def | ByDef;
 
 /** repeat */
 interface R {
@@ -12,16 +12,16 @@ interface R {
 	expr: Expr;
 }
 
-interface RC {
-	_type: 'RC';
+interface SE {
+	_type: 'SE';
 	ctr: number;
 	schema: number | [number, number];
 	args: Expr[];
 	expr: Expr;
 }
 
-interface RCX {
-	_type: 'RCX';
+interface RC {
+	_type: 'RC';
 	ctr: number;
 	expr: Expr;
 }
@@ -67,8 +67,8 @@ interface V {
 	params: Variable[];
 }
 
-interface E {
-	_type: 'E';
+interface TE {
+	_type: 'TE';
 	ctr: number;
 	subject: number | [number, number] | Expr;
 	args: Expr[];

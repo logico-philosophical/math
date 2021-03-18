@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "nodemon": "nodemon -e * --watch src/ --watch m42kup-builder.config.js --exec m42kup-builder"
+    "build": "m42kup-builder",
+    "nodemon": "nodemon -e * --watch src/ --watch m42kup-builder.config.js --exec npm run build"
   },
   "keywords": [],
   "author": "",

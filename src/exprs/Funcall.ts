@@ -203,7 +203,7 @@ export default class Funcall extends Expr {
 
 		if (hypnumMap.has(this.fun)) {
 			return [{
-				_type: 'RC',
+				_type: 'SE',
 				ctr: ctr.next(),
 				schema: hypnumMap.get(this.fun),
 				args: this.args,
@@ -213,7 +213,7 @@ export default class Funcall extends Expr {
 
 		if ($Map.has(this.fun)) {
 			return [{
-				_type: 'RC',
+				_type: 'SE',
 				ctr: ctr.next(),
 				schema: $Map.get(this.fun),
 				args: this.args,
@@ -223,7 +223,7 @@ export default class Funcall extends Expr {
 
 		if (this.fun instanceof Schema && this.fun.name) {
 			return [{
-				_type: 'RCX',
+				_type: 'RC',
 				ctr: ctr.next(),
 				expr: this
 			}];
@@ -242,7 +242,7 @@ export default class Funcall extends Expr {
 		return [
 			...schemalines,
 			{
-				_type: 'RC',
+				_type: 'SE',
 				ctr: ctr.next(),
 				schema: schemalines[schemalines.length - 1].ctr,
 				args: this.args,

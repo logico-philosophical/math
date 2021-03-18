@@ -234,7 +234,7 @@ ${as.expandMeta(true)}
 		if (this.rightEqualsResult && this.rightEqualsResult.length) {
 			ret.push(
 				{
-					_type: 'E',
+					_type: 'TE',
 					ctr: ctr.next(),
 					subject: subjectnum,
 					args,
@@ -251,7 +251,7 @@ ${as.expandMeta(true)}
 			);
 		} else {
 			ret.push({
-				_type: 'E',
+				_type: 'TE',
 				ctr: ctr.next(),
 				subject: subjectnum,
 				args,

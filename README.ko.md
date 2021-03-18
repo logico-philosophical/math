@@ -10,7 +10,7 @@
 
 [English](/README.md) &middot; **한국어**
 
-math-o-matic은 공리계(axiomatic system)를 만들고, 그 공리계 상에서의 정리(theorem)들을 증명할 수 있도록 하는 추론 체계(deductive system)입니다. 엄밀한 증명을 읽고 쓰기 쉽게 하는 것을 목표로 합니다. [메인 페이지](https://logico-philosophical.github.io/math-o-matic/web/index.html)에서 페이지 하단 버튼 중 하나를 눌러 현재의 공리계를 볼 수 있습니다.
+math-o-matic은 공리계를 만들고, 그 공리계 상에서의 정리들을 증명할 수 있도록 하는 추론 체계(deductive system)입니다. 엄밀한 증명을 읽고 쓰기 쉽게 하는 것을 목표로 합니다. [메인 페이지](https://logico-philosophical.github.io/math-o-matic/web/index.html)에서 페이지 하단 버튼 중 하나를 눌러 현재의 공리계를 볼 수 있습니다.
 
 ## 코드 예시
 
