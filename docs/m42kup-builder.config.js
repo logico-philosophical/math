@@ -39,8 +39,15 @@ module.exports = {
 			]
 		},
 		{
-			name: '우선순위',
-			file: 'precedence'
+			name: '개발자를 위한 명세',
+			dir: 'dev',
+			list: [
+				{
+					name: '우선순위',
+					file: 'precedence'
+				}
+			]
 		}
+		
 	]
 };
