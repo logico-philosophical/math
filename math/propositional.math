@@ -2,25 +2,30 @@
 type st;
 
 "implies (TFTT)."
-$!<prec=598>#1<<\to>>#2$
+[precedence=598]
+$#1<<\to>>#2$
 st I(st p, st q);
 
 "not (FT)."
-$!<prec=250><<\neg>>#1$
+[precedence=250]
+$<<\neg>>#1$
 st N(st p);
 
 "and (TFFF)."
-$!<prec=596>#1<<\land>>#2$
+[precedence=596]
+$#1<<\land>>#2$
 st A(st p, st q);
 
 "or (TTTF)."
-$!<prec=596>#1<<\lor>>#2$
+[precedence=596]
+$#1<<\lor>>#2$
 sealed st O(st p, st q) {
 	I(N(p), q)
 }
 
 "iff (TFFT)."
-$!<prec=599>#1<<\leftrightarrow>>#2$
+[precedence=599]
+$#1<<\leftrightarrow>>#2$
 sealed st E(st p, st q) {
 	A(I(p, q), I(q, p))
 }

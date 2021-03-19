@@ -107,6 +107,7 @@ defschemaparam =
  
 defun =
 	doc:(documentation __)?
+	tex_attributes:(tex_attributes __)?
 	tex:(tex __)?
 	sealed:('sealed' __)?
 	rettype:type __
@@ -132,6 +133,9 @@ defun =
 		return {
 			_type: 'defun',
 			doc: doc ? doc[0] : null,
+			tex_attributes: tex_attributes ? tex_attributes[0] : {
+				precedence: false
+			},
 			tex: tex ? tex[0] : null,
 			sealed: !!sealed,
 			rettype,
@@ -573,6 +577,13 @@ dollar_ident =
 documentation =
 	'"' b:$(!'"' a:. {return a})* '"' {
 		return b.replace(/\r\n|\r/g, '\n');
+	}
+
+tex_attributes =
+	'[' _ 'precedence=' _ precedence:$[0-9]+ _ ']' {
+		return {
+			precedence: precedence * 1
+		}
 	}
 
 tex =

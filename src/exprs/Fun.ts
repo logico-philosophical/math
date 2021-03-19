@@ -27,16 +27,6 @@ export default abstract class Fun extends Expr implements Nameable {
 			throw Expr.error('Cannot seal a primitive fun', trace);
 		}
 		
-		var precedence = false;
-
-		if (tex) {
-			var parsed = Expr.parseTeX(tex);
-			precedence = parsed.precedence;
-			tex = parsed.code;
-		} else {
-			tex = null;
-		}
-		
 		super(
 			doc, tex,
 			new ((rettype || expr.type) instanceof ObjectType ? FunctionalObjectType : FunctionalMetaType)({
@@ -48,7 +38,6 @@ export default abstract class Fun extends Expr implements Nameable {
 
 		this.annotations = annotations;
 		this.sealed = sealed;
-		this.precedence = precedence;
 		this.name = name;
 		this.params = params;
 		this.expr = expr;

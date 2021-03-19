@@ -174,7 +174,7 @@ export default abstract class Expr {
 			throw Error('wut');
 		}
 
-		return prec;
+		return prec || false;
 	}
 
 	public shouldConsolidate(prec: Precedence): boolean {
@@ -195,17 +195,6 @@ export default abstract class Expr {
 			'^': '\\textasciicircum',
 			'\\': '\\textbackslash'
 		})[m]);
-	}
-
-	public static parseTeX(tex: string) {
-		var precedence: Precedence = false;
-
-		var code = tex.replace(/^!<prec=([0-9]+)>/, (match, g1) => {
-			precedence = g1 * 1;
-			return '';
-		});
-
-		return {precedence, code};
 	}
 
 	public static makeTeXName(name: string): string {

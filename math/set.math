@@ -2,7 +2,8 @@ import propositional;
 import predicate;
 
 "집합론에서 정의하는 [$\in] 관계."
-$!<prec=450>#1<<\in>>#2$
+[precedence=450]
+$#1<<\in>>#2$
 st in(cls x, cls y);
 
 $\left(\cdot<<\in>>#1\right)$
@@ -15,25 +16,30 @@ pr contains(cls x) {
 	(cls y) => in(x, y)
 }
 
-$!<prec=450>#1<<\notin>>#2$
+[precedence=450]
+$#1<<\notin>>#2$
 st Nin(cls x, cls y) {
 	N(in(x, y))
 }
 
-$!<prec=350>#1<<\subseteq>>#2$
+[precedence=350]
+$#1<<\subseteq>>#2$
 st subset(cls x, cls y) {
 	U((cls z) => I(in(z, x), in(z, y)))
 }
 
-$!<prec=350>#1<<=>>#2$
+[precedence=350]
+$#1<<=>>#2$
 st eq(cls x, cls y);
 
-$!<prec=350>#1<<\neq>>#2$
+[precedence=350]
+$#1<<\neq>>#2$
 st neq(cls x, cls y) {
 	N(eq(x, y))
 }
 
-$!<prec=350>#1<<\subsetneq>>#2$
+[precedence=350]
+$#1<<\subsetneq>>#2$
 st subsetneq(cls x, cls y) {
 	A(subset(x, y), neq(x, y))
 }
@@ -268,22 +274,26 @@ theorem call_eq_i(fun f, cls x: @11, cls y: @12) {
 }
 
 "어떤 class 내에서의 forall."
-$!<prec=249><<\forall>>_{\in #1}#2$
+[precedence=249]
+$<<\forall>>_{\in #1}#2$
 st Uin($A$ cls a, pr f) {
 	U((cls z) => I(in(z, a), f(z)))
 }
 
-$!<prec=249><<\forall^2>>_{\in #1\times #2}#3$
+[precedence=249]
+$<<\forall^2>>_{\in #1\times #2}#3$
 st Uin2($A$ cls a, $B$ cls b, pr2 f) {
 	Uin(a, (cls x) => Uin(b, (cls y) => f(x, y)))
 }
 
-$!<prec=249><<\forall^3>>_{\in #1\times #2\times #3}#4$
+[precedence=249]
+$<<\forall^3>>_{\in #1\times #2\times #3}#4$
 st Uin3($A$ cls a, $B$ cls b, $C$ cls c, pr3 f) {
 	Uin(a, (cls x) => Uin(b, (cls y) => Uin(c, (cls z) => f(x, y, z))))
 }
 
-$!<prec=249><<\forall^4>>_{\in #1\times #2\times #3\times #4}#5$
+[precedence=249]
+$<<\forall^4>>_{\in #1\times #2\times #3\times #4}#5$
 st Uin4($A$ cls a, $B$ cls b, $C$ cls c, $D$ cls d, pr4 f) {
 	Uin(a, (cls x) => Uin(b, (cls y) => Uin(c, (cls z) => Uin(d, (cls w) => f(x, y, z, w)))))
 }
@@ -431,22 +441,26 @@ theorem UUin_to_UinU($A$ cls a, pr2 f) {
 }
 
 "어떤 class 내에서의 exists. Uin과 달리 and로 연결된다."
-$!<prec=249><<\exists>>_{\in #1}#2$
+[precedence=249]
+$<<\exists>>_{\in #1}#2$
 st Xin($A$ cls a, pr f) {
 	X((cls z) => A(in(z, a), f(z)))
 }
 
-$!<prec=249><<\exists^2>>_{\in #1\times #2}#3$
+[precedence=249]
+$<<\exists^2>>_{\in #1\times #2}#3$
 st Xin2($A$ cls a, $B$ cls b, pr2 f) {
 	Xin(a, (cls x) => Xin(b, (cls y) => f(x, y)))
 }
 
-$!<prec=249><<\exists^3>>_{\in #1\times #2\times #3}#4$
+[precedence=249]
+$<<\exists^3>>_{\in #1\times #2\times #3}#4$
 st Xin3($A$ cls a, $B$ cls b, $C$ cls c, pr3 f) {
 	Xin(a, (cls x) => Xin(b, (cls y) => Xin(c, (cls z) => f(x, y, z))))
 }
 
-$!<prec=249><<\exists^4>>_{\in #1\times #2\times #3\times #4}#5$
+[precedence=249]
+$<<\exists^4>>_{\in #1\times #2\times #3\times #4}#5$
 st Xin4($A$ cls a, $B$ cls b, $C$ cls c, $D$ cls d, pr4 f) {
 	Xin(a, (cls x) => Xin(b, (cls y) => Xin(c, (cls z) => Xin(d, (cls w) => f(x, y, z, w)))))
 }
@@ -684,7 +698,8 @@ theorem is_set_i_O(cls x, cls y, cls z) {
 }
 
 "[$f]를 만족하는 것들이 서로 같다."
-$!<prec=249><<\exists_{\leq 1}>>#1$
+[precedence=249]
+$<<\exists_{\leq 1}>>#1$
 st Q(pr f) {
 	U2((cls x, cls y) => I(A(f(x), f(y)), eq(x, y)))
 }
@@ -765,7 +780,8 @@ theorem QU(pr f: @11, pr g: @r1) {
 }
 
 "유일 존재 양화(unique existential quantification)."
-$!<prec=249><<\exists!>>#1$
+[precedence=249]
+$<<\exists!>>#1$
 st Xq(pr f) {
 	A(X(f), Q(f))
 }
@@ -1089,7 +1105,8 @@ theorem universe_is_not_set() {
 }
 
 "교집합."
-$!<prec=300>#1<<\cap>>#2$
+[precedence=300]
+$#1<<\cap>>#2$
 cls cap(cls x, cls y) {
 	setbuilder((cls z) => A(in(z, x), in(z, y)))
 }
@@ -1137,7 +1154,8 @@ theorem cap_commutative(cls x, cls y) {
 }
 
 "합집합."
-$!<prec=300>#1<<\cup>>#2$
+[precedence=300]
+$#1<<\cup>>#2$
 cls cup(cls x, cls y) {
 	setbuilder((cls z) => O(in(z, x), in(z, y)))
 }
@@ -1432,7 +1450,8 @@ theorem subset_cap_is_subset(cls x: @11, cls y: @12) {
 }
 
 "차집합."
-$!<prec=300>#1<<\setminus>>#2$
+[precedence=300]
+$#1<<\setminus>>#2$
 cls setminus(cls x, cls y) {
 	setbuilder((cls z) => A(in(z, x), Nin(z, y)))
 }

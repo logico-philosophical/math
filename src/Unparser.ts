@@ -93,6 +93,9 @@ function recurseInternal(
 				_type: 'defun';
 				doc: string;
 				tex: string;
+				tex_attributes: {
+					precedence: number
+				};
 				sealed: boolean;
 				rettype: TypeObject;
 				name: string;
@@ -102,7 +105,7 @@ function recurseInternal(
 			} */
 			return `${
 	line.doc ? `"${line.doc}"\n` : ''
-}${
+}${typeof line.tex_attributes.precedence == 'number' ? `[precedence=${line.tex_attributes.precedence}]\n` : ''}${
 	line.tex ? `$${line.tex}$\n` : ''
 }${line.sealed ? 'sealed ' : ''}${recurse(line.rettype, Context.NORMAL, 0)} ${line.name}(${
 	line.params.map(param => recurse(param, Context.NORMAL, 0)).join(', ')

@@ -94,52 +94,61 @@ pr2 Nf2(pr2 f) {
 }
 
 "보편 양화(universal quantification). 일반적인 표기법과는 다르게 pr을 입력으로 받는다. 또한 [*domain of discourse는 공집합일 수도 있다]."
-$!<prec=249><<\forall>>#1$
+[precedence=249]
+$<<\forall>>#1$
 st U(pr f);
 
 "pr2를 위한 보편 양화."
-$!<prec=249><<\forall^2>>#1$
+[precedence=249]
+$<<\forall^2>>#1$
 st U2(pr2 f) {
 	U((cls x) => U((cls y) => f(x, y)))
 }
 
 "pr3을 위한 보편 양화."
-$!<prec=249><<\forall^3>>#1$
+[precedence=249]
+$<<\forall^3>>#1$
 st U3(pr3 f) {
 	U((cls x) => U((cls y) => U((cls z) => f(x, y, z))))
 }
 
 "pr4를 위한 보편 양화."
-$!<prec=249><<\forall^4>>#1$
+[precedence=249]
+$<<\forall^4>>#1$
 st U4(pr4 f) {
 	U((cls x) => U((cls y) => U((cls z) => U((cls w) => f(x, y, z, w)))))
 }
 
 "존재 양화(existential quantification). 일반적인 표기법과는 다르게 pr을 입력으로 받으며 U에 의존한다. 또한 [*domain of discourse는 공집합일 수도 있다]."
-$!<prec=249><<\exists>>#1$
+[precedence=249]
+$<<\exists>>#1$
 st X(pr f) {
 	N(U(Nf(f)))
 }
 
-$!<prec=249><<\nexists>>#1$
+[precedence=249]
+$<<\nexists>>#1$
 st NX(pr f) {
 	N(X(f))
 }
 
 "pr2를 위한 존재 양화. X에 의존한다."
-$!<prec=249><<\exists^2>>#1$
+[precedence=249]
+$<<\exists^2>>#1$
 st X2(pr2 f) {
 	X((cls x) => X((cls y) => f(x, y)))
 }
 
 "pr3를 위한 존재 양화."
-$!<prec=249><<\exists^3>>#1$
+[precedence=249]
+$<<\exists^3>>#1$
 st X3(pr3 f) {
 	X((cls x) => X((cls y) => X((cls z) => f(x, y, z))))
 }
 
 "pr4를 위한 존재 양화."
-$!<prec=249><<\exists^4>>#1$
+[precedence=249]
+$<<\exists^4>>#1$
 st X4(pr4 f) {
 	X((cls x) => X((cls y) => X((cls z) => X((cls w) => f(x, y, z, w)))))
 }

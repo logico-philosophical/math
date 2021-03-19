@@ -242,7 +242,8 @@ cls setbuilder2_pair(fun2 f, pr2 g) {
 }
 
 "곱집합(cartesian product)."
-$!<prec=300>#1<<\times>>#2$
+[precedence=300]
+$#1<<\times>>#2$
 cls cartesian($A$ cls a, $B$ cls b) {
 	setbuilder_pair((cls x, cls y) => A(in(x, a), in(y, b)))
 }
@@ -338,7 +339,8 @@ st rel_call(${\sim}$ cls r, cls a, cls b) {
 }
 
 "이항관계의 정의역(domain)."
-$!<prec=200><<\operatorname{dom}>>#1$
+[precedence=200]
+$<<\operatorname{dom}>>#1$
 cls rel_dom($R$ cls r) {
 	setbuilder((cls x) => X((cls y) => in(pair(x, y), r)))
 }
@@ -355,7 +357,8 @@ theorem rel_dom_in_i($R$ cls r: @12, cls x: @111, cls y: @112) {
 }
 
 "이항관계의 치역(image)."
-$!<prec=200><<\operatorname{im}>>#1$
+[precedence=200]
+$<<\operatorname{im}>>#1$
 cls rel_im($R$ cls r) {
 	setbuilder((cls y) => X((cls x) => in(pair(x, y), r)))
 }
@@ -400,7 +403,8 @@ theorem rel_im_set_in_i($R$ cls r: @22, $A$ cls a: @12, cls x: @11, cls y: @212)
 }
 
 "이항관계의 역(inverse)."
-$!<prec=190>{#1}^{<<-1>>}$
+[precedence=190]
+${#1}^{<<-1>>}$
 sealed cls rel_inverse(cls x) {
 	setbuilder_pair((cls a, cls b) => in(pair(b, a), x))
 }
@@ -453,7 +457,8 @@ theorem rel_inverse_is_rel($R$ cls r: @11, $A$ cls a: @12, $B$ cls b: @13) using
 }
 
 "이항관계의 합성(composition)."
-$!<prec=300>#1 <<\circ>> #2$
+[precedence=300]
+$#1 <<\circ>> #2$
 cls rel_composite(cls x, cls y) {
 	setbuilder_pair((cls a, cls c) => X((cls b) => A(in(pair(a, b), y), in(pair(b, c), x))))
 }

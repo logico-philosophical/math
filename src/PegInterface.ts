@@ -147,6 +147,7 @@ export default class PI {
 		var scope = parentScope.extend('fun', obj._type == 'defun' ? obj.name : '<anonymous>', obj.location);
 
 		var doc = null,
+			precedence : false | number = false,
 			tex = null,
 			sealed = false,
 			rettype: ObjectType = null,
@@ -155,6 +156,7 @@ export default class PI {
 
 		if (obj._type == 'defun') {
 			doc = obj.doc;
+			precedence = obj.tex_attributes.precedence;
 			tex = obj.tex;
 			sealed = obj.sealed;
 			
@@ -184,7 +186,7 @@ export default class PI {
 			expr = PI.objectexpr(obj.expr, scope);
 		}
 
-		return new ObjectFun({annotations: [], sealed, rettype, name, params, expr, doc, tex}, scope.trace);
+		return new ObjectFun({annotations: [], sealed, rettype, name, params, expr, doc, precedence, tex}, scope.trace);
 	}
 
 	public static funcall(obj: FuncallObject, parentScope: Scope): Funcall {

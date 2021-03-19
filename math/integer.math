@@ -440,7 +440,8 @@ theorem int_U(pr f: @r2) {
 }
 
 "정수 덧셈."
-$!<prec=300>#1<<+_\Z>>#2$
+[precedence=300]
+$#1<<+_\Z>>#2$
 cls int_add(cls m, cls n) {
 	instantiate((cls k) => {
 		Xin4(omega, omega, omega, omega, (cls a1, cls b1, cls a2, cls b2) => {
@@ -791,13 +792,15 @@ cls int_neg(cls n) {
 }
 
 "정수 뺄셈."
-$!<prec=300>#1<<-_\Z>>#2$
+[precedence=300]
+$#1<<-_\Z>>#2$
 cls int_sub(cls m, cls n) {
 	int_add(m, int_neg(n))
 }
 
 "정수 곱셈."
-$!<prec=299>#1<<\times_\Z>>#2$
+[precedence=299]
+$#1<<\times_\Z>>#2$
 cls int_mul(cls m, cls n) {
 	instantiate((cls k) => {
 		Xin4(omega, omega, omega, omega, (cls a1, cls b1, cls a2, cls b2) => {

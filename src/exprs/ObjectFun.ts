@@ -2,8 +2,9 @@ import Fun from "./Fun";
 
 export default class ObjectFun extends Fun {
 	
-	constructor ({doc, tex, annotations, sealed, rettype, name, params, expr}: ObjectFunArgumentType, trace: StackTrace) {
+	constructor ({doc, precedence, tex, annotations, sealed, rettype, name, params, expr}: ObjectFunArgumentType, trace: StackTrace) {
 		super({doc, tex, annotations, sealed, rettype, name, params, expr}, trace);
+		this.precedence = precedence;
 	}
 
 	public substitute(map: Map<Variable, Expr>): Expr {
@@ -19,6 +20,7 @@ export default class ObjectFun extends Fun {
 
 		return new ObjectFun({
 			doc: null,
+			precedence: false,
 			tex: null,
 			annotations: this.annotations,
 			sealed: this.sealed,
@@ -35,6 +37,7 @@ export default class ObjectFun extends Fun {
 
 		return new ObjectFun({
 			doc: null,
+			precedence: false,
 			tex: null,
 			annotations: this.annotations,
 			sealed: this.sealed,
@@ -113,6 +116,7 @@ import { Type, ObjectType } from "./types";
 
 interface ObjectFunArgumentType {
 	doc: string;
+	precedence: number | false;
 	tex: string;
 	annotations: string[];
 	sealed: boolean;

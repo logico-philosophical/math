@@ -229,13 +229,15 @@ theorem induce_set_strong($X$ cls x: @12) {
 }
 
 "[$\omega]의 표준 strict order."
-$!<prec=350>#1<<<_\omega>>#2$
+[precedence=350]
+$#1<<<_\omega>>#2$
 st omega_lt(cls m, cls n) {
 	in(m, n)
 }
 
 "[$\omega]의 표준 순서."
-$!<prec=350>#1<<\leq_\omega>>#2$
+[precedence=350]
+$#1<<\leq_\omega>>#2$
 st omega_leq(cls m, cls n) {
 	subset(m, n)
 }
@@ -1145,7 +1147,8 @@ theorem omega_add_unary_ird(cls n) {
 }
 
 "자연수 덧셈."
-$!<prec=300>#1<<+_\omega>>#2$
+[precedence=300]
+$#1<<+_\omega>>#2$
 cls omega_add(cls m, cls n) {
 	funcall(omega_add_unary(m), n)
 }
@@ -1430,7 +1433,8 @@ cls omega_mul_unary(cls n) {
 }
 
 "자연수 곱셈."
-$!<prec=299>#1<<\times_\omega>>#2$
+[precedence=299]
+$#1<<\times_\omega>>#2$
 cls omega_mul(cls m, cls n) {
 	funcall(omega_mul_unary(m), n)
 }

@@ -53,6 +53,7 @@ describe('ObjectFun', function () {
 	it('should throw if !rettype && !expr', function () {
 		expect(() => new ObjectFun({
 			doc: null,
+			precedence: false,
 			tex: null,
 			annotations: [],
 			sealed: false,
