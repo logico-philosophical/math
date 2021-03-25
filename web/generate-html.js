@@ -201,9 +201,9 @@ function generateHtml(program) {
 			}
 		</ul>
 
-		<li><p><b>정의</b>(${primitiveDefinitionList.length + macroDefinitionList.length})</p>
+		<li><p><b>용어</b>(${primitiveDefinitionList.length + macroDefinitionList.length})</p>
 		<ul>
-			<li><b>원시 기호</b>(${primitiveDefinitionList.length}): ${
+			<li><b>무정의용어</b>(${primitiveDefinitionList.length}): ${
 				primitiveDefinitionList.map(n => `<a href="#def-${n}">${n}</a>`).join(', ')
 			}
 			<li><b>매크로</b>(${macroDefinitionList.length}): ${
