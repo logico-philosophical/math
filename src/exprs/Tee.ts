@@ -38,7 +38,7 @@ export default class Tee extends Expr {
 			throw Expr.error('Assertion failed', trace);
 		}
 
-		super(null, null, new TeeType({
+		super(null, false, null, new TeeType({
 			left: left.map(e => e.type),
 			right: right.type
 		}, trace), trace);

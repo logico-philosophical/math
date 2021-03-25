@@ -43,15 +43,17 @@ export default abstract class Expr {
 	public static readonly PREC_COMMA = 1000;
 	public static readonly PREC_COLONEQQ = 100000;
 
-	constructor (doc: string, tex: string, type: Type, trace: StackTrace) {
+	constructor (doc: string, precedence: Precedence, tex: string, type: Type, trace: StackTrace) {
 		this._id = UniversalCounter.next();
 		this.doc = doc;
+		this.precedence = precedence;
 		this.tex = tex;
-		this.trace = trace;
 
 		if (!type) throw Expr.error('Assertion failed', trace);
 
 		this.type = type;
+
+		this.trace = trace;
 	}
 
 	public abstract substitute(map: Map<Variable, Expr>): Expr;

@@ -1,10 +1,17 @@
 import Fun from "./Fun";
 
 export default class ObjectFun extends Fun {
+
+	public readonly sealed: boolean;
 	
 	constructor ({doc, precedence, tex, annotations, sealed, rettype, name, params, expr}: ObjectFunArgumentType, trace: StackTrace) {
-		super({doc, tex, annotations, sealed, rettype, name, params, expr}, trace);
-		this.precedence = precedence;
+		super({doc, precedence, tex, annotations, rettype, name, params, expr}, trace);
+
+		if (sealed && !expr) {
+			throw Expr.error('Cannot seal a primitive fun', trace);
+		}
+
+		this.sealed = sealed;
 	}
 
 	public substitute(map: Map<Variable, Expr>): Expr {

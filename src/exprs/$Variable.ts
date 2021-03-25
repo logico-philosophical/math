@@ -18,7 +18,7 @@ export default class $Variable extends Expr implements Nameable {
 	public readonly expr: Expr;
 
 	constructor ({name, expr}: $VariableArgumentType, trace: StackTrace) {
-		super(null, null, expr.type, trace);
+		super(null, false, null, expr.type, trace);
 
 		if (!name || !expr) {
 			throw Expr.error('Assertion failed', trace);

@@ -19,7 +19,9 @@ export default class Schema extends Fun {
 			throw Expr.error(`wut`, trace);
 		}
 
-		super({doc, tex, annotations, sealed: false, rettype: null, name, params, expr}, trace);
+		var precedence = name ? false : Expr.PREC_FUNEXPR;
+
+		super({doc, precedence, tex, annotations, rettype: null, name, params, expr}, trace);
 		
 		this.schemaType = schemaType;
 		this.def$s = def$s || [];
@@ -99,7 +101,6 @@ export default class Schema extends Fun {
 	
 	public toTeXString(prec?: Precedence, root?: boolean): string {
 		if (!this.name) {
-			this.precedence = Expr.PREC_FUNEXPR;
 			return [
 				(this.shouldConsolidate(prec) ? '\\left(' : ''),
 

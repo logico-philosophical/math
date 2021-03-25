@@ -1,15 +1,14 @@
 import Nameable from './Nameable';
-import Expr, { EqualsPriority } from './Expr';
+import Expr, { EqualsPriority, Precedence } from './Expr';
 
 export default abstract class Fun extends Expr implements Nameable {
 
 	public readonly annotations: string[];
-	public readonly sealed: boolean;
 	public readonly name: string;
 	public readonly params: Parameter[];
 	public readonly expr: Expr;
 
-	constructor ({doc, tex, annotations, sealed, rettype, name, params, expr}: FunArgumentType, trace: StackTrace) {
+	constructor ({doc, precedence, tex, annotations, rettype, name, params, expr}: FunArgumentType, trace: StackTrace) {
 		if (!name && !expr)
 			throw Expr.error('Anonymous fun cannot be primitive', trace);
 
@@ -23,12 +22,8 @@ export default abstract class Fun extends Expr implements Nameable {
 			throw Expr.error('Cannot guess the return type of a primitive fun', trace);
 		}
 		
-		if (sealed && !expr) {
-			throw Expr.error('Cannot seal a primitive fun', trace);
-		}
-		
 		super(
-			doc, tex,
+			doc, precedence, tex,
 			new ((rettype || expr.type) instanceof ObjectType ? FunctionalObjectType : FunctionalMetaType)({
 				from: params.map(variable => variable.type),
 				to: rettype || expr.type as any
@@ -37,7 +32,6 @@ export default abstract class Fun extends Expr implements Nameable {
 		);
 
 		this.annotations = annotations;
-		this.sealed = sealed;
 		this.name = name;
 		this.params = params;
 		this.expr = expr;
@@ -59,8 +53,8 @@ export default abstract class Fun extends Expr implements Nameable {
 	}
 	
 	protected equalsInternal(obj: Expr, context: ExecutionContext): (Fun | Variable)[] | false {
-		if (!(this.expr && !this.sealed)
-				&& !(obj instanceof Fun && obj.expr && !obj.sealed)) {
+		if (!this.isCallable(context)
+				&& !(obj instanceof Fun && obj.isCallable(context))) {
 			return false;
 		}
 
@@ -77,14 +71,14 @@ export default abstract class Fun extends Expr implements Nameable {
 
 		var usedMacrosList = [];
 
-		var thisCall = this.expr && !this.sealed
+		var thisCall = this.isCallable(context)
 			? (this.name && usedMacrosList.push(this), this.call(placeholders))
 			: new Funcall({
 				fun: this,
 				args: placeholders
 			}, this.trace);
 
-		var objCall = obj instanceof Fun && obj.expr && !obj.sealed
+		var objCall = obj instanceof Fun && obj.isCallable(context)
 			? (obj.name && usedMacrosList.push(obj), obj.call(placeholders))
 			: new Funcall({
 				fun: obj,
@@ -181,9 +175,9 @@ import { ObjectType, FunctionalObjectType, FunctionalMetaType, Type } from './ty
 
 interface FunArgumentType {
 	doc: string;
+	precedence: Precedence;
 	tex: string;
 	annotations: string[];
-	sealed: boolean;
 	rettype: Type;
 	name: string;
 	params: Parameter[];

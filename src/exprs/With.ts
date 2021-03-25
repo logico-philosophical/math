@@ -20,7 +20,7 @@ export default class With extends Expr {
 	public readonly expr: Expr;
 
 	constructor({variable, def$s, expr}: WithArgumentType, trace: StackTrace) {
-		super(null, null, expr.type, trace);
+		super(null, false, null, expr.type, trace);
 
 		this.variable = variable;
 		this.def$s = def$s;

@@ -23,7 +23,7 @@ export default class Variable extends Expr implements Nameable {
 	public readonly expr: Expr | null;
 
 	constructor ({doc, tex, sealed, type, name, expr}: VariableArgumentType, trace: StackTrace) {
-		super(doc, tex, type, trace);
+		super(doc, false, tex, type, trace);
 		
 		if (typeof name != 'string')
 			throw Expr.error('Assertion failed', trace);

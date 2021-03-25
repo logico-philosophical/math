@@ -32,7 +32,7 @@ export default class Funcall extends Expr {
 			}
 		}
 
-		super(null, null, resolvedType.to, trace);
+		super(null, false, null, resolvedType.to, trace);
 		
 		this.fun = fun;
 		this.args = args;

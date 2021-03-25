@@ -94,7 +94,7 @@ export default class Reduction extends Expr {
 				throw Expr.error(`Illegal argument type (expected ${paramTypes[i]}): ${antecedentTypes[i]}`, trace);
 		}
 
-		super(null, null, subject.type.right, trace);
+		super(null, false, null, subject.type.right, trace);
 
 		this.subject = subject;
 		this.antecedents = antecedents;
