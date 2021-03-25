@@ -141,59 +141,38 @@ export default class Funcall extends Expr {
 			return ret && ret.concat(used);
 		}
 
-		var usedMacrosList: (Fun | Variable)[] = [],
-			T = (q: (Fun | Variable)[] | false) => { if (q) usedMacrosList.push(...q); return q; };
+		var argsEquals: (Fun | Variable)[] | false = (() => {
+			if (this.args.length != obj.args.length) return false;
 
-		if (this.fun == obj.fun || T(this.fun.equals(obj.fun, context))) {
+			var tmp: (Fun | Variable)[] = [];
+
 			for (var i = 0; i < this.args.length; i++) {
-				if (!T(this.args[i].equals(obj.args[i], context))) return false;
+				var e = this.args[i].equals(obj.args[i], context);
+				if (!e) return false;
+				tmp = tmp.concat(e);
 			}
 
-			return usedMacrosList;
+			return tmp;
+		})();
+
+		if (argsEquals) {
+			var funEquals = this.fun.equals(obj.fun, context);
+			if (funEquals) return funEquals.concat(argsEquals);
 		}
 
-		if (this.fun instanceof Funcall && this.fun.isExpandable(context)) {
+		if (this.isExpandable(context)) {
 			var {expanded, used} = this.expandOnce(context);
 			var ret = expanded.equals(obj, context);
 			return ret && ret.concat(used);
 		}
 
-		if (obj.fun instanceof Funcall && obj.fun.isExpandable(context)) {
+		if (obj.isExpandable(context)) {
 			var {expanded, used} = obj.expandOnce(context);
 			var ret = this.equals(expanded, context);
 			return ret && ret.concat(used);
 		}
 
-		var thisIsExpandable = this.isExpandable(context),
-			objIsExpandable = obj.isExpandable(context);
-		
-		if (this.fun == obj.fun || !thisIsExpandable && !objIsExpandable) {
-			if (this.fun != obj.fun) return false;
-
-			if (!thisIsExpandable && !objIsExpandable) {
-				for (var i = 0; i < this.args.length; i++) {
-					if (!T(this.args[i].equals(obj.args[i], context))) return false;
-				}
-
-				return usedMacrosList;
-			}
-
-			if (this.args.every((_, i) => {
-				return T(this.args[i].equals(obj.args[i], context));
-			})) {
-				return usedMacrosList;
-			}
-		}
-
-		if (thisIsExpandable) {
-			var {expanded, used} = this.expandOnce(context);
-			var ret = expanded.equals(obj, context);
-			return ret && ret.concat(used);
-		}
-
-		var {expanded, used} = obj.expandOnce(context);
-		var ret = this.equals(expanded, context);
-		return ret && ret.concat(used);
+		return false;
 	}
 
 	protected getProofInternal(
