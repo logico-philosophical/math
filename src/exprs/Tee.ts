@@ -64,9 +64,9 @@ export default class Tee extends Expr {
 		}, this.trace);
 	}
 
-	protected expandMetaInternal(): Expr {
-		var left = this.left.map(lef => lef.expandMeta());
-		var right = this.right.expandMeta();
+	protected expandInternal(): Expr {
+		var left = this.left.map(lef => lef.expand());
+		var right = this.right.expand();
 
 		return new Tee({left, def$s: null, right}, this.trace);
 	}
@@ -140,7 +140,7 @@ export default class Tee extends Expr {
 	}
 	
 	public toTeXString(prec?: Precedence, root?: boolean): string {
-		var expanded = this.expandMeta() as Tee;
+		var expanded = this.expand() as Tee;
 
 		return [
 			(this.shouldConsolidate(prec) ? '\\left(' : ''),

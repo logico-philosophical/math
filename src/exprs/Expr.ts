@@ -58,12 +58,12 @@ export default abstract class Expr {
 
 	public abstract substitute(map: Map<Variable, Expr>): Expr;
 
-	public expandMeta(): Expr {
+	public expand(): Expr {
 		if (this.expandMetaCache) return this.expandMetaCache;
-		return this.expandMetaCache = this.expandMetaInternal();
+		return this.expandMetaCache = this.expandInternal();
 	}
 
-	protected abstract expandMetaInternal(): Expr;
+	protected abstract expandInternal(): Expr;
 
 	/**
 	 * 

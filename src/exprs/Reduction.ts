@@ -56,7 +56,7 @@ export default class Reduction extends Expr {
 			var derefs = subject.params.map((p, i) => {
 				if (args && args[i]) return args[i];
 
-				var tee = (subject as Fun).expr.expandMeta();
+				var tee = (subject as Fun).expr.expand();
 
 				if (!(tee instanceof Tee)) throw Error('wut');
 	
@@ -99,7 +99,7 @@ export default class Reduction extends Expr {
 		this.subject = subject;
 		this.antecedents = antecedents;
 
-		var tee = subject.expandMeta();
+		var tee = subject.expand();
 
 		if (!(tee instanceof Tee)) {
 			throw Expr.error('Assertion failed', trace);
@@ -109,7 +109,7 @@ export default class Reduction extends Expr {
 		this.antecedentEqualsResults = Array(tee.left.length).fill(0).map(() => []);
 
 		var antecedentsExpanded = antecedents.map(arg => {
-			return arg.expandMeta();
+			return arg.expand();
 		});
 
 		for (let i = 0; i < tee.left.length; i++) {
@@ -118,11 +118,11 @@ export default class Reduction extends Expr {
 				throw Expr.error(`LHS #${i + 1} failed to match:
 
 --- EXPECTED ---
-${tee.left[i].expandMeta()}
+${tee.left[i].expand()}
 ----------------
 
 --- RECEIVED ---
-${antecedents[i].expandMeta()}
+${antecedents[i].expand()}
 ----------------`, trace);
 			}
 
@@ -137,11 +137,11 @@ ${antecedents[i].expandMeta()}
 				throw Expr.error(`RHS failed to match:
 
 --- EXPECTED ---
-${tee.right.expandMeta()}
+${tee.right.expand()}
 ----------------
 
 --- RECEIVED (from [as ...]) ---
-${as.expandMeta()}
+${as.expand()}
 ----------------`, trace);
 			}
 
@@ -161,8 +161,8 @@ ${as.expandMeta()}
 		return this.consequent.substitute(map);
 	}
 
-	protected expandMetaInternal(): Expr {
-		return this.consequent.expandMeta();
+	protected expandInternal(): Expr {
+		return this.consequent.expand();
 	}
 
 	protected getEqualsPriority(): EqualsPriority {
@@ -295,7 +295,7 @@ ${as.expandMeta()}
 				pattern: Expr, instance: Expr,
 				params: Parameter[]): Expr {
 			
-			instance = instance.expandMeta();
+			instance = instance.expand();
 			
 			if (selector.length <= ptr) return instance;
 

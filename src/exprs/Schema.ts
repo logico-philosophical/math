@@ -68,7 +68,7 @@ export default class Schema extends Fun {
 		}, this.trace);
 	}
 
-	protected expandMetaInternal(): Expr {
+	protected expandInternal(): Expr {
 		return new Schema({
 			doc: null,
 			tex: null,
@@ -78,7 +78,7 @@ export default class Schema extends Fun {
 			params: this.params,
 			context: this.context,
 			def$s: this.def$s,
-			expr: this.expr.expandMeta()
+			expr: this.expr.expand()
 		}, this.trace);
 	}
 
@@ -89,7 +89,7 @@ export default class Schema extends Fun {
 	public toIndentedString(indent: number, root?: boolean): string {
 		return [
 			`∫ ${this.name || ''}(${this.params.map(p => p.toIndentedString(indent)).join(', ')}) => {`,
-			'\t' + this.expr.expandMeta().toIndentedString(indent + 1),
+			'\t' + this.expr.expand().toIndentedString(indent + 1),
 			'}'
 		].join('\n' + '\t'.repeat(indent));
 	}
@@ -105,7 +105,7 @@ export default class Schema extends Fun {
 					: `\\left(${this.params.map(e => e.toTeXString(Expr.PREC_COMMA)).join(', ')}\\right)`
 				),
 				'\\mapsto ',
-				this.expr.expandMeta().toTeXString(false),
+				this.expr.expand().toTeXString(false),
 
 				(this.shouldConsolidate(prec) ? '\\right)' : '')
 			].join('');
@@ -118,7 +118,7 @@ export default class Schema extends Fun {
 			return `\\href{#${id}}{\\htmlData{proved=${proved}}{\\mathsf{${Expr.escapeTeX(this.name)}}}}`;
 	
 		return `\\href{#${id}}{\\htmlData{proved=${proved}}{\\mathsf{${Expr.escapeTeX(this.name)}}}}\\mathord{\\left(${this.params.map(e => e.toTeXStringWithId(Expr.PREC_COMMA) + (e.selector ? `: \\texttt{@${e.selector}}` : '')).join(', ')}\\right)}:\\\\\\quad`
-				+ this.expr.expandMeta().toTeXString(true);
+				+ this.expr.expand().toTeXString(true);
 	}
 }
 

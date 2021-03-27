@@ -38,7 +38,7 @@ export default class ObjectFun extends Fun {
 		}, this.trace);
 	}
 
-	protected expandMetaInternal(): Expr {
+	protected expandInternal(): Expr {
 		if (!this.expr) return this;
 		if (this.type instanceof ObjectType && this.name) return this;
 
@@ -51,7 +51,7 @@ export default class ObjectFun extends Fun {
 			rettype: null,
 			name: null,
 			params: this.params,
-			expr: this.expr.expandMeta()
+			expr: this.expr.expand()
 		}, this.trace);
 	}
 
@@ -81,7 +81,7 @@ export default class ObjectFun extends Fun {
 					: `\\left(${this.params.map(e => e.toTeXString(Expr.PREC_COMMA)).join(', ')}\\right)`
 				),
 				'\\mapsto ',
-				this.expr.expandMeta().toTeXString(false),
+				this.expr.expand().toTeXString(false),
 
 				(this.shouldConsolidate(prec) ? '\\right)' : '')
 			].join('');

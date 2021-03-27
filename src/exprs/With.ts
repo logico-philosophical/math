@@ -31,14 +31,14 @@ export default class With extends Expr {
 		if (map.has(this.variable))
 			throw Error('Parameter collision');
 
-		return this.expandMeta().substitute(map);
+		return this.expand().substitute(map);
 	}
 
-	protected expandMetaInternal(): Expr {
+	protected expandInternal(): Expr {
 		var map = new Map<Variable, Expr>();
 		map.set(this.variable, this.variable.expr);
 
-		return this.expr.substitute(map).expandMeta();
+		return this.expr.substitute(map).expand();
 	}
 
 	protected getEqualsPriority(context: ExecutionContext): EqualsPriority {

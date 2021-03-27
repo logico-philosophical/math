@@ -36,8 +36,8 @@ export default class $Variable extends Expr implements Nameable {
 		return this.expr.substitute(map);
 	}
 
-	protected expandMetaInternal(): Expr {
-		return this.expr.expandMeta();
+	protected expandInternal(): Expr {
+		return this.expr.expand();
 	}
 
 	protected getEqualsPriority(): EqualsPriority {
