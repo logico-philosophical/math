@@ -30,17 +30,15 @@ export default class With extends Expr {
 	public substitute(map: Map<Variable, Expr>): Expr {
 		if (map.has(this.variable))
 			throw Error('Parameter collision');
-		
-		map = new Map(map);
 
-		return this.expandMeta(false).substitute(map);
+		return this.expandMeta().substitute(map);
 	}
 
-	protected expandMetaInternal(andFuncalls: boolean): Expr {
+	protected expandMetaInternal(): Expr {
 		var map = new Map<Variable, Expr>();
 		map.set(this.variable, this.variable.expr);
 
-		return this.expr.substitute(map).expandMeta(andFuncalls);
+		return this.expr.substitute(map).expandMeta();
 	}
 
 	protected getEqualsPriority(context: ExecutionContext): EqualsPriority {

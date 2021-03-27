@@ -53,7 +53,7 @@ export default class Variable extends Expr implements Nameable {
 		return this;
 	}
 
-	protected expandMetaInternal(andFuncalls: boolean): Expr {
+	protected expandMetaInternal(): Expr {
 		return this;
 	}
 

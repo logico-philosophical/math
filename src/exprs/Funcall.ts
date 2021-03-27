@@ -49,14 +49,14 @@ export default class Funcall extends Expr {
 		}, this.trace);
 	}
 
-	protected expandMetaInternal(andFuncalls: boolean): Expr {
-		var fun = this.fun.expandMeta(andFuncalls),
-			args = this.args.map(arg => arg.expandMeta(andFuncalls));
+	protected expandMetaInternal(): Expr {
+		var fun = this.fun.expandMeta(),
+			args = this.args.map(arg => arg.expandMeta());
 		
 		if (!(fun instanceof Fun) || !fun.expr || fun.name && !(fun instanceof Schema))
 			return new Funcall({fun, args}, this.trace);
 
-		return fun.call(args).expandMeta(andFuncalls);
+		return fun.call(args).expandMeta();
 	}
 
 	public isExpandable(context: ExecutionContext): boolean {

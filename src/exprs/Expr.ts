@@ -58,16 +58,12 @@ export default abstract class Expr {
 
 	public abstract substitute(map: Map<Variable, Expr>): Expr;
 
-	/**
-	 * 
-	 * @param andFuncalls 이름 없는 Funcall도 푼다.
-	 */
-	public expandMeta(andFuncalls: boolean): Expr {
+	public expandMeta(): Expr {
 		if (this.expandMetaCache) return this.expandMetaCache;
-		return this.expandMetaCache = this.expandMetaInternal(andFuncalls);
+		return this.expandMetaCache = this.expandMetaInternal();
 	}
 
-	protected abstract expandMetaInternal(andFuncalls: boolean): Expr;
+	protected abstract expandMetaInternal(): Expr;
 
 	/**
 	 * 

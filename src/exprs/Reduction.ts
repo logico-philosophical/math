@@ -56,7 +56,7 @@ export default class Reduction extends Expr {
 			var derefs = subject.params.map((p, i) => {
 				if (args && args[i]) return args[i];
 
-				var tee = (subject as Fun).expr.expandMeta(false);
+				var tee = (subject as Fun).expr.expandMeta();
 
 				if (!(tee instanceof Tee)) throw Error('wut');
 	
@@ -99,7 +99,7 @@ export default class Reduction extends Expr {
 		this.subject = subject;
 		this.antecedents = antecedents;
 
-		var tee = subject.expandMeta(true);
+		var tee = subject.expandMeta();
 
 		if (!(tee instanceof Tee)) {
 			throw Expr.error('Assertion failed', trace);
@@ -109,7 +109,7 @@ export default class Reduction extends Expr {
 		this.antecedentEqualsResults = Array(tee.left.length).fill(0).map(() => []);
 
 		var antecedentsExpanded = antecedents.map(arg => {
-			return arg.expandMeta(true);
+			return arg.expandMeta();
 		});
 
 		for (let i = 0; i < tee.left.length; i++) {
@@ -118,11 +118,11 @@ export default class Reduction extends Expr {
 				throw Expr.error(`LHS #${i + 1} failed to match:
 
 --- EXPECTED ---
-${tee.left[i].expandMeta(true)}
+${tee.left[i].expandMeta()}
 ----------------
 
 --- RECEIVED ---
-${antecedents[i].expandMeta(true)}
+${antecedents[i].expandMeta()}
 ----------------`, trace);
 			}
 
@@ -137,11 +137,11 @@ ${antecedents[i].expandMeta(true)}
 				throw Expr.error(`RHS failed to match:
 
 --- EXPECTED ---
-${tee.right.expandMeta(true)}
+${tee.right.expandMeta()}
 ----------------
 
 --- RECEIVED (from [as ...]) ---
-${as.expandMeta(true)}
+${as.expandMeta()}
 ----------------`, trace);
 			}
 
@@ -161,8 +161,8 @@ ${as.expandMeta(true)}
 		return this.consequent.substitute(map);
 	}
 
-	protected expandMetaInternal(andFuncalls: boolean): Expr {
-		return this.consequent.expandMeta(andFuncalls);
+	protected expandMetaInternal(): Expr {
+		return this.consequent.expandMeta();
 	}
 
 	protected getEqualsPriority(): EqualsPriority {
@@ -295,7 +295,7 @@ ${as.expandMeta(true)}
 				pattern: Expr, instance: Expr,
 				params: Parameter[]): Expr {
 			
-			instance = instance.expandMeta(true);
+			instance = instance.expandMeta();
 			
 			if (selector.length <= ptr) return instance;
 

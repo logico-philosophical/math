@@ -37,7 +37,7 @@ export default class ProofExplorer {
 		function exprToHtml(expr: number | [number, number] | Expr, expand?: boolean): string {
 			if (typeof expr == 'number') return `<b>${expr}</b>`;
 			if (expr instanceof Array) return `<b>${expr[0]}&ndash;${expr[1]}</b>`;
-			if (expand) return ktx(expr.expandMeta(true).toTeXString(true, true));
+			if (expand) return ktx(expr.expandMeta().toTeXString(true, true));
 			
 			return ktx(expr.toTeXString(true, true));
 		}

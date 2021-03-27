@@ -47,8 +47,6 @@ export default class Schema extends Fun {
 	}
 
 	public substitute(map: Map<Variable, Expr>): Expr {
-		if (!this.expr) return this;
-
 		// 이름이 있는 것은 스코프 밖에서 보이지 않으므로 치환될 것을
 		// 갖지 않는다는 생각이 들어 있다.
 		if (this.name) return this;
@@ -70,10 +68,7 @@ export default class Schema extends Fun {
 		}, this.trace);
 	}
 
-	protected expandMetaInternal(andFuncalls: boolean): Expr {
-		if (!this.expr) return this;
-		if (this.type instanceof ObjectType && this.name) return this;
-
+	protected expandMetaInternal(): Expr {
 		return new Schema({
 			doc: null,
 			tex: null,
@@ -83,7 +78,7 @@ export default class Schema extends Fun {
 			params: this.params,
 			context: this.context,
 			def$s: this.def$s,
-			expr: this.expr.expandMeta(andFuncalls)
+			expr: this.expr.expandMeta()
 		}, this.trace);
 	}
 
@@ -94,7 +89,7 @@ export default class Schema extends Fun {
 	public toIndentedString(indent: number, root?: boolean): string {
 		return [
 			`∫ ${this.name || ''}(${this.params.map(p => p.toIndentedString(indent)).join(', ')}) => {`,
-			'\t' + this.expr.expandMeta(true).toIndentedString(indent + 1),
+			'\t' + this.expr.expandMeta().toIndentedString(indent + 1),
 			'}'
 		].join('\n' + '\t'.repeat(indent));
 	}
@@ -110,7 +105,7 @@ export default class Schema extends Fun {
 					: `\\left(${this.params.map(e => e.toTeXString(Expr.PREC_COMMA)).join(', ')}\\right)`
 				),
 				'\\mapsto ',
-				this.expr.expandMeta(true).toTeXString(false),
+				this.expr.expandMeta().toTeXString(false),
 
 				(this.shouldConsolidate(prec) ? '\\right)' : '')
 			].join('');
@@ -123,7 +118,7 @@ export default class Schema extends Fun {
 			return `\\href{#${id}}{\\htmlData{proved=${proved}}{\\mathsf{${Expr.escapeTeX(this.name)}}}}`;
 	
 		return `\\href{#${id}}{\\htmlData{proved=${proved}}{\\mathsf{${Expr.escapeTeX(this.name)}}}}\\mathord{\\left(${this.params.map(e => e.toTeXStringWithId(Expr.PREC_COMMA) + (e.selector ? `: \\texttt{@${e.selector}}` : '')).join(', ')}\\right)}:\\\\\\quad`
-				+ this.expr.expandMeta(true).toTeXString(true);
+				+ this.expr.expandMeta().toTeXString(true);
 	}
 }
 
