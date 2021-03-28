@@ -57,6 +57,8 @@ export default class Tee extends Expr {
 		var left = this.left.map(e => e.substitute(map));
 		var right = this.right.substitute(map);
 
+		if (left.every((l, i) => l == this.left[i]) && right == this.right) return this;
+
 		return new Tee({
 			left,
 			def$s: null,

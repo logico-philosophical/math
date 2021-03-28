@@ -60,6 +60,9 @@ export default class Schema extends Fun {
 			});
 		}
 
+		var expr = this.expr.substitute(map);
+		if (expr == this.expr) return this;
+
 		return new Schema({
 			doc: null,
 			tex: null,
@@ -69,7 +72,7 @@ export default class Schema extends Fun {
 			params: this.params,
 			context: this.context,
 			def$s: this.def$s,
-			expr: this.expr.substitute(map)
+			expr
 		}, this.trace);
 	}
 

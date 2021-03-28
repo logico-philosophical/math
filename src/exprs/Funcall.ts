@@ -43,10 +43,13 @@ export default class Funcall extends Expr {
 	}
 
 	public substitute(map: Map<Variable, Expr>): Expr {
-		return new Funcall({
-			fun: this.fun.substitute(map),
-			args: this.args.map(arg => arg.substitute(map))
-		}, this.trace);
+		var fun = this.fun.substitute(map),
+			args = this.args.map(arg => arg.substitute(map));
+		
+		if (fun == this.fun && args.every((arg, i) => arg == this.args[i]))
+			return this;
+
+		return new Funcall({fun, args}, this.trace);
 	}
 
 	protected expandInternal(): Expr {

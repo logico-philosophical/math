@@ -33,7 +33,9 @@ export default class $Variable extends Expr implements Nameable {
 	}
 
 	public substitute(map: Map<Variable, Expr>): Expr {
-		return this.expr.substitute(map);
+		var expr = this.expr.substitute(map);
+		if (expr == this.expr) return this;
+		return expr;
 	}
 
 	protected expandInternal(): Expr {

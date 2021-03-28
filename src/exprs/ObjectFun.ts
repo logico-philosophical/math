@@ -31,6 +31,9 @@ export default class ObjectFun extends Fun {
 			});
 		}
 
+		var expr = this.expr.substitute(map);
+		if (expr == this.expr) return this;
+
 		return new ObjectFun({
 			doc: null,
 			precedence: false,
@@ -40,7 +43,7 @@ export default class ObjectFun extends Fun {
 			rettype: null,
 			name: null,
 			params: this.params,
-			expr: this.expr.substitute(map)
+			expr
 		}, this.trace);
 	}
 
