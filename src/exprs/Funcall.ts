@@ -59,7 +59,7 @@ export default class Funcall extends Expr {
 		return fun.call(args).expand();
 	}
 
-	public isExpandable(context: ExecutionContext): boolean {
+	public isExpandableOnce(context: ExecutionContext): boolean {
 		var callee: Expr = this.fun;
 
 		while (callee instanceof $Variable) {
@@ -71,7 +71,7 @@ export default class Funcall extends Expr {
 		}
 
 		if (callee instanceof Funcall) {
-			return callee.isExpandable(context);
+			return callee.isExpandableOnce(context);
 		}
 
 		if (!(callee instanceof Fun)) return false;
@@ -80,7 +80,7 @@ export default class Funcall extends Expr {
 	}
 	
 	public expandOnce(context: ExecutionContext): {expanded: Expr, used: (Fun | Variable)[]} {
-		if (!this.isExpandable(context)) {
+		if (!this.isExpandableOnce(context)) {
 			throw Error('Cannot expand');
 		}
 
@@ -134,7 +134,7 @@ export default class Funcall extends Expr {
 
 	protected equalsInternal(obj: Expr, context: ExecutionContext): (Fun | Variable)[] | false {
 		if (!(obj instanceof Funcall)) {
-			if (!this.isExpandable(context)) return false;
+			if (!this.isExpandableOnce(context)) return false;
 			
 			var {expanded, used} = this.expandOnce(context);
 			var ret = expanded.equals(obj, context);
@@ -160,13 +160,13 @@ export default class Funcall extends Expr {
 			if (funEquals) return funEquals.concat(argsEquals);
 		}
 
-		if (this.isExpandable(context)) {
+		if (this.isExpandableOnce(context)) {
 			var {expanded, used} = this.expandOnce(context);
 			var ret = expanded.equals(obj, context);
 			return ret && ret.concat(used);
 		}
 
-		if (obj.isExpandable(context)) {
+		if (obj.isExpandableOnce(context)) {
 			var {expanded, used} = obj.expandOnce(context);
 			var ret = this.equals(expanded, context);
 			return ret && ret.concat(used);

@@ -327,7 +327,7 @@ ${as.expand()}
 						break;
 					}
 
-					if (!instance.isExpandable(context)) {
+					if (!instance.isExpandableOnce(context)) {
 						throw Expr.error(`Cannot dereference @${selector} (at ${ptr}): ${instance}`, trace);
 					}
 
