@@ -94,3 +94,5 @@ typings/
 
 
 *.vsix
+
+build_tmp/
