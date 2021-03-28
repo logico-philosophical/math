@@ -238,7 +238,7 @@ export default abstract class Expr {
 		return `\\mathrm{${Expr.escapeTeX(name)}}`;
 	}
 
-	public makeTeX(id, args, prec) {
+	public makeTeX(id: string, args: string[], prec: Precedence) {
 		args = args || [];
 		prec = prec || false;
 		

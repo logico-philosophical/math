@@ -97,20 +97,20 @@ export default class ObjectFun extends Fun {
 				+ `\\coloneqq ${this.expr.toTeXString(Expr.PREC_COLONEQQ)}`;
 	}
 
-	public funcallToTeXString(args, prec) {
-		args = args.map(arg => {
+	public funcallToTeXString(args: Expr[], prec: Precedence) {
+		var argStrings = args.map(arg => {
 			return arg.toTeXString(this.tex ? this.precedence : Expr.PREC_COMMA);
 		});
 	
 		if (this.tex) {
-			return this.makeTeX('def-' + this.name, args, prec);
+			return this.makeTeX('def-' + this.name, argStrings, prec);
 		}
 	
 		return (
 			!this.name
 				? this.toTeXString(false)
 				: `\\href{#def-${this.name}}{${Expr.makeTeXName(this.name)}}`
-		) + `\\mathord{\\left(${args.join(', ')}\\right)}`;
+		) + `\\mathord{\\left(${argStrings.join(', ')}\\right)}`;
 	}
 }
 
