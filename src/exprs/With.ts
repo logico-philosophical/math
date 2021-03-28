@@ -28,8 +28,10 @@ export default class With extends Expr {
 	}
 
 	public substitute(map: Map<Variable, Expr>): Expr {
-		if (map.has(this.variable))
-			throw Error('Parameter collision');
+		if (map.has(this.variable)) {
+			map = new Map(map);
+			map.delete(this.variable);
+		}
 
 		return this.expand().substitute(map);
 	}
