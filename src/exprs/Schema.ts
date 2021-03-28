@@ -124,11 +124,9 @@ export default class Schema extends Fun {
 import $Variable from "./$Variable";
 import Expr, { Precedence } from "./Expr";
 import Variable from "./Variable";
-import ObjectFun from "./ObjectFun";
 import StackTrace from "../StackTrace";
 import ExecutionContext from "../ExecutionContext";
 import Parameter from "./Parameter";
-import { ObjectType } from "./types";
 
 interface SchemaArgumentType {
 	doc: string;
