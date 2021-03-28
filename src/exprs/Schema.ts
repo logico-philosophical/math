@@ -77,6 +77,9 @@ export default class Schema extends Fun {
 	}
 
 	protected expandInternal(): Expr {
+		var expr = this.expr.expand();
+		if (expr == this.expr) return this;
+		
 		return new Schema({
 			doc: null,
 			tex: null,

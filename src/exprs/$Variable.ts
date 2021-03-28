@@ -39,7 +39,9 @@ export default class $Variable extends Expr implements Nameable {
 	}
 
 	protected expandInternal(): Expr {
-		return this.expr.expand();
+		var expr = this.expr.expand();
+		if (expr == this.expr) return this;
+		return expr;
 	}
 
 	protected getEqualsPriority(): EqualsPriority {

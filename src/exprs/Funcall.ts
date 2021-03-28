@@ -56,8 +56,11 @@ export default class Funcall extends Expr {
 		var fun = this.fun.expand(),
 			args = this.args.map(arg => arg.expand());
 		
-		if (!(fun instanceof Fun) || !fun.expr || fun.name && !(fun instanceof Schema))
+		if (!(fun instanceof Fun) || !fun.expr || fun.name && !(fun instanceof Schema)) {
+			if (fun == this.fun && args.every((arg, i) => arg == this.args[i])) return this;
+			
 			return new Funcall({fun, args}, this.trace);
+		}
 
 		return fun.call(args).expand();
 	}

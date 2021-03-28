@@ -51,6 +51,9 @@ export default class ObjectFun extends Fun {
 		if (!this.expr) return this;
 		if (this.type instanceof ObjectType && this.name) return this;
 
+		var expr = this.expr.expand();
+		if (expr == this.expr) return this;
+
 		return new ObjectFun({
 			doc: null,
 			precedence: false,
@@ -60,7 +63,7 @@ export default class ObjectFun extends Fun {
 			rettype: null,
 			name: null,
 			params: this.params,
-			expr: this.expr.expand()
+			expr
 		}, this.trace);
 	}
 

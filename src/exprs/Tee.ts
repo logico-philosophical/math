@@ -59,16 +59,14 @@ export default class Tee extends Expr {
 
 		if (left.every((l, i) => l == this.left[i]) && right == this.right) return this;
 
-		return new Tee({
-			left,
-			def$s: null,
-			right
-		}, this.trace);
+		return new Tee({left, def$s: null, right}, this.trace);
 	}
 
 	protected expandInternal(): Expr {
 		var left = this.left.map(lef => lef.expand());
 		var right = this.right.expand();
+
+		if (left.every((l, i) => l == this.left[i]) && right == this.right) return this;
 
 		return new Tee({left, def$s: null, right}, this.trace);
 	}
