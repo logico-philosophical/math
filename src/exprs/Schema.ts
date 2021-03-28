@@ -5,7 +5,6 @@ export type SchemaType = 'axiom' | 'theorem' | 'schema';
 export default class Schema extends Fun {
 
 	public readonly schemaType: SchemaType;
-	public readonly using: ObjectFun[];
 	public readonly def$s: $Variable[];
 	public readonly context: ExecutionContext;
 	private isProvedCache: boolean;
