@@ -261,12 +261,18 @@ export default class PI {
 		switch (obj.type) {
 			case '@':
 				if (obj.name.match(/^h[0-9]+$/)) {
-					var hypnum = Number(obj.name.slice(1)) - 1;
-					if (hypnum >= scope.hypotheses.length) {
-						throw scope.error(`Hypothesis #${hypnum + 1} not found`);
+					// one-based
+					var hypnum = Number(obj.name.slice(1));
+
+					if (hypnum == 0) {
+						throw scope.error(`@h0 is not allowed; hypothesis number starts from one`);
 					}
 
-					return scope.hypotheses[hypnum];
+					if (hypnum > scope.hypotheses.length) {
+						throw scope.error(`Hypothesis #${hypnum} not found`);
+					}
+
+					return scope.hypotheses[hypnum - 1];
 				}
 
 				throw scope.error(`Unknown selector query ${varObjToString(obj)}`);
