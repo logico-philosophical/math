@@ -261,15 +261,25 @@ export default class PI {
 		switch (obj.type) {
 			case '@':
 				if (obj.name.match(/^h[0-9]+$/)) {
+					var numstring = obj.name.slice(1);
+
 					// one-based
-					var hypnum = Number(obj.name.slice(1));
+					var hypnum = Number(numstring);
 
 					if (hypnum == 0) {
 						throw scope.error(`@h0 is not allowed; hypothesis number starts from one`);
 					}
 
+					if (numstring[0] == '0') {
+						throw scope.error(`Hypothesis number cannot start with 0`);
+					}
+
+					if (numstring.length >= 16 /* String(Number.MAX_SAFE_INTEGER).length */) {
+						throw scope.error(`Hypothesis number insanely big`);
+					}
+
 					if (hypnum > scope.hypotheses.length) {
-						throw scope.error(`Hypothesis #${hypnum} not found`);
+						throw scope.error(`Hypothesis #${hypnum} not found; there are only ${scope.hypotheses.length} hypotheses available`);
 					}
 
 					return scope.hypotheses[hypnum - 1];
