@@ -523,7 +523,7 @@ at_var =
 		return {
 			_type: 'var',
 			type: '@',
-			name: name.slice(1),
+			name,
 			location: location()
 		}
 	}
@@ -534,7 +534,7 @@ dollar_var =
 		return {
 			_type: 'var',
 			type: '$',
-			name: name,
+			name,
 			location: location()
 		}
 	}

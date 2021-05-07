@@ -59,9 +59,7 @@ function typeObjToNestedArr(obj: TypeObject): NestedTypeInput {
 function varObjToString(obj: VarObject): string {
 	switch (obj.type) {
 		case '@':
-			return `@${obj.name}`;
 		case '$':
-			return `${obj.name}`;
 		case 'normal':
 			return `${obj.name}`;
 		default:
@@ -260,8 +258,8 @@ export default class PI {
 
 		switch (obj.type) {
 			case '@':
-				if (obj.name.match(/^h[0-9]+$/)) {
-					var numstring = obj.name.slice(1);
+				if (obj.name.match(/^@h[0-9]+$/)) {
+					var numstring = obj.name.slice(2);
 
 					// one-based
 					var hypnum = Number(numstring);

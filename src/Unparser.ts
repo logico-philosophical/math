@@ -269,7 +269,7 @@ function recurseInternal(
 				location: LocationObject;
 			} */
 			switch (line.type) {
-				case '@': return '@' + line.name;
+				case '@': return line.name;
 				case '$': return line.name;
 				default: return line.name;
 			}
