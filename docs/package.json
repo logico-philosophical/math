@@ -12,7 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "highlight.js": "^10.7.2",
+    "highlight.js": "^10.7.3",
     "katex": "^0.12.0",
     "m42kup": "^0.3.0",
     "m42kup-builder": "github:logico-philosophical/m42kup-builder"
