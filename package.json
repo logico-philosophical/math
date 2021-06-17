@@ -1,7 +1,7 @@
 {
   "name": "math-o-matic",
   "version": "0.3.1",
-  "description": "Computerized deductive system on the web",
+  "description": "Computerized proof system on the web",
   "keywords": [
     "math"
   ],

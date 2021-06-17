@@ -10,7 +10,7 @@
 
 **English** &middot; [한국어](/README.ko.md)
 
-**math-o-matic** is a computerized deductive system that enables you to make an axiomatic system and prove its theorems. Its aim is to make it easy to write and read rigorous mathematical proofs. You can see the current axiomatic system by pressing one of the buttons at the bottom of the [main page](https://logico-philosophical.github.io/math-o-matic/web/index.html).
+**math-o-matic** is a computerized proof system that lets you create an axiomatic system and prove its theorems. Its aim is to make it easy to read and write rigorous mathematical proofs. You can see the current axiomatic system by pressing one of the buttons at the bottom of the [main page](https://logico-philosophical.github.io/math-o-matic/web/index.html).
 
 ## Code example
 
@@ -20,18 +20,18 @@
     &gt; omega_add_one(omega_one) <b>as</b> eq(omega_add(omega_one, omega_one), omega_two)
 }</code></pre>
 
-The above code produces&hellip;
+This code produces&hellip;
 
 <p align="center"><img src="https://i.imgur.com/lSWwhW6.png" width="500px"><br>
 <i>A proof of</i> <code>1 + 1 = 2</code></p>
 
-&hellip;a proof of the equation `1 + 1 = 2`. The proof is verified by the math-o-matic program, and the name of the theorem is colored green if the proof is valid. The **proof explorer** also shows the individual steps of the proof in a human-readable format. The names in green refer to theorems that are already proved, and the symbols in blue are predefined notions.
+&hellip;a proof of the equation `1 + 1 = 2`. The proof is verified by the math-o-matic program, and the name of the theorem is colored green if the proof is valid. The **proof explorer** also shows the individual steps of the proof in a human-readable format. Here, green names refer to theorems that are already proved, and blue symbols indicate predefined notions.
 
 ## Keep reading
 
 * Find more math-o-matic code in [/math](/math) directory.
 * Refer to the [documentation](https://logico-philosophical.github.io/math-o-matic/docs/build/index.html) to learn how to write proofs.
-* Click on the colored parts of the proof above in the [main page](https://logico-philosophical.github.io/math-o-matic/web/index.html) to jump to definitions.
+* Click on the colored parts of the previous proof in the [main page](https://logico-philosophical.github.io/math-o-matic/web/index.html) to jump to definitions.
 * math-o-matic language support for Visual Studio Code and Sublime Text 3 can be found in [/tools](/tools).
 
 ## Contributing
